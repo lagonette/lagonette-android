@@ -12,7 +12,20 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+
+            buildConfigField "String", "CONTENT_AUTHORITY", "\"${defaultConfig.applicationId}${applicationIdSuffix}.content\""
+
+            buildConfigField "boolean", "LOG_SQL", "true"
+        }
         release {
+
+            buildConfigField "String", "CONTENT_AUTHORITY", "\"${defaultConfig.applicationId}.content\""
+
+            buildConfigField "boolean", "LOG_SQL", "false"
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

@@ -38,6 +38,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".content.GonetteContentProvider"
+            android:authorities="${applicationId}.content"
+            android:enabled="true"
+            android:exported="false"
+            android:syncable="true"/>
+
     </application>
 
 </manifest>
