@@ -19,6 +19,18 @@ public class GonetteDatabaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        createDatabase(db);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion > oldVersion) {
+            dropDatabase(db);
+            createDatabase(db);
+        }
+    }
+
+    private void createDatabase(SQLiteDatabase db) {
         Log.d(TAG, "onCreate: Create table " + Tables.PARTNER);
         db.execSQL("CREATE TABLE " + Tables.PARTNER + " ("
                 + PartnerColumns.ID + " INTEGER PRIMARY KEY, "
@@ -29,8 +41,8 @@ public class GonetteDatabaseOpenHelper extends SQLiteOpenHelper {
                 + ")");
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //TODO
+    private void dropDatabase(SQLiteDatabase db) {
+        Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER);
     }
 }
