@@ -1,6 +1,7 @@
 package com.zxcv.gonette;
 
 import android.database.Cursor;
+import android.support.compat.*;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -14,8 +15,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.zxcv.gonette.content.contract.GonetteContract;
+import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor> {
+public class MapsActivity
+        extends FragmentActivity
+        implements OnMapReadyCallback,
+                   LoaderManager.LoaderCallbacks<Cursor> {
 
     private GoogleMap mMap;
 
@@ -27,6 +32,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        if (BuildConfig.DEBUG) {
+            GonetteDatabaseOpenHelper.parseData(MapsActivity.this);
+        }
     }
 
 
