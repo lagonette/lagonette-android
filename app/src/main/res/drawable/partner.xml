@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:top="2dp">
+        <shape
+            android:shape="oval">
+
+            <solid
+                android:color="#36000000"/>
+
+            <size
+                android:width="16dp"
+                android:height="16dp"/>
+        </shape>
+    </item>
+
+    <!-- White Top color -->
+    <item android:bottom="2dp">
+        <shape
+            android:shape="oval">
+
+            <solid
+                android:color="#E94E1B"/>
+
+            <size
+                android:width="16dp"
+                android:height="16dp"/>
+        </shape>
+    </item>
+
+    <item
+        android:width="16dp"
+        android:height="16dp"
+        android:bottom="4dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp">
+        <bitmap android:src="@drawable/gonette"/>
+    </item>
+
+</layer-list>

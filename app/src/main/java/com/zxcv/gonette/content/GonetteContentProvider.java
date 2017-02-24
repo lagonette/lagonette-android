@@ -6,16 +6,19 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.zxcv.gonette.BuildConfig;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
 import com.zxcv.gonette.database.Tables;
+import com.zxcv.gonette.util.DebugContentProviderUtil;
 
 public class GonetteContentProvider
         extends ContentProvider {
@@ -42,8 +45,48 @@ public class GonetteContentProvider
             @Nullable String selection,
             @Nullable String[] selectionArgs,
             @Nullable String sortOrder) {
+        Log.d(TAG, "query: " + uri.toString());
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        int match = mUriMatcher.match(uri);
+        switch (match) {
+            case R.id.content_uri_partners:
+                qb.setTables(Tables.PARTNER);
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown uri: %s", uri));
+        }
+
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-        return null;
+
+        if (BuildConfig.DEBUG && BuildConfig.LOG_SQL) {
+            DebugContentProviderUtil.logSqlQuery(
+                    uri,
+                    qb,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder,
+                    null
+            );
+        }
+
+        Cursor cursor = qb.query(
+                db,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder,
+                null
+        );
+
+        assert null != getContext();
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return cursor;
     }
 
     @Nullable

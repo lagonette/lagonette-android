@@ -117,7 +117,7 @@ public class GonetteDatabaseOpenHelper
 
             inputStream = context.getResources().openRawResource(R.raw.footprint);
             jsonReader = new JsonReader(new InputStreamReader(inputStream));
-            footprintsJsonParser.parse(jsonReader);
+            //            footprintsJsonParser.parse(jsonReader);
 
             context.getContentResolver().applyBatch(
                     GonetteContract.AUTHORITY,

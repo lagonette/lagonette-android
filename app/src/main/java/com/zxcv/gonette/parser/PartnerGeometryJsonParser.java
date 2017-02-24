@@ -23,8 +23,8 @@ public class PartnerGeometryJsonParser
             throws IOException {
         if (COORDINATES.equals(name)) {
             jsonReader.beginArray();
-            mContentValues.put(GonetteContract.Partner.LATITUDE, jsonReader.nextDouble());
             mContentValues.put(GonetteContract.Partner.LONGITUDE, jsonReader.nextDouble());
+            mContentValues.put(GonetteContract.Partner.LATITUDE, jsonReader.nextDouble());
             jsonReader.endArray();
             return true;
         } else {
