@@ -3,5 +3,6 @@
 
     <item name="content_uri_partner" type="id" />
     <item name="content_uri_partners" type="id" />
+    <item name="content_uri_footprints" type="id" />
 
 </resources>

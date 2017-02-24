@@ -3,6 +3,7 @@ package com.zxcv.gonette.content.contract;
 import android.net.Uri;
 
 import com.zxcv.gonette.BuildConfig;
+import com.zxcv.gonette.database.FootprintColumns;
 import com.zxcv.gonette.database.PartnerColumns;
 import com.zxcv.gonette.database.Tables;
 
@@ -27,5 +28,16 @@ public class GonetteContract {
         String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.PARTNER;
 
         String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Tables.PARTNER;
+    }
+
+    public interface Footprint extends FootprintColumns {
+
+        Uri CONTENT_URI = BASE_URI.buildUpon()
+                .appendPath(Tables.FOOTPRINT)
+                .build();
+
+        String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.FOOTPRINT;
+
+        String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Tables.FOOTPRINT;
     }
 }

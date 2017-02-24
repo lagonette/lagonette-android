@@ -55,6 +55,8 @@ public class GonetteContentProvider
                 return GonetteContract.Partner.CONTENT_TYPE_ITEM;
             case R.id.content_uri_partners:
                 return GonetteContract.Partner.CONTENT_TYPE_DIR;
+            case R.id.content_uri_footprints:
+                return GonetteContract.Partner.CONTENT_TYPE_DIR;
             default:
                 throw new IllegalArgumentException(String.format(
                         "Unknown content uri code: %s",
@@ -67,12 +69,16 @@ public class GonetteContentProvider
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         String table;
-        Uri    baseUri;
-        int    match = mUriMatcher.match(uri);
+        Uri baseUri;
+        int match = mUriMatcher.match(uri);
         switch (match) {
             case R.id.content_uri_partners:
                 table = Tables.PARTNER;
                 baseUri = GonetteContract.Partner.CONTENT_URI;
+                break;
+            case R.id.content_uri_footprints:
+                table = Tables.FOOTPRINT;
+                baseUri = GonetteContract.Footprint.CONTENT_URI;
                 break;
             default:
                 throw new IllegalArgumentException(String.format(
@@ -81,9 +87,9 @@ public class GonetteContentProvider
                 ));
         }
 
-        SQLiteDatabase db     = mOpenHelper.getWritableDatabase();
-        long           rowID  = db.insert(table, null, values);
-        Uri            newUri = ContentUris.withAppendedId(baseUri, rowID);
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        long rowID = db.insert(table, null, values);
+        Uri newUri = ContentUris.withAppendedId(baseUri, rowID);
         // getContext() not null because called after onCreate()
         //noinspection ConstantConditions
         getContext().getContentResolver().notifyChange(newUri, null);
@@ -122,6 +128,12 @@ public class GonetteContentProvider
                 GonetteContract.AUTHORITY,
                 GonetteContract.Partner.CONTENT_URI.getPath() + "/#",
                 R.id.content_uri_partner
+        );
+        addUriToUriMatcher(
+                mUriMatcher,
+                GonetteContract.AUTHORITY,
+                GonetteContract.Footprint.CONTENT_URI.getPath(),
+                R.id.content_uri_footprints
         );
     }
 
