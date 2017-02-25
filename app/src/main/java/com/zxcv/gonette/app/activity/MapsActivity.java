@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
-import com.zxcv.gonette.BuildConfig;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.fragment.MapsFragment;
 
@@ -21,10 +20,6 @@ public class MapsActivity
             getSupportFragmentManager().beginTransaction()
                                        .add(R.id.content, fragment, MapsFragment.TAG)
                                        .commit();
-
-            if (BuildConfig.DEBUG) {
-                // GonetteDatabaseOpenHelper.parseData(MapsActivity.this);
-            }
         }
     }
 

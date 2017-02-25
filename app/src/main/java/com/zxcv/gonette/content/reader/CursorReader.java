@@ -14,12 +14,16 @@ public abstract class CursorReader {
         return mCursor.moveToNext();
     }
 
-    public boolean moveToNext(int offset) {
+    public boolean move(int offset) {
         return mCursor.move(offset);
     }
 
     public int getPosition() {
         return mCursor.getPosition();
+    }
+
+    public int getCount() {
+        return mCursor.getCount();
     }
 
 }
