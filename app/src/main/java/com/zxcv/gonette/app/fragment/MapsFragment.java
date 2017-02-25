@@ -26,8 +26,8 @@ import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 import com.zxcv.gonette.BuildConfig;
 import com.zxcv.gonette.R;
-import com.zxcv.gonette.app.ui.PartnerItem;
-import com.zxcv.gonette.app.ui.PartnerRenderer;
+import com.zxcv.gonette.app.ui.maps.PartnerItem;
+import com.zxcv.gonette.app.ui.maps.PartnerRenderer;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
@@ -63,6 +63,8 @@ public class MapsFragment
 
     private boolean mAskForMyPositionRequest = true;
 
+    private int mStatusBarHeight;
+
     public static MapsFragment newInstance() {
         return new MapsFragment();
     }
@@ -75,6 +77,8 @@ public class MapsFragment
                     STATE_ASK_FOR_MY_LOCATION_PERMISSION
             );
         }
+
+        mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
     }
 
     @Nullable
@@ -109,7 +113,7 @@ public class MapsFragment
     }
 
     private void setupMap() {
-        mMap.setPadding(0, UiUtil.getStatusBarHeight(getResources()), 0, 0);
+        mMap.setPadding(0, mStatusBarHeight, 0, 0);
 
         updateLocationUI();
 
@@ -267,5 +271,11 @@ public class MapsFragment
                 null
         );
         return true;
+    }
+
+    public void processParallaxTranslation(float translationY) {
+        int parallaxPadding = -(int) translationY;
+        int topPadding = mStatusBarHeight + parallaxPadding;
+        mMap.setPadding(0, topPadding, 0, parallaxPadding);
     }
 }

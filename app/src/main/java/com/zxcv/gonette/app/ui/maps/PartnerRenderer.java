@@ -1,4 +1,4 @@
-package com.zxcv.gonette.app.ui;
+package com.zxcv.gonette.app.ui.maps;
 
 import android.content.Context;
 import android.graphics.Bitmap;

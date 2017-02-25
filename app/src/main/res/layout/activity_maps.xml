@@ -1,7 +1,35 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:map="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:id="@+id/content"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.zxcv.gonette.app.activity.MapsActivity"/>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zxcv.gonette.app.activity.MapsActivity">
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:dependency="@+id/bottom_sheet"
+        app:layout_behavior="com.zxcv.gonette.app.ui.behavior.ParallaxBehavior"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:background="@android:color/holo_orange_light"
+        android:clipToPadding="true"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet "
+            android:textSize="16sp"/>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>
