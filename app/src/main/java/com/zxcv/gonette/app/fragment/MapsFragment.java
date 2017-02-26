@@ -19,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
@@ -41,7 +42,16 @@ public class MapsFragment
         extends Fragment
         implements OnMapReadyCallback,
                    LoaderManager.LoaderCallbacks<Cursor>,
-                   ClusterManager.OnClusterClickListener<PartnerItem> {
+                   ClusterManager.OnClusterClickListener<PartnerItem>,
+                   ClusterManager.OnClusterItemClickListener<PartnerItem>,
+                   GoogleMap.OnMapClickListener {
+
+    public interface Callback {
+
+        void showPartner(PartnerItem partnerItem);
+
+        void showFullMap();
+    }
 
     public static final String TAG = "MapsFragment";
 
@@ -64,6 +74,8 @@ public class MapsFragment
     private boolean mAskForMyPositionRequest = true;
 
     private int mStatusBarHeight;
+
+    private Callback mCallback;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -97,6 +109,12 @@ public class MapsFragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        try {
+            mCallback = (Callback) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
+        }
     }
 
     @Override
@@ -124,9 +142,11 @@ public class MapsFragment
                 mMap,
                 mClusterManager
         ));
+        mMap.setOnMapClickListener(MapsFragment.this);
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(MapsFragment.this);
+        mClusterManager.setOnClusterItemClickListener(MapsFragment.this);
     }
 
     private void updateLocationUI() {
@@ -236,6 +256,7 @@ public class MapsFragment
             PartnerReader partnerReader = new PartnerReader(cursor);
             do {
                 PartnerItem item = new PartnerItem(
+                        partnerReader.getId(),
                         partnerReader.getLatitude(),
                         partnerReader.getLongitude(),
                         partnerReader.getName(),
@@ -270,7 +291,19 @@ public class MapsFragment
                 ANIMATION_LENGTH,
                 null
         );
+        mCallback.showFullMap();
         return true;
+    }
+
+    @Override
+    public boolean onClusterItemClick(PartnerItem partnerItem) {
+        mCallback.showPartner(partnerItem);
+        return false;
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        mCallback.showFullMap();
     }
 
     public void processParallaxTranslation(float translationY) {

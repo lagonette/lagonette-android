@@ -12,16 +12,24 @@ public class PartnerItem
 
     private String mSnippet;
 
-    public PartnerItem(double lat, double lng) {
+    private long mId;
+
+    public PartnerItem(long id, double lat, double lng) {
+        mId = id;
         mPosition = new LatLng(lat, lng);
         mTitle = null;
         mSnippet = null;
     }
 
-    public PartnerItem(double lat, double lng, String title, String snippet) {
+    public PartnerItem(long id, double lat, double lng, String title, String snippet) {
+        mId = id;
         mPosition = new LatLng(lat, lng);
         mTitle = title;
         mSnippet = snippet;
+    }
+
+    public long getId() {
+        return mId;
     }
 
     @Override

@@ -11,6 +11,14 @@ public class PartnerReader
         super(mCursor);
     }
 
+    public long getId() {
+        return mCursor.getLong(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.ID
+                )
+        );
+    }
+
     public String getName() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
@@ -42,5 +50,4 @@ public class PartnerReader
                 )
         );
     }
-
 }
