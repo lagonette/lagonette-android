@@ -3,24 +3,23 @@ package com.zxcv.gonette.app.activity;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.fragment.MapsFragment;
+import com.zxcv.gonette.app.fragment.PartnerDetailFragment;
 import com.zxcv.gonette.app.ui.behavior.ParallaxBehavior;
-import com.zxcv.gonette.app.ui.maps.PartnerItem;
 
 public class MapsActivity
         extends AppCompatActivity
         implements MapsFragment.Callback,
-                   ParallaxBehavior.OnParallaxTranslationListener,
-                   View.OnLayoutChangeListener {
+                   ParallaxBehavior.OnParallaxTranslationListener {
 
     private static final String TAG = "MapsActivity";
 
     private MapsFragment mMapsFragment;
+
+    private PartnerDetailFragment mBottomSheetFragment;
 
     private BottomSheetBehavior<View> mBottomSheetBehavior;
 
@@ -42,10 +41,8 @@ public class MapsActivity
         }
 
         mBottomSheet = findViewById(R.id.bottom_sheet);
-        mBottomSheet.findViewById(R.id.bottom_sheet_content)
-                    .addOnLayoutChangeListener(MapsActivity.this);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(300);
+        mBottomSheetBehavior.setPeekHeight(500);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
@@ -60,32 +57,31 @@ public class MapsActivity
     }
 
     @Override
-    public void showPartner(PartnerItem partnerItem) {
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        TextView name = (TextView) findViewById(R.id.name);
-        TextView description = (TextView) findViewById(R.id.description);
-        name.setText(partnerItem.getTitle());
-        description.setText(partnerItem.getSnippet());
+    public void showPartner(long partnerId) {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
+        getSupportFragmentManager().beginTransaction()
+                                   .setCustomAnimations(
+                                           android.R.anim.fade_in,
+                                           android.R.anim.fade_out
+                                   )
+                                   .replace(
+                                           R.id.bottom_sheet,
+                                           mBottomSheetFragment,
+                                           PartnerDetailFragment.TAG
+                                   )
+                                   .commit();
     }
 
     @Override
     public void showFullMap() {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
-
-    @Override
-    public void onLayoutChange(
-            View v,
-            int left,
-            int top,
-            int right,
-            int bottom,
-            int oldLeft,
-            int oldTop,
-            int oldRight,
-            int oldBottom) {
-        Log.d(TAG, "onLayoutChange: " + top + ":" + bottom);
-        mBottomSheetBehavior.setPeekHeight(bottom - top);
+        getSupportFragmentManager().beginTransaction()
+                                   .setCustomAnimations(
+                                           android.R.anim.fade_in,
+                                           android.R.anim.fade_out
+                                   )
+                                   .remove(mBottomSheetFragment)
+                                   .commit();
     }
 }

@@ -19,22 +19,26 @@ public class GonetteContract {
 
     public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
-    public interface Partner extends PartnerColumns {
+    public static final long NO_ID = -1;
+
+    public interface Partner
+            extends PartnerColumns {
 
         Uri CONTENT_URI = BASE_URI.buildUpon()
-                .appendPath(Tables.PARTNER)
-                .build();
+                                  .appendPath(Tables.PARTNER)
+                                  .build();
 
         String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.PARTNER;
 
         String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Tables.PARTNER;
     }
 
-    public interface Footprint extends FootprintColumns {
+    public interface Footprint
+            extends FootprintColumns {
 
         Uri CONTENT_URI = BASE_URI.buildUpon()
-                .appendPath(Tables.FOOTPRINT)
-                .build();
+                                  .appendPath(Tables.FOOTPRINT)
+                                  .build();
 
         String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.FOOTPRINT;
 

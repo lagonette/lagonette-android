@@ -21,13 +21,6 @@ public class PartnerItem
         mSnippet = null;
     }
 
-    public PartnerItem(long id, double lat, double lng, String title, String snippet) {
-        mId = id;
-        mPosition = new LatLng(lat, lng);
-        mTitle = title;
-        mSnippet = snippet;
-    }
-
     public long getId() {
         return mId;
     }
@@ -47,21 +40,4 @@ public class PartnerItem
         return mSnippet;
     }
 
-    /**
-     * Set the title of the marker
-     *
-     * @param title string to be set as title
-     */
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
-    /**
-     * Set the description of the marker
-     *
-     * @param snippet string to be set as snippet
-     */
-    public void setSnippet(String snippet) {
-        mSnippet = snippet;
-    }
 }

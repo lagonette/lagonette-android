@@ -13,41 +13,15 @@
         app:dependency="@+id/bottom_sheet"
         app:layout_behavior="com.zxcv.gonette.app.ui.behavior.ParallaxBehavior"/>
 
-    <android.support.v4.widget.NestedScrollView
+
+    <FrameLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:background="@android:color/white"
+        android:layout_height="match_parent"
+        android:background="?android:attr/colorBackground"
         android:clipToPadding="true"
         android:elevation="16dp"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
-
-        <LinearLayout
-            android:id="@+id/bottom_sheet_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/colorAccent"
-                tools:text="Gonette"/>
-
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                tools:text="Lorem ipsum dolor sit amet"/>
-
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

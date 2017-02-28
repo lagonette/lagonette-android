@@ -48,14 +48,12 @@ public class MapsFragment
 
     public interface Callback {
 
-        void showPartner(PartnerItem partnerItem);
+        void showPartner(long partnerId);
 
         void showFullMap();
     }
 
     public static final String TAG = "MapsFragment";
-
-    public static final int ZOOM_LEVEL_CITY = 10;
 
     public static final int ANIMATION_LENGTH = 400;
 
@@ -258,9 +256,7 @@ public class MapsFragment
                 PartnerItem item = new PartnerItem(
                         partnerReader.getId(),
                         partnerReader.getLatitude(),
-                        partnerReader.getLongitude(),
-                        partnerReader.getName(),
-                        partnerReader.getDescription()
+                        partnerReader.getLongitude()
                 );
                 mClusterManager.addItem(item);
             } while (partnerReader.moveToNext());
@@ -297,7 +293,7 @@ public class MapsFragment
 
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
-        mCallback.showPartner(partnerItem);
+        mCallback.showPartner(partnerItem.getId());
         return false;
     }
 

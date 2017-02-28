@@ -5,6 +5,7 @@
     <item name="content_uri_partners" type="id"/>
     <item name="content_uri_footprints" type="id"/>
 
+    <item name="loader_query_partner" type="id"/>
     <item name="loader_query_partners" type="id"/>
 
 </resources>
