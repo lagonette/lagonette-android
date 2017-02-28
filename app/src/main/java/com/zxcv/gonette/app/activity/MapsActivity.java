@@ -15,8 +15,6 @@ public class MapsActivity
         implements MapsFragment.Callback,
                    ParallaxBehavior.OnParallaxTranslationListener {
 
-    private static final String TAG = "MapsActivity";
-
     private MapsFragment mMapsFragment;
 
     private PartnerDetailFragment mBottomSheetFragment;
@@ -27,7 +25,9 @@ public class MapsActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        StrictModeUtil.enableStrictMode();
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_maps);
 
         if (savedInstanceState == null) {
