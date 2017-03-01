@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.zxcv.gonette.app.activity.MapsActivity">
+    tools:context=".app.activity.MapsActivity">
 
     <FrameLayout
         android:id="@+id/content"
@@ -13,15 +13,42 @@
         app:dependency="@+id/bottom_sheet"
         app:layout_behavior="com.zxcv.gonette.app.ui.behavior.ParallaxBehavior"/>
 
-
     <FrameLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/colorBackground"
         android:clipToPadding="true"
-        android:elevation="16dp"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"/>
+        android:elevation="4dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        tools:elevation="2dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/bottom_sheet_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_filter_list_white_24dp"
+        app:fabSize="normal"
+        app:layout_anchor="@id/bottom_sheet"
+        app:layout_anchorGravity="end"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/my_location_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginBottom="88dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_my_location_grey_24dp"
+        android:visibility="gone"
+        app:backgroundTint="@android:color/white"
+        app:elevation="2dp"
+        app:fabSize="normal"
+        app:layout_anchor="@id/content"
+        app:layout_anchorGravity="end|bottom"
+        tools:visibility="visible"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

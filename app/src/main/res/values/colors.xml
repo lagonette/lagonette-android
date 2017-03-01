@@ -5,4 +5,7 @@
     <color name="colorAccent">#E94E1B</color>
 
     <color name="footprint">#57E94E1B</color>
+
+    <color name="icon">#60000000</color>
+    <color name="icon_dark">#89000000</color>
 </resources>

@@ -2,6 +2,7 @@ package com.zxcv.gonette.app.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -13,7 +14,8 @@ import com.zxcv.gonette.app.ui.behavior.ParallaxBehavior;
 public class MapsActivity
         extends AppCompatActivity
         implements MapsFragment.Callback,
-                   ParallaxBehavior.OnParallaxTranslationListener {
+                   ParallaxBehavior.OnParallaxTranslationListener,
+                   View.OnClickListener {
 
     private MapsFragment mMapsFragment;
 
@@ -23,9 +25,10 @@ public class MapsActivity
 
     private View mBottomSheet;
 
+    private FloatingActionButton mMyLocationFAB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        StrictModeUtil.enableStrictMode();
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_maps);
@@ -40,7 +43,10 @@ public class MapsActivity
                     .findFragmentByTag(MapsFragment.TAG);
         }
 
-        mBottomSheet = findViewById(R.id.bottom_sheet);
+        onViewCreated();
+
+        mMyLocationFAB.setOnClickListener(MapsActivity.this);
+
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setPeekHeight(500);
         mBottomSheetBehavior.setHideable(true);
@@ -51,9 +57,24 @@ public class MapsActivity
         parallaxBehavior.setOnParallaxTranslationListener(MapsActivity.this);
     }
 
+    private void onViewCreated() {
+        mBottomSheet = findViewById(R.id.bottom_sheet);
+        mMyLocationFAB = (FloatingActionButton) findViewById(R.id.my_location_fab);
+    }
+
     @Override
     public void onParallaxTranslation(float translationY) {
         mMapsFragment.processParallaxTranslation(translationY);
+    }
+
+    @Override
+    public void hideMyLocationButton() {
+        mMyLocationFAB.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showMyLocationButton() {
+        mMyLocationFAB.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -83,5 +104,21 @@ public class MapsActivity
                                    )
                                    .remove(mBottomSheetFragment)
                                    .commit();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.my_location_fab:
+                onMyLocationFabClick();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown view id: " + id);
+        }
+    }
+
+    private void onMyLocationFabClick() {
+        mMapsFragment.moveOnMyLocation();
     }
 }

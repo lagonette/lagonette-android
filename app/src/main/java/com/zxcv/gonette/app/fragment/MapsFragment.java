@@ -1,7 +1,9 @@
 package com.zxcv.gonette.app.fragment;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,22 +49,35 @@ public class MapsFragment
                    LoaderManager.LoaderCallbacks<Cursor>,
                    ClusterManager.OnClusterClickListener<PartnerItem>,
                    ClusterManager.OnClusterItemClickListener<PartnerItem>,
-                   GoogleMap.OnMapClickListener {
+                   GoogleMap.OnMapClickListener,
+                   GoogleApiClient.ConnectionCallbacks,
+                   GoogleApiClient.OnConnectionFailedListener {
 
     public interface Callback {
+
+        void hideMyLocationButton();
+
+        void showMyLocationButton();
 
         void showPartner(long partnerId);
 
         void showFullMap();
+
     }
+
+    private Location mLastLocation;
+
+    private GoogleApiClient mGoogleApiClient;
 
     public static final String TAG = "MapsFragment";
 
-    public static final int ANIMATION_LENGTH = 400;
+    public static final int ANIMATION_LENGTH = 600;
+
+    public static final int ZOOM_LEVEL_STREET = 15;
 
     public static final int CLUSTER_CLICK_ZOOM_IN = 1;
 
-    public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 666;
+    public static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
     private static final String STATE_ASK_FOR_MY_LOCATION_PERMISSION = "state:ask_for_my_location_permission";
 
@@ -69,7 +87,7 @@ public class MapsFragment
 
     private boolean mLocationPermissionGranted = false;
 
-    private boolean mAskForMyPositionRequest = true;
+    private boolean mAskFormMyPositionPermission = true;
 
     private int mStatusBarHeight;
 
@@ -83,9 +101,17 @@ public class MapsFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            mAskForMyPositionRequest = savedInstanceState.getBoolean(
+            mAskFormMyPositionPermission = savedInstanceState.getBoolean(
                     STATE_ASK_FOR_MY_LOCATION_PERMISSION
             );
+        }
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addConnectionCallbacks(MapsFragment.this)
+                    .addOnConnectionFailedListener(MapsFragment.this)
+                    .addApi(LocationServices.API)
+                    .build();
         }
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
@@ -117,7 +143,7 @@ public class MapsFragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_ASK_FOR_MY_LOCATION_PERMISSION, mAskForMyPositionRequest);
+        outState.putBoolean(STATE_ASK_FOR_MY_LOCATION_PERMISSION, mAskFormMyPositionPermission);
     }
 
     @Override
@@ -130,6 +156,8 @@ public class MapsFragment
 
     private void setupMap() {
         mMap.setPadding(0, mStatusBarHeight, 0, 0);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
 
         updateLocationUI();
 
@@ -145,53 +173,6 @@ public class MapsFragment
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(MapsFragment.this);
         mClusterManager.setOnClusterItemClickListener(MapsFragment.this);
-    }
-
-    private void updateLocationUI() {
-        if (mMap == null) {
-            return;
-        }
-
-        if (ContextCompat.checkSelfPermission(
-                getContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-        )
-                == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-        } else if (mAskForMyPositionRequest) {
-            mAskForMyPositionRequest = false;
-            requestPermissions(
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-            );
-        }
-
-        if (mLocationPermissionGranted) {
-            mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        } else {
-            mMap.setMyLocationEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            //            mLastKnownLocation = null;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String permissions[],
-            @NonNull int[] grantResults) {
-        mLocationPermissionGranted = false;
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
-                }
-            }
-        }
-        updateLocationUI();
     }
 
     private void queryPartners() {
@@ -306,5 +287,109 @@ public class MapsFragment
         int parallaxPadding = -(int) translationY;
         int topPadding = mStatusBarHeight + parallaxPadding;
         mMap.setPadding(0, topPadding, 0, parallaxPadding);
+    }
+
+
+    public void moveOnMyLocation() {
+        if (mLocationPermissionGranted) {
+            //noinspection MissingPermission
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(
+                                    mLastLocation.getLatitude(),
+                                    mLastLocation.getLongitude()
+                            ),
+                            ZOOM_LEVEL_STREET
+                    ),
+                    ANIMATION_LENGTH,
+                    null
+            );
+        }
+    }
+
+    public void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        //TODO
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        //TODO snackbar
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        //TODO snackbar
+    }
+
+    private void updateLocationUI() {
+        if (mMap == null) {
+            return;
+        }
+
+        if (checkLocationPermission()) {
+            mMap.setMyLocationEnabled(true);
+            mCallback.showMyLocationButton();
+        } else {
+            mMap.setMyLocationEnabled(false);
+            mCallback.hideMyLocationButton();
+        }
+    }
+
+    private boolean checkLocationPermission() {
+        if (!mLocationPermissionGranted) {
+            if (ContextCompat.checkSelfPermission(
+                    getContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            )
+                    == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
+            } else if (mAskFormMyPositionPermission) {
+                mAskFormMyPositionPermission = false;
+                requestPermissions(
+                        new String[]{
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                        },
+                        PERMISSIONS_REQUEST_LOCATION
+                );
+            }
+        }
+
+        return mLocationPermissionGranted;
+    }
+
+    private void onLocationPermissionResult(@NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_LOCATION:
+                onLocationPermissionResult(grantResults);
+                updateLocationUI();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown request code: " + requestCode);
+        }
     }
 }
