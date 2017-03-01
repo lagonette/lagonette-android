@@ -294,17 +294,21 @@ public class MapsFragment
         if (mLocationPermissionGranted) {
             //noinspection MissingPermission
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            mMap.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                            new LatLng(
-                                    mLastLocation.getLatitude(),
-                                    mLastLocation.getLongitude()
-                            ),
-                            ZOOM_LEVEL_STREET
-                    ),
-                    ANIMATION_LENGTH,
-                    null
-            );
+            if (mLastLocation != null) {
+                mMap.animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                                new LatLng(
+                                        mLastLocation.getLatitude(),
+                                        mLastLocation.getLongitude()
+                                ),
+                                ZOOM_LEVEL_STREET
+                        ),
+                        ANIMATION_LENGTH,
+                        null
+                );
+            } else {
+                Log.e(TAG, "moveOnMyLocation: Last location is NULL");
+            }
         }
     }
 

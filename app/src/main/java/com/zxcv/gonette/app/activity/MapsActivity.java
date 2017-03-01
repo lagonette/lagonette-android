@@ -97,13 +97,15 @@ public class MapsActivity
     @Override
     public void showFullMap() {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        getSupportFragmentManager().beginTransaction()
-                                   .setCustomAnimations(
-                                           android.R.anim.fade_in,
-                                           android.R.anim.fade_out
-                                   )
-                                   .remove(mBottomSheetFragment)
-                                   .commit();
+        if (mBottomSheetFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                                       .setCustomAnimations(
+                                               android.R.anim.fade_in,
+                                               android.R.anim.fade_out
+                                       )
+                                       .remove(mBottomSheetFragment)
+                                       .commit();
+        }
     }
 
     @Override
