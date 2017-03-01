@@ -53,6 +53,7 @@ public class PartnerRenderer
             PartnerItem partnerItem,
             MarkerOptions markerOptions) {
         markerOptions.icon(mPartnerBitmapDescriptor)
+                     .anchor(0.5f, 0.5f)
                      .title(partnerItem.getTitle());
     }
 
@@ -61,7 +62,8 @@ public class PartnerRenderer
             Cluster<PartnerItem> cluster,
             MarkerOptions markerOptions) {
         Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon))
+                     .anchor(0.5f, 0.5f);
     }
 
 }
