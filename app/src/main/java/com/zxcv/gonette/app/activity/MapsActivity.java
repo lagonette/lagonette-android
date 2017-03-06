@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -145,24 +146,31 @@ public class MapsActivity
 
     @Override
     public void showPartner(long partnerId) {
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(
-                        android.R.anim.fade_in,
-                        android.R.anim.fade_out
-                )
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (BottomSheetBehavior.STATE_HIDDEN != mBottomSheetBehavior.getState()) {
+            transaction.setCustomAnimations(
+                    android.R.anim.fade_in,
+                    android.R.anim.fade_out
+            );
+        }
+        transaction
                 .replace(
                         R.id.bottom_sheet,
                         mBottomSheetFragment,
                         PartnerDetailFragment.TAG
                 )
                 .commit();
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     @Override
     public void showFullMap() {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        removeBottomSheetFragment();
+    }
+
+    private void removeBottomSheetFragment() {
         if (mBottomSheetFragment != null) {
             getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(
@@ -171,6 +179,7 @@ public class MapsActivity
                     )
                     .remove(mBottomSheetFragment)
                     .commit();
+            mBottomSheetFragment = null;
         }
     }
 
