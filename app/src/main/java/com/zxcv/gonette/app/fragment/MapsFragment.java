@@ -1,9 +1,11 @@
 package com.zxcv.gonette.app.fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -92,6 +94,8 @@ public class MapsFragment
     private int mStatusBarHeight;
 
     private Callback mCallback;
+
+    private PartnerItem mSelectedPartnerItem;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -260,6 +264,7 @@ public class MapsFragment
 
     @Override
     public boolean onClusterClick(Cluster<PartnerItem> cluster) {
+        mSelectedPartnerItem = null;
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         cluster.getPosition(),
@@ -274,12 +279,14 @@ public class MapsFragment
 
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
-        mCallback.showPartner(partnerItem.getId());
+        mSelectedPartnerItem = partnerItem;
+        mCallback.showPartner(mSelectedPartnerItem.getId());
         return false;
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
+        mSelectedPartnerItem = null;
         mCallback.showFullMap();
     }
 
@@ -396,4 +403,15 @@ public class MapsFragment
                 throw new IllegalArgumentException("Unknown request code: " + requestCode);
         }
     }
+
+    public void startDirection() {
+        if (mSelectedPartnerItem != null) {
+            Intent intent = new Intent(
+                    android.content.Intent.ACTION_VIEW,
+                    Uri.parse("google.navigation:q=" + mSelectedPartnerItem.getPosition().latitude + "," + mSelectedPartnerItem.getPosition().longitude)
+            );
+            startActivity(intent);
+        }
+    }
+
 }
