@@ -102,6 +102,15 @@ public class MapsActivity
     }
 
     @Override
+    public void onBackPressed() {
+        if (mBottomSheetManager.isBottomSheetOpen()) {
+            mBottomSheetManager.closeBottomSheet();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onParallaxTranslation(float translationY) {
         mMapsFragment.processParallaxTranslation(translationY);
     }
@@ -208,7 +217,7 @@ public class MapsActivity
             if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
                 mShowPartnerAfterBottomSheetClose = true;
                 mPartnerToShowAfterBottomSheetClose = partnerId;
-                hideBottomSheet();
+                closeBottomSheet();
             } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
                 switchPartner(partnerId);
             } else {
@@ -261,7 +270,7 @@ public class MapsActivity
             mBottomSheetType = BOTTOM_SHEET_FILTERS;
         }
 
-        private void hideBottomSheet() {
+        private void closeBottomSheet() {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
 
@@ -313,6 +322,10 @@ public class MapsActivity
             p.setAnchorId(R.id.content);
             p.anchorGravity = Gravity.BOTTOM | GravityCompat.END;
             mBottomSheetFAB.setLayoutParams(p);
+        }
+
+        public boolean isBottomSheetOpen() {
+            return mBottomSheetType != BOTTOM_SHEET_NONE;
         }
 
     }
