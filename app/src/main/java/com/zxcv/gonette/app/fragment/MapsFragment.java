@@ -73,7 +73,9 @@ public class MapsFragment
 
     public static final String TAG = "MapsFragment";
 
-    public static final int ANIMATION_LENGTH = 600;
+    public static final int ANIMATION_LENGTH_LONG = 600;
+
+    public static final int ANIMATION_LENGTH_SHORT = 300;
 
     public static final int ZOOM_LEVEL_STREET = 15;
 
@@ -270,7 +272,7 @@ public class MapsFragment
                         cluster.getPosition(),
                         mMap.getCameraPosition().zoom + CLUSTER_CLICK_ZOOM_IN
                 ),
-                ANIMATION_LENGTH,
+                ANIMATION_LENGTH_LONG,
                 null
         );
         mCallback.showFullMap();
@@ -280,8 +282,8 @@ public class MapsFragment
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
         mSelectedPartnerItem = partnerItem;
-        mCallback.showPartner(mSelectedPartnerItem.getId());
-        return false;
+        mCallback.showPartner(partnerItem.getId());
+        return true;
     }
 
     @Override
@@ -310,12 +312,27 @@ public class MapsFragment
                                 ),
                                 ZOOM_LEVEL_STREET
                         ),
-                        ANIMATION_LENGTH,
+                        ANIMATION_LENGTH_LONG,
                         null
                 );
             } else {
                 Log.e(TAG, "moveOnMyLocation: Last location is NULL");
             }
+        }
+    }
+
+    public void showSelectedPartner(GoogleMap.CancelableCallback callback) {
+        if (mSelectedPartnerItem != null) {
+            mMap.animateCamera(
+                    CameraUpdateFactory.newLatLng(
+                            new LatLng(
+                                    mSelectedPartnerItem.getPosition().latitude,
+                                    mSelectedPartnerItem.getPosition().longitude
+                            )
+                    ),
+                    ANIMATION_LENGTH_SHORT,
+                    callback
+            );
         }
     }
 

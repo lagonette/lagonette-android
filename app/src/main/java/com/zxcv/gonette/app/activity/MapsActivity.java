@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.fragment.MapsFragment;
 import com.zxcv.gonette.app.fragment.PartnerDetailFragment;
@@ -182,7 +183,9 @@ public class MapsActivity
 
         private boolean mShowPartnerAfterBottomSheetClose = false;
 
-        private long mPartnerToShowAfterBottomSheetClose = GonetteContract.NO_ID;
+        private boolean mSwitchPartnerAfterBottomSheetCollapsed = false;
+
+        private long mSelectedPartnerId = GonetteContract.NO_ID;
 
         private final float mFABElevationPrimary;
 
@@ -201,7 +204,13 @@ public class MapsActivity
                 mBottomSheetFAB.setCompatElevation(mFABElevationPrimary);
                 if (mShowPartnerAfterBottomSheetClose) {
                     mShowPartnerAfterBottomSheetClose = false;
-                    showPartner(mPartnerToShowAfterBottomSheetClose);
+                    showPartner(mSelectedPartnerId);
+                }
+            }
+            else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+                if (mSwitchPartnerAfterBottomSheetCollapsed) {
+                    mSwitchPartnerAfterBottomSheetCollapsed = false;
+                    switchPartner(mSelectedPartnerId);
                 }
             }
         }
@@ -216,7 +225,7 @@ public class MapsActivity
         public void showPartner(long partnerId) {
             if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
                 mShowPartnerAfterBottomSheetClose = true;
-                mPartnerToShowAfterBottomSheetClose = partnerId;
+                mSelectedPartnerId = partnerId;
                 closeBottomSheet();
             } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
                 switchPartner(partnerId);
@@ -225,36 +234,53 @@ public class MapsActivity
             }
         }
 
-        public void openPartner(long partnerId) {
-            mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(
-                            R.id.bottom_sheet,
-                            mBottomSheetFragment,
-                            PartnerDetailFragment.TAG
-                    )
-                    .commit();
-            anchorBottomSheetFab();
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            mBottomSheetType = BOTTOM_SHEET_PARTNER;
+        public void openPartner(final long partnerId) {
+            mMapsFragment.showSelectedPartner(new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(
+                                    R.id.bottom_sheet,
+                                    mBottomSheetFragment,
+                                    PartnerDetailFragment.TAG
+                            )
+                            .commit();
+                    anchorBottomSheetFab();
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    mBottomSheetType = BOTTOM_SHEET_PARTNER;
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
         }
 
         public void switchPartner(long partnerId) {
-            mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(
-                            android.R.anim.fade_in,
-                            android.R.anim.fade_out
-                    )
-                    .replace(
-                            R.id.bottom_sheet,
-                            mBottomSheetFragment,
-                            PartnerDetailFragment.TAG
-                    )
-                    .commit();
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            mBottomSheetType = BOTTOM_SHEET_PARTNER;
+            if (BottomSheetBehavior.STATE_COLLAPSED != mBottomSheetBehavior.getState()) {
+                mSwitchPartnerAfterBottomSheetCollapsed = true;
+                mSelectedPartnerId = partnerId;
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+            else {
+                mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(
+                                android.R.anim.fade_in,
+                                android.R.anim.fade_out
+                        )
+                        .replace(
+                                R.id.bottom_sheet,
+                                mBottomSheetFragment,
+                                PartnerDetailFragment.TAG
+                        )
+                        .commit();
+                mMapsFragment.showSelectedPartner(null);
+                mBottomSheetType = BOTTOM_SHEET_PARTNER;
+            }
         }
 
         public void showFilters() {
