@@ -13,9 +13,6 @@ import com.google.gson.stream.JsonReader;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.parser.FeatureCollectionJsonParser;
-import com.zxcv.gonette.parser.FootprintCoordinatesJsonParser;
-import com.zxcv.gonette.parser.FootprintGeometryJsonParser;
-import com.zxcv.gonette.parser.FootprintJsonParser;
 import com.zxcv.gonette.parser.PartnerGeometryJsonParser;
 import com.zxcv.gonette.parser.PartnerJsonParser;
 import com.zxcv.gonette.parser.PartnerPropertiesJsonParser;
@@ -60,21 +57,11 @@ public class GonetteDatabaseOpenHelper
                            + PartnerColumns.LATITUDE + " NUMERIC NOT NULL, "
                            + PartnerColumns.LONGITUDE + " NUMERIC NOT NULL "
                            + ")");
-
-        Log.d(TAG, "onCreate: Create table " + Tables.FOOTPRINT);
-        db.execSQL("CREATE TABLE " + Tables.FOOTPRINT + " ("
-                           + FootprintColumns.ID + " INTEGER PRIMARY KEY, "
-                           + FootprintColumns.LATITUDE + " NUMERIC NOT NULL, "
-                           + FootprintColumns.LONGITUDE + " NUMERIC NOT NULL "
-                           + ")");
     }
 
     private void dropDatabase(SQLiteDatabase db) {
         Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER);
-
-        Log.d(TAG, "dropDatabase: Drop table " + Tables.FOOTPRINT);
-        db.execSQL("DROP TABLE IF EXISTS " + Tables.FOOTPRINT);
     }
 
     public static void parseData(Context context) {
@@ -96,28 +83,10 @@ public class GonetteDatabaseOpenHelper
                 partnerJsonParser
         );
 
-        FootprintCoordinatesJsonParser footprintCoordinatesJsonParser = new FootprintCoordinatesJsonParser(
-                operations,
-                contentValues
-        );
-        FootprintGeometryJsonParser footprintGeometryJsonParser = new FootprintGeometryJsonParser(
-                footprintCoordinatesJsonParser
-        );
-        FootprintJsonParser footprintJsonParser = new FootprintJsonParser(
-                footprintGeometryJsonParser
-        );
-        FeatureCollectionJsonParser footprintsJsonParser = new FeatureCollectionJsonParser(
-                footprintJsonParser
-        );
-
         try {
             InputStream inputStream = context.getResources().openRawResource(R.raw.gonette);
             JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream));
             partnersJsonParser.parse(jsonReader);
-
-            inputStream = context.getResources().openRawResource(R.raw.footprint);
-            jsonReader = new JsonReader(new InputStreamReader(inputStream));
-            //            footprintsJsonParser.parse(jsonReader);
 
             context.getContentResolver().applyBatch(
                     GonetteContract.AUTHORITY,

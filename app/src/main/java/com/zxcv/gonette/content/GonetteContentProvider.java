@@ -119,10 +119,6 @@ public class GonetteContentProvider
                 table = Tables.PARTNER;
                 baseUri = GonetteContract.Partner.CONTENT_URI;
                 break;
-            case R.id.content_uri_footprints:
-                table = Tables.FOOTPRINT;
-                baseUri = GonetteContract.Footprint.CONTENT_URI;
-                break;
             default:
                 throw new IllegalArgumentException(String.format(
                         "Unknown content uri code: %s",
@@ -171,12 +167,6 @@ public class GonetteContentProvider
                 GonetteContract.AUTHORITY,
                 GonetteContract.Partner.CONTENT_URI.getPath() + "/#",
                 R.id.content_uri_partner
-        );
-        addUriToUriMatcher(
-                mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.Footprint.CONTENT_URI.getPath(),
-                R.id.content_uri_footprints
         );
     }
 
