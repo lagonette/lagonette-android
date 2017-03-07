@@ -4,4 +4,4 @@
            android:layout_height="16dp"
            android:maxHeight="16dp"
            android:maxWidth="16dp"
-           android:src="@drawable/partner"/>
+           android:src="@drawable/item_partner"/>
