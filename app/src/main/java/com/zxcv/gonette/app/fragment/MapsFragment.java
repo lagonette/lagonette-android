@@ -36,6 +36,7 @@ import com.zxcv.gonette.BuildConfig;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.ui.maps.PartnerItem;
 import com.zxcv.gonette.app.ui.maps.PartnerRenderer;
+import com.zxcv.gonette.content.GonetteContentProviderHelper;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
@@ -48,12 +49,12 @@ import java.io.IOException;
 public class MapsFragment
         extends Fragment
         implements OnMapReadyCallback,
-                   LoaderManager.LoaderCallbacks<Cursor>,
-                   ClusterManager.OnClusterClickListener<PartnerItem>,
-                   ClusterManager.OnClusterItemClickListener<PartnerItem>,
-                   GoogleMap.OnMapClickListener,
-                   GoogleApiClient.ConnectionCallbacks,
-                   GoogleApiClient.OnConnectionFailedListener {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        ClusterManager.OnClusterClickListener<PartnerItem>,
+        ClusterManager.OnClusterItemClickListener<PartnerItem>,
+        GoogleMap.OnMapClickListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     public interface Callback {
 
@@ -206,7 +207,7 @@ public class MapsFragment
             case R.id.loader_query_partners:
                 return new CursorLoader(
                         getContext(),
-                        GonetteContract.Partner.CONTENT_URI,
+                        GonetteContract.Partner.METADATA_CONTENT_URI,
                         new String[]{
                                 GonetteContract.Partner.ID,
                                 GonetteContract.Partner.NAME,
@@ -214,7 +215,7 @@ public class MapsFragment
                                 GonetteContract.Partner.LATITUDE,
                                 GonetteContract.Partner.LONGITUDE
                         },
-                        null,
+                        GonetteContentProviderHelper.getIsVisibleSelection(),
                         null,
                         null
                 );

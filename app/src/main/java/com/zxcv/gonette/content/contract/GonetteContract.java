@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.zxcv.gonette.BuildConfig;
 import com.zxcv.gonette.database.PartnerColumns;
+import com.zxcv.gonette.database.PartnerMetadataColumns;
 import com.zxcv.gonette.database.Tables;
 
 public class GonetteContract {
@@ -24,12 +25,28 @@ public class GonetteContract {
             extends PartnerColumns {
 
         Uri CONTENT_URI = BASE_URI.buildUpon()
-                                  .appendPath(Tables.PARTNER)
-                                  .build();
+                .appendPath(Tables.PARTNER)
+                .build();
+
+        Uri METADATA_CONTENT_URI = CONTENT_URI.buildUpon()
+                .appendPath(Tables.PARTNER_METADATA)
+                .build();
 
         String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.PARTNER;
 
         String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Tables.PARTNER;
+    }
+
+    public interface PartnerMetadata
+            extends PartnerMetadataColumns {
+
+        Uri CONTENT_URI = BASE_URI.buildUpon()
+                .appendPath(Tables.PARTNER_METADATA)
+                .build();
+
+        String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.PARTNER_METADATA;
+
+        String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Tables.PARTNER_METADATA;
     }
 
 }

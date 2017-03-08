@@ -2,14 +2,14 @@ package com.zxcv.gonette.database;
 
 public interface PartnerColumns {
 
-    String ID = "id";
+    String ID = Tables.PARTNER + "_id";
 
-    String NAME = "name";
+    String NAME = Tables.PARTNER + "_name";
 
-    String DESCRIPTION = "description";
+    String DESCRIPTION = Tables.PARTNER + "_description";
 
-    String LATITUDE = "latitude";
+    String LATITUDE = Tables.PARTNER + "_latitude";
 
-    String LONGITUDE = "longitude";
+    String LONGITUDE = Tables.PARTNER + "_longitude";
 
 }

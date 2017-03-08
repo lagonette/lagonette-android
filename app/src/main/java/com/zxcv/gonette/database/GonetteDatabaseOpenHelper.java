@@ -51,17 +51,26 @@ public class GonetteDatabaseOpenHelper
     private void createDatabase(SQLiteDatabase db) {
         Log.d(TAG, "onCreate: Create table " + Tables.PARTNER);
         db.execSQL("CREATE TABLE " + Tables.PARTNER + " ("
-                           + PartnerColumns.ID + " INTEGER PRIMARY KEY, "
-                           + PartnerColumns.NAME + " TEXT NOT NULL, "
-                           + PartnerColumns.DESCRIPTION + " TEXT NOT NULL, "
-                           + PartnerColumns.LATITUDE + " NUMERIC NOT NULL, "
-                           + PartnerColumns.LONGITUDE + " NUMERIC NOT NULL "
-                           + ")");
+                + PartnerColumns.ID + " INTEGER PRIMARY KEY, "
+                + PartnerColumns.NAME + " TEXT NOT NULL, "
+                + PartnerColumns.DESCRIPTION + " TEXT NOT NULL, "
+                + PartnerColumns.LATITUDE + " NUMERIC NOT NULL, "
+                + PartnerColumns.LONGITUDE + " NUMERIC NOT NULL "
+                + ")");
+
+        Log.d(TAG, "onCreate: Create table " + Tables.PARTNER_METADATA);
+        db.execSQL("CREATE TABLE " + Tables.PARTNER_METADATA + " ("
+                + PartnerMetadataColumns.PARTNER_ID + " INTEGER PRIMARY KEY, "
+                + PartnerMetadataColumns.IS_VISIBLE + " INTEGER NOT NULL "
+                + ")");
     }
 
     private void dropDatabase(SQLiteDatabase db) {
         Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER);
+
+        Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER_METADATA);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER_METADATA);
     }
 
     public static void parseData(Context context) {
