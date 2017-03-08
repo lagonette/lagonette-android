@@ -184,7 +184,7 @@ public class MapsFragment
 
     private void queryPartners() {
         LoaderManager loaderManager = getLoaderManager();
-        loaderManager.initLoader(R.id.loader_query_partners, null, MapsFragment.this);
+        loaderManager.initLoader(R.id.loader_query_map_partners, null, MapsFragment.this);
     }
 
     private void setupFootprint() {
@@ -204,7 +204,7 @@ public class MapsFragment
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
-            case R.id.loader_query_partners:
+            case R.id.loader_query_map_partners:
                 return new CursorLoader(
                         getContext(),
                         GonetteContract.Partner.METADATA_CONTENT_URI,
@@ -228,7 +228,7 @@ public class MapsFragment
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         int id = loader.getId();
         switch (id) {
-            case R.id.loader_query_partners:
+            case R.id.loader_query_map_partners:
                 onQueryPartnerLoadFinished(cursor);
                 break;
             default:
@@ -257,7 +257,7 @@ public class MapsFragment
     public void onLoaderReset(Loader<Cursor> loader) {
         int id = loader.getId();
         switch (id) {
-            case R.id.loader_query_partners:
+            case R.id.loader_query_map_partners:
                 // Do nothing.
                 break;
             default:

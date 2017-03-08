@@ -14,8 +14,8 @@ public abstract class CursorReader {
         return mCursor.moveToNext();
     }
 
-    public boolean move(int offset) {
-        return mCursor.move(offset);
+    public boolean moveToPosition(int positon) {
+        return mCursor.moveToPosition(positon);
     }
 
     public int getPosition() {

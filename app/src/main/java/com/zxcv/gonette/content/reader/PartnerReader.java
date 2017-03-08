@@ -7,8 +7,8 @@ import com.zxcv.gonette.content.contract.GonetteContract;
 public class PartnerReader
         extends CursorReader {
 
-    public PartnerReader(Cursor mCursor) {
-        super(mCursor);
+    public PartnerReader(Cursor cursor) {
+        super(cursor);
     }
 
     public long getId() {

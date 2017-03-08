@@ -75,7 +75,7 @@ public class PartnerDetailFragment
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
-            case R.id.loader_query_partner:
+            case R.id.loader_query_detail_partner:
                 return new CursorLoader(
                         getContext(),
                         GonetteContract.Partner.CONTENT_URI,
@@ -101,7 +101,7 @@ public class PartnerDetailFragment
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         int id = loader.getId();
         switch (id) {
-            case R.id.loader_query_partner:
+            case R.id.loader_query_detail_partner:
                 onQueryPartnerLoadFinished(cursor);
                 break;
             default:
@@ -123,7 +123,7 @@ public class PartnerDetailFragment
     public void onLoaderReset(Loader<Cursor> loader) {
         int id = loader.getId();
         switch (id) {
-            case R.id.loader_query_partner:
+            case R.id.loader_query_detail_partner:
                 // Do nothing.
                 break;
             default:
@@ -136,6 +136,6 @@ public class PartnerDetailFragment
         Bundle args = new Bundle(1);
         args.putLong(ARG_PARTNER_ID, mPartnerId);
         LoaderManager loaderManager = getLoaderManager();
-        loaderManager.initLoader(R.id.loader_query_partner, args, PartnerDetailFragment.this);
+        loaderManager.initLoader(R.id.loader_query_detail_partner, args, PartnerDetailFragment.this);
     }
 }

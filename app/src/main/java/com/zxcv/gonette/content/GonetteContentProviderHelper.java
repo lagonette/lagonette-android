@@ -13,7 +13,7 @@ public abstract class GonetteContentProviderHelper {
     }
 
     public static String getIsVisibleProjection() {
-        return "CASE " + PartnerMetadataColumns.IS_VISIBLE + " IS NULL THEN 'true' ELSE " + PartnerMetadataColumns.IS_VISIBLE + " END";
+        return "CASE WHEN " + PartnerMetadataColumns.IS_VISIBLE + " IS NULL THEN 'true' ELSE " + PartnerMetadataColumns.IS_VISIBLE + " END";
     }
 
     public static String getIsVisibleSelection() {

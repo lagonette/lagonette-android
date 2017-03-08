@@ -3,6 +3,7 @@ package com.zxcv.gonette.app.widget.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.zxcv.gonette.R;
+import com.zxcv.gonette.content.reader.PartnerReader;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -21,6 +23,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         void onPartnerVisibilityClick(FilterAdapter.PartnerViewHolder holder);
     }
+
+    private static final String TAG = "FilterAdapter";
+
+    @Nullable
+    private PartnerReader mPartnerReader;
 
     @Nullable
     private OnPartnerClickListener mOnPartnerClickListener;
@@ -128,7 +135,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 onBindAllPartnerViewHolder((AllPartnerViewHolder) holder, position);
                 break;
             case R.id.view_type_partner:
-                onBindPartnerViewHolder((PartnerViewHolder) holder, position);
+                onBindPartnerViewHolder((PartnerViewHolder) holder, position - 1);
                 break;
             case R.id.view_type_footer:
                 break;
@@ -142,12 +149,24 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void onBindPartnerViewHolder(PartnerViewHolder holder, int position) {
-        holder.nameTextView.setText("Gonneeeettte!!");
+        if (mPartnerReader.moveToPosition(position)) {
+            holder.nameTextView.setText(mPartnerReader.getName());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 1 + 20 + 1;
+        return mPartnerReader != null
+                ? 1 + mPartnerReader.getCount() + 1
+                : 0;
+    }
+
+    public void setPartnerReader(PartnerReader partnerReader) {
+        if (mPartnerReader == partnerReader) {
+            return;
+        }
+        mPartnerReader = partnerReader;
+        notifyDataSetChanged();
     }
 
     public class PartnerViewHolder extends RecyclerView.ViewHolder {
