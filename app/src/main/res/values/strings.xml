@@ -1,3 +1,7 @@
 <resources>
+
     <string name="app_name">Gonette</string>
+
+    <string name="row_partners">Partenaires</string>
+
 </resources>

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -16,9 +17,10 @@ import android.view.animation.Interpolator;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.zxcv.gonette.R;
+import com.zxcv.gonette.app.fragment.FiltersFragment;
 import com.zxcv.gonette.app.fragment.MapsFragment;
 import com.zxcv.gonette.app.fragment.PartnerDetailFragment;
-import com.zxcv.gonette.app.ui.behavior.ParallaxBehavior;
+import com.zxcv.gonette.app.widget.behavior.ParallaxBehavior;
 import com.zxcv.gonette.content.contract.GonetteContract;
 
 import java.lang.annotation.Retention;
@@ -45,7 +47,7 @@ public class MapsActivity
 
     private MapsFragment mMapsFragment;
 
-    private PartnerDetailFragment mBottomSheetFragment;
+    private Fragment mBottomSheetFragment;
 
     private BottomSheetBehavior<View> mBottomSheetBehavior;
 
@@ -206,8 +208,7 @@ public class MapsActivity
                     mShowPartnerAfterBottomSheetClose = false;
                     showPartner(mSelectedPartnerId);
                 }
-            }
-            else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+            } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
                 if (mSwitchPartnerAfterBottomSheetCollapsed) {
                     mSwitchPartnerAfterBottomSheetCollapsed = false;
                     switchPartner(mSelectedPartnerId);
@@ -264,8 +265,7 @@ public class MapsActivity
                 mSwitchPartnerAfterBottomSheetCollapsed = true;
                 mSelectedPartnerId = partnerId;
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-            else {
+            } else {
                 mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(
@@ -290,6 +290,15 @@ public class MapsActivity
         }
 
         private void openFilters() {
+            mBottomSheetFragment = FiltersFragment.newInstance();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(
+                            R.id.bottom_sheet,
+                            mBottomSheetFragment,
+                            FiltersFragment.TAG
+                    )
+                    .commit();
             detachBottomSheetFab();
             mBottomSheetFAB.setCompatElevation(mFABElevationSecondary);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);

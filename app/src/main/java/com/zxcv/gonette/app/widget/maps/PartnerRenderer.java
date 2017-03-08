@@ -1,4 +1,4 @@
-package com.zxcv.gonette.app.ui.maps;
+package com.zxcv.gonette.app.widget.maps;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -53,8 +53,8 @@ public class PartnerRenderer
             PartnerItem partnerItem,
             MarkerOptions markerOptions) {
         markerOptions.icon(mPartnerBitmapDescriptor)
-                     .anchor(0.5f, 0.5f)
-                     .title(partnerItem.getTitle());
+                .anchor(0.5f, 0.5f)
+                .title(partnerItem.getTitle());
     }
 
     @Override
@@ -63,7 +63,7 @@ public class PartnerRenderer
             MarkerOptions markerOptions) {
         Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon))
-                     .anchor(0.5f, 0.5f);
+                .anchor(0.5f, 0.5f);
     }
 
 }

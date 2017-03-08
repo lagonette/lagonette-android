@@ -1,17 +1,17 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".app.activity.MapsActivity">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:id="@+id/coordinator_layout"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context=".app.activity.MapsActivity">
 
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:dependency="@+id/bottom_sheet"
-        app:layout_behavior="com.zxcv.gonette.app.ui.behavior.ParallaxBehavior" />
+        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.ParallaxBehavior"/>
 
     <FrameLayout
         android:id="@+id/bottom_sheet"
@@ -21,7 +21,7 @@
         android:clipToPadding="true"
         android:elevation="4dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-        tools:elevation="2dp" />
+        tools:elevation="2dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/bottom_sheet_fab"
@@ -32,7 +32,7 @@
         app:elevation="@dimen/fab_elevation_primary"
         app:fabSize="normal"
         app:layout_anchor="@id/bottom_sheet"
-        app:layout_anchorGravity="end|top" />
+        app:layout_anchorGravity="end|top"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/my_location_fab"
@@ -49,7 +49,7 @@
         app:fabSize="normal"
         app:layout_anchor="@id/content"
         app:layout_anchorGravity="end|bottom"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

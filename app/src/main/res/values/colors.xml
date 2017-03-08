@@ -6,6 +6,13 @@
 
     <color name="footprint">#57E94E1B</color>
 
+    <color name="text_primary">#DD000000</color>
+    <color name="text_secondary">#89000000</color>
+    <color name="text_disabled">#60000000</color>
+    <color name="text_hint">#60000000</color>
+
+    <color name="divider">#1E000000</color>
+
     <color name="icon">#60000000</color>
     <color name="icon_dark">#89000000</color>
 </resources>

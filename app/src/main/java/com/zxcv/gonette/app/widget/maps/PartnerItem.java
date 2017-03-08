@@ -1,4 +1,4 @@
-package com.zxcv.gonette.app.ui.maps;
+package com.zxcv.gonette.app.widget.maps;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;

@@ -1,4 +1,4 @@
-package com.zxcv.gonette.app.ui.behavior;
+package com.zxcv.gonette.app.widget.behavior;
 
 import android.content.Context;
 import android.content.res.TypedArray;
