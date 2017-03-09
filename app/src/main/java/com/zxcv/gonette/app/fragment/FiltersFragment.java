@@ -17,6 +17,7 @@ import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.widget.adapter.FilterAdapter;
 import com.zxcv.gonette.content.GonetteContentProviderHelper;
 import com.zxcv.gonette.content.contract.GonetteContract;
+import com.zxcv.gonette.content.loader.InsertPartnerVisibilityLoader;
 import com.zxcv.gonette.content.reader.PartnerReader;
 
 public class FiltersFragment
@@ -36,6 +37,23 @@ public class FiltersFragment
     private RecyclerView mFilterList;
 
     private FilterAdapter mFilterAdapter;
+
+    private LoaderManager.LoaderCallbacks<Bundle> mBundleLoaderCallbacks = new LoaderManager.LoaderCallbacks<Bundle>() {
+        @Override
+        public Loader<Bundle> onCreateLoader(int id, Bundle args) {
+            return new InsertPartnerVisibilityLoader(getContext(), args);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Bundle> loader, Bundle data) {
+            getLoaderManager().destroyLoader(loader.getId());
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Bundle> loader) {
+            // Do nothing
+        }
+    };
 
     public static FiltersFragment newInstance() {
         return new FiltersFragment();
@@ -89,7 +107,16 @@ public class FiltersFragment
 
     @Override
     public void onPartnerVisibilityClick(FilterAdapter.PartnerViewHolder holder) {
+        insertPartnerVisibility(holder.partnerId, !holder.isVisible);
+    }
 
+    private void insertPartnerVisibility(long partnerId, boolean isVisible) {
+        InsertPartnerVisibilityLoader.initLoader(
+                getLoaderManager(),
+                mBundleLoaderCallbacks,
+                partnerId,
+                isVisible
+        );
     }
 
     @Override

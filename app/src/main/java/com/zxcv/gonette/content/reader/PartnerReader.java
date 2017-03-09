@@ -50,4 +50,12 @@ public class PartnerReader
                 )
         );
     }
+
+    public boolean getIsVisible() {
+        return 1 == mCursor.getInt(
+                mCursor.getColumnIndex(
+                        GonetteContract.PartnerMetadata.IS_VISIBLE
+                )
+        );
+    }
 }

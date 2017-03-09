@@ -1,6 +1,7 @@
 package com.zxcv.gonette.content;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -19,6 +20,9 @@ import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
 import com.zxcv.gonette.database.Tables;
 import com.zxcv.gonette.util.DebugContentProviderUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GonetteContentProvider
         extends ContentProvider {
@@ -116,6 +120,7 @@ public class GonetteContentProvider
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+        List<Uri> uris = new ArrayList<>();
         String table;
         Uri baseUri;
         int match = mUriMatcher.match(uri);
@@ -123,10 +128,12 @@ public class GonetteContentProvider
             case R.id.content_uri_partners:
                 table = Tables.PARTNER;
                 baseUri = GonetteContract.Partner.CONTENT_URI;
+                uris.add(GonetteContract.Partner.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
+                uris.add(GonetteContract.Partner.METADATA_CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format(
@@ -140,9 +147,13 @@ public class GonetteContentProvider
         Uri newUri = ContentUris.withAppendedId(baseUri, rowID);
         // getContext() not null because called after onCreate()
         //noinspection ConstantConditions
-        getContext().getContentResolver().notifyChange(newUri, null);
+        ContentResolver contentResolver = getContext().getContentResolver();
         Log.d(TAG, "insert: Notify " + newUri);
-        // TODO check notify change.
+        contentResolver.notifyChange(newUri, null);
+        for (Uri u : uris) {
+            Log.d(TAG, "insert: Notify " + u);
+            contentResolver.notifyChange(GonetteContract.Partner.METADATA_CONTENT_URI, null);
+        }
 
         return newUri;
     }

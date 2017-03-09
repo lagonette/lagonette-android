@@ -164,7 +164,7 @@ public class MapsActivity
 
     private void onBottomSheetFabClick() {
         if (mIsDirectionVisible) {
-            mMapsFragment.startDirection((long) mBottomSheetFAB.getTag()); //TODO
+            mMapsFragment.startDirection((long) mBottomSheetFAB.getTag());
         } else if (BottomSheetBehavior.STATE_HIDDEN == mBottomSheetBehavior.getState()) {
             mBottomSheetManager.showFilters();
         }

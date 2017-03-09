@@ -246,6 +246,8 @@ public class MapsFragment
 
     private void onQueryPartnerLoadFinished(Cursor cursor) {
         if (cursor != null && cursor.getCount() > 0) {
+            mPartnerItems.clear();
+            mClusterManager.clearItems();
             cursor.moveToFirst();
             PartnerReader partnerReader = new PartnerReader(cursor);
             do {
@@ -257,6 +259,7 @@ public class MapsFragment
                 mPartnerItems.put(item.getId(), item);
                 mClusterManager.addItem(item);
             } while (partnerReader.moveToNext());
+            mClusterManager.cluster();
         } else if (cursor != null && BuildConfig.DEBUG) {
             GonetteDatabaseOpenHelper.parseData(getContext());
         }

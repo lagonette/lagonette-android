@@ -51,7 +51,7 @@ public class GonetteDatabaseOpenHelper
     private void createDatabase(SQLiteDatabase db) {
         Log.d(TAG, "onCreate: Create table " + Tables.PARTNER);
         db.execSQL("CREATE TABLE " + Tables.PARTNER + " ("
-                + PartnerColumns.ID + " INTEGER PRIMARY KEY, "
+                + PartnerColumns.ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
                 + PartnerColumns.NAME + " TEXT NOT NULL, "
                 + PartnerColumns.DESCRIPTION + " TEXT NOT NULL, "
                 + PartnerColumns.LATITUDE + " NUMERIC NOT NULL, "
@@ -60,7 +60,7 @@ public class GonetteDatabaseOpenHelper
 
         Log.d(TAG, "onCreate: Create table " + Tables.PARTNER_METADATA);
         db.execSQL("CREATE TABLE " + Tables.PARTNER_METADATA + " ("
-                + PartnerMetadataColumns.PARTNER_ID + " INTEGER PRIMARY KEY, "
+                + PartnerMetadataColumns.PARTNER_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
                 + PartnerMetadataColumns.IS_VISIBLE + " INTEGER NOT NULL "
                 + ")");
     }

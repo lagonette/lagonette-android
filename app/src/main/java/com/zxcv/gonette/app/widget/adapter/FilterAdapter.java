@@ -155,7 +155,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void onBindPartnerViewHolder(PartnerViewHolder holder, int position) {
         if (mPartnerReader.moveToPosition(position)) {
             holder.partnerId = mPartnerReader.getId();
+            holder.isVisible = mPartnerReader.getIsVisible();
             holder.nameTextView.setText(mPartnerReader.getName());
+            holder.itemView.setClickable(holder.isVisible);
+            if (holder.isVisible) {
+                holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
+            } else {
+                holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
+            }
         }
     }
 
@@ -170,14 +177,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public long getItemId(int position) {
         if (position == 0) {
             return HEADER_ID;
-        }
-        else if (position == getItemCount() - 1) {
+        } else if (position == getItemCount() - 1) {
             return FOOTER_ID;
-        }
-        else if (mPartnerReader.moveToPosition(position)) {
+        } else if (mPartnerReader.moveToPosition(position)) {
             return mPartnerReader.getId();
-        }
-        else {
+        } else {
             return super.getItemId(position);
         }
     }
@@ -193,6 +197,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class PartnerViewHolder extends RecyclerView.ViewHolder {
 
         public long partnerId;
+
+        public boolean isVisible;
 
         public final TextView nameTextView;
 
