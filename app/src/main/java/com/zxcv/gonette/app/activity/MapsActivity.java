@@ -29,6 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 public class MapsActivity
         extends AppCompatActivity
         implements MapsFragment.Callback,
+        FiltersFragment.Callback,
         ParallaxBehavior.OnParallaxTranslationListener,
         View.OnClickListener {
 
@@ -163,15 +164,15 @@ public class MapsActivity
 
     private void onBottomSheetFabClick() {
         if (mIsDirectionVisible) {
-            mMapsFragment.startDirection();
+            mMapsFragment.startDirection((long) mBottomSheetFAB.getTag()); //TODO
         } else if (BottomSheetBehavior.STATE_HIDDEN == mBottomSheetBehavior.getState()) {
             mBottomSheetManager.showFilters();
         }
     }
 
     @Override
-    public void showPartner(long partnerId) {
-        mBottomSheetManager.showPartner(partnerId);
+    public void showPartner(long partnerId, boolean zoom) {
+        mBottomSheetManager.showPartner(partnerId, zoom);
     }
 
     public class BottomSheetManager extends BottomSheetBehavior.BottomSheetCallback {
@@ -189,6 +190,8 @@ public class MapsActivity
 
         private long mSelectedPartnerId = GonetteContract.NO_ID;
 
+        private boolean mZoomForPartnerId;
+
         private final float mFABElevationPrimary;
 
         private final float mFABElevationSecondary;
@@ -204,9 +207,10 @@ public class MapsActivity
                 removeBottomSheetFragment();
                 mBottomSheetType = BOTTOM_SHEET_NONE;
                 mBottomSheetFAB.setCompatElevation(mFABElevationPrimary);
+                mBottomSheetFAB.setTag(null);
                 if (mShowPartnerAfterBottomSheetClose) {
                     mShowPartnerAfterBottomSheetClose = false;
-                    showPartner(mSelectedPartnerId);
+                    showPartner(mSelectedPartnerId, mZoomForPartnerId);
                 }
             } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
                 if (mSwitchPartnerAfterBottomSheetCollapsed) {
@@ -223,20 +227,21 @@ public class MapsActivity
             }
         }
 
-        public void showPartner(long partnerId) {
+        public void showPartner(long partnerId, boolean zoom) {
             if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
                 mShowPartnerAfterBottomSheetClose = true;
                 mSelectedPartnerId = partnerId;
+                mZoomForPartnerId = zoom;
                 closeBottomSheet();
             } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
                 switchPartner(partnerId);
             } else {
-                openPartner(partnerId);
+                openPartner(partnerId, zoom);
             }
         }
 
-        public void openPartner(final long partnerId) {
-            mMapsFragment.showSelectedPartner(new GoogleMap.CancelableCallback() {
+        public void openPartner(final long partnerId, boolean zoom) {
+            mMapsFragment.showPartner(partnerId, zoom, new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
                     mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
@@ -249,6 +254,7 @@ public class MapsActivity
                             )
                             .commit();
                     anchorBottomSheetFab();
+                    mBottomSheetFAB.setTag(partnerId);
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     mBottomSheetType = BOTTOM_SHEET_PARTNER;
                 }
@@ -278,7 +284,7 @@ public class MapsActivity
                                 PartnerDetailFragment.TAG
                         )
                         .commit();
-                mMapsFragment.showSelectedPartner(null);
+                mMapsFragment.showPartner(partnerId, false, null);
                 mBottomSheetType = BOTTOM_SHEET_PARTNER;
             }
         }

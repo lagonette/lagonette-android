@@ -26,6 +26,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final String TAG = "FilterAdapter";
 
+    private static final int HEADER_ID = -2;
+
+    private static final int FOOTER_ID = -3;
+
     @Nullable
     private PartnerReader mPartnerReader;
 
@@ -150,6 +154,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void onBindPartnerViewHolder(PartnerViewHolder holder, int position) {
         if (mPartnerReader.moveToPosition(position)) {
+            holder.partnerId = mPartnerReader.getId();
             holder.nameTextView.setText(mPartnerReader.getName());
         }
     }
@@ -161,6 +166,22 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 : 0;
     }
 
+    @Override
+    public long getItemId(int position) {
+        if (position == 0) {
+            return HEADER_ID;
+        }
+        else if (position == getItemCount() - 1) {
+            return FOOTER_ID;
+        }
+        else if (mPartnerReader.moveToPosition(position)) {
+            return mPartnerReader.getId();
+        }
+        else {
+            return super.getItemId(position);
+        }
+    }
+
     public void setPartnerReader(PartnerReader partnerReader) {
         if (mPartnerReader == partnerReader) {
             return;
@@ -170,6 +191,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public class PartnerViewHolder extends RecyclerView.ViewHolder {
+
+        public long partnerId;
 
         public final TextView nameTextView;
 

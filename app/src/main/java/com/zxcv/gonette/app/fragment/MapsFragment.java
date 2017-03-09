@@ -45,6 +45,8 @@ import com.zxcv.gonette.util.UiUtil;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapsFragment
         extends Fragment
@@ -62,7 +64,7 @@ public class MapsFragment
 
         void showMyLocationButton();
 
-        void showPartner(long partnerId);
+        void showPartner(long partnerId, boolean zoom);
 
         void showFullMap();
 
@@ -98,7 +100,9 @@ public class MapsFragment
 
     private Callback mCallback;
 
-    private PartnerItem mSelectedPartnerItem;
+//    private PartnerItem mSelectedPartnerItem;
+
+    private Map<Long, PartnerItem> mPartnerItems;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -122,6 +126,8 @@ public class MapsFragment
         }
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
+
+        mPartnerItems = new HashMap<>();
     }
 
     @Nullable
@@ -169,12 +175,14 @@ public class MapsFragment
         updateLocationUI();
 
         mClusterManager = new ClusterManager<>(getContext(), mMap);
-        mClusterManager.setRenderer(new PartnerRenderer(
-                getContext(),
-                LayoutInflater.from(getContext()),
-                mMap,
-                mClusterManager
-        ));
+        mClusterManager.setRenderer(
+                new PartnerRenderer(
+                        getContext(),
+                        LayoutInflater.from(getContext()),
+                        mMap,
+                        mClusterManager
+                )
+        );
         mMap.setOnMapClickListener(MapsFragment.this);
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
@@ -246,6 +254,7 @@ public class MapsFragment
                         partnerReader.getLatitude(),
                         partnerReader.getLongitude()
                 );
+                mPartnerItems.put(item.getId(), item);
                 mClusterManager.addItem(item);
             } while (partnerReader.moveToNext());
         } else if (cursor != null && BuildConfig.DEBUG) {
@@ -267,7 +276,7 @@ public class MapsFragment
 
     @Override
     public boolean onClusterClick(Cluster<PartnerItem> cluster) {
-        mSelectedPartnerItem = null;
+//        mSelectedPartnerItem = null;
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         cluster.getPosition(),
@@ -282,14 +291,14 @@ public class MapsFragment
 
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
-        mSelectedPartnerItem = partnerItem;
-        mCallback.showPartner(partnerItem.getId());
+//        mSelectedPartnerItem = partnerItem;
+        mCallback.showPartner(partnerItem.getId(), false);
         return true;
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
-        mSelectedPartnerItem = null;
+//        mSelectedPartnerItem = null;
         mCallback.showFullMap();
     }
 
@@ -322,18 +331,26 @@ public class MapsFragment
         }
     }
 
-    public void showSelectedPartner(GoogleMap.CancelableCallback callback) {
-        if (mSelectedPartnerItem != null) {
-            mMap.animateCamera(
-                    CameraUpdateFactory.newLatLng(
-                            new LatLng(
-                                    mSelectedPartnerItem.getPosition().latitude,
-                                    mSelectedPartnerItem.getPosition().longitude
-                            )
-                    ),
-                    ANIMATION_LENGTH_SHORT,
-                    callback
+    public void showPartner(long id, boolean zoom, GoogleMap.CancelableCallback callback) {
+        PartnerItem partnerItem = mPartnerItems.get(id);
+        if (partnerItem != null) {
+            LatLng latLng = new LatLng(
+                    partnerItem.getPosition().latitude,
+                    partnerItem.getPosition().longitude
             );
+            if (zoom) {
+                mMap.animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
+                        ANIMATION_LENGTH_LONG,
+                        callback
+                );
+            } else {
+                mMap.animateCamera(
+                        CameraUpdateFactory.newLatLng(latLng),
+                        ANIMATION_LENGTH_SHORT,
+                        callback
+                );
+            }
         }
     }
 
@@ -422,11 +439,12 @@ public class MapsFragment
         }
     }
 
-    public void startDirection() {
-        if (mSelectedPartnerItem != null) {
+    public void startDirection(long partnerId) {
+        PartnerItem partnerItem = mPartnerItems.get(partnerId);
+        if (partnerItem != null) {
             Intent intent = new Intent(
                     android.content.Intent.ACTION_VIEW,
-                    Uri.parse("google.navigation:q=" + mSelectedPartnerItem.getPosition().latitude + "," + mSelectedPartnerItem.getPosition().longitude)
+                    Uri.parse("google.navigation:q=" + partnerItem.getPosition().latitude + "," + partnerItem.getPosition().longitude)
             );
             startActivity(intent);
         }

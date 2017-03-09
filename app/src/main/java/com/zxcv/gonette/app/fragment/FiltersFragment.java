@@ -9,7 +9,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,15 @@ public class FiltersFragment
         extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, FilterAdapter.OnPartnerClickListener {
 
+    public interface Callback {
+
+        void showPartner(long partnerId, boolean zoom);
+
+    }
+
     public static final String TAG = "FiltersFragment";
+
+    private Callback mCallback;
 
     private RecyclerView mFilterList;
 
@@ -50,6 +57,7 @@ public class FiltersFragment
         super.onActivityCreated(savedInstanceState);
 
         mFilterAdapter = new FilterAdapter(FiltersFragment.this);
+        mFilterAdapter.setHasStableIds(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getContext(),
@@ -60,12 +68,18 @@ public class FiltersFragment
         mFilterList.setLayoutManager(layoutManager);
         mFilterList.setAdapter(mFilterAdapter);
 
+        try {
+            mCallback = (Callback) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
+        }
+
         queryPartners();
     }
 
     @Override
     public void onPartnerClick(FilterAdapter.PartnerViewHolder holder) {
-
+        mCallback.showPartner(holder.partnerId, true);
     }
 
     @Override
