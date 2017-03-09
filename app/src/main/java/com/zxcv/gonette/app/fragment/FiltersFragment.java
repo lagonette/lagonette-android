@@ -111,12 +111,11 @@ public class FiltersFragment
     }
 
     private void insertPartnerVisibility(long partnerId, boolean isVisible) {
-        InsertPartnerVisibilityLoader.initLoader(
-                getLoaderManager(),
-                mBundleLoaderCallbacks,
+        Bundle args = InsertPartnerVisibilityLoader.getArgs(
                 partnerId,
                 isVisible
         );
+        getLoaderManager().initLoader(R.id.loader_insert_partner_visibility, args, mBundleLoaderCallbacks);
     }
 
     @Override

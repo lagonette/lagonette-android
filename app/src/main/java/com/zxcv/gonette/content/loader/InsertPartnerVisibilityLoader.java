@@ -28,11 +28,12 @@ public class InsertPartnerVisibilityLoader extends BundleLoader {
 
     private long mPartnerId;
 
-    public static void initLoader(@NonNull LoaderManager loaderManager, @NonNull LoaderManager.LoaderCallbacks<Bundle> loaderCallbacks, long partnerId, boolean isVisible) {
+    @NonNull
+    public static Bundle getArgs(long partnerId, boolean isVisible) {
         Bundle args = new Bundle(2);
         args.putLong(ARG_PARTNER_ID, partnerId);
         args.putBoolean(ARG_IS_VISIBLE, isVisible);
-        loaderManager.initLoader(R.id.loader_insert_partner_visibility, args, loaderCallbacks);
+        return args;
     }
 
     public InsertPartnerVisibilityLoader(Context context, Bundle args) {
