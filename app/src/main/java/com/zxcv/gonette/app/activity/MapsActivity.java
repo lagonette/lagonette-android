@@ -54,6 +54,8 @@ public class MapsActivity
 
     private View mBottomSheet;
 
+    private View mContentView;
+
     private FloatingActionButton mMyLocationFAB;
 
     private FloatingActionButton mBottomSheetFAB;
@@ -93,9 +95,7 @@ public class MapsActivity
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         mBottomSheetBehavior.setBottomSheetCallback(mBottomSheetManager);
 
-        View content = findViewById(R.id.content);
-        ParallaxBehavior<View> parallaxBehavior = ParallaxBehavior.from(content);
-        parallaxBehavior.setOnParallaxTranslationListener(MapsActivity.this);
+        mContentView = findViewById(R.id.content);
     }
 
     private void onViewCreated() {
@@ -132,6 +132,12 @@ public class MapsActivity
     @Override
     public void showFullMap() {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    @Override
+    public void onMapReady() {
+        ParallaxBehavior<View> parallaxBehavior = ParallaxBehavior.from(mContentView);
+        parallaxBehavior.setOnParallaxTranslationListener(MapsActivity.this);
     }
 
     private void removeBottomSheetFragment() {

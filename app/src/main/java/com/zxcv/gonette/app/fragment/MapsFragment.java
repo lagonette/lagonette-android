@@ -68,6 +68,8 @@ public class MapsFragment
 
         void showFullMap();
 
+        void onMapReady();
+
     }
 
     private Location mLastLocation;
@@ -162,6 +164,7 @@ public class MapsFragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mCallback.onMapReady();
         setupMap();
         setupFootprint();
         queryPartners();
