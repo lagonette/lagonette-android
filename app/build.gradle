@@ -18,12 +18,14 @@ android {
             buildConfigField "String", "CONTENT_AUTHORITY", "\"${defaultConfig.applicationId}${applicationIdSuffix}.content\""
 
             buildConfigField "boolean", "LOG_SQL", "true"
+            buildConfigField "boolean", "INSERT_DATA", "false"
         }
         release {
 
             buildConfigField "String", "CONTENT_AUTHORITY", "\"${defaultConfig.applicationId}.content\""
 
             buildConfigField "boolean", "LOG_SQL", "false"
+            buildConfigField "boolean", "INSERT_DATA", "false"
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

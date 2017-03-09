@@ -260,7 +260,7 @@ public class MapsFragment
                 mClusterManager.addItem(item);
             } while (partnerReader.moveToNext());
             mClusterManager.cluster();
-        } else if (cursor != null && BuildConfig.DEBUG) {
+        } else if (cursor != null && BuildConfig.INSERT_DATA) {
             GonetteDatabaseOpenHelper.parseData(getContext());
         }
     }
