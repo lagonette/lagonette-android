@@ -20,9 +20,9 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:src="@drawable/ic_visibility_accent_24dp"/>
 
@@ -39,10 +39,14 @@
         tools:text="AlterConso"/>
 
     <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="center_vertical"
-        android:layout_margin="12dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:padding="12dp"
         android:src="@drawable/ic_arrow_forward_grey_24dp"/>
 
 </LinearLayout>

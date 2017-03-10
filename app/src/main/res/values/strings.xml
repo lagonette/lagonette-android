@@ -4,4 +4,6 @@
 
     <string name="row_partners">Partenaires</string>
 
+    <string name="hint_search">Rechercher...</string>
+
 </resources>

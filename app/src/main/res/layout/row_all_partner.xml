@@ -6,6 +6,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_row_header"
                 android:elevation="4dp"
                 android:minHeight="48dp"
@@ -20,9 +21,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:src="@drawable/ic_visibility_accent_24dp"/>
 
@@ -36,9 +37,9 @@
         android:layout_alignParentTop="true"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:src="@drawable/ic_expand_less_grey_24dp"/>
 
     <TextView

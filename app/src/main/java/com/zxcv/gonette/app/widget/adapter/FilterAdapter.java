@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -32,11 +33,15 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final int LOADING_ID = -4;
 
+    private static final int SEARCH_ID = -5;
+
     private static final int HEADER_COUNT = 1;
 
     private static final int FOOTER_COUNT = 1;
 
     private static final int LOADING_COUNT = 1;
+
+    private static final int SEARCH_COUNT = 1;
 
     @Nullable
     private PartnerReader mPartnerReader;
@@ -54,59 +59,70 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public int getItemViewType(int position) {
-
+    public int getItemCount() {
         if (mPartnersVisibilityReader == null) {
-            return R.id.view_type_loading;
+            return SEARCH_COUNT + LOADING_COUNT;
         } else if (mPartnerReader == null) {
-            if (position < HEADER_COUNT) {
-                return R.id.view_type_partner_all;
-            } else {
-                return R.id.view_type_loading;
-            }
+            return SEARCH_COUNT + HEADER_COUNT + LOADING_COUNT;
         } else {
-            if (position < HEADER_COUNT) {
-                return R.id.view_type_partner_all;
-            } else if (position - HEADER_COUNT < getPartnerCount()) {
-                return R.id.view_type_partner;
-            } else {
-                return R.id.view_type_footer;
-            }
+            return SEARCH_COUNT + HEADER_COUNT + getPartnerCount() + FOOTER_COUNT;
         }
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemViewType(int position) {
+        if (position < SEARCH_COUNT) {
+            return R.id.view_type_search;
+        }
+        position -= SEARCH_COUNT;
+
         if (mPartnersVisibilityReader == null) {
-            return LOADING_COUNT;
-        } else if (mPartnerReader == null) {
-            return HEADER_COUNT + LOADING_COUNT;
+            return R.id.view_type_loading;
         } else {
-            return HEADER_COUNT + getPartnerCount() + FOOTER_COUNT;
+            if (position < HEADER_COUNT) {
+                return R.id.view_type_partner_all;
+            }
+            position -= HEADER_COUNT;
+
+            if (mPartnerReader == null) {
+                return R.id.view_type_loading;
+            } else {
+                if (position < getPartnerCount()) {
+                    return R.id.view_type_partner;
+                } else {
+                    return R.id.view_type_footer;
+                }
+            }
         }
     }
 
     @Override
     public long getItemId(int position) {
+        if (position < SEARCH_COUNT) {
+            return SEARCH_ID;
+        }
+        position -= SEARCH_COUNT;
+
         if (mPartnersVisibilityReader == null) {
             return LOADING_ID;
-        } else if (mPartnerReader == null) {
-            if (position < HEADER_COUNT) {
-                return HEADER_ID;
-            } else {
-                return LOADING_ID;
-            }
         } else {
             if (position < HEADER_COUNT) {
                 return HEADER_ID;
-            } else if (position - HEADER_COUNT < getPartnerCount()) {
-                if (mPartnerReader.moveToPosition(position - HEADER_COUNT)) {
-                    return mPartnerReader.getId();
-                } else {
-                    return RecyclerView.NO_ID;
-                }
+            }
+            position -= HEADER_COUNT;
+
+            if (mPartnerReader == null) {
+                return LOADING_ID;
             } else {
-                return FOOTER_ID;
+                if (position < getPartnerCount()) {
+                    if (mPartnerReader.moveToPosition(position)) {
+                        return mPartnerReader.getId();
+                    } else {
+                        return RecyclerView.NO_ID;
+                    }
+                } else {
+                    return FOOTER_ID;
+                }
             }
         }
     }
@@ -122,9 +138,23 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 return onCreateFooterViewHolder(parent);
             case R.id.view_type_loading:
                 return onCreateLoadingViewHolder(parent);
+            case R.id.view_type_search:
+                return onCreateSearchViewHolder(parent);
             default:
                 throw new IllegalArgumentException("Unknown view type:" + viewType);
         }
+    }
+
+    private SearchViewHolder onCreateSearchViewHolder(ViewGroup parent) {
+        return new SearchViewHolder(
+                LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(
+                                R.layout.row_search,
+                                parent,
+                                false
+                        )
+        );
     }
 
     private LoadingViewHolder onCreateLoadingViewHolder(ViewGroup parent) {
@@ -223,10 +253,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 onBindAllPartnerViewHolder((AllPartnerViewHolder) holder);
                 break;
             case R.id.view_type_partner:
-                onBindPartnerViewHolder((PartnerViewHolder) holder, position - 1);
+                onBindPartnerViewHolder((PartnerViewHolder) holder, position - SEARCH_COUNT - HEADER_COUNT);
                 break;
             case R.id.view_type_footer:
             case R.id.view_type_loading:
+            case R.id.view_type_search:
                 break;
             default:
                 throw new IllegalArgumentException("Unknown view type:" + viewType);
@@ -325,6 +356,16 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
             visibilityButton = (ImageButton) itemView.findViewById(R.id.partners_visibility);
             expandButton = (ImageButton) itemView.findViewById(R.id.partners_expand);
+        }
+    }
+
+    public class SearchViewHolder extends RecyclerView.ViewHolder {
+
+        public final EditText searchTextView;
+
+        public SearchViewHolder(View itemView) {
+            super(itemView);
+            searchTextView = (EditText) itemView.findViewById(R.id.search_text);
         }
     }
 
