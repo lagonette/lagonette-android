@@ -1,8 +1,11 @@
 package com.zxcv.gonette.app.widget.adapter;
 
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +21,15 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface OnPartnerClickListener {
 
-        void onPartnerClick(FilterAdapter.PartnerViewHolder holder);
+        void onPartnerClick(@NonNull FilterAdapter.PartnerViewHolder holder);
 
-        void onAllPartnerVisibilityClick(FilterAdapter.AllPartnerViewHolder holder);
+        void onAllPartnerVisibilityClick(@NonNull FilterAdapter.AllPartnerViewHolder holder);
 
-        void onPartnerVisibilityClick(FilterAdapter.PartnerViewHolder holder);
+        void onPartnerVisibilityClick(@NonNull FilterAdapter.PartnerViewHolder holder);
+
+        void onSearchTextChanged(@NonNull String search);
+
+        void onSearchClick(@NonNull SearchViewHolder tag);
     }
 
     private static final String TAG = "FilterAdapter";
@@ -145,18 +152,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private SearchViewHolder onCreateSearchViewHolder(ViewGroup parent) {
-        return new SearchViewHolder(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_search,
-                                parent,
-                                false
-                        )
-        );
-    }
-
     private LoadingViewHolder onCreateLoadingViewHolder(ViewGroup parent) {
         return new LoadingViewHolder(
                 LayoutInflater
@@ -179,6 +174,56 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 false
                         )
         );
+    }
+
+    private SearchViewHolder onCreateSearchViewHolder(ViewGroup parent) {
+        SearchViewHolder holder = new SearchViewHolder(
+                LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(
+                                R.layout.row_search,
+                                parent,
+                                false
+                        )
+        );
+
+        if (mOnPartnerClickListener != null) {
+
+            holder.searchTextView.setTag(holder);
+            holder.searchTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        mOnPartnerClickListener.onSearchClick((SearchViewHolder) v.getTag());
+                    }
+                }
+            });
+            holder.searchTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnPartnerClickListener.onSearchClick((SearchViewHolder) v.getTag());
+                }
+            });
+
+            holder.searchTextView.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    mOnPartnerClickListener.onSearchTextChanged(s.toString());
+                }
+            });
+        }
+
+        return holder;
     }
 
     private PartnerViewHolder onCreatePartnerViewHolder(ViewGroup parent) {
@@ -224,20 +269,20 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         )
         );
 
+        holder.expandButton.setTag(holder);
+        holder.expandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAllPartnerExpandClick((AllPartnerViewHolder) v.getTag());
+            }
+        });
+
         if (mOnPartnerClickListener != null) {
             holder.visibilityButton.setTag(holder);
             holder.visibilityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mOnPartnerClickListener.onAllPartnerVisibilityClick((AllPartnerViewHolder) v.getTag());
-                }
-            });
-
-            holder.expandButton.setTag(holder);
-            holder.expandButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onAllPartnerExpandClick((AllPartnerViewHolder) v.getTag());
                 }
             });
         }

@@ -2,6 +2,7 @@ package com.zxcv.gonette.app.fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -17,6 +18,7 @@ import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.widget.adapter.FilterAdapter;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.loader.InsertPartnerVisibilityLoader;
+import com.zxcv.gonette.content.loader.PartnerCursorLoaderHelper;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 
@@ -28,6 +30,9 @@ public class FiltersFragment
 
         void showPartner(long partnerId, boolean zoom);
 
+        void filterPartner(@NonNull String search);
+
+        void expandFilters();
     }
 
     public static final String TAG = "FiltersFragment";
@@ -96,18 +101,29 @@ public class FiltersFragment
     }
 
     @Override
-    public void onPartnerClick(FilterAdapter.PartnerViewHolder holder) {
+    public void onPartnerClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
         mCallback.showPartner(holder.partnerId, true);
     }
 
     @Override
-    public void onAllPartnerVisibilityClick(FilterAdapter.AllPartnerViewHolder holder) {
+    public void onAllPartnerVisibilityClick(@NonNull FilterAdapter.AllPartnerViewHolder holder) {
         insertAllPartnerVisibility(!holder.isVisible);
     }
 
     @Override
-    public void onPartnerVisibilityClick(FilterAdapter.PartnerViewHolder holder) {
+    public void onPartnerVisibilityClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
         insertPartnerVisibility(holder.partnerId, !holder.isVisible);
+    }
+
+    @Override
+    public void onSearchTextChanged(@NonNull String search) {
+        queryPartners(search);
+        mCallback.filterPartner(search);
+    }
+
+    @Override
+    public void onSearchClick(@NonNull FilterAdapter.SearchViewHolder tag) {
+        mCallback.expandFilters();
     }
 
     private void insertPartnerVisibility(long partnerId, boolean isVisible) {
@@ -136,6 +152,7 @@ public class FiltersFragment
     }
 
     private Loader<Cursor> onCreateQueryPartnersLoader(Bundle args) {
+        String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoader(
                 getContext(),
                 GonetteContract.Partner.METADATA_CONTENT_URI,
@@ -144,8 +161,10 @@ public class FiltersFragment
                         GonetteContract.Partner.NAME,
                         GonetteContract.PartnerMetadata.IS_VISIBLE
                 },
-                null,
-                null,
+                GonetteContract.Partner.NAME + " LIKE ?",
+                new String[] {
+                        "%" + search + "%"
+                },
                 GonetteContract.Partner.NAME + " ASC"
         );
     }
@@ -214,6 +233,15 @@ public class FiltersFragment
     private void queryPartners() {
         LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(R.id.loader_query_filters_partners, null, FiltersFragment.this);
+    }
+
+    private void queryPartners(@NonNull String search) {
+        LoaderManager loaderManager = getLoaderManager();
+        loaderManager.restartLoader(
+                R.id.loader_query_filters_partners,
+                PartnerCursorLoaderHelper.getArgs(search),
+                FiltersFragment.this
+        );
     }
 
     private void queryPartnersVisibility() {

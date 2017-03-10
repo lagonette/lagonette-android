@@ -187,6 +187,16 @@ public class MapsActivity
         mBottomSheetManager.showPartner(partnerId, zoom);
     }
 
+    @Override
+    public void filterPartner(@NonNull String search) {
+        mMapsFragment.filterPartner(search);
+    }
+
+    @Override
+    public void expandFilters() {
+        mBottomSheetManager.expandFilters();
+    }
+
     public class BottomSheetManager extends BottomSheetBehavior.BottomSheetCallback {
 
         @BottomSheetType
@@ -304,6 +314,12 @@ public class MapsActivity
         public void showFilters() {
             if (mBottomSheetType == BOTTOM_SHEET_NONE) {
                 openFilters();
+            }
+        }
+
+        public void expandFilters() {
+            if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         }
 

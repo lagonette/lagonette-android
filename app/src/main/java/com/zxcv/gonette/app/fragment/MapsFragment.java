@@ -32,14 +32,12 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
-import com.zxcv.gonette.BuildConfig;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.widget.maps.PartnerItem;
 import com.zxcv.gonette.app.widget.maps.PartnerRenderer;
-import com.zxcv.gonette.content.GonetteContentProviderHelper;
 import com.zxcv.gonette.content.contract.GonetteContract;
+import com.zxcv.gonette.content.loader.PartnerCursorLoaderHelper;
 import com.zxcv.gonette.content.reader.PartnerReader;
-import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
 import com.zxcv.gonette.util.UiUtil;
 
 import org.json.JSONException;
@@ -101,8 +99,6 @@ public class MapsFragment
     private int mStatusBarHeight;
 
     private Callback mCallback;
-
-//    private PartnerItem mSelectedPartnerItem;
 
     private Map<Long, PartnerItem> mPartnerItems;
 
@@ -198,6 +194,15 @@ public class MapsFragment
         loaderManager.initLoader(R.id.loader_query_map_partners, null, MapsFragment.this);
     }
 
+    private void queryPartners(@NonNull String search) {
+        LoaderManager loaderManager = getLoaderManager();
+        loaderManager.restartLoader(
+                R.id.loader_query_map_partners,
+                PartnerCursorLoaderHelper.getArgs(search),
+                MapsFragment.this
+        );
+    }
+
     private void setupFootprint() {
         try {
             GeoJsonLayer footprintLayer = new GeoJsonLayer(mMap, R.raw.footprint, getContext());
@@ -216,6 +221,7 @@ public class MapsFragment
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case R.id.loader_query_map_partners:
+                String search = PartnerCursorLoaderHelper.getSearch(args);
                 return new CursorLoader(
                         getContext(),
                         GonetteContract.Partner.METADATA_CONTENT_URI,
@@ -226,8 +232,11 @@ public class MapsFragment
                                 GonetteContract.Partner.LATITUDE,
                                 GonetteContract.Partner.LONGITUDE
                         },
-                        GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1",
-                        null,
+                        GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1 AND " + GonetteContract.Partner.NAME + " LIKE ?",
+
+                        new String[] {
+                                "%" + search + "%"
+                        },
                         null
                 );
             default:
@@ -281,7 +290,6 @@ public class MapsFragment
 
     @Override
     public boolean onClusterClick(Cluster<PartnerItem> cluster) {
-//        mSelectedPartnerItem = null;
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         cluster.getPosition(),
@@ -296,14 +304,12 @@ public class MapsFragment
 
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
-//        mSelectedPartnerItem = partnerItem;
         mCallback.showPartner(partnerItem.getId(), false);
         return true;
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
-//        mSelectedPartnerItem = null;
         mCallback.showFullMap();
     }
 
@@ -453,6 +459,10 @@ public class MapsFragment
             );
             startActivity(intent);
         }
+    }
+
+    public void filterPartner(@NonNull String search) {
+        queryPartners(search);
     }
 
 }
