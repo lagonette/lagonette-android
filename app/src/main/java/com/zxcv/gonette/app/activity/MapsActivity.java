@@ -35,6 +35,8 @@ public class MapsActivity
         ParallaxBehavior.OnParallaxTranslationListener,
         View.OnClickListener {
 
+    private static final String STATE_SEARCH = "state:search";
+
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({BOTTOM_SHEET_NONE, BOTTOM_SHEET_PARTNER, BOTTOM_SHEET_FILTERS})
     public @interface BottomSheetType {
@@ -67,6 +69,9 @@ public class MapsActivity
     private boolean mIsDirectionVisible = false;
 
     private BottomSheetManager mBottomSheetManager;
+
+    @NonNull
+    private String mCurrentSearch = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +107,13 @@ public class MapsActivity
         if (BuildConfig.INSERT_DATA) {
             GonetteDatabaseOpenHelper.parseData(MapsActivity.this);
         }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentSearch = savedInstanceState.getString(STATE_SEARCH, FiltersFragment.DEFAULT_SEARCH);
+        mBottomSheetManager.onRestoreInstanceState(savedInstanceState);
     }
 
     private void onViewCreated() {
@@ -189,7 +201,15 @@ public class MapsActivity
 
     @Override
     public void filterPartner(@NonNull String search) {
-        mMapsFragment.filterPartner(search);
+        mCurrentSearch = search;
+        mMapsFragment.filterPartner(mCurrentSearch);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(STATE_SEARCH, mCurrentSearch);
+        mBottomSheetManager.onSaveInstanceState(outState);
     }
 
     @Override
@@ -198,6 +218,8 @@ public class MapsActivity
     }
 
     public class BottomSheetManager extends BottomSheetBehavior.BottomSheetCallback {
+
+        public static final String STATE_BOTTOM_SHEET_TYPE = "state:bottom_sheet_type";
 
         @BottomSheetType
         private int mBottomSheetType = BOTTOM_SHEET_NONE;
@@ -221,6 +243,15 @@ public class MapsActivity
         public BottomSheetManager(@NonNull Resources resources) {
             mFABElevationPrimary = resources.getDimension(R.dimen.fab_elevation_primary);
             mFABElevationSecondary = resources.getDimension(R.dimen.fab_elevation_secondary);
+        }
+
+        public void onSaveInstanceState(@NonNull Bundle outState) {
+            outState.putInt(STATE_BOTTOM_SHEET_TYPE, mBottomSheetType);
+        }
+
+        public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+            //noinspection WrongConstant
+            mBottomSheetType = savedInstanceState.getInt(STATE_BOTTOM_SHEET_TYPE, BOTTOM_SHEET_NONE);
         }
 
         @Override
@@ -324,7 +355,7 @@ public class MapsActivity
         }
 
         private void openFilters() {
-            mBottomSheetFragment = FiltersFragment.newInstance();
+            mBottomSheetFragment = FiltersFragment.newInstance(mCurrentSearch);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(

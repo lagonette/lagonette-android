@@ -61,8 +61,12 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private boolean mIsExpanded = true;
 
-    public FilterAdapter(@Nullable OnPartnerClickListener onPartnerClickListener) {
+    @Nullable
+    private String mInitSearch;
+
+    public FilterAdapter(@Nullable OnPartnerClickListener onPartnerClickListener, @NonNull String search) {
         mOnPartnerClickListener = onPartnerClickListener;
+        mInitSearch = search;
     }
 
     @Override
@@ -300,16 +304,25 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case R.id.view_type_partner:
                 onBindPartnerViewHolder((PartnerViewHolder) holder, position - SEARCH_COUNT - HEADER_COUNT);
                 break;
+            case R.id.view_type_search:
+                onBindSearchViewHolder((SearchViewHolder) holder);
+                break;
             case R.id.view_type_footer:
             case R.id.view_type_loading:
-            case R.id.view_type_search:
                 break;
             default:
                 throw new IllegalArgumentException("Unknown view type:" + viewType);
         }
     }
 
-    private void onBindAllPartnerViewHolder(AllPartnerViewHolder holder) {
+    private void onBindSearchViewHolder(@NonNull SearchViewHolder holder) {
+        if (mInitSearch != null) {
+            holder.searchTextView.setText(mInitSearch);
+            mInitSearch = null;
+        }
+    }
+
+    private void onBindAllPartnerViewHolder(@NonNull AllPartnerViewHolder holder) {
         if (mPartnersVisibilityReader.moveToFirst()) {
             holder.isVisible = mPartnersVisibilityReader.getPartnersVisibilityCount() > 0;
             if (holder.isVisible) {
@@ -327,7 +340,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private void onBindPartnerViewHolder(PartnerViewHolder holder, int position) {
+    private void onBindPartnerViewHolder(@NonNull PartnerViewHolder holder, int position) {
         if (mPartnerReader.moveToPosition(position)) {
             holder.partnerId = mPartnerReader.getId();
             holder.isVisible = mPartnerReader.getIsVisible();
@@ -341,7 +354,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private void onAllPartnerExpandClick(AllPartnerViewHolder holder) {
+    private void onAllPartnerExpandClick(@NonNull AllPartnerViewHolder holder) {
         mIsExpanded = !mIsExpanded;
         notifyDataSetChanged();
     }

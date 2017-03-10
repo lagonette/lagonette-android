@@ -35,6 +35,12 @@ public class FiltersFragment
         void expandFilters();
     }
 
+    private static final String STATE_SEARCH = "state:search";
+
+    private static final String ARG_SEARCH = "arg:search";
+
+    public static final String DEFAULT_SEARCH = "";
+
     public static final String TAG = "FiltersFragment";
 
     private Callback mCallback;
@@ -42,6 +48,9 @@ public class FiltersFragment
     private RecyclerView mFilterList;
 
     private FilterAdapter mFilterAdapter;
+
+    @NonNull
+    private String mCurrentSearch = "";
 
     private LoaderManager.LoaderCallbacks<Bundle> mBundleLoaderCallbacks = new LoaderManager.LoaderCallbacks<Bundle>() {
         @Override
@@ -60,8 +69,26 @@ public class FiltersFragment
         }
     };
 
-    public static FiltersFragment newInstance() {
-        return new FiltersFragment();
+    public static FiltersFragment newInstance(@NonNull String search) {
+        Bundle args = new Bundle(1);
+        args.putString(ARG_SEARCH, search);
+        FiltersFragment fragment = new FiltersFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mCurrentSearch = savedInstanceState.getString(STATE_SEARCH, DEFAULT_SEARCH);
+        }
+        else {
+            Bundle arguments = getArguments();
+            if (arguments != null) {
+                mCurrentSearch = arguments.getString(ARG_SEARCH, DEFAULT_SEARCH);
+            }
+        }
     }
 
     @Nullable
@@ -79,7 +106,7 @@ public class FiltersFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mFilterAdapter = new FilterAdapter(FiltersFragment.this);
+        mFilterAdapter = new FilterAdapter(FiltersFragment.this, mCurrentSearch);
         mFilterAdapter.setHasStableIds(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
@@ -101,6 +128,12 @@ public class FiltersFragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(STATE_SEARCH, mCurrentSearch);
+    }
+
+    @Override
     public void onPartnerClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
         mCallback.showPartner(holder.partnerId, true);
     }
@@ -117,8 +150,11 @@ public class FiltersFragment
 
     @Override
     public void onSearchTextChanged(@NonNull String search) {
-        queryPartners(search);
-        mCallback.filterPartner(search);
+        if (!mCurrentSearch.equals(search)) {
+            mCurrentSearch = search;
+            queryPartners();
+            mCallback.filterPartner(search);
+        }
     }
 
     @Override
@@ -232,14 +268,9 @@ public class FiltersFragment
 
     private void queryPartners() {
         LoaderManager loaderManager = getLoaderManager();
-        loaderManager.initLoader(R.id.loader_query_filters_partners, null, FiltersFragment.this);
-    }
-
-    private void queryPartners(@NonNull String search) {
-        LoaderManager loaderManager = getLoaderManager();
         loaderManager.restartLoader(
                 R.id.loader_query_filters_partners,
-                PartnerCursorLoaderHelper.getArgs(search),
+                PartnerCursorLoaderHelper.getArgs(mCurrentSearch),
                 FiltersFragment.this
         );
     }
