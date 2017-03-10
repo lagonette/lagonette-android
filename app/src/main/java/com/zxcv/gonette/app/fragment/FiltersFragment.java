@@ -93,7 +93,6 @@ public class FiltersFragment
         }
 
         queryPartnersVisibility();
-        queryPartners();
     }
 
     @Override
@@ -194,6 +193,7 @@ public class FiltersFragment
                 cursor != null
                         ? new PartnersVisibilityReader(cursor)
                         : null);
+        queryPartners();
     }
 
     @Override

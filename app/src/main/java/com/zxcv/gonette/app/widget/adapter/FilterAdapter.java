@@ -30,6 +30,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final int FOOTER_ID = -3;
 
+    private static final int LOADING_ID = -4;
+
+    private static final int HEADER_COUNT = 1;
+
+    private static final int FOOTER_COUNT = 1;
+
+    private static final int LOADING_COUNT = 1;
+
     @Nullable
     private PartnerReader mPartnerReader;
 
@@ -45,11 +53,60 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0
-                ? R.id.view_type_partner_all
-                : position == getItemCount() - 1
-                ? R.id.view_type_footer
-                : R.id.view_type_partner;
+
+        if (mPartnersVisibilityReader == null) {
+            return R.id.view_type_loading;
+        } else if (mPartnerReader == null) {
+            if (position < HEADER_COUNT) {
+                return R.id.view_type_partner_all;
+            } else {
+                return R.id.view_type_loading;
+            }
+        } else {
+            if (position < HEADER_COUNT) {
+                return R.id.view_type_partner_all;
+            } else if (position - HEADER_COUNT < mPartnerReader.getCount()) {
+                return R.id.view_type_partner;
+            } else {
+                return R.id.view_type_footer;
+            }
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (mPartnersVisibilityReader == null) {
+            return LOADING_COUNT;
+        } else if (mPartnerReader == null) {
+            return HEADER_COUNT + LOADING_COUNT;
+        } else {
+            return HEADER_COUNT + mPartnerReader.getCount() + FOOTER_COUNT;
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (mPartnersVisibilityReader == null) {
+            return LOADING_ID;
+        } else if (mPartnerReader == null) {
+            if (position < HEADER_COUNT) {
+                return HEADER_ID;
+            } else {
+                return LOADING_ID;
+            }
+        } else {
+            if (position < HEADER_COUNT) {
+                return HEADER_ID;
+            } else if (position - HEADER_COUNT < mPartnerReader.getCount()) {
+                if (mPartnerReader.moveToPosition(position - HEADER_COUNT)) {
+                    return mPartnerReader.getId();
+                } else {
+                    return RecyclerView.NO_ID;
+                }
+            } else {
+                return FOOTER_ID;
+            }
+        }
     }
 
     @Override
@@ -61,9 +118,23 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 return onCreatePartnerViewHolder(parent);
             case R.id.view_type_footer:
                 return onCreateFooterViewHolder(parent);
+            case R.id.view_type_loading:
+                return onCreateLoadingViewHolder(parent);
             default:
                 throw new IllegalArgumentException("Unknown view type:" + viewType);
         }
+    }
+
+    private LoadingViewHolder onCreateLoadingViewHolder(ViewGroup parent) {
+        return new LoadingViewHolder(
+                LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(
+                                R.layout.row_loading,
+                                parent,
+                                false
+                        )
+        );
     }
 
     private FooterViewHolder onCreateFooterViewHolder(ViewGroup parent) {
@@ -139,19 +210,20 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         int viewType = holder.getItemViewType();
         switch (viewType) {
             case R.id.view_type_partner_all:
-                onBindAllPartnerViewHolder((AllPartnerViewHolder) holder, position);
+                onBindAllPartnerViewHolder((AllPartnerViewHolder) holder);
                 break;
             case R.id.view_type_partner:
                 onBindPartnerViewHolder((PartnerViewHolder) holder, position - 1);
                 break;
             case R.id.view_type_footer:
+            case R.id.view_type_loading:
                 break;
             default:
                 throw new IllegalArgumentException("Unknown view type:" + viewType);
         }
     }
 
-    private void onBindAllPartnerViewHolder(AllPartnerViewHolder holder, int position) {
+    private void onBindAllPartnerViewHolder(AllPartnerViewHolder holder) {
         if (mPartnersVisibilityReader.moveToFirst()) {
             holder.isVisible = mPartnersVisibilityReader.getPartnersVisibilityCount() > 0;
             if (holder.isVisible) {
@@ -173,26 +245,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             } else {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
             }
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return mPartnerReader != null
-                ? 1 + mPartnerReader.getCount() + 1
-                : 0;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        if (position == 0) {
-            return HEADER_ID;
-        } else if (position == getItemCount() - 1) {
-            return FOOTER_ID;
-        } else if (mPartnerReader.moveToPosition(position)) {
-            return mPartnerReader.getId();
-        } else {
-            return super.getItemId(position);
         }
     }
 
@@ -244,6 +296,13 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class FooterViewHolder extends RecyclerView.ViewHolder {
 
         public FooterViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public class LoadingViewHolder extends RecyclerView.ViewHolder {
+
+        public LoadingViewHolder(View itemView) {
             super(itemView);
         }
     }

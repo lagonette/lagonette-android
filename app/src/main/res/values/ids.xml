@@ -15,5 +15,6 @@
     <item name="view_type_partner_all" type="id"/>
     <item name="view_type_partner" type="id"/>
     <item name="view_type_footer" type="id"/>
+    <item name="view_type_loading" type="id"/>
 
 </resources>
