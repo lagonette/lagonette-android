@@ -23,6 +23,8 @@ public class PartnerJsonParser
 
     private JsonParser mGeometryJsonParser;
 
+    private long currentPartnerId = 0;
+
     public PartnerJsonParser(
             @NonNull List<ContentProviderOperation> operations,
             @NonNull ContentValues partnerContentValues,
@@ -45,6 +47,22 @@ public class PartnerJsonParser
         } else {
             return false;
         }
+    }
+
+    @Override
+    protected void onAddOperations() {
+        mContentValues.put(GonetteContract.Partner.ID, currentPartnerId);
+        super.onAddOperations();
+        mContentValues.clear();
+        mContentValues.put(GonetteContract.PartnerMetadata.PARTNER_ID, currentPartnerId);
+        mContentValues.put(GonetteContract.PartnerMetadata.IS_VISIBLE, true);
+        mOperations.add(
+                ContentProviderOperation.newInsert(GonetteContract.PartnerMetadata.CONTENT_URI)
+                        .withValues(mContentValues)
+                        .withYieldAllowed(true)
+                        .build()
+        );
+        currentPartnerId++;
     }
 
 }

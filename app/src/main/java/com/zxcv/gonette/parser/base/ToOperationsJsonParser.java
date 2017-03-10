@@ -33,8 +33,16 @@ public abstract class ToOperationsJsonParser
 
     @Override
     public void parse(@NonNull JsonReader jsonReader) throws IOException {
-        mContentValues.clear();
+        onClearContentValues();
         super.parse(jsonReader);
+        onAddOperations();
+    }
+
+    protected void onClearContentValues() {
+        mContentValues.clear();
+    }
+
+    protected void onAddOperations() {
         mOperations.add(
                 ContentProviderOperation
                         .newInsert(mUri)

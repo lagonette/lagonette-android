@@ -135,7 +135,7 @@ public class FiltersFragment
                 new String[]{
                         GonetteContract.Partner.ID,
                         GonetteContract.Partner.NAME,
-                        GonetteContentProviderHelper.getIsVisibleProjection()
+                        GonetteContract.PartnerMetadata.IS_VISIBLE
                 },
                 null,
                 null,

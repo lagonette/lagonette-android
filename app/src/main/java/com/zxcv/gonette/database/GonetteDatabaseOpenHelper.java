@@ -93,6 +93,17 @@ public class GonetteDatabaseOpenHelper
         );
 
         try {
+            operations.add(
+                    ContentProviderOperation.newDelete(GonetteContract.Partner.CONTENT_URI)
+                    .withYieldAllowed(true)
+                    .build()
+            );
+            operations.add(
+                    ContentProviderOperation.newDelete(GonetteContract.PartnerMetadata.CONTENT_URI)
+                    .withYieldAllowed(true)
+                    .build()
+            );
+
             InputStream inputStream = context.getResources().openRawResource(R.raw.gonette);
             JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream));
             partnersJsonParser.parse(jsonReader);

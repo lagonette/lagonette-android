@@ -226,7 +226,7 @@ public class MapsFragment
                                 GonetteContract.Partner.LATITUDE,
                                 GonetteContract.Partner.LONGITUDE
                         },
-                        GonetteContentProviderHelper.getIsVisibleSelection(),
+                        GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1",
                         null,
                         null
                 );
