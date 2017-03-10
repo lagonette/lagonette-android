@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.widget.adapter.FilterAdapter;
-import com.zxcv.gonette.content.GonetteContentProviderHelper;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.loader.InsertPartnerVisibilityLoader;
 import com.zxcv.gonette.content.reader.PartnerReader;
+import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 
 public class FiltersFragment
         extends Fragment
@@ -92,6 +92,7 @@ public class FiltersFragment
             throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
         }
 
+        queryPartnersVisibility();
         queryPartners();
     }
 
@@ -102,7 +103,7 @@ public class FiltersFragment
 
     @Override
     public void onAllPartnerVisibilityClick(FilterAdapter.AllPartnerViewHolder holder) {
-
+        insertAllPartnerVisibility(!holder.isVisible);
     }
 
     @Override
@@ -118,11 +119,18 @@ public class FiltersFragment
         getLoaderManager().initLoader(R.id.loader_insert_partner_visibility, args, mBundleLoaderCallbacks);
     }
 
+    private void insertAllPartnerVisibility(boolean isVisible) {
+        Bundle args = InsertPartnerVisibilityLoader.getArgs(isVisible);
+        getLoaderManager().initLoader(R.id.loader_insert_partner_visibility, args, mBundleLoaderCallbacks);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case R.id.loader_query_filters_partners:
                 return onCreateQueryPartnersLoader(args);
+            case R.id.loader_query_filters_partners_visibility:
+                return onCreateQueryPartnersVisibilityLoader(args);
             default:
                 throw new IllegalArgumentException("Unknown loader id:" + id);
         }
@@ -143,12 +151,30 @@ public class FiltersFragment
         );
     }
 
+    private Loader<Cursor> onCreateQueryPartnersVisibilityLoader(Bundle args) {
+        return new CursorLoader(
+                getContext(),
+                GonetteContract.Partner.METADATA_CONTENT_URI,
+                new String[]{
+                        PartnersVisibilityReader.getPartnerVisibilityCountProjection()
+                },
+                GonetteContract.PartnerMetadata.IS_VISIBLE + " > ?",
+                new String[]{
+                        String.valueOf(0)
+                },
+                null
+        );
+    }
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_query_filters_partners:
                 onQueryPartnersLoadFinished(cursor);
+                break;
+            case R.id.loader_query_filters_partners_visibility:
+                onQueryPartnersVisibilityLoadFinished(cursor);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown loader id:" + id);
@@ -163,12 +189,22 @@ public class FiltersFragment
         );
     }
 
+    private void onQueryPartnersVisibilityLoadFinished(Cursor cursor) {
+        mFilterAdapter.setPartnersVisibilityCursor(
+                cursor != null
+                        ? new PartnersVisibilityReader(cursor)
+                        : null);
+    }
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_query_filters_partners:
                 mFilterAdapter.setPartnerReader(null);
+                break;
+            case R.id.loader_query_filters_partners_visibility:
+                mFilterAdapter.setPartnersVisibilityCursor(null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown loader id:" + id);
@@ -178,6 +214,11 @@ public class FiltersFragment
     private void queryPartners() {
         LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(R.id.loader_query_filters_partners, null, FiltersFragment.this);
+    }
+
+    private void queryPartnersVisibility() {
+        LoaderManager loaderManager = getLoaderManager();
+        loaderManager.initLoader(R.id.loader_query_filters_partners_visibility, null, FiltersFragment.this);
     }
 
 }

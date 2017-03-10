@@ -28,10 +28,19 @@ public class InsertPartnerVisibilityLoader extends BundleLoader {
 
     private long mPartnerId;
 
+    private boolean mAllPartner;
+
     @NonNull
     public static Bundle getArgs(long partnerId, boolean isVisible) {
         Bundle args = new Bundle(2);
         args.putLong(ARG_PARTNER_ID, partnerId);
+        args.putBoolean(ARG_IS_VISIBLE, isVisible);
+        return args;
+    }
+
+    @NonNull
+    public static Bundle getArgs(boolean isVisible) {
+        Bundle args = new Bundle(1);
         args.putBoolean(ARG_IS_VISIBLE, isVisible);
         return args;
     }
@@ -44,12 +53,7 @@ public class InsertPartnerVisibilityLoader extends BundleLoader {
     protected void readArguments(@NonNull Bundle args) {
         mPartnerId = args.getLong(ARG_PARTNER_ID, GonetteContract.NO_ID);
         mIsVisible = args.getBoolean(ARG_IS_VISIBLE, false);
-
-        if (BuildConfig.DEBUG) {
-            if (mPartnerId == GonetteContract.NO_ID) {
-                throw new IllegalArgumentException("A partner id must specified.");
-            }
-        }
+        mAllPartner = mPartnerId == GonetteContract.NO_ID;
     }
 
     @Override
@@ -66,12 +70,25 @@ public class InsertPartnerVisibilityLoader extends BundleLoader {
     @Override
     public Bundle loadInBackground() {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-        operations.add(
-                ContentProviderOperation.newInsert(GonetteContract.PartnerMetadata.CONTENT_URI)
-                        .withValue(GonetteContract.PartnerMetadata.PARTNER_ID, mPartnerId)
-                        .withValue(GonetteContract.PartnerMetadata.IS_VISIBLE, mIsVisible)
-                        .build()
-        );
+        if (mAllPartner) {
+            operations.add(
+                    ContentProviderOperation.newUpdate(GonetteContract.PartnerMetadata.CONTENT_URI)
+                            .withValue(GonetteContract.PartnerMetadata.IS_VISIBLE, mIsVisible)
+                            .build()
+            );
+        } else {
+            operations.add(
+                    ContentProviderOperation.newUpdate(GonetteContract.PartnerMetadata.CONTENT_URI)
+                            .withValue(GonetteContract.PartnerMetadata.IS_VISIBLE, mIsVisible)
+                            .withSelection(
+                                    GonetteContract.PartnerMetadata.PARTNER_ID + " = ?",
+                                    new String[]{
+                                            String.valueOf(mPartnerId)
+                                    }
+                            )
+                            .build()
+            );
+        }
         try {
             mContext.getContentResolver().applyBatch(
                     GonetteContract.AUTHORITY,

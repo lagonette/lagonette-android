@@ -16,12 +16,14 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.zxcv.gonette.BuildConfig;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.fragment.FiltersFragment;
 import com.zxcv.gonette.app.fragment.MapsFragment;
 import com.zxcv.gonette.app.fragment.PartnerDetailFragment;
 import com.zxcv.gonette.app.widget.behavior.ParallaxBehavior;
 import com.zxcv.gonette.content.contract.GonetteContract;
+import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -96,6 +98,10 @@ public class MapsActivity
         mBottomSheetBehavior.setBottomSheetCallback(mBottomSheetManager);
 
         mContentView = findViewById(R.id.content);
+
+        if (BuildConfig.INSERT_DATA) {
+            GonetteDatabaseOpenHelper.parseData(MapsActivity.this);
+        }
     }
 
     private void onViewCreated() {

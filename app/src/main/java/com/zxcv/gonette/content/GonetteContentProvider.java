@@ -159,20 +159,79 @@ public class GonetteContentProvider
     }
 
     @Override
-    public int delete(
-            @NonNull Uri uri,
-            @Nullable String selection,
-            @Nullable String[] selectionArgs) {
-        return 0;
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+        List<Uri> uris = new ArrayList<>();
+        String table;
+        Uri baseUri;
+        int match = mUriMatcher.match(uri);
+        switch (match) {
+            case R.id.content_uri_partners:
+                table = Tables.PARTNER;
+                baseUri = GonetteContract.Partner.CONTENT_URI;
+                uris.add(GonetteContract.Partner.CONTENT_URI);
+                break;
+            case R.id.content_uri_partners_metadata:
+                table = Tables.PARTNER_METADATA;
+                baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
+                uris.add(GonetteContract.Partner.METADATA_CONTENT_URI);
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
+        }
+
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int n = db.delete(table, selection, selectionArgs);
+        Log.d(TAG, "delete: Delete " + n + " rows in " + table);
+
+        // getContext() not null because called after onCreate()
+        //noinspection ConstantConditions
+        ContentResolver contentResolver = getContext().getContentResolver();
+        Log.d(TAG, "delete: Notify " + baseUri);
+        contentResolver.notifyChange(baseUri, null);
+        for (Uri u : uris) {
+            Log.d(TAG, "insert: Notify " + u);
+            contentResolver.notifyChange(GonetteContract.Partner.METADATA_CONTENT_URI, null);
+        }
+
+        return n;
     }
 
     @Override
-    public int update(
-            @NonNull Uri uri,
-            @Nullable ContentValues values,
-            @Nullable String selection,
-            @Nullable String[] selectionArgs) {
-        return 0;
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        List<Uri> uris = new ArrayList<>();
+        String table;
+        Uri baseUri;
+        int match = mUriMatcher.match(uri);
+        switch (match) {
+            case R.id.content_uri_partners:
+                table = Tables.PARTNER;
+                baseUri = GonetteContract.Partner.CONTENT_URI;
+                uris.add(GonetteContract.Partner.CONTENT_URI);
+                break;
+            case R.id.content_uri_partners_metadata:
+                table = Tables.PARTNER_METADATA;
+                baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
+                uris.add(GonetteContract.Partner.METADATA_CONTENT_URI);
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
+        }
+
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int n = db.update(table, values, selection, selectionArgs);
+        Log.d(TAG, "update: Update " + n + " rows in " + table);
+
+        // getContext() not null because called after onCreate()
+        //noinspection ConstantConditions
+        ContentResolver contentResolver = getContext().getContentResolver();
+        Log.d(TAG, "update: Notify " + baseUri);
+        contentResolver.notifyChange(baseUri, null);
+        for (Uri u : uris) {
+            Log.d(TAG, "insert: Notify " + u);
+            contentResolver.notifyChange(GonetteContract.Partner.METADATA_CONTENT_URI, null);
+        }
+
+        return n;
     }
 
     private void setupUriMatcher() {

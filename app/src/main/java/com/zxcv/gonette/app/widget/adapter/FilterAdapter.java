@@ -3,7 +3,6 @@ package com.zxcv.gonette.app.widget.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.content.reader.PartnerReader;
+import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -32,6 +32,9 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Nullable
     private PartnerReader mPartnerReader;
+
+    @Nullable
+    private PartnersVisibilityReader mPartnersVisibilityReader;
 
     @Nullable
     private OnPartnerClickListener mOnPartnerClickListener;
@@ -149,7 +152,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void onBindAllPartnerViewHolder(AllPartnerViewHolder holder, int position) {
-
+        if (mPartnersVisibilityReader.moveToFirst()) {
+            holder.isVisible = mPartnersVisibilityReader.getPartnersVisibilityCount() > 0;
+            if (holder.isVisible) {
+                holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
+            } else {
+                holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
+            }
+        }
     }
 
     private void onBindPartnerViewHolder(PartnerViewHolder holder, int position) {
@@ -186,11 +196,19 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public void setPartnerReader(PartnerReader partnerReader) {
+    public void setPartnerReader(@Nullable PartnerReader partnerReader) {
         if (mPartnerReader == partnerReader) {
             return;
         }
         mPartnerReader = partnerReader;
+        notifyDataSetChanged();
+    }
+
+    public void setPartnersVisibilityCursor(@Nullable PartnersVisibilityReader partnersVisibilityReader) {
+        if (mPartnersVisibilityReader == partnersVisibilityReader) {
+            return;
+        }
+        mPartnersVisibilityReader = partnersVisibilityReader;
         notifyDataSetChanged();
     }
 
@@ -212,6 +230,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public class AllPartnerViewHolder extends RecyclerView.ViewHolder {
+
+        public boolean isVisible;
 
         public final ImageButton visibilityButton;
 

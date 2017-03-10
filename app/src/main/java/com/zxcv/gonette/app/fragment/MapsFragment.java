@@ -248,23 +248,22 @@ public class MapsFragment
     }
 
     private void onQueryPartnerLoadFinished(Cursor cursor) {
-        if (cursor != null && cursor.getCount() > 0) {
+        if (cursor != null) {
             mPartnerItems.clear();
             mClusterManager.clearItems();
-            cursor.moveToFirst();
             PartnerReader partnerReader = new PartnerReader(cursor);
-            do {
-                PartnerItem item = new PartnerItem(
-                        partnerReader.getId(),
-                        partnerReader.getLatitude(),
-                        partnerReader.getLongitude()
-                );
-                mPartnerItems.put(item.getId(), item);
-                mClusterManager.addItem(item);
-            } while (partnerReader.moveToNext());
+            if (partnerReader.moveToFirst()) {
+                do {
+                    PartnerItem item = new PartnerItem(
+                            partnerReader.getId(),
+                            partnerReader.getLatitude(),
+                            partnerReader.getLongitude()
+                    );
+                    mPartnerItems.put(item.getId(), item);
+                    mClusterManager.addItem(item);
+                } while (partnerReader.moveToNext());
+            }
             mClusterManager.cluster();
-        } else if (cursor != null && BuildConfig.INSERT_DATA) {
-            GonetteDatabaseOpenHelper.parseData(getContext());
         }
     }
 

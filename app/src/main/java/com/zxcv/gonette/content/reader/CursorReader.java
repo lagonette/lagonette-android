@@ -26,4 +26,8 @@ public abstract class CursorReader {
         return mCursor.getCount();
     }
 
+    public boolean moveToFirst() {
+        return mCursor.moveToFirst();
+    }
+
 }
