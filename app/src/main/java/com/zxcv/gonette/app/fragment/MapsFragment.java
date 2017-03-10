@@ -27,6 +27,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
@@ -101,6 +103,8 @@ public class MapsFragment
     private Callback mCallback;
 
     private Map<Long, PartnerItem> mPartnerItems;
+
+    private Marker mSelectedMarker;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -298,7 +302,7 @@ public class MapsFragment
                 ANIMATION_LENGTH_LONG,
                 null
         );
-        mCallback.showFullMap();
+        showFullMap();
         return true;
     }
 
@@ -310,7 +314,27 @@ public class MapsFragment
 
     @Override
     public void onMapClick(LatLng latLng) {
+        showFullMap();
+    }
+
+    private void showFullMap() {
+        removeSelectedMarker();
         mCallback.showFullMap();
+    }
+
+    private void addSelectedMarker(@NonNull LatLng position) {
+        mSelectedMarker = mMap.addMarker(
+                new MarkerOptions()
+                        .position(position)
+                        .zIndex(1f)
+        );
+    }
+
+    private void removeSelectedMarker() {
+        if (mSelectedMarker != null) {
+            mSelectedMarker.remove();
+            mSelectedMarker = null;
+        }
     }
 
     public void processParallaxTranslation(float translationY) {
@@ -343,12 +367,14 @@ public class MapsFragment
     }
 
     public void showPartner(long id, boolean zoom, GoogleMap.CancelableCallback callback) {
+        removeSelectedMarker();
         PartnerItem partnerItem = mPartnerItems.get(id);
         if (partnerItem != null) {
             LatLng latLng = new LatLng(
                     partnerItem.getPosition().latitude,
                     partnerItem.getPosition().longitude
             );
+            addSelectedMarker(latLng);
             if (zoom) {
                 mMap.animateCamera(
                         CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
