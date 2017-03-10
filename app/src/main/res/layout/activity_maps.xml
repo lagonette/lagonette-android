@@ -42,7 +42,7 @@
         android:layout_marginBottom="88dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:src="@drawable/ic_my_location_grey_24dp"
+        android:src="@drawable/ic_my_location_dark_grey_24dp"
         android:visibility="gone"
         app:backgroundTint="@android:color/white"
         app:elevation="@dimen/fab_elevation_secondary"

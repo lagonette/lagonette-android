@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.zxcv.gonette.R;
+import com.zxcv.gonette.app.fragment.FiltersFragment;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 
@@ -191,6 +192,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         )
         );
 
+        holder.clearButton.setTag(holder);
+        holder.clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSearchClearClick((SearchViewHolder) v.getTag());
+            }
+        });
+
         if (mOnPartnerClickListener != null) {
 
             holder.searchTextView.setTag(holder);
@@ -359,6 +368,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
+    private void onSearchClearClick(@NonNull SearchViewHolder holder) {
+        holder.searchTextView.setText(FiltersFragment.DEFAULT_SEARCH);
+    }
+
     private int getPartnerCount() {
         if (mPartnerReader != null && mIsExpanded) {
             return mPartnerReader.getCount();
@@ -421,9 +434,12 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public final EditText searchTextView;
 
+        public final ImageButton clearButton;
+
         public SearchViewHolder(View itemView) {
             super(itemView);
             searchTextView = (EditText) itemView.findViewById(R.id.search_text);
+            clearButton = (ImageButton) itemView.findViewById(R.id.search_clear);
         }
     }
 
