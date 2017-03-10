@@ -47,6 +47,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Nullable
     private OnPartnerClickListener mOnPartnerClickListener;
 
+    private boolean mIsExpanded = true;
+
     public FilterAdapter(@Nullable OnPartnerClickListener onPartnerClickListener) {
         mOnPartnerClickListener = onPartnerClickListener;
     }
@@ -65,7 +67,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         } else {
             if (position < HEADER_COUNT) {
                 return R.id.view_type_partner_all;
-            } else if (position - HEADER_COUNT < mPartnerReader.getCount()) {
+            } else if (position - HEADER_COUNT < getPartnerCount()) {
                 return R.id.view_type_partner;
             } else {
                 return R.id.view_type_footer;
@@ -80,7 +82,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         } else if (mPartnerReader == null) {
             return HEADER_COUNT + LOADING_COUNT;
         } else {
-            return HEADER_COUNT + mPartnerReader.getCount() + FOOTER_COUNT;
+            return HEADER_COUNT + getPartnerCount() + FOOTER_COUNT;
         }
     }
 
@@ -97,7 +99,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         } else {
             if (position < HEADER_COUNT) {
                 return HEADER_ID;
-            } else if (position - HEADER_COUNT < mPartnerReader.getCount()) {
+            } else if (position - HEADER_COUNT < getPartnerCount()) {
                 if (mPartnerReader.moveToPosition(position - HEADER_COUNT)) {
                     return mPartnerReader.getId();
                 } else {
@@ -200,6 +202,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     mOnPartnerClickListener.onAllPartnerVisibilityClick((AllPartnerViewHolder) v.getTag());
                 }
             });
+
+            holder.expandButton.setTag(holder);
+            holder.expandButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onAllPartnerExpandClick((AllPartnerViewHolder) v.getTag());
+                }
+            });
         }
 
         return holder;
@@ -231,6 +241,13 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             } else {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
             }
+
+            holder.isExpanded = mIsExpanded;
+            if (holder.isExpanded) {
+                holder.expandButton.setImageResource(R.drawable.ic_expand_less_grey_24dp);
+            } else {
+                holder.expandButton.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+            }
         }
     }
 
@@ -245,6 +262,19 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             } else {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
             }
+        }
+    }
+
+    private void onAllPartnerExpandClick(AllPartnerViewHolder holder) {
+        mIsExpanded = !mIsExpanded;
+        notifyDataSetChanged();
+    }
+
+    private int getPartnerCount() {
+        if (mPartnerReader != null && mIsExpanded) {
+            return mPartnerReader.getCount();
+        } else {
+            return 0;
         }
     }
 
@@ -285,11 +315,16 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public boolean isVisible;
 
+        public boolean isExpanded;
+
         public final ImageButton visibilityButton;
+
+        public final ImageButton expandButton;
 
         public AllPartnerViewHolder(View itemView) {
             super(itemView);
             visibilityButton = (ImageButton) itemView.findViewById(R.id.partners_visibility);
+            expandButton = (ImageButton) itemView.findViewById(R.id.partners_expand);
         }
     }
 

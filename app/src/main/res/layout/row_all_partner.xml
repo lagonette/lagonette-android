@@ -26,15 +26,30 @@
         android:layout_marginStart="8dp"
         android:src="@drawable/ic_visibility_accent_24dp"/>
 
+    <ImageButton
+        android:id="@+id/partners_expand"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_expand_less_grey_24dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:layout_toEndOf="@id/partners_visibility"
+        android:layout_toLeftOf="@id/partners_expand"
         android:layout_toRightOf="@id/partners_visibility"
+        android:layout_toStartOf="@id/partners_expand"
         android:text="@string/row_partners"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
