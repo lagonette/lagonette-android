@@ -325,18 +325,22 @@ public class MapsActivity
                 mSelectedPartnerId = partnerId;
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             } else {
-                mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
-                getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(
-                                android.R.anim.fade_in,
-                                android.R.anim.fade_out
-                        )
-                        .replace(
-                                R.id.bottom_sheet,
-                                mBottomSheetFragment,
-                                PartnerDetailFragment.TAG
-                        )
-                        .commit();
+                long currentPartnerId = (long) mBottomSheetFAB.getTag();
+                if (currentPartnerId != partnerId) {
+                    mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(
+                                    android.R.anim.fade_in,
+                                    android.R.anim.fade_out
+                            )
+                            .replace(
+                                    R.id.bottom_sheet,
+                                    mBottomSheetFragment,
+                                    PartnerDetailFragment.TAG
+                            )
+                            .commit();
+                    mBottomSheetFAB.setTag(partnerId);
+                }
                 mMapsFragment.showPartner(partnerId, false, null);
                 mBottomSheetType = BOTTOM_SHEET_PARTNER;
             }
