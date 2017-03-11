@@ -13,27 +13,6 @@
         app:dependency="@+id/bottom_sheet"
         app:layout_behavior="com.zxcv.gonette.app.widget.behavior.ParallaxBehavior"/>
 
-    <FrameLayout
-        android:id="@+id/bottom_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:background="?android:attr/colorBackground"
-        android:clipToPadding="true"
-        android:elevation="4dp"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-        tools:elevation="2dp"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/bottom_sheet_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_filter_list_white_24dp"
-        app:elevation="@dimen/fab_elevation_primary"
-        app:fabSize="normal"
-        app:layout_anchor="@id/bottom_sheet"
-        app:layout_anchorGravity="end|top"/>
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/my_location_fab"
         android:layout_width="wrap_content"
@@ -50,6 +29,35 @@
         app:layout_anchor="@id/content"
         app:layout_anchorGravity="end|bottom"
         tools:visibility="visible"/>
+
+    <View
+        android:id="@+id/shadow"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@drawable/bg_bottom_sheet"
+        app:layout_anchor="@id/bottom_sheet"/>
+
+    <FrameLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:background="?android:attr/colorBackground"
+        android:clipToPadding="true"
+        android:elevation="4dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        tools:elevation="2dp"
+        tools:layout_height="40dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/bottom_sheet_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_filter_list_white_24dp"
+        app:elevation="@dimen/fab_elevation_primary"
+        app:fabSize="normal"
+        app:layout_anchor="@id/bottom_sheet"
+        app:layout_anchorGravity="end|top"/>
 
 
 </android.support.design.widget.CoordinatorLayout>
