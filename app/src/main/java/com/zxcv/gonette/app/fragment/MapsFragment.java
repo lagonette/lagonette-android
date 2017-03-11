@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -44,6 +45,7 @@ import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.loader.PartnerCursorLoaderHelper;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.util.SharedPreferencesUtil;
+import com.zxcv.gonette.util.SnackbarUtil;
 import com.zxcv.gonette.util.UiUtil;
 
 import org.json.JSONException;
@@ -543,7 +545,18 @@ public class MapsFragment
                     android.content.Intent.ACTION_VIEW,
                     Uri.parse("google.navigation:q=" + partnerItem.getPosition().latitude + "," + partnerItem.getPosition().longitude)
             );
-            startActivity(intent);
+            PackageManager packageManager = getActivity().getPackageManager();
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent);
+            } else {
+                Snackbar
+                        .make(
+                                SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                                R.string.error_no_direction_app_found,
+                                Snackbar.LENGTH_LONG
+                        )
+                        .show();
+            }
         }
     }
 

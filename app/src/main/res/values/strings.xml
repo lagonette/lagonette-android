@@ -6,4 +6,6 @@
 
     <string name="hint_search">Rechercher...</string>
 
+    <string name="error_no_direction_app_found">Aucune application GPS trouvée.</string>
+
 </resources>
