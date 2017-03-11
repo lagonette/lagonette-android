@@ -12,9 +12,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -71,8 +69,6 @@ public class MapsActivity
     private FloatingActionButton mBottomSheetFAB;
 
     private View mCoordinatorLayout;
-
-    private boolean mIsDirectionVisible = false;
 
     private BottomSheetManager mBottomSheetManager;
 
@@ -245,9 +241,9 @@ public class MapsActivity
     }
 
     private void onBottomSheetFabClick() {
-        if (mIsDirectionVisible) {
+        if (mBottomSheetManager.isPartnerBottomSheetOpened()) {
             mMapsFragment.startDirection((long) mBottomSheetFAB.getTag());
-        } else if (BottomSheetBehavior.STATE_HIDDEN == mBottomSheetBehavior.getState()) {
+        } else if (mBottomSheetManager.isBottomSheetClose()) {
             mBottomSheetManager.showFilters();
         }
     }
@@ -302,6 +298,8 @@ public class MapsActivity
 
         private final int mFabBottomMargin;
 
+        private boolean mIsDirectionVisible = false;
+
         public BottomSheetManager(@NonNull Context context, @NonNull Resources resources) {
             mFABElevationPrimary = resources.getDimension(R.dimen.fab_elevation_primary);
             mFABElevationSecondary = resources.getDimension(R.dimen.fab_elevation_secondary);
@@ -317,6 +315,20 @@ public class MapsActivity
         public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
             //noinspection WrongConstant
             mBottomSheetType = savedInstanceState.getInt(STATE_BOTTOM_SHEET_TYPE, BOTTOM_SHEET_NONE);
+
+            if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
+                mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
+            } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
+                mBottomSheetFAB.setImageResource(R.drawable.ic_directions_white_24dp);
+                mIsDirectionVisible = true;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mBottomSheetFAB.setCompatElevation(mFABElevationPrimary);
+                }
+            }
+
+            if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                updateBottomSheetPadding(mBottomSheet, mStatusBarHeight);
+            }
         }
 
         @Override
@@ -407,7 +419,6 @@ public class MapsActivity
             mBottomSheetFAB.setScaleX(scale);
             mBottomSheetFAB.setScaleY(scale);
 
-            // TODO optimize
             int fabCenter = mBottomSheetFAB.getHeight() / 2 + mFabBottomMargin;
             if (!mIsDirectionVisible && translationY > fabCenter) {
                 mBottomSheetFAB.setImageResource(R.drawable.ic_directions_white_24dp);
@@ -427,13 +438,17 @@ public class MapsActivity
                         : slideOffset < 0
                         ? 0
                         : slideOffset;
-                bottomSheet.setPadding(
-                        bottomSheet.getPaddingLeft(),
-                        (int) (slideOffset * mStatusBarHeight),
-                        mBottomSheet.getPaddingRight(),
-                        mBottomSheet.getPaddingBottom()
-                );
+                updateBottomSheetPadding(bottomSheet, (int) (slideOffset * mStatusBarHeight));
             }
+        }
+
+        private void updateBottomSheetPadding(@NonNull View bottomSheet, int top) {
+            bottomSheet.setPadding(
+                    bottomSheet.getPaddingLeft(),
+                    top,
+                    mBottomSheet.getPaddingRight(),
+                    mBottomSheet.getPaddingBottom()
+            );
         }
 
         public void showPartner(long partnerId, boolean zoom) {
@@ -540,6 +555,13 @@ public class MapsActivity
             return mBottomSheetType != BOTTOM_SHEET_NONE;
         }
 
+        public boolean isPartnerBottomSheetOpened() {
+            return mBottomSheetType == BOTTOM_SHEET_PARTNER;
+        }
+
+        public boolean isBottomSheetClose() {
+            return mBottomSheetType == BOTTOM_SHEET_NONE;
+        }
     }
 
 }
