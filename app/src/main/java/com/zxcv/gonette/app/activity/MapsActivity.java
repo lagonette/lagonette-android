@@ -326,6 +326,7 @@ public class MapsActivity
                 mBottomSheetFAB.setCompatElevation(mFABElevationPrimary);
                 mBottomSheetFAB.setTag(null);
                 mBottomSheet.setBackgroundColor(mBottomSheetBackgroundColor);
+                mBottomSheet.getLayoutParams().height = CoordinatorLayout.LayoutParams.MATCH_PARENT;
                 if (mShowPartnerAfterBottomSheetClose) {
                     mShowPartnerAfterBottomSheetClose = false;
                     showPartner(mSelectedPartnerId, mZoomForPartnerId);
@@ -347,15 +348,16 @@ public class MapsActivity
         }
 
         private void onBottomSheetSlide(@NonNull View bottomSheet, float slideOffset) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+                    && bottomSheet.getLayoutParams().height == CoordinatorLayout.LayoutParams.MATCH_PARENT) {
                 slideOffset = slideOffset * 5 - 4;
                 slideOffset = slideOffset > 1
                         ? 1
                         : slideOffset < 0
                         ? 0
                         : slideOffset;
-                mBottomSheet.setPadding(
-                        mBottomSheet.getPaddingLeft(),
+                bottomSheet.setPadding(
+                        bottomSheet.getPaddingLeft(),
                         (int) (slideOffset * mStatusBarHeight),
                         mBottomSheet.getPaddingRight(),
                         mBottomSheet.getPaddingBottom()
@@ -428,6 +430,7 @@ public class MapsActivity
                     anchorBottomSheetFab();
                     mBottomSheetFAB.setTag(partnerId);
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    mBottomSheet.getLayoutParams().height = mCoordinatorLayout.getHeight() * 3 / 4;
                     mBottomSheetType = BOTTOM_SHEET_PARTNER;
                 }
 
