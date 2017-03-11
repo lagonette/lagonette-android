@@ -2,11 +2,13 @@ package com.zxcv.gonette.app.fragment;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -40,6 +43,7 @@ import com.zxcv.gonette.app.widget.maps.PartnerRenderer;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.loader.PartnerCursorLoaderHelper;
 import com.zxcv.gonette.content.reader.PartnerReader;
+import com.zxcv.gonette.util.SharedPreferencesUtil;
 import com.zxcv.gonette.util.UiUtil;
 
 import org.json.JSONException;
@@ -106,6 +110,14 @@ public class MapsFragment
 
     private Marker mSelectedMarker;
 
+    private boolean mConfChanged = false;
+
+    private double mStartLatitude;
+
+    private double mStartLongitude;
+
+    private float mStartZoom;
+
     public static MapsFragment newInstance() {
         return new MapsFragment();
     }
@@ -114,9 +126,17 @@ public class MapsFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
+            mConfChanged = true;
             mAskFormMyPositionPermission = savedInstanceState.getBoolean(
                     STATE_ASK_FOR_MY_LOCATION_PERMISSION
             );
+        }
+        else {
+            mConfChanged = false;
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            mStartLatitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LATITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LATITUDE);
+            mStartLongitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LONGITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LONGITUDE);
+            mStartZoom = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_ZOOM, SharedPreferencesUtil.DEFAULT_VALUE_START_ZOOM);
         }
 
         if (mGoogleApiClient == null) {
@@ -162,6 +182,18 @@ public class MapsFragment
     }
 
     @Override
+    public void onPause() {
+        CameraPosition cameraPosition = mMap.getCameraPosition();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sharedPref.edit()
+                .putFloat(SharedPreferencesUtil.PREFERENCE_START_LATITUDE, (float) cameraPosition.target.latitude)
+                .putFloat(SharedPreferencesUtil.PREFERENCE_START_LONGITUDE, (float) cameraPosition.target.longitude)
+                .putFloat(SharedPreferencesUtil.PREFERENCE_START_ZOOM, cameraPosition.zoom)
+                .apply();
+        super.onPause();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mCallback.onMapReady();
@@ -176,6 +208,16 @@ public class MapsFragment
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
         updateLocationUI();
+
+        if (!mConfChanged) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(
+                            mStartLatitude,
+                            mStartLongitude
+                    ),
+                    mStartZoom
+            ));
+        }
 
         mClusterManager = new ClusterManager<>(getContext(), mMap);
         mClusterManager.setRenderer(
