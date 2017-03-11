@@ -130,8 +130,7 @@ public class MapsFragment
             mAskFormMyPositionPermission = savedInstanceState.getBoolean(
                     STATE_ASK_FOR_MY_LOCATION_PERMISSION
             );
-        }
-        else {
+        } else {
             mConfChanged = false;
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
             mStartLatitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LATITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LATITUDE);
@@ -280,7 +279,7 @@ public class MapsFragment
                         },
                         GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1 AND " + GonetteContract.Partner.NAME + " LIKE ?",
 
-                        new String[] {
+                        new String[]{
                                 "%" + search + "%"
                         },
                         null
@@ -406,6 +405,20 @@ public class MapsFragment
                 Log.e(TAG, "moveOnMyLocation: Last location is NULL");
             }
         }
+    }
+
+    public void moveOnFootprint() {
+        mMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(
+                                SharedPreferencesUtil.DEFAULT_VALUE_START_LATITUDE,
+                                SharedPreferencesUtil.DEFAULT_VALUE_START_LONGITUDE
+                        ),
+                        SharedPreferencesUtil.DEFAULT_VALUE_START_ZOOM
+                ),
+                ANIMATION_LENGTH_SHORT,
+                null
+        );
     }
 
     public void showPartner(long id, boolean zoom, GoogleMap.CancelableCallback callback) {

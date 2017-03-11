@@ -33,7 +33,8 @@ public class MapsActivity
         implements MapsFragment.Callback,
         FiltersFragment.Callback,
         ParallaxBehavior.OnParallaxTranslationListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        View.OnLongClickListener {
 
     private static final String STATE_SEARCH = "state:search";
 
@@ -94,6 +95,7 @@ public class MapsActivity
         mBottomSheetManager = new BottomSheetManager(getResources());
 
         mMyLocationFAB.setOnClickListener(MapsActivity.this);
+        mMyLocationFAB.setOnLongClickListener(MapsActivity.this);
         mBottomSheetFAB.setOnClickListener(MapsActivity.this);
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
@@ -182,8 +184,24 @@ public class MapsActivity
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.my_location_fab:
+                return onMyLocationFabLongClick();
+            default:
+                throw new IllegalArgumentException("Unknown view id: " + id);
+        }
+    }
+
     private void onMyLocationFabClick() {
         mMapsFragment.moveOnMyLocation();
+    }
+
+    private boolean onMyLocationFabLongClick() {
+        mMapsFragment.moveOnFootprint();
+        return true;
     }
 
     private void onBottomSheetFabClick() {
