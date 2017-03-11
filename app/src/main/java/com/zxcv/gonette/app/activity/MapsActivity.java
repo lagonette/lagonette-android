@@ -1,7 +1,9 @@
 package com.zxcv.gonette.app.activity;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
@@ -9,6 +11,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -25,6 +28,7 @@ import com.zxcv.gonette.app.fragment.PartnerDetailFragment;
 import com.zxcv.gonette.app.widget.behavior.ParallaxBehavior;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
+import com.zxcv.gonette.util.UiUtil;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -75,6 +79,8 @@ public class MapsActivity
     @NonNull
     private String mCurrentSearch = "";
 
+    private int mStatusBarHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +99,7 @@ public class MapsActivity
 
         onViewCreated();
 
-        mBottomSheetManager = new BottomSheetManager(getResources());
+        mBottomSheetManager = new BottomSheetManager(MapsActivity.this, getResources());
 
         mMyLocationFAB.setOnClickListener(MapsActivity.this);
         mMyLocationFAB.setOnLongClickListener(MapsActivity.this);
@@ -106,6 +112,8 @@ public class MapsActivity
         mBottomSheetBehavior.setBottomSheetCallback(mBottomSheetManager);
 
         mContentView = findViewById(R.id.content);
+
+        mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
 
         if (BuildConfig.INSERT_DATA) {
             GonetteDatabaseOpenHelper.parseData(MapsActivity.this);
@@ -290,9 +298,15 @@ public class MapsActivity
 
         private final float mFABElevationSecondary;
 
-        public BottomSheetManager(@NonNull Resources resources) {
+        private int mBottomSheetBackgroundColor;
+
+        private int mFiltersBottomSheetBackgroundColor;
+
+        public BottomSheetManager(@NonNull Context context, @NonNull Resources resources) {
             mFABElevationPrimary = resources.getDimension(R.dimen.fab_elevation_primary);
             mFABElevationSecondary = resources.getDimension(R.dimen.fab_elevation_secondary);
+            mFiltersBottomSheetBackgroundColor = ContextCompat.getColor(context, R.color.colorPrimary);
+            mBottomSheetBackgroundColor = ContextCompat.getColor(context, android.R.color.background_light);
         }
 
         public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -311,6 +325,7 @@ public class MapsActivity
                 mBottomSheetType = BOTTOM_SHEET_NONE;
                 mBottomSheetFAB.setCompatElevation(mFABElevationPrimary);
                 mBottomSheetFAB.setTag(null);
+                mBottomSheet.setBackgroundColor(mBottomSheetBackgroundColor);
                 if (mShowPartnerAfterBottomSheetClose) {
                     mShowPartnerAfterBottomSheetClose = false;
                     showPartner(mSelectedPartnerId, mZoomForPartnerId);
@@ -325,8 +340,62 @@ public class MapsActivity
 
         @Override
         public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            onBottomSheetSlide(bottomSheet, slideOffset);
             if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
                 onPartnerSlide(bottomSheet, slideOffset);
+            }
+        }
+
+        private void onBottomSheetSlide(@NonNull View bottomSheet, float slideOffset) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                slideOffset = slideOffset * 5 - 4;
+                slideOffset = slideOffset > 1
+                        ? 1
+                        : slideOffset < 0
+                        ? 0
+                        : slideOffset;
+                mBottomSheet.setPadding(
+                        mBottomSheet.getPaddingLeft(),
+                        (int) (slideOffset * mStatusBarHeight),
+                        mBottomSheet.getPaddingRight(),
+                        mBottomSheet.getPaddingBottom()
+                );
+            }
+        }
+
+        private void onPartnerSlide(@NonNull View bottomSheet, float slideOffset) {
+            int translationY = mCoordinatorLayout.getBottom() - bottomSheet.getTop();
+
+            float scale = slideOffset * 4 - 1;
+            scale = scale > 1
+                    ? 1
+                    : scale < 0
+                    ? 0
+                    : scale;
+            scale = 1 - scale;
+            scale = mInterpolator.getInterpolation(scale);
+            if (scale <= 0) {
+                if (mIsAnchored) {
+                    detachBottomSheetFab();
+                    mIsAnchored = false;
+                }
+            } else {
+                if (!mIsAnchored) {
+                    anchorBottomSheetFab();
+                    mIsAnchored = true;
+                }
+            }
+            mBottomSheetFAB.setScaleX(scale);
+            mBottomSheetFAB.setScaleY(scale);
+
+            // TODO optimize
+            int fabCenter = mBottomSheetFAB.getHeight() / 2 + ((CoordinatorLayout.LayoutParams) mBottomSheetFAB.getLayoutParams()).bottomMargin;
+            if (!mIsDirectionVisible && translationY > fabCenter) {
+                mBottomSheetFAB.setImageResource(R.drawable.ic_directions_white_24dp);
+                mIsDirectionVisible = true;
+            } else if (mIsDirectionVisible && translationY <= fabCenter) {
+                mBottomSheetFAB.setImageResource(R.drawable.ic_filter_list_white_24dp);
+                mIsDirectionVisible = false;
             }
         }
 
@@ -421,47 +490,12 @@ public class MapsActivity
             detachBottomSheetFab();
             mBottomSheetFAB.setCompatElevation(mFABElevationSecondary);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
             mBottomSheetType = BOTTOM_SHEET_FILTERS;
         }
 
         private void closeBottomSheet() {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
-
-        private void onPartnerSlide(@NonNull View bottomSheet, float slideOffset) {
-            int translationY = mCoordinatorLayout.getBottom() - bottomSheet.getTop();
-
-            float scale = slideOffset * 4 - 1;
-            scale = scale > 1
-                    ? 1
-                    : scale < 0
-                    ? 0
-                    : scale;
-            scale = 1 - scale;
-            scale = mInterpolator.getInterpolation(scale);
-            if (scale <= 0) {
-                if (mIsAnchored) {
-                    detachBottomSheetFab();
-                    mIsAnchored = false;
-                }
-            } else {
-                if (!mIsAnchored) {
-                    anchorBottomSheetFab();
-                    mIsAnchored = true;
-                }
-            }
-            mBottomSheetFAB.setScaleX(scale);
-            mBottomSheetFAB.setScaleY(scale);
-
-            // TODO optimize
-            int fabCenter = mBottomSheetFAB.getHeight() / 2 + ((CoordinatorLayout.LayoutParams) mBottomSheetFAB.getLayoutParams()).bottomMargin;
-            if (!mIsDirectionVisible && translationY > fabCenter) {
-                mBottomSheetFAB.setImageResource(R.drawable.ic_directions_white_24dp);
-                mIsDirectionVisible = true;
-            } else if (mIsDirectionVisible && translationY <= fabCenter) {
-                mBottomSheetFAB.setImageResource(R.drawable.ic_filter_list_white_24dp);
-                mIsDirectionVisible = false;
-            }
         }
 
         private void anchorBottomSheetFab() {
