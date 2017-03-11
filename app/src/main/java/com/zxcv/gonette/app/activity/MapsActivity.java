@@ -327,7 +327,9 @@ public class MapsActivity
             }
 
             if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                updateBottomSheetPadding(mBottomSheet, mStatusBarHeight);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    updateBottomSheetPadding(mBottomSheet, mStatusBarHeight);
+                }
             }
         }
 
