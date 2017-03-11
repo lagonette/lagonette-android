@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:src="@drawable/ic_filter_list_white_24dp"
-        app:elevation="@dimen/fab_elevation_primary"
+        app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
         app:layout_anchor="@id/bottom_sheet"
         app:layout_anchorGravity="end|top"/>
