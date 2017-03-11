@@ -458,17 +458,20 @@ public class MapsFragment
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        //TODO
+        // Called when location service is connected and my position available.
+        // Do nothing here.
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        //TODO snackbar
+        // Called when location service is suspended and my position is not available anymore.
+        // Do nothing here.
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        //TODO snackbar
+        // Called when the connection to the location service fail.
+        Log.e(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
     }
 
     private void updateLocationUI() {
