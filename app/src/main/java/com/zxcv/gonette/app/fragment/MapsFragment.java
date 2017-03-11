@@ -182,13 +182,15 @@ public class MapsFragment
 
     @Override
     public void onPause() {
-        CameraPosition cameraPosition = mMap.getCameraPosition();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        sharedPref.edit()
-                .putFloat(SharedPreferencesUtil.PREFERENCE_START_LATITUDE, (float) cameraPosition.target.latitude)
-                .putFloat(SharedPreferencesUtil.PREFERENCE_START_LONGITUDE, (float) cameraPosition.target.longitude)
-                .putFloat(SharedPreferencesUtil.PREFERENCE_START_ZOOM, cameraPosition.zoom)
-                .apply();
+        if (mMap != null) {
+            CameraPosition cameraPosition = mMap.getCameraPosition();
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            sharedPref.edit()
+                    .putFloat(SharedPreferencesUtil.PREFERENCE_START_LATITUDE, (float) cameraPosition.target.latitude)
+                    .putFloat(SharedPreferencesUtil.PREFERENCE_START_LONGITUDE, (float) cameraPosition.target.longitude)
+                    .putFloat(SharedPreferencesUtil.PREFERENCE_START_ZOOM, cameraPosition.zoom)
+                    .apply();
+        }
         super.onPause();
     }
 
