@@ -22,13 +22,11 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:src="@drawable/ic_my_location_dark_grey_24dp"
-        android:visibility="gone"
         app:backgroundTint="@android:color/white"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
         app:layout_anchor="@id/content"
-        app:layout_anchorGravity="end|bottom"
-        tools:visibility="visible"/>
+        app:layout_anchorGravity="end|bottom"/>
 
     <View
         android:id="@+id/shadow"

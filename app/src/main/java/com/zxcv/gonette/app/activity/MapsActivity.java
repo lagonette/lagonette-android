@@ -1,5 +1,6 @@
 package com.zxcv.gonette.app.activity;
 
+import android.animation.Animator;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
@@ -141,12 +142,43 @@ public class MapsActivity
 
     @Override
     public void hideMyLocationButton() {
-        mMyLocationFAB.setVisibility(View.GONE);
+        mMyLocationFAB.animate()
+                .scaleX(0f)
+                .scaleY(0f)
+                .setDuration(300)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mMyLocationFAB.setVisibility(View.GONE);
+                        mMyLocationFAB.animate().setListener(null);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .start();
     }
 
     @Override
     public void showMyLocationButton() {
         mMyLocationFAB.setVisibility(View.VISIBLE);
+        mMyLocationFAB.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(300)
+                .start();
     }
 
     @Override
