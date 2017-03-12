@@ -330,6 +330,14 @@ public class MapsActivity
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     updateBottomSheetPadding(mBottomSheet, mStatusBarHeight);
                 }
+            } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                // Workaround to prevent undefined fab state on configuration change.
+                mBottomSheet.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onSlide(mBottomSheet, 0);
+                    }
+                });
             }
         }
 
