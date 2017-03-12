@@ -96,6 +96,8 @@ public class MapsFragment
 
     private static final String STATE_ASK_FOR_MY_LOCATION_PERMISSION = "state:ask_for_my_location_permission";
 
+    private static final String STATE_SELECTED_MARKER_POSITION = "state:selected_marker_position";
+
     private GoogleMap mMap;
 
     private ClusterManager<PartnerItem> mClusterManager;
@@ -120,6 +122,8 @@ public class MapsFragment
 
     private float mStartZoom;
 
+    private LatLng mSelectedMarkerPosition = null;
+
     public static MapsFragment newInstance() {
         return new MapsFragment();
     }
@@ -131,6 +135,9 @@ public class MapsFragment
             mConfChanged = true;
             mAskFormMyPositionPermission = savedInstanceState.getBoolean(
                     STATE_ASK_FOR_MY_LOCATION_PERMISSION
+            );
+            mSelectedMarkerPosition = savedInstanceState.getParcelable(
+                    STATE_SELECTED_MARKER_POSITION
             );
         } else {
             mConfChanged = false;
@@ -180,6 +187,9 @@ public class MapsFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_ASK_FOR_MY_LOCATION_PERMISSION, mAskFormMyPositionPermission);
+        if (mSelectedMarker != null) {
+            outState.putParcelable(STATE_SELECTED_MARKER_POSITION, mSelectedMarker.getPosition());
+        }
     }
 
     @Override
@@ -220,6 +230,9 @@ public class MapsFragment
                     ),
                     mStartZoom
             ));
+        } else if (mSelectedMarkerPosition != null) {
+            addSelectedMarker(mSelectedMarkerPosition);
+            mSelectedMarkerPosition = null;
         }
 
         mClusterManager = new ClusterManager<>(getContext(), mMap);
