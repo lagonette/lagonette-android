@@ -62,12 +62,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private boolean mIsExpanded = true;
 
-    @Nullable
-    private String mInitSearch;
+    private SearchBarManager mSearchBarManager;
 
     public FilterAdapter(@Nullable OnPartnerClickListener onPartnerClickListener, @NonNull String search) {
         mOnPartnerClickListener = onPartnerClickListener;
-        mInitSearch = search;
+        mSearchBarManager = new SearchBarManager(onPartnerClickListener, search);
     }
 
     @Override
@@ -203,14 +202,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (mOnPartnerClickListener != null) {
 
             holder.searchTextView.setTag(holder);
-            holder.searchTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) {
-                        mOnPartnerClickListener.onSearchClick((SearchViewHolder) v.getTag());
-                    }
-                }
-            });
+            holder.searchTextView.setOnFocusChangeListener(mSearchBarManager);
             holder.searchTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -218,22 +210,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
 
-            holder.searchTextView.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    mOnPartnerClickListener.onSearchTextChanged(s.toString());
-                }
-            });
+            holder.searchTextView.addTextChangedListener(mSearchBarManager);
         }
 
         return holder;
@@ -325,10 +302,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void onBindSearchViewHolder(@NonNull SearchViewHolder holder) {
-        if (mInitSearch != null) {
-            holder.searchTextView.setText(mInitSearch);
-            mInitSearch = null;
-        }
+        mSearchBarManager.onBind(holder);
     }
 
     private void onBindAllPartnerViewHolder(@NonNull AllPartnerViewHolder holder) {
@@ -454,6 +428,70 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public LoadingViewHolder(View itemView) {
             super(itemView);
+        }
+    }
+
+    public static class SearchBarManager implements TextWatcher, View.OnFocusChangeListener {
+
+        @Nullable
+        private OnPartnerClickListener mOnPartnerClickListener;
+
+        @Nullable
+        private String mCurrentSearch;
+
+        private boolean mSearchHasFocus = false;
+
+        private boolean mTextChangedComesFromCode = false;
+
+        public SearchBarManager(@NonNull OnPartnerClickListener onPartnerClickListener, @Nullable String search) {
+            mOnPartnerClickListener = onPartnerClickListener;
+            mCurrentSearch = search;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // Save current search for the bind
+            mCurrentSearch = s.toString();
+            if (mOnPartnerClickListener != null) {
+                mOnPartnerClickListener.onSearchTextChanged(mCurrentSearch);
+            }
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            // Call the listener (To open bottom sheet) when the focus is requested from user and not by code.
+            mSearchHasFocus = hasFocus;
+            if (!mTextChangedComesFromCode && hasFocus) {
+                if (mOnPartnerClickListener != null) {
+                    mOnPartnerClickListener.onSearchClick((SearchViewHolder) v.getTag());
+                }
+            } else if (mTextChangedComesFromCode) {
+                mTextChangedComesFromCode = false;
+            }
+        }
+
+        public void onBind(@NonNull SearchViewHolder holder) {
+            // Bind search bar with current search and manage to have the correct focus
+            if (mCurrentSearch != null) {
+                mTextChangedComesFromCode = true;
+                holder.searchTextView.setText(mCurrentSearch);
+                if (mSearchHasFocus) {
+                    holder.searchTextView.requestFocus();
+                    holder.searchTextView.setSelection(holder.searchTextView.getText().length());
+                } else {
+                    holder.searchTextView.clearFocus();
+                }
+            }
         }
     }
 }
