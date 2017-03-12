@@ -98,6 +98,8 @@ public class MapsFragment
 
     private static final String STATE_SELECTED_MARKER_POSITION = "state:selected_marker_position";
 
+    private static final String STATE_SELECTED_MARKER_ID = "state:selected_marker_id";
+
     private GoogleMap mMap;
 
     private ClusterManager<PartnerItem> mClusterManager;
@@ -112,8 +114,6 @@ public class MapsFragment
 
     private Map<Long, PartnerItem> mPartnerItems;
 
-    private Marker mSelectedMarker;
-
     private boolean mConfChanged = false;
 
     private double mStartLatitude;
@@ -122,7 +122,11 @@ public class MapsFragment
 
     private float mStartZoom;
 
+    private Marker mSelectedMarker;
+
     private LatLng mSelectedMarkerPosition = null;
+
+    private long mSelectedMarkerId = GonetteContract.NO_ID;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -138,6 +142,9 @@ public class MapsFragment
             );
             mSelectedMarkerPosition = savedInstanceState.getParcelable(
                     STATE_SELECTED_MARKER_POSITION
+            );
+            mSelectedMarkerId = savedInstanceState.getLong(
+                    STATE_SELECTED_MARKER_ID
             );
         } else {
             mConfChanged = false;
@@ -189,6 +196,7 @@ public class MapsFragment
         outState.putBoolean(STATE_ASK_FOR_MY_LOCATION_PERMISSION, mAskFormMyPositionPermission);
         if (mSelectedMarker != null) {
             outState.putParcelable(STATE_SELECTED_MARKER_POSITION, mSelectedMarker.getPosition());
+            outState.putLong(STATE_SELECTED_MARKER_ID, mSelectedMarkerId);
         }
     }
 
@@ -231,7 +239,7 @@ public class MapsFragment
                     mStartZoom
             ));
         } else if (mSelectedMarkerPosition != null) {
-            addSelectedMarker(mSelectedMarkerPosition);
+            addSelectedMarker(mSelectedMarkerId, mSelectedMarkerPosition);
             mSelectedMarkerPosition = null;
         }
 
@@ -246,7 +254,22 @@ public class MapsFragment
         );
         mMap.setOnMapClickListener(MapsFragment.this);
         mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                // If cluster manager do not manage marker then the user has probably clicked on the selected marker.
+                // If so, we simulate a click on the marker behind.
+                if (!mClusterManager.onMarkerClick(marker)) {
+                    if (marker.getId().equals(mSelectedMarker.getId())) {
+                        mCallback.showPartner(mSelectedMarkerId, false);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        });
         mClusterManager.setOnClusterClickListener(MapsFragment.this);
         mClusterManager.setOnClusterItemClickListener(MapsFragment.this);
     }
@@ -380,18 +403,20 @@ public class MapsFragment
         mCallback.showFullMap();
     }
 
-    private void addSelectedMarker(@NonNull LatLng position) {
+    private void addSelectedMarker(long partnerId, @NonNull LatLng position) {
         mSelectedMarker = mMap.addMarker(
                 new MarkerOptions()
                         .position(position)
                         .zIndex(1f)
         );
+        mSelectedMarkerId = partnerId;
     }
 
     private void removeSelectedMarker() {
         if (mSelectedMarker != null) {
             mSelectedMarker.remove();
             mSelectedMarker = null;
+            mSelectedMarkerId = GonetteContract.NO_ID;
         }
     }
 
@@ -446,7 +471,7 @@ public class MapsFragment
                     partnerItem.getPosition().latitude,
                     partnerItem.getPosition().longitude
             );
-            addSelectedMarker(latLng);
+            addSelectedMarker(partnerItem.getId(), latLng);
             if (zoom) {
                 mMap.animateCamera(
                         CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
