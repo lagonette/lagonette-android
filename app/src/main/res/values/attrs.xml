@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ParallaxBehavior">
+    <declare-styleable name="GonetteBehavior">
         <attr name="dependency" format="reference"/>
+        <attr name="leave_length" format="dimension"/>
+        <attr name="leave_offset" format="dimension"/>
+        <attr name="move_offset" format="dimension"/>
     </declare-styleable>
 </resources>

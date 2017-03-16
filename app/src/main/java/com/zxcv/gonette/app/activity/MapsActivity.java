@@ -23,6 +23,7 @@ import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.fragment.FiltersFragment;
 import com.zxcv.gonette.app.fragment.MapsFragment;
 import com.zxcv.gonette.app.fragment.PartnerDetailFragment;
+import com.zxcv.gonette.app.widget.behavior.GonetteFabBehavior;
 import com.zxcv.gonette.app.widget.behavior.ParallaxBehavior;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
@@ -64,9 +65,9 @@ public class MapsActivity
 
     private View mContentView;
 
-    private FloatingActionButton mMyLocationFAB;
+    private FloatingActionButton mMyLocationFab;
 
-    private FloatingActionButton mBottomSheetFAB;
+    private FloatingActionButton mBottomSheetFab;
 
     private View mCoordinatorLayout;
 
@@ -97,9 +98,9 @@ public class MapsActivity
 
         mBottomSheetManager = new BottomSheetManager(MapsActivity.this, getResources());
 
-        mMyLocationFAB.setOnClickListener(MapsActivity.this);
-        mMyLocationFAB.setOnLongClickListener(MapsActivity.this);
-        mBottomSheetFAB.setOnClickListener(MapsActivity.this);
+        mMyLocationFab.setOnClickListener(MapsActivity.this);
+        mMyLocationFab.setOnLongClickListener(MapsActivity.this);
+        mBottomSheetFab.setOnClickListener(MapsActivity.this);
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setPeekHeight(500);
@@ -126,8 +127,8 @@ public class MapsActivity
     private void onViewCreated() {
         mCoordinatorLayout = findViewById(R.id.coordinator_layout);
         mBottomSheet = findViewById(R.id.bottom_sheet);
-        mMyLocationFAB = (FloatingActionButton) findViewById(R.id.my_location_fab);
-        mBottomSheetFAB = (FloatingActionButton) findViewById(R.id.bottom_sheet_fab);
+        mMyLocationFab = (FloatingActionButton) findViewById(R.id.my_location_fab);
+        mBottomSheetFab = (FloatingActionButton) findViewById(R.id.bottom_sheet_fab);
     }
 
     @Override
@@ -146,7 +147,7 @@ public class MapsActivity
 
     @Override
     public void hideMyLocationButton() {
-        mMyLocationFAB.animate()
+        mMyLocationFab.animate()
                 .scaleX(0f)
                 .scaleY(0f)
                 .setDuration(300)
@@ -158,8 +159,8 @@ public class MapsActivity
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        mMyLocationFAB.setVisibility(View.GONE);
-                        mMyLocationFAB.animate().setListener(null);
+                        mMyLocationFab.setVisibility(View.GONE);
+                        mMyLocationFab.animate().setListener(null);
                     }
 
                     @Override
@@ -177,8 +178,8 @@ public class MapsActivity
 
     @Override
     public void showMyLocationButton() {
-        mMyLocationFAB.setVisibility(View.VISIBLE);
-        mMyLocationFAB.animate()
+        mMyLocationFab.setVisibility(View.VISIBLE);
+        mMyLocationFab.animate()
                 .scaleX(1f)
                 .scaleY(1f)
                 .setDuration(300)
@@ -242,7 +243,7 @@ public class MapsActivity
 
     private void onBottomSheetFabClick() {
         if (mBottomSheetManager.isPartnerBottomSheetOpened()) {
-            mMapsFragment.startDirection((long) mBottomSheetFAB.getTag());
+            mMapsFragment.startDirection((long) mBottomSheetFab.getTag());
         } else if (mBottomSheetManager.isBottomSheetClose()) {
             mBottomSheetManager.showFilters();
         }
@@ -300,12 +301,18 @@ public class MapsActivity
 
         private boolean mIsDirectionVisible = false;
 
+        private GonetteFabBehavior mMyLocationFabBehavior;
+
+        private GonetteFabBehavior mBottomSheetFabBehavior;
+
         public BottomSheetManager(@NonNull Context context, @NonNull Resources resources) {
             mFABElevationPrimary = resources.getDimension(R.dimen.fab_elevation_primary);
             mFABElevationSecondary = resources.getDimension(R.dimen.fab_elevation_secondary);
             mFiltersBottomSheetBackgroundColor = ContextCompat.getColor(context, R.color.colorPrimary);
             mBottomSheetBackgroundColor = ContextCompat.getColor(context, android.R.color.background_light);
-            mFabBottomMargin = ((CoordinatorLayout.LayoutParams) mBottomSheetFAB.getLayoutParams()).bottomMargin;
+            mFabBottomMargin = ((CoordinatorLayout.LayoutParams) mBottomSheetFab.getLayoutParams()).bottomMargin;
+            mMyLocationFabBehavior = GonetteFabBehavior.from(mMyLocationFab);
+            mBottomSheetFabBehavior = GonetteFabBehavior.from(mBottomSheetFab);
         }
 
         public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -319,10 +326,10 @@ public class MapsActivity
             if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
                 mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
             } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
-                mBottomSheetFAB.setImageResource(R.drawable.ic_directions_white_24dp);
+                mBottomSheetFab.setImageResource(R.drawable.ic_directions_white_24dp);
                 mIsDirectionVisible = true;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mBottomSheetFAB.setCompatElevation(mFABElevationPrimary);
+                    mBottomSheetFab.setCompatElevation(mFABElevationPrimary);
                 }
             }
 
@@ -347,11 +354,18 @@ public class MapsActivity
                 removeBottomSheetFragment();
                 mBottomSheetType = BOTTOM_SHEET_NONE;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mBottomSheetFAB.setCompatElevation(mFABElevationSecondary);
+                    mBottomSheetFab.setCompatElevation(mFABElevationSecondary);
                 }
-                mBottomSheetFAB.setTag(null);
+                mBottomSheetFab.setTag(null);
                 mBottomSheet.setBackgroundColor(mBottomSheetBackgroundColor);
                 mBottomSheet.getLayoutParams().height = CoordinatorLayout.LayoutParams.MATCH_PARENT;
+                mMyLocationFabBehavior.setLeaveLength(mMyLocationFab.getHeight());
+                mMyLocationFabBehavior.setLeaveOffset(0);
+                mMyLocationFabBehavior.setMoveOffset(0);
+                mBottomSheetFabBehavior.setLeaveLength(mBottomSheetFab.getHeight());
+                mBottomSheetFabBehavior.setLeaveOffset(0);
+                mBottomSheetFabBehavior.setMoveOffset(0);
+                mBottomSheetFabBehavior.setLeaveMethod(GonetteFabBehavior.LEAVE_METHOD_ALPHA);
                 if (mShowPartnerAfterBottomSheetClose) {
                     mShowPartnerAfterBottomSheetClose = false;
                     showPartner(mSelectedPartnerId, mZoomForPartnerId);
@@ -366,54 +380,10 @@ public class MapsActivity
 
         @Override
         public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-            int translationY = mCoordinatorLayout.getBottom() - bottomSheet.getTop();
-            int maxTranslationY = mMyLocationFAB.getHeight() / 2 + mFabBottomMargin;
             manageStatusBarPaddingOnBottomSheetSlide(bottomSheet, slideOffset);
             if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
+                int translationY = mCoordinatorLayout.getBottom() - bottomSheet.getTop();
                 manageBottomSheetFabOnPartnerSlide(translationY, slideOffset);
-                manageMyLocationFabOnPartnerSlide(translationY, maxTranslationY);
-            } else {
-                manageFabOnSlide(mBottomSheetFAB, translationY, maxTranslationY);
-                manageFabOnSlide(mMyLocationFAB, translationY, maxTranslationY);
-            }
-        }
-
-        private void manageMyLocationFabOnPartnerSlide(int translationY, int maxTranslationY) {
-            translationY -= mBottomSheetFAB.getHeight() / 2 + mFabBottomMargin;
-            translationY = translationY > maxTranslationY
-                    ? maxTranslationY
-                    : translationY < 0
-                    ? 0
-                    : translationY;
-            float scale = 1 - ((float) translationY) / ((float) maxTranslationY);
-            mMyLocationFAB.setAlpha(scale);
-            if (scale <= 0) {
-                mMyLocationFAB.setTranslationY(0);
-                // Workaround for old device, else it's like there is an invisible button preventing clicking behind.
-                mMyLocationFAB.setTranslationX(mMyLocationFAB.getWidth() * 2);
-            } else {
-                mMyLocationFAB.setTranslationY(-translationY);
-                // Workaround for old device, else it's like there is an invisible button preventing clicking behind.
-                mMyLocationFAB.setTranslationX(0);
-            }
-        }
-
-        private void manageFabOnSlide(@NonNull FloatingActionButton fab, int translationY, int maxTranslationY) {
-            translationY = translationY > maxTranslationY
-                    ? maxTranslationY
-                    : translationY < 0
-                    ? 0
-                    : translationY;
-            float scale = 1 - ((float) translationY) / ((float) maxTranslationY);
-            fab.setAlpha(scale);
-            if (scale <= 0) {
-                fab.setTranslationY(0);
-                // Workaround for old device, else it's like there is an invisible button preventing clicking behind.
-                fab.setTranslationX(fab.getWidth() * 2);
-            } else {
-                fab.setTranslationY(-translationY);
-                // Workaround for old device, else it's like there is an invisible button preventing clicking behind.
-                fab.setTranslationX(0);
             }
         }
 
@@ -426,15 +396,15 @@ public class MapsActivity
                     : scale;
             scale = 1 - scale;
             scale = mInterpolator.getInterpolation(scale);
-            mBottomSheetFAB.setScaleX(scale);
-            mBottomSheetFAB.setScaleY(scale);
+            mBottomSheetFab.setScaleX(scale);
+            mBottomSheetFab.setScaleY(scale);
 
-            int fabCenter = mBottomSheetFAB.getHeight() / 2 + mFabBottomMargin;
+            int fabCenter = mBottomSheetFab.getHeight() / 2 + mFabBottomMargin;
             if (!mIsDirectionVisible && translationY > fabCenter) {
-                mBottomSheetFAB.setImageResource(R.drawable.ic_directions_white_24dp);
+                mBottomSheetFab.setImageResource(R.drawable.ic_directions_white_24dp);
                 mIsDirectionVisible = true;
             } else if (mIsDirectionVisible && translationY <= fabCenter) {
-                mBottomSheetFAB.setImageResource(R.drawable.ic_filter_list_white_24dp);
+                mBottomSheetFab.setImageResource(R.drawable.ic_filter_list_white_24dp);
                 mIsDirectionVisible = false;
             }
         }
@@ -488,11 +458,19 @@ public class MapsActivity
                             )
                             .commit();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mBottomSheetFAB.setCompatElevation(mFABElevationPrimary);
+                        mBottomSheetFab.setCompatElevation(mFABElevationPrimary);
                     }
-                    mBottomSheetFAB.setTag(partnerId);
+                    mBottomSheetFab.setTag(partnerId);
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     mBottomSheet.getLayoutParams().height = mCoordinatorLayout.getHeight() * 3 / 4;
+                    int offset = mBottomSheetFab.getHeight() / 2 + ((CoordinatorLayout.LayoutParams) mBottomSheetFab.getLayoutParams()).bottomMargin;
+                    mMyLocationFabBehavior.setLeaveLength(mMyLocationFab.getHeight());
+                    mMyLocationFabBehavior.setLeaveOffset(offset);
+                    mMyLocationFabBehavior.setMoveOffset(offset);
+                    mBottomSheetFabBehavior.setLeaveLength(mBottomSheetFab.getHeight());
+                    mBottomSheetFabBehavior.setLeaveOffset(mBottomSheetBehavior.getPeekHeight() + offset * 2);
+                    mBottomSheetFabBehavior.setMoveOffset(offset);
+                    mBottomSheetFabBehavior.setLeaveMethod(GonetteFabBehavior.LEAVE_METHOD_SCALE);
                     mBottomSheetType = BOTTOM_SHEET_PARTNER;
                 }
 
@@ -509,7 +487,7 @@ public class MapsActivity
                 mSelectedPartnerId = partnerId;
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             } else {
-                long currentPartnerId = (long) mBottomSheetFAB.getTag();
+                long currentPartnerId = (long) mBottomSheetFab.getTag();
                 if (currentPartnerId != partnerId) {
                     mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
                     getSupportFragmentManager().beginTransaction()
@@ -523,7 +501,7 @@ public class MapsActivity
                                     PartnerDetailFragment.TAG
                             )
                             .commit();
-                    mBottomSheetFAB.setTag(partnerId);
+                    mBottomSheetFab.setTag(partnerId);
                 }
                 mMapsFragment.showPartner(partnerId, false, null);
                 mBottomSheetType = BOTTOM_SHEET_PARTNER;

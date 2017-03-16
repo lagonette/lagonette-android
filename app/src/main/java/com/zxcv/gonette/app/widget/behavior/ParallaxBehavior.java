@@ -30,13 +30,14 @@ public class ParallaxBehavior<V extends View>
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(
                 attrs,
-                R.styleable.ParallaxBehavior
+                R.styleable.GonetteBehavior
         );
-        TypedValue value = a.peekValue(R.styleable.ParallaxBehavior_dependency);
+        TypedValue value = a.peekValue(R.styleable.GonetteBehavior_dependency);
         if (value != null) {
             mDependencyId = a.getResourceId(
-                    R.styleable.ParallaxBehavior_dependency, 0);
+                    R.styleable.GonetteBehavior_dependency, 0);
         }
+        a.recycle();
     }
 
     @Override

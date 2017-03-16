@@ -18,16 +18,16 @@
         android:id="@+id/my_location_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
+        android:layout_gravity="bottom|end"
         android:layout_marginBottom="88dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:src="@drawable/ic_my_location_dark_grey_24dp"
         app:backgroundTint="@android:color/white"
+        app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_anchor="@id/content"
-        app:layout_anchorGravity="end|bottom"/>
+        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteFabBehavior"/>
 
     <View
         android:id="@+id/shadow"
@@ -53,12 +53,13 @@
         android:id="@+id/bottom_sheet_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_filter_list_white_24dp"
+        app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_anchor="@id/bottom_sheet"
-        app:layout_anchorGravity="end|top"/>
+        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteFabBehavior"/>
 
 
 </android.support.design.widget.CoordinatorLayout>
