@@ -4,7 +4,7 @@
     <item name="content_uri_partner" type="id"/>
     <item name="content_uri_partners" type="id"/>
     <item name="content_uri_partners_metadata" type="id"/>
-    <item name="content_uri_partners_partners_metdata" type="id"/>
+    <item name="content_uri_partners_partners_metadata" type="id"/>
 
     <item name="loader_query_detail_partner" type="id"/>
     <item name="loader_query_map_partners" type="id"/>

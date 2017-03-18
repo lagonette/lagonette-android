@@ -56,7 +56,7 @@ public class GonetteContentProvider
             case R.id.content_uri_partners:
                 qb.setTables(Tables.PARTNER);
                 break;
-            case R.id.content_uri_partners_partners_metdata:
+            case R.id.content_uri_partners_partners_metadata:
                 qb.setTables(GonetteContentProviderHelper.getPartnerWithMetadataStatement());
                 break;
             default:
@@ -105,7 +105,7 @@ public class GonetteContentProvider
                 return GonetteContract.Partner.CONTENT_TYPE_ITEM;
             case R.id.content_uri_partners:
                 return GonetteContract.Partner.CONTENT_TYPE_DIR;
-            case R.id.content_uri_partners_partners_metdata:
+            case R.id.content_uri_partners_partners_metadata:
                 return GonetteContract.Partner.CONTENT_TYPE_DIR;
             case R.id.content_uri_partners_metadata:
                 return GonetteContract.PartnerMetadata.CONTENT_TYPE_DIR;
@@ -251,7 +251,7 @@ public class GonetteContentProvider
                 mUriMatcher,
                 GonetteContract.AUTHORITY,
                 GonetteContract.Partner.METADATA_CONTENT_URI.getPath(),
-                R.id.content_uri_partners_partners_metdata
+                R.id.content_uri_partners_partners_metadata
         );
         addUriToUriMatcher(
                 mUriMatcher,

@@ -293,7 +293,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
-    public void setPartnersVisibilityCursor(@Nullable PartnersVisibilityReader partnersVisibilityReader) {
+    public void setPartnersVisibilityReader(@Nullable PartnersVisibilityReader partnersVisibilityReader) {
         if (mPartnersVisibilityReader == partnersVisibilityReader) {
             return;
         }

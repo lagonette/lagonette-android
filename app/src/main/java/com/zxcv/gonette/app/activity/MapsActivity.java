@@ -28,6 +28,7 @@ import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.fragment.FiltersFragment;
 import com.zxcv.gonette.app.fragment.MapsFragment;
 import com.zxcv.gonette.app.fragment.PartnerDetailFragment;
+import com.zxcv.gonette.app.presenter.FiltersPresenter;
 import com.zxcv.gonette.app.widget.behavior.GonetteFabBehavior;
 import com.zxcv.gonette.app.widget.behavior.ParallaxBehavior;
 import com.zxcv.gonette.content.contract.GonetteContract;
@@ -576,7 +577,7 @@ public class MapsActivity
         }
 
         private void openFilters() {
-            mBottomSheetFragment = FiltersFragment.newInstance(mSearchText.getText().toString());
+            mBottomSheetFragment = FiltersPresenter.newInstance(mSearchText.getText().toString());
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(
