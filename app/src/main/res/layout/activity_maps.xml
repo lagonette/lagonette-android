@@ -61,5 +61,17 @@
         app:fabSize="normal"
         app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteFabBehavior"/>
 
+    <include
+        layout="@layout/widget_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginBottom="@dimen/search_bar_margin_bottom"
+        android:layout_marginEnd="@dimen/search_bar_margin_end"
+        android:layout_marginLeft="@dimen/search_bar_margin_start"
+        android:layout_marginRight="@dimen/search_bar_margin_end"
+        android:layout_marginStart="@dimen/search_bar_margin_start"
+        android:layout_marginTop="@dimen/search_bar_margin_top"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

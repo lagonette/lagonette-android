@@ -28,9 +28,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         void onPartnerVisibilityClick(@NonNull FilterAdapter.PartnerViewHolder holder);
 
-        void onSearchTextChanged(@NonNull String search);
-
-        void onSearchClick(@NonNull SearchViewHolder tag);
     }
 
     private static final String TAG = "FilterAdapter";
@@ -41,15 +38,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final int LOADING_ID = -4;
 
-    private static final int SEARCH_ID = -5;
-
     private static final int HEADER_COUNT = 1;
 
     private static final int FOOTER_COUNT = 1;
 
     private static final int LOADING_COUNT = 1;
-
-    private static final int SEARCH_COUNT = 1;
 
     @Nullable
     private PartnerReader mPartnerReader;
@@ -62,31 +55,23 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private boolean mIsExpanded = true;
 
-    private SearchBarManager mSearchBarManager;
-
-    public FilterAdapter(@Nullable OnPartnerClickListener onPartnerClickListener, @NonNull String search) {
+    public FilterAdapter(@Nullable OnPartnerClickListener onPartnerClickListener/*, @NonNull String search*/) {
         mOnPartnerClickListener = onPartnerClickListener;
-        mSearchBarManager = new SearchBarManager(onPartnerClickListener, search);
     }
 
     @Override
     public int getItemCount() {
         if (mPartnersVisibilityReader == null) {
-            return SEARCH_COUNT + LOADING_COUNT;
+            return LOADING_COUNT;
         } else if (mPartnerReader == null) {
-            return SEARCH_COUNT + HEADER_COUNT + LOADING_COUNT;
+            return HEADER_COUNT + LOADING_COUNT;
         } else {
-            return SEARCH_COUNT + HEADER_COUNT + getPartnerCount() + FOOTER_COUNT;
+            return HEADER_COUNT + getPartnerCount() + FOOTER_COUNT;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position < SEARCH_COUNT) {
-            return R.id.view_type_search;
-        }
-        position -= SEARCH_COUNT;
-
         if (mPartnersVisibilityReader == null) {
             return R.id.view_type_loading;
         } else {
@@ -109,11 +94,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public long getItemId(int position) {
-        if (position < SEARCH_COUNT) {
-            return SEARCH_ID;
-        }
-        position -= SEARCH_COUNT;
-
         if (mPartnersVisibilityReader == null) {
             return LOADING_ID;
         } else {
@@ -149,8 +129,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 return onCreateFooterViewHolder(parent);
             case R.id.view_type_loading:
                 return onCreateLoadingViewHolder(parent);
-            case R.id.view_type_search:
-                return onCreateSearchViewHolder(parent);
             default:
                 throw new IllegalArgumentException("Unknown view type:" + viewType);
         }
@@ -178,42 +156,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 false
                         )
         );
-    }
-
-    private SearchViewHolder onCreateSearchViewHolder(ViewGroup parent) {
-        SearchViewHolder holder = new SearchViewHolder(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_search,
-                                parent,
-                                false
-                        )
-        );
-
-        holder.clearButton.setTag(holder);
-        holder.clearButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSearchClearClick((SearchViewHolder) v.getTag());
-            }
-        });
-
-        if (mOnPartnerClickListener != null) {
-
-            holder.searchTextView.setTag(holder);
-            holder.searchTextView.setOnFocusChangeListener(mSearchBarManager);
-            holder.searchTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnPartnerClickListener.onSearchClick((SearchViewHolder) v.getTag());
-                }
-            });
-
-            holder.searchTextView.addTextChangedListener(mSearchBarManager);
-        }
-
-        return holder;
     }
 
     private PartnerViewHolder onCreatePartnerViewHolder(ViewGroup parent) {
@@ -288,10 +230,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 onBindAllPartnerViewHolder((AllPartnerViewHolder) holder);
                 break;
             case R.id.view_type_partner:
-                onBindPartnerViewHolder((PartnerViewHolder) holder, position - SEARCH_COUNT - HEADER_COUNT);
-                break;
-            case R.id.view_type_search:
-                onBindSearchViewHolder((SearchViewHolder) holder);
+                onBindPartnerViewHolder((PartnerViewHolder) holder, position - /*SEARCH_COUNT -*/ HEADER_COUNT);
                 break;
             case R.id.view_type_footer:
             case R.id.view_type_loading:
@@ -299,10 +238,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             default:
                 throw new IllegalArgumentException("Unknown view type:" + viewType);
         }
-    }
-
-    private void onBindSearchViewHolder(@NonNull SearchViewHolder holder) {
-        mSearchBarManager.onBind(holder);
     }
 
     private void onBindAllPartnerViewHolder(@NonNull AllPartnerViewHolder holder) {
@@ -340,10 +275,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void onAllPartnerExpandClick(@NonNull AllPartnerViewHolder holder) {
         mIsExpanded = !mIsExpanded;
         notifyDataSetChanged();
-    }
-
-    private void onSearchClearClick(@NonNull SearchViewHolder holder) {
-        holder.searchTextView.setText(FiltersFragment.DEFAULT_SEARCH);
     }
 
     private int getPartnerCount() {
@@ -404,19 +335,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public class SearchViewHolder extends RecyclerView.ViewHolder {
-
-        public final EditText searchTextView;
-
-        public final ImageButton clearButton;
-
-        public SearchViewHolder(View itemView) {
-            super(itemView);
-            searchTextView = (EditText) itemView.findViewById(R.id.search_text);
-            clearButton = (ImageButton) itemView.findViewById(R.id.search_clear);
-        }
-    }
-
     public class FooterViewHolder extends RecyclerView.ViewHolder {
 
         public FooterViewHolder(View itemView) {
@@ -431,67 +349,4 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public static class SearchBarManager implements TextWatcher, View.OnFocusChangeListener {
-
-        @Nullable
-        private OnPartnerClickListener mOnPartnerClickListener;
-
-        @Nullable
-        private String mCurrentSearch;
-
-        private boolean mSearchHasFocus = false;
-
-        private boolean mTextChangedComesFromCode = false;
-
-        public SearchBarManager(@NonNull OnPartnerClickListener onPartnerClickListener, @Nullable String search) {
-            mOnPartnerClickListener = onPartnerClickListener;
-            mCurrentSearch = search;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            // Save current search for the bind
-            mCurrentSearch = s.toString();
-            if (mOnPartnerClickListener != null) {
-                mOnPartnerClickListener.onSearchTextChanged(mCurrentSearch);
-            }
-        }
-
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            // Call the listener (To open bottom sheet) when the focus is requested from user and not by code.
-            mSearchHasFocus = hasFocus;
-            if (!mTextChangedComesFromCode && hasFocus) {
-                if (mOnPartnerClickListener != null) {
-                    mOnPartnerClickListener.onSearchClick((SearchViewHolder) v.getTag());
-                }
-            } else if (mTextChangedComesFromCode) {
-                mTextChangedComesFromCode = false;
-            }
-        }
-
-        public void onBind(@NonNull SearchViewHolder holder) {
-            // Bind search bar with current search and manage to have the correct focus
-            if (mCurrentSearch != null) {
-                mTextChangedComesFromCode = true;
-                holder.searchTextView.setText(mCurrentSearch);
-                if (mSearchHasFocus) {
-                    holder.searchTextView.requestFocus();
-                    holder.searchTextView.setSelection(holder.searchTextView.getText().length());
-                } else {
-                    holder.searchTextView.clearFocus();
-                }
-            }
-        }
-    }
 }

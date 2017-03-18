@@ -21,6 +21,7 @@ import com.zxcv.gonette.content.loader.InsertPartnerVisibilityLoader;
 import com.zxcv.gonette.content.loader.PartnerCursorLoaderHelper;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
+import com.zxcv.gonette.util.SearchUtil;
 
 public class FiltersFragment
         extends Fragment
@@ -30,16 +31,9 @@ public class FiltersFragment
 
         void showPartner(long partnerId, boolean zoom);
 
-        void filterPartner(@NonNull String search);
-
-        void expandFilters();
     }
 
-    private static final String STATE_SEARCH = "state:search";
-
     private static final String ARG_SEARCH = "arg:search";
-
-    public static final String DEFAULT_SEARCH = "";
 
     public static final String TAG = "FiltersFragment";
 
@@ -50,7 +44,7 @@ public class FiltersFragment
     private FilterAdapter mFilterAdapter;
 
     @NonNull
-    private String mCurrentSearch = "";
+    private String mCurrentSearch = SearchUtil.DEFAULT_SEARCH;
 
     private LoaderManager.LoaderCallbacks<Bundle> mBundleLoaderCallbacks = new LoaderManager.LoaderCallbacks<Bundle>() {
         @Override
@@ -80,14 +74,9 @@ public class FiltersFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mCurrentSearch = savedInstanceState.getString(STATE_SEARCH, DEFAULT_SEARCH);
-        }
-        else {
-            Bundle arguments = getArguments();
-            if (arguments != null) {
-                mCurrentSearch = arguments.getString(ARG_SEARCH, DEFAULT_SEARCH);
-            }
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
         }
     }
 
@@ -106,7 +95,7 @@ public class FiltersFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mFilterAdapter = new FilterAdapter(FiltersFragment.this, mCurrentSearch);
+        mFilterAdapter = new FilterAdapter(FiltersFragment.this/*, mCurrentSearch*/);
         mFilterAdapter.setHasStableIds(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
@@ -128,12 +117,6 @@ public class FiltersFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(STATE_SEARCH, mCurrentSearch);
-    }
-
-    @Override
     public void onPartnerClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
         mCallback.showPartner(holder.partnerId, true);
     }
@@ -148,18 +131,11 @@ public class FiltersFragment
         insertPartnerVisibility(holder.partnerId, !holder.isVisible);
     }
 
-    @Override
-    public void onSearchTextChanged(@NonNull String search) {
+    public void filterPartner(@NonNull String search) {
         if (!mCurrentSearch.equals(search)) {
             mCurrentSearch = search;
             queryPartners();
-            mCallback.filterPartner(search);
         }
-    }
-
-    @Override
-    public void onSearchClick(@NonNull FilterAdapter.SearchViewHolder tag) {
-        mCallback.expandFilters();
     }
 
     private void insertPartnerVisibility(long partnerId, boolean isVisible) {
@@ -198,7 +174,7 @@ public class FiltersFragment
                         GonetteContract.PartnerMetadata.IS_VISIBLE
                 },
                 GonetteContract.Partner.NAME + " LIKE ?",
-                new String[] {
+                new String[]{
                         "%" + search + "%"
                 },
                 GonetteContract.Partner.NAME + " ASC"
