@@ -15,6 +15,7 @@
     <ImageButton
         android:id="@+id/partners_visibility"
         style="?android:attr/borderlessButtonStyle"
+        android:background="?selectableItemBackgroundBorderless"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentLeft="true"

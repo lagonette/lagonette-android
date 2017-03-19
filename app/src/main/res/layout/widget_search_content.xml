@@ -29,6 +29,7 @@
     <ImageButton
         android:id="@+id/search_clear"
         style="?android:attr/borderlessButtonStyle"
+        android:background="?selectableItemBackgroundBorderless"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/ic_clear_grey_24dp"/>
