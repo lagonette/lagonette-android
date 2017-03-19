@@ -29,7 +29,7 @@ import com.zxcv.gonette.app.fragment.FiltersFragment;
 import com.zxcv.gonette.app.fragment.MapsFragment;
 import com.zxcv.gonette.app.fragment.PartnerDetailFragment;
 import com.zxcv.gonette.app.presenter.FiltersPresenter;
-import com.zxcv.gonette.app.widget.behavior.GonetteFabBehavior;
+import com.zxcv.gonette.app.widget.behavior.GonetteDisappearBehavior;
 import com.zxcv.gonette.app.widget.behavior.ParallaxBehavior;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
@@ -45,7 +45,7 @@ public class MapsActivity
         FiltersFragment.Callback,
         ParallaxBehavior.OnParallaxTranslationListener,
         View.OnClickListener,
-        View.OnLongClickListener {
+        View.OnLongClickListener, GonetteDisappearBehavior.OnMoveListener {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({BOTTOM_SHEET_NONE, BOTTOM_SHEET_PARTNER, BOTTOM_SHEET_FILTERS})
@@ -87,6 +87,10 @@ public class MapsActivity
     private int mStatusBarHeight;
 
     private int mSearchBarVerticalMargin;
+
+    private int mParallaxMapsPaddingTop = 0;
+
+    private int mSearchBarMapsPaddingTop = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +197,9 @@ public class MapsActivity
 
     @Override
     public void onParallaxTranslation(float translationY) {
-        mMapsFragment.processParallaxTranslation(translationY);
+        mParallaxMapsPaddingTop = (int) -translationY;
+        updateMapsPaddingTop();
+        updateMapsPaddingBottom();
     }
 
     @Override
@@ -326,6 +332,20 @@ public class MapsActivity
         }
     }
 
+    @Override
+    public void onMove(View child, int translationY) {
+        mSearchBarMapsPaddingTop = child.getBottom() + translationY;
+        updateMapsPaddingTop();
+    }
+
+    private void updateMapsPaddingTop() {
+        mMapsFragment.updateMapPaddingTop(mParallaxMapsPaddingTop + mSearchBarMapsPaddingTop);
+    }
+
+    private void updateMapsPaddingBottom() {
+        mMapsFragment.updateMapPaddingBottom(mParallaxMapsPaddingTop);
+    }
+
     public class BottomSheetManager extends BottomSheetBehavior.BottomSheetCallback {
 
         public static final String STATE_BOTTOM_SHEET_TYPE = "state:bottom_sheet_type";
@@ -355,9 +375,11 @@ public class MapsActivity
 
         private boolean mIsDirectionVisible = false;
 
-        private GonetteFabBehavior mMyLocationFabBehavior;
+        private GonetteDisappearBehavior mMyLocationFabBehavior;
 
-        private GonetteFabBehavior mBottomSheetFabBehavior;
+        private GonetteDisappearBehavior mBottomSheetFabBehavior;
+
+        private GonetteDisappearBehavior mSearchBarBehavior;
 
         public BottomSheetManager(@NonNull Context context, @NonNull Resources resources) {
             mFABElevationPrimary = resources.getDimension(R.dimen.fab_elevation_primary);
@@ -365,8 +387,10 @@ public class MapsActivity
             mFiltersBottomSheetBackgroundColor = ContextCompat.getColor(context, R.color.colorPrimary);
             mBottomSheetBackgroundColor = ContextCompat.getColor(context, android.R.color.background_light);
             mFabBottomMargin = ((CoordinatorLayout.LayoutParams) mBottomSheetFab.getLayoutParams()).bottomMargin;
-            mMyLocationFabBehavior = GonetteFabBehavior.from(mMyLocationFab);
-            mBottomSheetFabBehavior = GonetteFabBehavior.from(mBottomSheetFab);
+            mMyLocationFabBehavior = GonetteDisappearBehavior.from(mMyLocationFab);
+            mBottomSheetFabBehavior = GonetteDisappearBehavior.from(mBottomSheetFab);
+            mSearchBarBehavior = GonetteDisappearBehavior.from(mSearchBar);
+            mSearchBarBehavior.setOnMoveListener(MapsActivity.this);
         }
 
         public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -418,8 +442,9 @@ public class MapsActivity
                 mMyLocationFabBehavior.setMoveOffset(0);
                 mBottomSheetFabBehavior.setLeaveLength(mBottomSheetFab.getHeight());
                 mBottomSheetFabBehavior.setLeaveOffset(0);
+                mBottomSheetFabBehavior.setMoveLength(mBottomSheetFab.getHeight());
                 mBottomSheetFabBehavior.setMoveOffset(0);
-                mBottomSheetFabBehavior.setLeaveMethod(GonetteFabBehavior.LEAVE_METHOD_ALPHA);
+                mBottomSheetFabBehavior.setLeaveMethod(GonetteDisappearBehavior.LEAVE_METHOD_ALPHA);
                 if (mShowPartnerAfterBottomSheetClose) {
                     mShowPartnerAfterBottomSheetClose = false;
                     showPartner(mSelectedPartnerId, mZoomForPartnerId);
@@ -525,8 +550,14 @@ public class MapsActivity
                     mMyLocationFabBehavior.setMoveOffset(offset);
                     mBottomSheetFabBehavior.setLeaveLength(mBottomSheetFab.getHeight());
                     mBottomSheetFabBehavior.setLeaveOffset(mBottomSheetBehavior.getPeekHeight() + offset * 2);
+                    mBottomSheetFabBehavior.setMoveLength(mBottomSheetFab.getHeight() + mBottomSheetBehavior.getPeekHeight() + offset * 2);
                     mBottomSheetFabBehavior.setMoveOffset(offset);
-                    mBottomSheetFabBehavior.setLeaveMethod(GonetteFabBehavior.LEAVE_METHOD_SCALE);
+                    mBottomSheetFabBehavior.setLeaveMethod(GonetteDisappearBehavior.LEAVE_METHOD_SCALE);
+                    mSearchBarBehavior.enable();
+                    mSearchBarBehavior.setLeaveLength(mMyLocationFab.getHeight());
+                    mSearchBarBehavior.setLeaveOffset(offset); // TODO improve: do this only one time.
+                    mSearchBarBehavior.setMoveLength(mSearchBar.getBottom() - mStatusBarHeight);
+                    mSearchBarBehavior.setMoveOffset(offset);
                     mBottomSheetType = BOTTOM_SHEET_PARTNER;
                 }
 
@@ -588,6 +619,7 @@ public class MapsActivity
                     .commit();
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
+            mSearchBarBehavior.disable();
             mBottomSheetType = BOTTOM_SHEET_FILTERS;
         }
 

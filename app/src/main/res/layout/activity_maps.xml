@@ -27,7 +27,7 @@
         app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteFabBehavior"/>
+        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteDisappearBehavior"/>
 
     <View
         android:id="@+id/shadow"
@@ -59,7 +59,7 @@
         app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteFabBehavior"/>
+        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteDisappearBehavior"/>
 
     <include
         layout="@layout/widget_search"
@@ -71,7 +71,9 @@
         android:layout_marginLeft="@dimen/search_bar_margin_start"
         android:layout_marginRight="@dimen/search_bar_margin_end"
         android:layout_marginStart="@dimen/search_bar_margin_start"
-        android:layout_marginTop="@dimen/search_bar_margin_top"/>
+        android:layout_marginTop="@dimen/search_bar_margin_top"
+        app:dependency="@id/bottom_sheet"
+        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteDisappearBehavior"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -128,6 +128,10 @@ public class MapsFragment
 
     private long mSelectedMarkerId = GonetteContract.NO_ID;
 
+    private int mTopPadding;
+
+    private int mBottomPadding;
+
     public static MapsFragment newInstance() {
         return new MapsFragment();
     }
@@ -420,12 +424,24 @@ public class MapsFragment
         }
     }
 
-    public void processParallaxTranslation(float translationY) {
-        int parallaxPadding = -(int) translationY;
-        int topPadding = mStatusBarHeight + parallaxPadding;
-        mMap.setPadding(0, topPadding, 0, parallaxPadding);
+    public void updateMapPaddingTop(int paddingTop) {
+        mTopPadding = paddingTop;
+        updateMapPadding();
     }
 
+    public void updateMapPaddingBottom(int bottomPadding) {
+        mBottomPadding = bottomPadding;
+        updateMapPadding();
+    }
+
+    private void updateMapPadding() {
+        mMap.setPadding(
+                0,
+                mTopPadding,
+                0,
+                mBottomPadding
+        );
+    }
 
     public void moveOnMyLocation() {
         if (mLocationPermissionGranted) {
