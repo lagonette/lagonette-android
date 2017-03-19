@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_widget_search"
-    android:elevation="8dp"
+    android:elevation="4dp"
     android:orientation="horizontal">
 
     <include layout="@layout/widget_search_content"/>
