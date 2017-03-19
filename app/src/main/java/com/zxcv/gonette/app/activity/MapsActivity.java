@@ -310,7 +310,10 @@ public class MapsActivity
     }
 
     private void onSearchClearClick() {
-        mSearchText.setText(SearchUtil.DEFAULT_SEARCH);
+        String currentText = mSearchText.getText().toString();
+        if (!SearchUtil.DEFAULT_SEARCH.equals(currentText)) {
+            mSearchText.setText(SearchUtil.DEFAULT_SEARCH);
+        }
     }
 
     @Override
