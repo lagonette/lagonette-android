@@ -15,9 +15,9 @@ import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 
 public class PartnerRepo
-        extends GonetteRepo<PartnerRepo.Callback> {
+        extends BaseRepo<PartnerRepo.Callback> {
 
-    public interface Callback extends GonetteRepo.Callback {
+    public interface Callback extends BaseRepo.Callback {
 
         void onPartnerLoaded(@Nullable PartnerReader reader);
 
@@ -41,7 +41,7 @@ public class PartnerRepo
             case R.id.loader_query_filters_partners_visibility:
                 return onCreateQueryPartnersVisibilityLoader(args);
             default:
-                throw new IllegalArgumentException("Unknown loader id:" + id);
+                return super.onCreateCursorLoader(id, args);
         }
     }
 
@@ -56,7 +56,7 @@ public class PartnerRepo
                 onQueryPartnersVisibilityLoadFinished(cursor);
                 break;
             default:
-                throw new IllegalArgumentException("Unknown loader id:" + id);
+                super.onCursorLoadFinished(loader, cursor);
         }
     }
 
@@ -71,7 +71,7 @@ public class PartnerRepo
                 mCallback.onPartnersVisibilityReset();
                 break;
             default:
-                throw new IllegalArgumentException("Unknown loader id:" + id);
+                super.onCursorLoaderReset(loader);
         }
     }
 
@@ -81,7 +81,7 @@ public class PartnerRepo
             case R.id.loader_insert_partner_visibility:
                 return new InsertPartnerVisibilityLoader(mCallback.getContext(), args);
             default:
-                throw new IllegalArgumentException("Unknown loader id:" + id);
+                return super.onCreateBundleLoader(id, args);
         }
     }
 
@@ -93,7 +93,7 @@ public class PartnerRepo
                 // Do nothing
                 break;
             default:
-                throw new IllegalArgumentException("Unknown loader id:" + id);
+                super.onBundleLoadFinished(loader, data);
         }
     }
 
@@ -105,7 +105,7 @@ public class PartnerRepo
                 // Do nothing
                 break;
             default:
-                throw new IllegalArgumentException("Unknown loader id:" + id);
+                super.onBundleLoaderReset(loader);
         }
     }
 

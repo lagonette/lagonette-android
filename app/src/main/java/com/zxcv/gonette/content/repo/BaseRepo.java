@@ -3,12 +3,13 @@ package com.zxcv.gonette.content.repo;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-public abstract class GonetteRepo<C extends GonetteRepo.Callback> {
+public abstract class BaseRepo<C extends BaseRepo.Callback> {
 
     public interface Callback {
 
@@ -23,7 +24,7 @@ public abstract class GonetteRepo<C extends GonetteRepo.Callback> {
     @NonNull
     protected final C mCallback;
 
-    public GonetteRepo(@NonNull C callback) {
+    protected BaseRepo(@NonNull C callback) {
         mCallback = callback;
     }
 
@@ -81,17 +82,35 @@ public abstract class GonetteRepo<C extends GonetteRepo.Callback> {
         mCallback.getLoaderManager().restartLoader(id, args, mBundleLoaderCallbacks);
     }
 
-    protected abstract Loader<Cursor> onCreateCursorLoader(int id, Bundle args);
+    @CallSuper
+    protected Loader<Cursor> onCreateCursorLoader(int id, Bundle args) {
+        throw new IllegalArgumentException("Unknown loader Id: " + id);
+    }
 
-    protected abstract void onCursorLoadFinished(@NonNull Loader<Cursor> loader, @Nullable Cursor cursor);
+    @CallSuper
+    protected void onCursorLoadFinished(@NonNull Loader<Cursor> loader, @Nullable Cursor cursor) {
+        throw new IllegalArgumentException("Unknown loader Id: " + loader.getId());
+    }
 
-    protected abstract void onCursorLoaderReset(@NonNull Loader<Cursor> loader);
+    @CallSuper
+    protected void onCursorLoaderReset(@NonNull Loader<Cursor> loader) {
+        throw new IllegalArgumentException("Unknown loader Id: " + loader.getId());
+    }
 
-    protected abstract Loader<Bundle> onCreateBundleLoader(int id, Bundle args);
+    @CallSuper
+    protected Loader<Bundle> onCreateBundleLoader(int id, Bundle args) {
+        throw new IllegalArgumentException("Unknown loader Id: " + id);
+    }
 
-    protected abstract void onBundleLoadFinished(@NonNull Loader<Bundle> loader, @NonNull Bundle data);
+    @CallSuper
+    protected void onBundleLoadFinished(@NonNull Loader<Bundle> loader, @NonNull Bundle data) {
+        throw new IllegalArgumentException("Unknown loader Id: " + loader.getId());
+    }
 
-    protected abstract void onBundleLoaderReset(@NonNull Loader<Bundle> loader);
+    @CallSuper
+    protected void onBundleLoaderReset(@NonNull Loader<Bundle> loader) {
+        throw new IllegalArgumentException("Unknown loader Id: " + loader.getId());
+    }
 
 
 }
