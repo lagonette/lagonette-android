@@ -85,12 +85,12 @@ public class FiltersFragment
 
     @Override
     public void onAllPartnerVisibilityClick(@NonNull FilterAdapter.AllPartnerViewHolder holder) {
-        mPresenter.changePartnersVisibility(!holder.isVisible);
+        mPresenter.setPartnersVisibility(!holder.isVisible);
     }
 
     @Override
     public void onPartnerVisibilityClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
-        mPresenter.changePartnerVisibility(holder.partnerId, !holder.isVisible);
+        mPresenter.setPartnerVisibility(holder.partnerId, !holder.isVisible);
     }
 
     public void filterPartner(@NonNull String search) {

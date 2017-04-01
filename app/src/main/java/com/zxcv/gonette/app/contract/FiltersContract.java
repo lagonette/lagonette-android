@@ -10,9 +10,9 @@ public abstract class FiltersContract {
 
     public interface Presenter extends Contract.Presenter {
 
-        void changePartnerVisibility(long partnerId, boolean visibility);
+        void setPartnerVisibility(long partnerId, boolean visibility);
 
-        void changePartnersVisibility(boolean visibility);
+        void setPartnersVisibility(boolean visibility);
 
         void filterPartner(@NonNull String search);
 

@@ -1,26 +1,21 @@
 package com.zxcv.gonette.app.presenter;
 
-import android.database.Cursor;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 
-import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.contract.FiltersContract;
 import com.zxcv.gonette.app.fragment.FiltersFragment;
-import com.zxcv.gonette.content.contract.GonetteContract;
-import com.zxcv.gonette.content.loader.InsertPartnerVisibilityLoader;
-import com.zxcv.gonette.content.loader.PartnerCursorLoaderHelper;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
+import com.zxcv.gonette.content.repo.PartnerRepo;
 import com.zxcv.gonette.util.SearchUtil;
 
 public class FiltersPresenter
         extends FragmentPresenter
-        implements FiltersContract.Presenter, LoaderManager.LoaderCallbacks<Cursor> {
+        implements FiltersContract.Presenter, PartnerRepo.Callback {
 
     private static final String ARG_SEARCH = "arg:search";
 
@@ -37,25 +32,10 @@ public class FiltersPresenter
     private FiltersContract.Fragment mFragment;
 
     @NonNull
-    private String mCurrentSearch = SearchUtil.DEFAULT_SEARCH;
+    private PartnerRepo mPartnerRepo;
 
     @NonNull
-    private LoaderManager.LoaderCallbacks<Bundle> mBundleLoaderCallbacks = new LoaderManager.LoaderCallbacks<Bundle>() {
-        @Override
-        public Loader<Bundle> onCreateLoader(int id, Bundle args) {
-            return new InsertPartnerVisibilityLoader(mFragment.getContext(), args);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Bundle> loader, Bundle data) {
-            mFragment.getLoaderManager().destroyLoader(loader.getId());
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Bundle> loader) {
-            // Do nothing
-        }
-    };
+    private String mCurrentSearch = SearchUtil.DEFAULT_SEARCH;
 
     public FiltersPresenter(@NonNull FiltersContract.Fragment fragment) {
         mFragment = fragment;
@@ -74,135 +54,59 @@ public class FiltersPresenter
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadPartnersVisibility();
+        mPartnerRepo = new PartnerRepo(FiltersPresenter.this);
+        mPartnerRepo.loadPartnersVisibility();
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (id) {
-            case R.id.loader_query_filters_partners:
-                return onCreateQueryPartnersLoader(args);
-            case R.id.loader_query_filters_partners_visibility:
-                return onCreateQueryPartnersVisibilityLoader(args);
-            default:
-                throw new IllegalArgumentException("Unknown loader id:" + id);
-        }
-    }
-
-    private Loader<Cursor> onCreateQueryPartnersLoader(Bundle args) {
-        String search = PartnerCursorLoaderHelper.getSearch(args);
-        return new CursorLoader(
-                mFragment.getContext(),
-                GonetteContract.Partner.METADATA_CONTENT_URI,
-                new String[]{
-                        GonetteContract.Partner.ID,
-                        GonetteContract.Partner.NAME,
-                        GonetteContract.PartnerMetadata.IS_VISIBLE
-                },
-                GonetteContract.Partner.NAME + " LIKE ?",
-                new String[]{
-                        "%" + search + "%"
-                },
-                GonetteContract.Partner.NAME + " ASC"
-        );
-    }
-
-    private Loader<Cursor> onCreateQueryPartnersVisibilityLoader(Bundle args) {
-        return new CursorLoader(
-                mFragment.getContext(),
-                GonetteContract.Partner.METADATA_CONTENT_URI,
-                new String[]{
-                        PartnersVisibilityReader.getPartnerVisibilityCountProjection()
-                },
-                GonetteContract.PartnerMetadata.IS_VISIBLE + " > ?",
-                new String[]{
-                        String.valueOf(0)
-                },
-                null
-        );
+    public void setPartnerVisibility(long partnerId, boolean isVisible) {
+        mPartnerRepo.setPartnerVisibility(partnerId, isVisible);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_query_filters_partners:
-                onQueryPartnersLoadFinished(cursor);
-                break;
-            case R.id.loader_query_filters_partners_visibility:
-                onQueryPartnersVisibilityLoadFinished(cursor);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown loader id:" + id);
-        }
-    }
-
-    private void onQueryPartnersLoadFinished(Cursor cursor) {
-        mFragment.displayPartners(
-                cursor != null
-                        ? new PartnerReader(cursor)
-                        : null
-        );
-    }
-
-    private void onQueryPartnersVisibilityLoadFinished(Cursor cursor) {
-        mFragment.displayPartnersVisibility(
-                cursor != null
-                        ? new PartnersVisibilityReader(cursor)
-                        : null
-        );
-        loadPartners();
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_query_filters_partners:
-                mFragment.resetPartners();
-                break;
-            case R.id.loader_query_filters_partners_visibility:
-                mFragment.resetPartnersVisibility();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown loader id:" + id);
-        }
-    }
-
-    private void loadPartners() {
-        LoaderManager loaderManager = mFragment.getLoaderManager();
-        loaderManager.restartLoader(
-                R.id.loader_query_filters_partners,
-                PartnerCursorLoaderHelper.getArgs(mCurrentSearch),
-                FiltersPresenter.this
-        );
-    }
-
-    private void loadPartnersVisibility() {
-        LoaderManager loaderManager = mFragment.getLoaderManager();
-        loaderManager.initLoader(R.id.loader_query_filters_partners_visibility, null, FiltersPresenter.this);
-    }
-
-    @Override
-    public void changePartnerVisibility(long partnerId, boolean isVisible) {
-        Bundle args = InsertPartnerVisibilityLoader.getArgs(
-                partnerId,
-                isVisible
-        );
-        mFragment.getLoaderManager().initLoader(R.id.loader_insert_partner_visibility, args, mBundleLoaderCallbacks);
-    }
-
-    @Override
-    public void changePartnersVisibility(boolean isVisible) {
-        Bundle args = InsertPartnerVisibilityLoader.getArgs(isVisible);
-        mFragment.getLoaderManager().initLoader(R.id.loader_insert_partner_visibility, args, mBundleLoaderCallbacks);
+    public void setPartnersVisibility(boolean isVisible) {
+        mPartnerRepo.setPartnersVisibility(isVisible);
     }
 
     @Override
     public void filterPartner(@NonNull String search) {
         if (!mCurrentSearch.equals(search)) {
             mCurrentSearch = search;
-            loadPartners();
+            mPartnerRepo.loadPartners(mCurrentSearch);
         }
+    }
+
+    @Override
+    public void onPartnerLoaded(@Nullable PartnerReader reader) {
+        mFragment.displayPartners(reader);
+    }
+
+    @Override
+    public void onPartnersVisibilityLoaded(@Nullable PartnersVisibilityReader reader) {
+        mFragment.displayPartnersVisibility(reader);
+        //TODO maybe load only at start?
+        mPartnerRepo.loadPartners(mCurrentSearch);
+    }
+
+    @Override
+    public void onPartnerReset() {
+        mFragment.resetPartners();
+    }
+
+    @Override
+    public void onPartnersVisibilityReset() {
+        mFragment.resetPartnersVisibility();
+    }
+
+    @NonNull
+    @Override
+    public Context getContext() {
+        return mFragment.getContext();
+    }
+
+    @NonNull
+    @Override
+    public LoaderManager getLoaderManager() {
+        return mFragment.getLoaderManager();
     }
 }

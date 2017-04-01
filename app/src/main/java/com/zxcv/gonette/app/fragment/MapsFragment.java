@@ -435,12 +435,14 @@ public class MapsFragment
     }
 
     private void updateMapPadding() {
-        mMap.setPadding(
-                0,
-                mTopPadding,
-                0,
-                mBottomPadding
-        );
+        if (mMap != null) {
+            mMap.setPadding(
+                    0,
+                    mTopPadding,
+                    0,
+                    mBottomPadding
+            );
+        }
     }
 
     public void moveOnMyLocation() {
