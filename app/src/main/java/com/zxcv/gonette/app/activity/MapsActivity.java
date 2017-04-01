@@ -40,7 +40,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class MapsActivity
-        extends AppCompatActivity
+        extends BaseActivity
         implements MapsFragment.Callback,
         FiltersFragment.Callback,
         ParallaxBehavior.OnParallaxTranslationListener,
@@ -93,18 +93,12 @@ public class MapsActivity
     private int mSearchBarMapsPaddingTop = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        onCreateView();
-        onViewCreated();
-        onActivityCreated(savedInstanceState);
-    }
-
-    private void onCreateView() {
+    protected void setContentView() {
         setContentView(R.layout.activity_maps);
     }
 
-    private void onViewCreated() {
+    @Override
+    protected void onViewCreated() {
         mCoordinatorLayout = findViewById(R.id.coordinator_layout);
         mSearchBar = findViewById(R.id.search_bar);
         mSearchText = (EditText) findViewById(R.id.search_text);
@@ -114,7 +108,8 @@ public class MapsActivity
         mBottomSheetFab = (FloatingActionButton) findViewById(R.id.bottom_sheet_fab);
     }
 
-    private void onActivityCreated(Bundle savedInstanceState) {
+    @Override
+    protected void onActivityCreated(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             mMapsFragment = MapsFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
