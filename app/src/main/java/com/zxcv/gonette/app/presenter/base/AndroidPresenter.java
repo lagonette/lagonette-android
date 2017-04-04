@@ -6,8 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.zxcv.gonette.app.contract.Contract;
 
-public abstract class FragmentPresenter
-        extends LoaderPresenter
+public abstract class AndroidPresenter
         implements Contract.Presenter {
 
     public void onCreate(@Nullable Bundle savedInstanceState) {

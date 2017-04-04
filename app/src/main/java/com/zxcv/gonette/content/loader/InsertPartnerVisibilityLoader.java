@@ -6,11 +6,7 @@ import android.content.OperationApplicationException;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
-import android.util.Log;
 
-import com.zxcv.gonette.BuildConfig;
-import com.zxcv.gonette.R;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.loader.base.BundleLoader;
 
@@ -57,17 +53,6 @@ public class InsertPartnerVisibilityLoader extends BundleLoader {
     }
 
     @Override
-    public void deliverResult(Bundle data) {
-        if (isReset()) {
-            return;
-        }
-        if (isStarted()) {
-            Log.d(TAG, "deliverResult() " + mBundle.toString() + " " + toString());
-            super.deliverResult(data);
-        }
-    }
-
-    @Override
     public Bundle loadInBackground() {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         if (mAllPartner) {
@@ -94,10 +79,8 @@ public class InsertPartnerVisibilityLoader extends BundleLoader {
                     GonetteContract.AUTHORITY,
                     operations
             );
-        } catch (RemoteException e) {
+        } catch (RemoteException | OperationApplicationException e) {
             e.printStackTrace(); // TODO
-        } catch (OperationApplicationException e) {
-            e.printStackTrace();
         }
         mBundle.putInt(ARG_STATUS, STATUS_OK);
         return mBundle;

@@ -7,11 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.widget.Toast;
 
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.contract.FiltersContract;
 import com.zxcv.gonette.app.fragment.FiltersFragment;
-import com.zxcv.gonette.app.presenter.base.FragmentPresenter;
+import com.zxcv.gonette.app.presenter.base.LoaderPresenter;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.loader.InsertPartnerVisibilityLoader;
 import com.zxcv.gonette.content.loader.PartnerCursorLoaderHelper;
@@ -20,7 +21,7 @@ import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 import com.zxcv.gonette.util.SearchUtil;
 
 public class FiltersPresenter
-        extends FragmentPresenter
+        extends LoaderPresenter
         implements FiltersContract.Presenter {
 
     private static final String ARG_SEARCH = "arg:search";
@@ -52,6 +53,12 @@ public class FiltersPresenter
         if (arguments != null) {
             mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
         }
+    }
+
+    @Override
+    protected void onReattachBundleLoader() {
+        LoaderManager loaderManager = getLoaderManager();
+        reattachBundleLoader(loaderManager, R.id.loader_insert_partner_visibility);
     }
 
     @Override
@@ -117,6 +124,7 @@ public class FiltersPresenter
         int id = loader.getId();
         switch (id) {
             case R.id.loader_insert_partner_visibility:
+                Toast.makeText(mFragment.getContext(), "TINY RICK!", Toast.LENGTH_SHORT).show();
                 // Do nothing
                 break;
             default:

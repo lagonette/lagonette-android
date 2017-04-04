@@ -3,12 +3,13 @@ package com.zxcv.gonette.app.presenter.base;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-public abstract class LoaderPresenter {
+public abstract class LoaderPresenter extends AndroidPresenter {
 
 
     @NonNull
@@ -49,6 +50,14 @@ public abstract class LoaderPresenter {
         }
     };
 
+    @CallSuper
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        onReattachBundleLoader();
+    }
+
+    protected abstract void onReattachBundleLoader();
+
     @NonNull
     protected abstract LoaderManager getLoaderManager();
 
@@ -66,6 +75,12 @@ public abstract class LoaderPresenter {
 
     protected void restartBundleLoader(int id, @Nullable Bundle args) {
         getLoaderManager().restartLoader(id, args, mBundleLoaderCallbacks);
+    }
+
+    protected void reattachBundleLoader(@NonNull LoaderManager loaderManager, @IdRes int loaderId) {
+        if (loaderManager.getLoader(loaderId) != null) {
+            loaderManager.initLoader(loaderId, null, mBundleLoaderCallbacks);
+        }
     }
 
     @CallSuper
