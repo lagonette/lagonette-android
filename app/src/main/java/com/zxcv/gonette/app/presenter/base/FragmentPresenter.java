@@ -1,4 +1,4 @@
-package com.zxcv.gonette.app.presenter;
+package com.zxcv.gonette.app.presenter.base;
 
 
 import android.os.Bundle;
@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 
 import com.zxcv.gonette.app.contract.Contract;
 
-public abstract class FragmentPresenter implements Contract.Presenter {
+public abstract class FragmentPresenter
+        extends LoaderPresenter
+        implements Contract.Presenter {
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
 

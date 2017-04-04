@@ -1,6 +1,5 @@
-package com.zxcv.gonette.content.repo;
+package com.zxcv.gonette.app.presenter.base;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -9,24 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-public abstract class BaseRepo<C extends BaseRepo.Callback> {
+public abstract class LoaderPresenter {
 
-    public interface Callback {
-
-        @NonNull
-        Context getContext();
-
-        @NonNull
-        LoaderManager getLoaderManager();
-
-    }
-
-    @NonNull
-    protected final C mCallback;
-
-    protected BaseRepo(@NonNull C callback) {
-        mCallback = callback;
-    }
 
     @NonNull
     private LoaderManager.LoaderCallbacks<Bundle> mBundleLoaderCallbacks = new LoaderManager.LoaderCallbacks<Bundle>() {
@@ -37,7 +20,7 @@ public abstract class BaseRepo<C extends BaseRepo.Callback> {
 
         @Override
         public void onLoadFinished(Loader<Bundle> loader, Bundle data) {
-            mCallback.getLoaderManager().destroyLoader(loader.getId());
+            getLoaderManager().destroyLoader(loader.getId());
             onBundleLoadFinished(loader, data);
         }
 
@@ -66,20 +49,23 @@ public abstract class BaseRepo<C extends BaseRepo.Callback> {
         }
     };
 
+    @NonNull
+    protected abstract LoaderManager getLoaderManager();
+
     protected void initCursorLoader(int id, @Nullable Bundle args) {
-        mCallback.getLoaderManager().initLoader(id, args, mCursorLoaderCallbacks);
+        getLoaderManager().initLoader(id, args, mCursorLoaderCallbacks);
     }
 
     protected void restartCursorLoader(int id, @Nullable Bundle args) {
-        mCallback.getLoaderManager().restartLoader(id, args, mCursorLoaderCallbacks);
+        getLoaderManager().restartLoader(id, args, mCursorLoaderCallbacks);
     }
 
     protected void initBundleLoader(int id, @Nullable Bundle args) {
-        mCallback.getLoaderManager().initLoader(id, args, mBundleLoaderCallbacks);
+        getLoaderManager().initLoader(id, args, mBundleLoaderCallbacks);
     }
 
     protected void restartBundleLoader(int id, @Nullable Bundle args) {
-        mCallback.getLoaderManager().restartLoader(id, args, mBundleLoaderCallbacks);
+        getLoaderManager().restartLoader(id, args, mBundleLoaderCallbacks);
     }
 
     @CallSuper
@@ -111,6 +97,5 @@ public abstract class BaseRepo<C extends BaseRepo.Callback> {
     protected void onBundleLoaderReset(@NonNull Loader<Bundle> loader) {
         throw new IllegalArgumentException("Unknown loader Id: " + loader.getId());
     }
-
 
 }
