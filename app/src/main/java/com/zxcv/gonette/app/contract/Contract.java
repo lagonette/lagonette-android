@@ -7,7 +7,7 @@ import android.support.v4.app.LoaderManager;
 
 public abstract class Contract {
 
-    public interface BaseView<P extends Presenter> {
+    public interface BaseView {
 
         Context getContext();
 
@@ -15,15 +15,11 @@ public abstract class Contract {
 
         LoaderManager getLoaderManager();
 
-        void setPresenter(P presenter);
-
     }
 
-    public interface Presenter {
+    public interface BasePresenter {
 
-        void onCreate(@Nullable Bundle savedInstanceState);
-
-        void onActivityCreated(@Nullable Bundle savedInstanceState);
+        void start(@Nullable Bundle savedInstanceState);
 
     }
 

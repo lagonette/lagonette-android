@@ -31,28 +31,17 @@ public class FiltersPresenter
         args.putString(ARG_SEARCH, search);
         FiltersFragment fragment = new FiltersFragment();
         fragment.setArguments(args);
-        new FiltersPresenter(fragment);
         return fragment;
     }
 
     @NonNull
-    private FiltersContract.Fragment mFragment;
+    private FiltersContract.View mView;
 
     @NonNull
     private String mCurrentSearch = SearchUtil.DEFAULT_SEARCH;
 
-    public FiltersPresenter(@NonNull FiltersContract.Fragment fragment) {
-        mFragment = fragment;
-        mFragment.setPresenter(FiltersPresenter.this);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle arguments = mFragment.getArguments();
-        if (arguments != null) {
-            mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
-        }
+    public FiltersPresenter(@NonNull FiltersContract.View view) {
+        mView = view;
     }
 
     @Override
@@ -62,8 +51,14 @@ public class FiltersPresenter
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void start(@Nullable Bundle savedInstanceState) {
+        super.start(savedInstanceState);
+
+        Bundle arguments = mView.getArguments();
+        if (arguments != null) {
+            mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
+        }
+
         loadPartnersVisibility();
     }
 
@@ -113,7 +108,7 @@ public class FiltersPresenter
     protected Loader<Bundle> onCreateBundleLoader(int id, Bundle args) {
         switch (id) {
             case R.id.loader_insert_partner_visibility:
-                return new InsertPartnerVisibilityLoader(mFragment.getContext(), args);
+                return new InsertPartnerVisibilityLoader(mView.getContext(), args);
             default:
                 return super.onCreateBundleLoader(id, args);
         }
@@ -124,7 +119,6 @@ public class FiltersPresenter
         int id = loader.getId();
         switch (id) {
             case R.id.loader_insert_partner_visibility:
-                Toast.makeText(mFragment.getContext(), "TINY RICK!", Toast.LENGTH_SHORT).show();
                 // Do nothing
                 break;
             default:
@@ -145,7 +139,7 @@ public class FiltersPresenter
     }
 
     private void onQueryPartnersVisibilityLoadFinished(Cursor cursor) {
-        mFragment.displayPartnersVisibility(
+        mView.displayPartnersVisibility(
                 cursor != null
                         ? new PartnersVisibilityReader(cursor)
                         : null
@@ -156,17 +150,17 @@ public class FiltersPresenter
     }
 
     public void onPartnerReset() {
-        mFragment.resetPartners();
+        mView.resetPartners();
     }
 
     public void onPartnersVisibilityReset() {
-        mFragment.resetPartnersVisibility();
+        mView.resetPartnersVisibility();
     }
 
     @NonNull
     @Override
     public LoaderManager getLoaderManager() {
-        return mFragment.getLoaderManager();
+        return mView.getLoaderManager();
     }
 
     @Override
@@ -201,7 +195,7 @@ public class FiltersPresenter
     private Loader<Cursor> onCreateQueryPartnersLoader(Bundle args) {
         String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoader(
-                mFragment.getContext(),
+                mView.getContext(),
                 GonetteContract.Partner.METADATA_CONTENT_URI,
                 new String[]{
                         GonetteContract.Partner.ID,
@@ -218,7 +212,7 @@ public class FiltersPresenter
 
     private Loader<Cursor> onCreateQueryPartnersVisibilityLoader(Bundle args) {
         return new CursorLoader(
-                mFragment.getContext(),
+                mView.getContext(),
                 GonetteContract.Partner.METADATA_CONTENT_URI,
                 new String[]{
                         PartnersVisibilityReader.getPartnerVisibilityCountProjection()
@@ -232,7 +226,7 @@ public class FiltersPresenter
     }
 
     private void onQueryPartnersLoadFinished(Cursor cursor) {
-        mFragment.displayPartners(
+        mView.displayPartners(
                 cursor != null
                         ? new PartnerReader(cursor)
                         : null

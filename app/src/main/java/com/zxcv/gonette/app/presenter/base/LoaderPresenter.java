@@ -9,7 +9,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-public abstract class LoaderPresenter extends AndroidPresenter {
+import com.zxcv.gonette.app.contract.Contract;
+
+public abstract class LoaderPresenter implements Contract.BasePresenter {
 
 
     @NonNull
@@ -52,7 +54,7 @@ public abstract class LoaderPresenter extends AndroidPresenter {
 
     @CallSuper
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void start(@Nullable Bundle savedInstanceState) {
         onReattachBundleLoader();
     }
 

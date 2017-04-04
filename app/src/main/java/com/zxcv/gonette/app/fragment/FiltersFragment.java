@@ -12,13 +12,14 @@ import android.view.ViewGroup;
 
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.contract.FiltersContract;
+import com.zxcv.gonette.app.presenter.FiltersPresenter;
 import com.zxcv.gonette.app.widget.adapter.FilterAdapter;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 
 public class FiltersFragment
         extends Fragment
-        implements FiltersContract.Fragment, FilterAdapter.OnPartnerClickListener {
+        implements FiltersContract.View, FilterAdapter.OnPartnerClickListener {
 
     public interface Callback {
 
@@ -35,12 +36,6 @@ public class FiltersFragment
     private RecyclerView mFilterList;
 
     private FilterAdapter mFilterAdapter;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPresenter.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @Override
@@ -75,7 +70,8 @@ public class FiltersFragment
             throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
         }
 
-        mPresenter.onActivityCreated(savedInstanceState);
+        mPresenter = new FiltersPresenter(FiltersFragment.this);
+        mPresenter.start(savedInstanceState);
     }
 
     @Override
@@ -115,11 +111,6 @@ public class FiltersFragment
     @Override
     public void resetPartners() {
         mFilterAdapter.setPartnerReader(null);
-    }
-
-    @Override
-    public void setPresenter(FiltersContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
 }
