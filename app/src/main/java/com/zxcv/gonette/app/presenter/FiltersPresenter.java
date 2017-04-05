@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.widget.Toast;
 
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.contract.FiltersContract;
@@ -51,14 +50,16 @@ public class FiltersPresenter
     }
 
     @Override
-    public void start(@Nullable Bundle savedInstanceState) {
-        super.start(savedInstanceState);
-
+    public void onCreate(@NonNull Bundle savedInstanceState) {
         Bundle arguments = mView.getArguments();
         if (arguments != null) {
             mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
         }
+    }
 
+    @Override
+    public void start() {
+        super.start();
         loadPartnersVisibility();
     }
 

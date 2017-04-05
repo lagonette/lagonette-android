@@ -125,22 +125,31 @@ public class MapsActivity
 
         mBottomSheetManager = new BottomSheetManager(MapsActivity.this, getResources());
 
-        mSearchText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        //TODO Activity leaks ?
+        // Add TextWatcher later to avoid callback called on configuration changed.
+        mSearchText.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        mSearchText.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
+                            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                MapsActivity.this.onSearchTextChanged(s.toString());
-            }
-        });
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                                MapsActivity.this.onSearchTextChanged(s.toString());
+                            }
+                        });
+                    }
+                }
+        );
 
         mSearchClear.setOnClickListener(MapsActivity.this);
 
@@ -394,6 +403,7 @@ public class MapsActivity
             outState.putInt(STATE_BOTTOM_SHEET_TYPE, mBottomSheetType);
         }
 
+        // TODO put this in onCreate ?
         public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
             //noinspection WrongConstant
             mBottomSheetType = savedInstanceState.getInt(STATE_BOTTOM_SHEET_TYPE, BOTTOM_SHEET_NONE);

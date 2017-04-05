@@ -19,7 +19,9 @@ public abstract class BaseContract {
 
     public interface BasePresenter {
 
-        void start(@Nullable Bundle savedInstanceState);
+        void onCreate(@Nullable Bundle savedInstanceState);
+
+        void start();
 
     }
 

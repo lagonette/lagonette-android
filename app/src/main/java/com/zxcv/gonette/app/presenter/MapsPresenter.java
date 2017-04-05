@@ -34,8 +34,14 @@ public class MapsPresenter extends LoaderPresenter implements MapsContract.Prese
     }
 
     @Override
-    public void start(@Nullable Bundle savedInstanceState) {
-        super.start(savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        loadPartners();
     }
 
     @Override
@@ -112,7 +118,7 @@ public class MapsPresenter extends LoaderPresenter implements MapsContract.Prese
 
     @Override
     public void loadPartners(@NonNull String search) {
-        initCursorLoader(
+        restartCursorLoader(
                 R.id.loader_query_map_partners,
                 PartnerCursorLoaderHelper.getArgs(search)
         );

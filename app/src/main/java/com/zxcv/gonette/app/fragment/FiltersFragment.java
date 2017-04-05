@@ -71,7 +71,8 @@ public class FiltersFragment
         }
 
         mPresenter = new FiltersPresenter(FiltersFragment.this);
-        mPresenter.start(savedInstanceState);
+        mPresenter.onCreate(savedInstanceState);
+        mPresenter.start();
     }
 
     @Override
