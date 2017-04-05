@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 
-public abstract class Contract {
+public abstract class BaseContract {
 
     public interface BaseView {
 

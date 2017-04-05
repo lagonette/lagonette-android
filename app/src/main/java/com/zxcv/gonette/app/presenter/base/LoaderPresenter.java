@@ -9,9 +9,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import com.zxcv.gonette.app.contract.Contract;
+import com.zxcv.gonette.app.contract.BaseContract;
 
-public abstract class LoaderPresenter implements Contract.BasePresenter {
+public abstract class LoaderPresenter implements BaseContract.BasePresenter {
 
 
     @NonNull

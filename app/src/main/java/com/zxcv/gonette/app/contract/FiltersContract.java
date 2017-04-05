@@ -8,7 +8,7 @@ import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 
 public abstract class FiltersContract {
 
-    public interface Presenter extends Contract.BasePresenter {
+    public interface Presenter extends BaseContract.BasePresenter {
 
         void setPartnerVisibility(long partnerId, boolean visibility);
 
@@ -18,7 +18,7 @@ public abstract class FiltersContract {
 
     }
 
-    public interface View extends Contract.BaseView {
+    public interface View extends BaseContract.BaseView {
 
         void displayPartnersVisibility(@Nullable PartnersVisibilityReader visibilityReader);
 

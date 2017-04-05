@@ -39,6 +39,8 @@ import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 import com.zxcv.gonette.R;
+import com.zxcv.gonette.app.contract.MapsContract;
+import com.zxcv.gonette.app.presenter.MapsPresenter;
 import com.zxcv.gonette.app.widget.maps.PartnerItem;
 import com.zxcv.gonette.app.widget.maps.PartnerRenderer;
 import com.zxcv.gonette.content.contract.GonetteContract;
@@ -56,8 +58,8 @@ import java.util.Map;
 
 public class MapsFragment
         extends Fragment
-        implements OnMapReadyCallback,
-        LoaderManager.LoaderCallbacks<Cursor>,
+        implements MapsContract.View,
+        OnMapReadyCallback,
         ClusterManager.OnClusterClickListener<PartnerItem>,
         ClusterManager.OnClusterItemClickListener<PartnerItem>,
         GoogleMap.OnMapClickListener,
@@ -77,6 +79,8 @@ public class MapsFragment
         void onMapReady();
 
     }
+
+    private MapsPresenter mPresenter;
 
     private Location mLastLocation;
 
@@ -193,6 +197,9 @@ public class MapsFragment
         } catch (ClassCastException e) {
             throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
         }
+
+        mPresenter = new MapsPresenter(MapsFragment.this);
+        mPresenter.start(savedInstanceState);
     }
 
     @Override
@@ -224,7 +231,7 @@ public class MapsFragment
         mCallback.onMapReady();
         setupMap();
         setupFootprint();
-        queryPartners();
+        mPresenter.loadPartners();
     }
 
     private void setupMap() {
@@ -278,20 +285,6 @@ public class MapsFragment
         mClusterManager.setOnClusterItemClickListener(MapsFragment.this);
     }
 
-    private void queryPartners() {
-        LoaderManager loaderManager = getLoaderManager();
-        loaderManager.initLoader(R.id.loader_query_map_partners, null, MapsFragment.this);
-    }
-
-    private void queryPartners(@NonNull String search) {
-        LoaderManager loaderManager = getLoaderManager();
-        loaderManager.restartLoader(
-                R.id.loader_query_map_partners,
-                PartnerCursorLoaderHelper.getArgs(search),
-                MapsFragment.this
-        );
-    }
-
     private void setupFootprint() {
         try {
             GeoJsonLayer footprintLayer = new GeoJsonLayer(mMap, R.raw.footprint, getContext());
@@ -303,77 +296,6 @@ public class MapsFragment
             footprintLayer.addLayerToMap();
         } catch (IOException | JSONException e) {
             Log.e(TAG, "onMapReady: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (id) {
-            case R.id.loader_query_map_partners:
-                String search = PartnerCursorLoaderHelper.getSearch(args);
-                return new CursorLoader(
-                        getContext(),
-                        GonetteContract.Partner.METADATA_CONTENT_URI,
-                        new String[]{
-                                GonetteContract.Partner.ID,
-                                GonetteContract.Partner.NAME,
-                                GonetteContract.Partner.DESCRIPTION,
-                                GonetteContract.Partner.LATITUDE,
-                                GonetteContract.Partner.LONGITUDE
-                        },
-                        GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1 AND " + GonetteContract.Partner.NAME + " LIKE ?",
-
-                        new String[]{
-                                "%" + search + "%"
-                        },
-                        null
-                );
-            default:
-                throw new IllegalArgumentException("Unknown loader id: " + id);
-        }
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_query_map_partners:
-                onQueryPartnerLoadFinished(cursor);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown loader id: " + id);
-        }
-    }
-
-    private void onQueryPartnerLoadFinished(Cursor cursor) {
-        if (cursor != null) {
-            mPartnerItems.clear();
-            mClusterManager.clearItems();
-            PartnerReader partnerReader = new PartnerReader(cursor);
-            if (partnerReader.moveToFirst()) {
-                do {
-                    PartnerItem item = new PartnerItem(
-                            partnerReader.getId(),
-                            partnerReader.getLatitude(),
-                            partnerReader.getLongitude()
-                    );
-                    mPartnerItems.put(item.getId(), item);
-                    mClusterManager.addItem(item);
-                } while (partnerReader.moveToNext());
-            }
-            mClusterManager.cluster();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_query_map_partners:
-                // Do nothing.
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown loader id: " + id);
         }
     }
 
@@ -597,27 +519,44 @@ public class MapsFragment
     public void startDirection(long partnerId) {
         PartnerItem partnerItem = mPartnerItems.get(partnerId);
         if (partnerItem != null) {
-            Intent intent = new Intent(
-                    android.content.Intent.ACTION_VIEW,
-                    Uri.parse("google.navigation:q=" + partnerItem.getPosition().latitude + "," + partnerItem.getPosition().longitude)
-            );
-            PackageManager packageManager = getActivity().getPackageManager();
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent);
-            } else {
-                Snackbar
-                        .make(
-                                SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
-                                R.string.error_no_direction_app_found,
-                                Snackbar.LENGTH_LONG
-                        )
-                        .show();
-            }
+            LatLng position = partnerItem.getPosition();
+            mPresenter.startDirection(position.latitude, position.longitude);
         }
     }
 
     public void filterPartner(@NonNull String search) {
-        queryPartners(search);
+        mPresenter.loadPartners(search);
+    }
+
+    @Override
+    public void showPartners(@Nullable PartnerReader partnerReader) {
+        mPartnerItems.clear();
+        mClusterManager.clearItems();
+        if (partnerReader != null) {
+            if (partnerReader.moveToFirst()) {
+                do {
+                    PartnerItem item = new PartnerItem(
+                            partnerReader.getId(),
+                            partnerReader.getLatitude(),
+                            partnerReader.getLongitude()
+                    );
+                    mPartnerItems.put(item.getId(), item);
+                    mClusterManager.addItem(item);
+                } while (partnerReader.moveToNext());
+            }
+            mClusterManager.cluster();
+        }
+    }
+
+    @Override
+    public void errorNoDirectionAppFound() {
+        Snackbar
+                .make(
+                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        R.string.error_no_direction_app_found,
+                        Snackbar.LENGTH_LONG
+                )
+                .show();
     }
 
 }
