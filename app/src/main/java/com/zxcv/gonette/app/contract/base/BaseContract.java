@@ -1,4 +1,4 @@
-package com.zxcv.gonette.app.contract;
+package com.zxcv.gonette.app.contract.base;
 
 import android.content.Context;
 import android.os.Bundle;

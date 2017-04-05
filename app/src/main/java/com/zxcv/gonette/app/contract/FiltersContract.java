@@ -3,6 +3,7 @@ package com.zxcv.gonette.app.contract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.zxcv.gonette.app.contract.base.BaseContract;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 
