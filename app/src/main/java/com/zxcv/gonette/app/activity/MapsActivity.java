@@ -33,6 +33,7 @@ import com.zxcv.gonette.app.widget.behavior.ParallaxBehavior;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.database.GonetteDatabaseOpenHelper;
 import com.zxcv.gonette.util.SearchUtil;
+import com.zxcv.gonette.util.SoftKeyboardUtil;
 import com.zxcv.gonette.util.UiUtil;
 
 import java.lang.annotation.Retention;
@@ -248,6 +249,7 @@ public class MapsActivity
 
     @Override
     public void showFullMap() {
+        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
@@ -313,6 +315,7 @@ public class MapsActivity
     }
 
     private void onSearchClearClick() {
+        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
         String currentText = mSearchText.getText().toString();
         if (!SearchUtil.DEFAULT_SEARCH.equals(currentText)) {
             mSearchText.setText(SearchUtil.DEFAULT_SEARCH);
@@ -321,6 +324,7 @@ public class MapsActivity
 
     @Override
     public void showPartner(long partnerId, boolean zoom) {
+        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
         mBottomSheetManager.showPartner(partnerId, zoom);
     }
 
