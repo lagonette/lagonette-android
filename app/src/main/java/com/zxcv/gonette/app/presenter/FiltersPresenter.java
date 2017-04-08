@@ -64,26 +64,6 @@ public class FiltersPresenter
     }
 
     @Override
-    public void onStart() {
-        // Callback, do nothing
-    }
-
-    @Override
-    public void onStop() {
-        // Callback, do nothing
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // Callback, do nothing
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        // Callback, do nothing
-    }
-
-    @Override
     protected Loader<Cursor> onCreateCursorLoader(int id, Bundle args) {
         switch (id) {
             case R.id.loader_query_filters_partners:
