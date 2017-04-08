@@ -4,12 +4,13 @@ package com.zxcv.gonette.app.contract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.zxcv.gonette.app.contract.base.BaseContract;
 import com.zxcv.gonette.content.reader.PartnerReader;
 
 public class MapsContract {
 
-    public interface Presenter extends BaseContract.BasePresenter {
+    public interface Presenter extends BaseContract.BasePresenter, OnMapReadyCallback {
 
         void loadPartners();
 

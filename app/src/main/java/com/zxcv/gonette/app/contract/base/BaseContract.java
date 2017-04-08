@@ -21,7 +21,7 @@ public abstract class BaseContract {
 
         void onCreate(@Nullable Bundle savedInstanceState);
 
-        void start();
+        void onActivityCreated(@Nullable Bundle savedInstanceState);
 
     }
 

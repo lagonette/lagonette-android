@@ -22,8 +22,10 @@ public abstract class LoaderPresenter implements BaseContract.BasePresenter {
 
     @CallSuper
     @Override
-    public void start() {
-        onReattachBundleLoader();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            onReattachBundleLoader();
+        }
     }
 
     protected abstract void onReattachBundleLoader();

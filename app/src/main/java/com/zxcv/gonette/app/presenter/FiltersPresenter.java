@@ -58,8 +58,8 @@ public class FiltersPresenter
     }
 
     @Override
-    public void start() {
-        super.start();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         loadPartnersVisibility();
     }
 

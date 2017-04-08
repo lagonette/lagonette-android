@@ -166,6 +166,9 @@ public class MapsFragment
         mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
 
         mPartnerItems = new HashMap<>();
+
+        mPresenter = new MapsPresenter(MapsFragment.this);
+        mPresenter.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -191,8 +194,7 @@ public class MapsFragment
             throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
         }
 
-        mPresenter = new MapsPresenter(MapsFragment.this);
-        mPresenter.onCreate(savedInstanceState);
+        mPresenter.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -224,7 +226,7 @@ public class MapsFragment
         mCallback.onMapReady();
         setupMap();
         setupFootprint();
-        mPresenter.start();
+        mPresenter.onMapReady(googleMap);
     }
 
     private void setupMap() {

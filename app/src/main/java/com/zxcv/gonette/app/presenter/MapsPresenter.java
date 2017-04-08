@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.contract.MapsContract;
 import com.zxcv.gonette.app.presenter.base.LoaderPresenter;
@@ -39,8 +40,12 @@ public class MapsPresenter extends LoaderPresenter implements MapsContract.Prese
     }
 
     @Override
-    public void start() {
-        super.start();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
         loadPartners();
     }
 
@@ -136,5 +141,4 @@ public class MapsPresenter extends LoaderPresenter implements MapsContract.Prese
             mView.errorNoDirectionAppFound();
         }
     }
-
 }

@@ -37,6 +37,14 @@ public class FiltersFragment
 
     private FilterAdapter mFilterAdapter;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mPresenter = new FiltersPresenter(FiltersFragment.this);
+        mPresenter.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,9 +78,7 @@ public class FiltersFragment
             throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
         }
 
-        mPresenter = new FiltersPresenter(FiltersFragment.this);
-        mPresenter.onCreate(savedInstanceState);
-        mPresenter.start();
+        mPresenter.onActivityCreated(savedInstanceState);
     }
 
     @Override
