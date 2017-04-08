@@ -2,6 +2,7 @@ package com.zxcv.gonette.app.presenter;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -11,19 +12,23 @@ import android.support.v4.content.Loader;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.contract.FiltersContract;
 import com.zxcv.gonette.app.fragment.FiltersFragment;
-import com.zxcv.gonette.app.presenter.base.LoaderPresenter;
+import com.zxcv.gonette.app.presenter.base.BundleLoaderPresenter;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.loader.InsertPartnerVisibilityLoader;
 import com.zxcv.gonette.content.loader.PartnerCursorLoaderHelper;
+import com.zxcv.gonette.content.loader.callbacks.CursorLoaderCallbacks;
 import com.zxcv.gonette.content.reader.PartnerReader;
 import com.zxcv.gonette.content.reader.PartnersVisibilityReader;
 import com.zxcv.gonette.util.SearchUtil;
 
 public class FiltersPresenter
-        extends LoaderPresenter
-        implements FiltersContract.Presenter {
+        extends BundleLoaderPresenter
+        implements FiltersContract.Presenter,
+        CursorLoaderCallbacks.Callbacks {
 
     private static final String ARG_SEARCH = "arg:search";
+
+    private CursorLoaderCallbacks mCursorLoaderCallbacks;
 
     public static FiltersFragment newInstance(@NonNull String search) {
         Bundle args = new Bundle(1);
@@ -44,17 +49,13 @@ public class FiltersPresenter
     }
 
     @Override
-    protected void onReattachBundleLoader() {
-        LoaderManager loaderManager = getLoaderManager();
-        reattachBundleLoader(loaderManager, R.id.loader_insert_partner_visibility);
-    }
-
-    @Override
     public void onCreate(@NonNull Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Bundle arguments = mView.getArguments();
         if (arguments != null) {
             mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
         }
+        mCursorLoaderCallbacks = new CursorLoaderCallbacks(FiltersPresenter.this);
     }
 
     @Override
@@ -63,80 +64,93 @@ public class FiltersPresenter
         loadPartnersVisibility();
     }
 
+    @CallSuper
     @Override
-    protected Loader<Cursor> onCreateCursorLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateCursorLoader(int id, Bundle args) {
         switch (id) {
             case R.id.loader_query_filters_partners:
                 return onCreateQueryPartnersLoader(args);
             case R.id.loader_query_filters_partners_visibility:
                 return onCreateQueryPartnersVisibilityLoader(args);
             default:
-                return super.onCreateCursorLoader(id, args);
+                return null;
         }
     }
 
+    @CallSuper
     @Override
-    protected void onCursorLoadFinished(@NonNull Loader<Cursor> loader, @Nullable Cursor cursor) {
+    public boolean onCursorLoadFinished(@NonNull Loader<Cursor> loader, @Nullable Cursor cursor) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_query_filters_partners:
                 onQueryPartnersLoadFinished(cursor);
-                break;
+                return true;
             case R.id.loader_query_filters_partners_visibility:
                 onQueryPartnersVisibilityLoadFinished(cursor);
-                break;
+                return true;
             default:
-                super.onCursorLoadFinished(loader, cursor);
+                return false;
         }
     }
 
+    @CallSuper
     @Override
-    protected void onCursorLoaderReset(@NonNull Loader<Cursor> loader) {
+    public boolean onCursorLoaderReset(@NonNull Loader<Cursor> loader) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_query_filters_partners:
                 onPartnerReset();
-                break;
+                return true;
             case R.id.loader_query_filters_partners_visibility:
                 onPartnersVisibilityReset();
-                break;
+                return true;
             default:
-                super.onCursorLoaderReset(loader);
+                return false;
         }
     }
 
+    @CallSuper
     @Override
-    protected Loader<Bundle> onCreateBundleLoader(int id, Bundle args) {
+    public Loader<Bundle> onCreateBundleLoader(int id, Bundle args) {
         switch (id) {
             case R.id.loader_insert_partner_visibility:
                 return new InsertPartnerVisibilityLoader(mView.getContext(), args);
             default:
-                return super.onCreateBundleLoader(id, args);
+                return null;
         }
     }
 
+    @CallSuper
     @Override
-    protected void onBundleLoadFinished(@NonNull Loader<Bundle> loader, @NonNull Bundle data) {
+    public boolean onBundleLoadFinished(@NonNull Loader<Bundle> loader, @NonNull Bundle data) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_insert_partner_visibility:
                 // Do nothing
-                break;
+                return true;
             default:
-                super.onBundleLoadFinished(loader, data);
+                return false;
         }
     }
 
+    @CallSuper
     @Override
-    protected void onBundleLoaderReset(@NonNull Loader<Bundle> loader) {
+    public boolean onBundleLoaderReset(@NonNull Loader<Bundle> loader) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_insert_partner_visibility:
                 // Do nothing
-                break;
+                return true;
             default:
-                super.onBundleLoaderReset(loader);
+                return false;
         }
+    }
+
+    @Override
+    public int[] getBundleLoaderIds() {
+        return new int[]{
+                R.id.loader_insert_partner_visibility
+        };
     }
 
     private void onQueryPartnersVisibilityLoadFinished(Cursor cursor) {
@@ -169,7 +183,7 @@ public class FiltersPresenter
                 partnerId,
                 isVisible
         );
-        initBundleLoader(
+        mBundleLoaderCallbacks.initLoader(
                 R.id.loader_insert_partner_visibility,
                 args
         );
@@ -178,7 +192,7 @@ public class FiltersPresenter
     @Override
     public void setPartnersVisibility(boolean isVisible) {
         Bundle args = InsertPartnerVisibilityLoader.getArgs(isVisible);
-        initBundleLoader(
+        mBundleLoaderCallbacks.initLoader(
                 R.id.loader_insert_partner_visibility,
                 args
         );
@@ -234,23 +248,24 @@ public class FiltersPresenter
     }
 
     private void loadPartners() {
-        initCursorLoader(
+        mCursorLoaderCallbacks.initLoader(
                 R.id.loader_query_filters_partners,
                 null
         );
     }
 
     private void loadPartners(@NonNull String search) {
-        restartCursorLoader(
+        mCursorLoaderCallbacks.restartLoader(
                 R.id.loader_query_filters_partners,
                 PartnerCursorLoaderHelper.getArgs(search)
         );
     }
 
     private void loadPartnersVisibility() {
-        initCursorLoader(
+        mCursorLoaderCallbacks.initLoader(
                 R.id.loader_query_filters_partners_visibility,
                 null
         );
     }
+
 }

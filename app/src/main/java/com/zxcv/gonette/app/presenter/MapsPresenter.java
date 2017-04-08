@@ -21,16 +21,18 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.zxcv.gonette.R;
 import com.zxcv.gonette.app.contract.MapsContract;
-import com.zxcv.gonette.app.presenter.base.LoaderPresenter;
+import com.zxcv.gonette.app.presenter.base.BasePresenter;
+import com.zxcv.gonette.app.presenter.base.BundleLoaderPresenter;
 import com.zxcv.gonette.content.contract.GonetteContract;
 import com.zxcv.gonette.content.loader.PartnerCursorLoaderHelper;
+import com.zxcv.gonette.content.loader.callbacks.CursorLoaderCallbacks;
 import com.zxcv.gonette.content.reader.PartnerReader;
 
 public class MapsPresenter
-        extends LoaderPresenter
+        extends BasePresenter
         implements MapsContract.Presenter,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, CursorLoaderCallbacks.Callbacks {
 
     private static final String TAG = "MapsPresenter";
 
@@ -40,6 +42,8 @@ public class MapsPresenter
 
     @NonNull
     private final MapsContract.View mView;
+
+    private CursorLoaderCallbacks mCursorLoaderCallbacks;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -55,12 +59,13 @@ public class MapsPresenter
 
     @NonNull
     @Override
-    protected LoaderManager getLoaderManager() {
+    public LoaderManager getLoaderManager() {
         return mView.getLoaderManager();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mAskFormMyPositionPermission = savedInstanceState.getBoolean(
                     STATE_ASK_FOR_MY_LOCATION_PERMISSION
@@ -74,6 +79,8 @@ public class MapsPresenter
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        mCursorLoaderCallbacks = new CursorLoaderCallbacks(MapsPresenter.this);
     }
 
     @Override
@@ -124,11 +131,6 @@ public class MapsPresenter
     }
 
     @Override
-    protected void onReattachBundleLoader() {
-        // Do nothing here
-    }
-
-    @Override
     public Loader<Cursor> onCreateCursorLoader(int id, Bundle args) {
         switch (id) {
             case R.id.loader_query_map_partners:
@@ -151,19 +153,19 @@ public class MapsPresenter
                         null
                 );
             default:
-                return super.onCreateCursorLoader(id, args);
+                return null;
         }
     }
 
     @Override
-    public void onCursorLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public boolean onCursorLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_query_map_partners:
                 onQueryPartnerLoadFinished(cursor);
-                break;
+                return true;
             default:
-                super.onCursorLoadFinished(loader, cursor);
+                return false;
         }
     }
 
@@ -176,20 +178,20 @@ public class MapsPresenter
     }
 
     @Override
-    public void onCursorLoaderReset(Loader<Cursor> loader) {
+    public boolean onCursorLoaderReset(Loader<Cursor> loader) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_query_map_partners:
                 // Do nothing.
-                break;
+                return true;
             default:
-                super.onCursorLoaderReset(loader);
+                return false;
         }
     }
 
     @Override
     public void loadPartners() {
-        initCursorLoader(
+        mCursorLoaderCallbacks.initLoader(
                 R.id.loader_query_map_partners,
                 null
         );
@@ -197,7 +199,7 @@ public class MapsPresenter
 
     @Override
     public void loadPartners(@NonNull String search) {
-        restartCursorLoader(
+        mCursorLoaderCallbacks.restartLoader(
                 R.id.loader_query_map_partners,
                 PartnerCursorLoaderHelper.getArgs(search)
         );
