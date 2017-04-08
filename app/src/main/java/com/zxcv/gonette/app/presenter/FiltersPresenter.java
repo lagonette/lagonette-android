@@ -146,8 +146,7 @@ public class FiltersPresenter
                         : null
         );
 
-        //TODO maybe load only at start?
-        loadPartners(mCurrentSearch);
+        loadPartners();
     }
 
     public void onPartnerReset() {
@@ -234,15 +233,21 @@ public class FiltersPresenter
         );
     }
 
-    public void loadPartners(@NonNull String search) {
-        //TODO Do not restart loader on conf change
+    private void loadPartners() {
+        initCursorLoader(
+                R.id.loader_query_filters_partners,
+                null
+        );
+    }
+
+    private void loadPartners(@NonNull String search) {
         restartCursorLoader(
                 R.id.loader_query_filters_partners,
                 PartnerCursorLoaderHelper.getArgs(search)
         );
     }
 
-    public void loadPartnersVisibility() {
+    private void loadPartnersVisibility() {
         initCursorLoader(
                 R.id.loader_query_filters_partners_visibility,
                 null
