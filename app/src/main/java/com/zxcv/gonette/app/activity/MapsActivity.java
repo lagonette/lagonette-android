@@ -126,6 +126,8 @@ public class MapsActivity
 
         mBottomSheetManager = new BottomSheetManager(MapsActivity.this, getResources());
 
+        mSearchText.setCursorVisible(false);
+        mSearchText.setOnClickListener(MapsActivity.this);
         //TODO Activity leaks ?
         // Add TextWatcher later to avoid callback called on configuration changed.
         mSearchText.post(
@@ -249,7 +251,7 @@ public class MapsActivity
 
     @Override
     public void showFullMap() {
-        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
+        focusOnMap();
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
@@ -272,6 +274,9 @@ public class MapsActivity
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
+            case R.id.search_text:
+                onSearchTextClick();
+                break;
             case R.id.my_location_fab:
                 onMyLocationFabClick();
                 break;
@@ -306,6 +311,11 @@ public class MapsActivity
         return true;
     }
 
+    private boolean onSearchTextClick() {
+        mSearchText.setCursorVisible(true);
+        return true;
+    }
+
     private void onBottomSheetFabClick() {
         if (mBottomSheetManager.isPartnerBottomSheetOpened()) {
             mMapsFragment.startDirection((long) mBottomSheetFab.getTag());
@@ -315,7 +325,7 @@ public class MapsActivity
     }
 
     private void onSearchClearClick() {
-        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
+        focusOnMap();
         String currentText = mSearchText.getText().toString();
         if (!SearchUtil.DEFAULT_SEARCH.equals(currentText)) {
             mSearchText.setText(SearchUtil.DEFAULT_SEARCH);
@@ -324,7 +334,7 @@ public class MapsActivity
 
     @Override
     public void showPartner(long partnerId, boolean zoom) {
-        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
+        focusOnMap();
         mBottomSheetManager.showPartner(partnerId, zoom);
     }
 
@@ -354,6 +364,11 @@ public class MapsActivity
 
     private void updateMapsPaddingBottom() {
         mMapsFragment.updateMapPaddingBottom(mParallaxMapsPaddingTop);
+    }
+
+    private void focusOnMap() {
+        mSearchText.setCursorVisible(false);
+        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
     }
 
     public class BottomSheetManager extends BottomSheetBehavior.BottomSheetCallback {
