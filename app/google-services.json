@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "1043289964222",
+    "firebase_url": "https://gonette-159220.firebaseio.com",
+    "project_id": "gonette-159220",
+    "storage_bucket": "gonette-159220.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1043289964222:android:e1f029d3f1c74f6f",
+        "android_client_info": {
+          "package_name": "com.gonette.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1043289964222-c1fldl4qcgrpvf29l7asbjt8ula4tnr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXJ7utFfs74KqdrUFveeGwNcGJkZdwd6w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1043289964222:android:60ce1e24b97d1cc9",
+        "android_client_info": {
+          "package_name": "com.gonette.android.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1043289964222-c1fldl4qcgrpvf29l7asbjt8ula4tnr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXJ7utFfs74KqdrUFveeGwNcGJkZdwd6w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

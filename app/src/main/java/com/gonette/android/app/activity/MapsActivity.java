@@ -21,7 +21,6 @@ import android.view.animation.Interpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.gonette.android.BuildConfig;
 import com.gonette.android.R;
 import com.gonette.android.app.fragment.FiltersFragment;
@@ -35,6 +34,7 @@ import com.gonette.android.database.GonetteDatabaseOpenHelper;
 import com.gonette.android.util.SearchUtil;
 import com.gonette.android.util.SoftKeyboardUtil;
 import com.gonette.android.util.UiUtil;
+import com.google.android.gms.maps.GoogleMap;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
