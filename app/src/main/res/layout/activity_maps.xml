@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:dependency="@+id/bottom_sheet"
-        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.ParallaxBehavior"/>
+        app:layout_behavior="com.gonette.android.app.widget.behavior.ParallaxBehavior"/>
 
     <View
         android:id="@+id/shadow"
@@ -46,7 +46,7 @@
         app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteDisappearBehavior"/>
+        app:layout_behavior="com.gonette.android.app.widget.behavior.GonetteDisappearBehavior"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/bottom_sheet_fab"
@@ -58,7 +58,7 @@
         app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteDisappearBehavior"/>
+        app:layout_behavior="com.gonette.android.app.widget.behavior.GonetteDisappearBehavior"/>
 
     <include
         layout="@layout/widget_search"
@@ -72,7 +72,7 @@
         android:layout_marginStart="@dimen/search_bar_margin_start"
         android:layout_marginTop="@dimen/search_bar_margin_top"
         app:dependency="@id/bottom_sheet"
-        app:layout_behavior="com.zxcv.gonette.app.widget.behavior.GonetteDisappearBehavior"/>
+        app:layout_behavior="com.gonette.android.app.widget.behavior.GonetteDisappearBehavior"/>
 
 
 </android.support.design.widget.CoordinatorLayout>
