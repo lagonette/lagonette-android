@@ -66,8 +66,8 @@ public abstract class LoaderPresenter implements BaseContract.BasePresenter {
 
                 @Override
                 public void onLoadFinished(Loader<Bundle> loader, Bundle data) {
-                    getLoaderManager().destroyLoader(loader.getId());
                     onBundleLoadFinished(loader, data);
+                    getLoaderManager().destroyLoader(loader.getId());
                 }
 
                 @Override
