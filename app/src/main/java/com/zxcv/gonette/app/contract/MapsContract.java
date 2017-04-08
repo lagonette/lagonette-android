@@ -1,6 +1,7 @@
 package com.zxcv.gonette.app.contract;
 
 
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -16,9 +17,15 @@ public class MapsContract {
 
         void loadPartners(@NonNull String search);
 
+        Location getLastLocation();
+
+        boolean checkLocationPermission();
+
     }
 
-    public interface View extends BaseContract.BaseView {
+    public interface View extends BaseContract.BaseView, OnMapReadyCallback {
+
+        void updateLocationUI();
 
         void showPartners(@Nullable PartnerReader partnerReader);
 

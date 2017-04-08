@@ -52,12 +52,9 @@ import java.util.Map;
 public class MapsFragment
         extends Fragment
         implements MapsContract.View,
-        OnMapReadyCallback,
         ClusterManager.OnClusterClickListener<PartnerItem>,
         ClusterManager.OnClusterItemClickListener<PartnerItem>,
-        GoogleMap.OnMapClickListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleMap.OnMapClickListener {
 
     public interface Callback {
 
@@ -75,10 +72,6 @@ public class MapsFragment
 
     private MapsPresenter mPresenter;
 
-    private Location mLastLocation;
-
-    private GoogleApiClient mGoogleApiClient;
-
     public static final String TAG = "MapsFragment";
 
     public static final int ANIMATION_LENGTH_LONG = 600;
@@ -89,10 +82,6 @@ public class MapsFragment
 
     public static final int CLUSTER_CLICK_ZOOM_IN = 1;
 
-    public static final int PERMISSIONS_REQUEST_LOCATION = 666;
-
-    private static final String STATE_ASK_FOR_MY_LOCATION_PERMISSION = "state:ask_for_my_location_permission";
-
     private static final String STATE_SELECTED_MARKER_POSITION = "state:selected_marker_position";
 
     private static final String STATE_SELECTED_MARKER_ID = "state:selected_marker_id";
@@ -100,10 +89,6 @@ public class MapsFragment
     private GoogleMap mMap;
 
     private ClusterManager<PartnerItem> mClusterManager;
-
-    private boolean mLocationPermissionGranted = false;
-
-    private boolean mAskFormMyPositionPermission = true;
 
     private int mStatusBarHeight;
 
@@ -138,9 +123,6 @@ public class MapsFragment
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mConfChanged = true;
-            mAskFormMyPositionPermission = savedInstanceState.getBoolean(
-                    STATE_ASK_FOR_MY_LOCATION_PERMISSION
-            );
             mSelectedMarkerPosition = savedInstanceState.getParcelable(
                     STATE_SELECTED_MARKER_POSITION
             );
@@ -153,14 +135,6 @@ public class MapsFragment
             mStartLatitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LATITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LATITUDE);
             mStartLongitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LONGITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LONGITUDE);
             mStartZoom = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_ZOOM, SharedPreferencesUtil.DEFAULT_VALUE_START_ZOOM);
-        }
-
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                    .addConnectionCallbacks(MapsFragment.this)
-                    .addOnConnectionFailedListener(MapsFragment.this)
-                    .addApi(LocationServices.API)
-                    .build();
         }
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
@@ -186,7 +160,7 @@ public class MapsFragment
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mapFragment.getMapAsync(mPresenter);
 
         try {
             mCallback = (Callback) getActivity();
@@ -199,11 +173,17 @@ public class MapsFragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_ASK_FOR_MY_LOCATION_PERMISSION, mAskFormMyPositionPermission);
+        mPresenter.onSaveInstanceState(outState);
         if (mSelectedMarker != null) {
             outState.putParcelable(STATE_SELECTED_MARKER_POSITION, mSelectedMarker.getPosition());
             outState.putLong(STATE_SELECTED_MARKER_ID, mSelectedMarkerId);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPresenter.onStart();
     }
 
     @Override
@@ -221,12 +201,17 @@ public class MapsFragment
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mCallback.onMapReady();
         setupMap();
         setupFootprint();
-        mPresenter.onMapReady(googleMap);
+        mCallback.onMapReady();
     }
 
     private void setupMap() {
@@ -363,24 +348,19 @@ public class MapsFragment
     }
 
     public void moveOnMyLocation() {
-        if (mLocationPermissionGranted) {
-            //noinspection MissingPermission
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (mLastLocation != null) {
-                mMap.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                                new LatLng(
-                                        mLastLocation.getLatitude(),
-                                        mLastLocation.getLongitude()
-                                ),
-                                ZOOM_LEVEL_STREET
-                        ),
-                        ANIMATION_LENGTH_LONG,
-                        null
-                );
-            } else {
-                Log.e(TAG, "moveOnMyLocation: Last location is NULL");
-            }
+        Location lastLocation = mPresenter.getLastLocation();
+        if (lastLocation != null) {
+            mMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(
+                                    lastLocation.getLatitude(),
+                                    lastLocation.getLongitude()
+                            ),
+                            ZOOM_LEVEL_STREET
+                    ),
+                    ANIMATION_LENGTH_LONG,
+                    null
+            );
         }
     }
 
@@ -423,40 +403,12 @@ public class MapsFragment
         }
     }
 
-    public void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    public void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        // Called when location service is connected and my position available.
-        // Do nothing here.
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        // Called when location service is suspended and my position is not available anymore.
-        // Do nothing here.
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // Called when the connection to the location service fail.
-        Log.e(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
-    }
-
-    private void updateLocationUI() {
+    public void updateLocationUI() {
         if (mMap == null) {
             return;
         }
 
-        if (checkLocationPermission()) {
+        if (mPresenter.checkLocationPermission()) {
             mMap.setMyLocationEnabled(true);
             mCallback.showMyLocationButton();
         } else {
@@ -465,50 +417,12 @@ public class MapsFragment
         }
     }
 
-    private boolean checkLocationPermission() {
-        if (!mLocationPermissionGranted) {
-            if (ContextCompat.checkSelfPermission(
-                    getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            )
-                    == PackageManager.PERMISSION_GRANTED) {
-                mLocationPermissionGranted = true;
-            } else if (mAskFormMyPositionPermission) {
-                mAskFormMyPositionPermission = false;
-                requestPermissions(
-                        new String[]{
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                        },
-                        PERMISSIONS_REQUEST_LOCATION
-                );
-            }
-        }
-
-        return mLocationPermissionGranted;
-    }
-
-    private void onLocationPermissionResult(@NonNull int[] grantResults) {
-        mLocationPermissionGranted = false;
-        // If request is cancelled, the result arrays are empty.
-        if (grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(
             int requestCode,
             @NonNull String permissions[],
             @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_LOCATION:
-                onLocationPermissionResult(grantResults);
-                updateLocationUI();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown request code: " + requestCode);
-        }
+        mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public void startDirection(long partnerId) {

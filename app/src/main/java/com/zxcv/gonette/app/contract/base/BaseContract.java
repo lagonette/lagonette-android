@@ -2,6 +2,7 @@ package com.zxcv.gonette.app.contract.base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 
@@ -15,6 +16,8 @@ public abstract class BaseContract {
 
         LoaderManager getLoaderManager();
 
+        void requestPermissions(@NonNull String[] permissions, int requestCode);
+
     }
 
     public interface BasePresenter {
@@ -22,6 +25,17 @@ public abstract class BaseContract {
         void onCreate(@Nullable Bundle savedInstanceState);
 
         void onActivityCreated(@Nullable Bundle savedInstanceState);
+
+        void onStart();
+
+        void onStop();
+
+        void onSaveInstanceState(Bundle outState);
+
+        void onRequestPermissionsResult(
+                int requestCode,
+                @NonNull String permissions[],
+                @NonNull int[] grantResults);
 
     }
 
