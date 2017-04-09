@@ -15,7 +15,9 @@ public abstract class FiltersContract {
 
         void setPartnersVisibility(boolean visibility);
 
-        void filterPartner(@NonNull String search);
+        void filterPartners(@NonNull String search);
+
+        void LoadFilters();
 
     }
 

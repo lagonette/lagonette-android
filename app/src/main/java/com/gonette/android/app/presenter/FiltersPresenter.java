@@ -30,6 +30,8 @@ public class FiltersPresenter
 
     private CursorLoaderCallbacks mCursorLoaderCallbacks;
 
+    private boolean mStartUp = true;
+
     public static FiltersFragment newInstance(@NonNull String search) {
         Bundle args = new Bundle(1);
         args.putString(ARG_SEARCH, search);
@@ -61,7 +63,7 @@ public class FiltersPresenter
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadPartnersVisibility();
+//        loadPartnersVisibility();
     }
 
     @CallSuper
@@ -160,7 +162,9 @@ public class FiltersPresenter
                         : null
         );
 
-        loadPartners();
+        if (mStartUp) {
+            loadPartners();
+        }
     }
 
     public void onPartnerReset() {
@@ -199,11 +203,16 @@ public class FiltersPresenter
     }
 
     @Override
-    public void filterPartner(@NonNull String search) {
+    public void filterPartners(@NonNull String search) {
         if (!mCurrentSearch.equals(search)) {
             mCurrentSearch = search;
             loadPartners(mCurrentSearch);
         }
+    }
+
+    @Override
+    public void LoadFilters() {
+        loadPartnersVisibility();
     }
 
     private Loader<Cursor> onCreateQueryPartnersLoader(Bundle args) {
@@ -245,6 +254,8 @@ public class FiltersPresenter
                         ? new PartnerReader(cursor)
                         : null
         );
+
+        mStartUp = false;
     }
 
     private void loadPartners() {

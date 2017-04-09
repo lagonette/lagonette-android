@@ -96,8 +96,12 @@ public class FiltersFragment
         mPresenter.setPartnerVisibility(holder.partnerId, !holder.isVisible);
     }
 
+    public void LoadFilters() {
+        mPresenter.LoadFilters();
+    }
+
     public void filterPartner(@NonNull String search) {
-        mPresenter.filterPartner(search);
+        mPresenter.filterPartners(search);
     }
 
     @Override

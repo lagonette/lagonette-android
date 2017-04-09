@@ -384,6 +384,8 @@ public class MapsActivity
 
         private boolean mSwitchPartnerAfterBottomSheetCollapsed = false;
 
+        private boolean mLoadFiltersAfterBottomSheetCollapsed = false;
+
         private long mSelectedPartnerId = GonetteContract.NO_ID;
 
         private boolean mZoomForPartnerId;
@@ -479,6 +481,14 @@ public class MapsActivity
                 if (mSwitchPartnerAfterBottomSheetCollapsed) {
                     mSwitchPartnerAfterBottomSheetCollapsed = false;
                     switchPartner(mSelectedPartnerId);
+                }
+
+                if (mLoadFiltersAfterBottomSheetCollapsed) {
+                    mLoadFiltersAfterBottomSheetCollapsed = false;
+                    FiltersFragment fragment = geFiltersFragment();
+                    if (fragment != null) {
+                        fragment.LoadFilters();
+                    }
                 }
             }
         }
@@ -646,6 +656,7 @@ public class MapsActivity
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
             mSearchBarBehavior.disable();
+            mLoadFiltersAfterBottomSheetCollapsed = true;
             mBottomSheetType = BOTTOM_SHEET_FILTERS;
         }
 
