@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -35,6 +36,7 @@ import com.gonette.android.util.SearchUtil;
 import com.gonette.android.util.SoftKeyboardUtil;
 import com.gonette.android.util.UiUtil;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
