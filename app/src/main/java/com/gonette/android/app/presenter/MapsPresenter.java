@@ -26,6 +26,7 @@ import com.gonette.android.content.contract.GonetteContract;
 import com.gonette.android.content.loader.PartnerCursorLoaderHelper;
 import com.gonette.android.content.loader.callbacks.CursorLoaderCallbacks;
 import com.gonette.android.content.reader.PartnerReader;
+import com.google.firebase.crash.FirebaseCrash;
 
 public class MapsPresenter
         extends BasePresenter
@@ -210,7 +211,7 @@ public class MapsPresenter
             //noinspection MissingPermission
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (mLastLocation == null) {
-                Log.e(TAG, "moveOnMyLocation: Last location is NULL");
+                Log.w(TAG, "getLastLocation: Last location is NULL");
             }
             return mLastLocation;
         }
@@ -269,6 +270,14 @@ public class MapsPresenter
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // Called when the connection to the location service fail.
         Log.e(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
+        FirebaseCrash.report(
+                new IllegalStateException(
+                        "Connection to google location service failed: ("
+                                + connectionResult.getErrorCode()
+                                + ") "
+                                + connectionResult.getErrorMessage()
+                )
+        );
     }
 
 }

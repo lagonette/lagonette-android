@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
@@ -270,6 +271,7 @@ public class MapsFragment
             footprintLayer.addLayerToMap();
         } catch (IOException | JSONException e) {
             Log.e(TAG, "onMapReady: " + e.getMessage(), e);
+            FirebaseCrash.report(e);
         }
     }
 

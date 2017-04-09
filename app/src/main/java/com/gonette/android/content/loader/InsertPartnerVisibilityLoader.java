@@ -6,9 +6,11 @@ import android.content.OperationApplicationException;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.gonette.android.content.contract.GonetteContract;
 import com.gonette.android.content.loader.base.BundleLoader;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 
@@ -74,14 +76,17 @@ public class InsertPartnerVisibilityLoader extends BundleLoader {
                             .build()
             );
         }
+
         try {
             mContext.getContentResolver().applyBatch(
                     GonetteContract.AUTHORITY,
                     operations
             );
         } catch (RemoteException | OperationApplicationException e) {
-            e.printStackTrace(); // TODO
+            Log.e(TAG, "loadInBackground: ", e);
+            FirebaseCrash.report(e);
         }
+
         mBundle.putInt(ARG_STATUS, STATUS_OK);
         return mBundle;
     }

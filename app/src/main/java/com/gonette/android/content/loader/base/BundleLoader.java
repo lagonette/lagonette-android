@@ -10,6 +10,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.gonette.android.BuildConfig;
+import com.google.firebase.crash.FirebaseCrash;
 
 public abstract class BundleLoader extends AsyncTaskLoader<Bundle> implements LoaderStatus {
 
@@ -68,20 +69,16 @@ public abstract class BundleLoader extends AsyncTaskLoader<Bundle> implements Lo
         if (mBundle.equals(loadInBackground())) {
             mLoadInProgress = false;
             if (!mBundle.containsKey(ARG_STATUS)) {
+                FirebaseCrash.report(new IllegalStateException("mBundle must contain arg:status value at the end."));
                 if (BuildConfig.DEBUG) {
                     throw new IllegalArgumentException(
                             "mBundle must contain arg:status value at the end."
                     );
                 } else {
-//                    CrashReportingUtils.logException(
-//                            new Exception(
-//                                    "mBundle must contain arg:status value at the end."
-//                            )
-//                    );
-                    // TODO Firebase
                     mBundle.putInt(ARG_STATUS, STATUS_ERROR);
                 }
             }
+
             if (mHandler != null) {
                 mHandler.post(
                         new Runnable() {

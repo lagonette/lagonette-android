@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.stream.JsonReader;
 import com.gonette.android.R;
 import com.gonette.android.content.contract.GonetteContract;
@@ -114,6 +115,7 @@ public class GonetteDatabaseOpenHelper
             );
         } catch (IOException | RemoteException | OperationApplicationException e) {
             Log.e(TAG, "parseData: " + e.getMessage(), e);
+            FirebaseCrash.report(e);
         }
     }
 }
