@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 public abstract class BaseActivity
         extends AppCompatActivity {
 
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView();
         onViewCreated();

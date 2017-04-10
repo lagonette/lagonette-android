@@ -374,7 +374,7 @@ public class MapsFragment
         );
     }
 
-    public void showPartner(long id, boolean zoom, GoogleMap.CancelableCallback callback) {
+    public void showPartner(long id, boolean zoom, @Nullable GoogleMap.CancelableCallback callback) {
         removeSelectedMarker();
         PartnerItem partnerItem = mPartnerItems.get(id);
         if (partnerItem != null) {

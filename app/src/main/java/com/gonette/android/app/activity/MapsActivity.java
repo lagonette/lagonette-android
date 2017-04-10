@@ -2,25 +2,18 @@ package com.gonette.android.app.activity;
 
 import android.animation.Animator;
 import android.content.Context;
-import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.gonette.android.BuildConfig;
 import com.gonette.android.R;
@@ -28,45 +21,26 @@ import com.gonette.android.app.fragment.FiltersFragment;
 import com.gonette.android.app.fragment.MapsFragment;
 import com.gonette.android.app.fragment.PartnerDetailFragment;
 import com.gonette.android.app.presenter.FiltersPresenter;
-import com.gonette.android.app.widget.behavior.GonetteDisappearBehavior;
 import com.gonette.android.app.widget.behavior.ParallaxBehavior;
-import com.gonette.android.content.contract.GonetteContract;
+import com.gonette.android.app.widget.coordinator.MainCoordinator;
 import com.gonette.android.database.GonetteDatabaseOpenHelper;
 import com.gonette.android.util.SearchUtil;
 import com.gonette.android.util.SoftKeyboardUtil;
-import com.gonette.android.util.UiUtil;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.firebase.crash.FirebaseCrash;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 public class MapsActivity
         extends BaseActivity
         implements MapsFragment.Callback,
         FiltersFragment.Callback,
-        ParallaxBehavior.OnParallaxTranslationListener,
+        MainCoordinator.Callbacks,
         View.OnClickListener,
-        View.OnLongClickListener, GonetteDisappearBehavior.OnMoveListener {
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({BOTTOM_SHEET_NONE, BOTTOM_SHEET_PARTNER, BOTTOM_SHEET_FILTERS})
-    public @interface BottomSheetType {
-    }
-
-    public static final int BOTTOM_SHEET_NONE = 0;
-
-    public static final int BOTTOM_SHEET_PARTNER = 1;
-
-    public static final int BOTTOM_SHEET_FILTERS = 2;
+        View.OnLongClickListener {
 
     private static final String TAG = "MapsActivity";
 
     private MapsFragment mMapsFragment;
 
     private Fragment mBottomSheetFragment;
-
-    private BottomSheetBehavior<View> mBottomSheetBehavior;
 
     private View mSearchBar;
 
@@ -82,17 +56,9 @@ public class MapsActivity
 
     private FloatingActionButton mBottomSheetFab;
 
-    private View mCoordinatorLayout;
+    private CoordinatorLayout mCoordinatorLayout;
 
-    private BottomSheetManager mBottomSheetManager;
-
-    private int mStatusBarHeight;
-
-    private int mSearchBarVerticalMargin;
-
-    private int mParallaxMapsPaddingTop = 0;
-
-    private int mSearchBarMapsPaddingTop = 0;
+    private MainCoordinator mCoordinator;
 
     @Override
     protected void setContentView() {
@@ -101,7 +67,7 @@ public class MapsActivity
 
     @Override
     protected void onViewCreated() {
-        mCoordinatorLayout = findViewById(R.id.coordinator_layout);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mSearchBar = findViewById(R.id.search_bar);
         mSearchText = (EditText) findViewById(R.id.search_text);
         mSearchClear = (ImageButton) findViewById(R.id.search_clear);
@@ -112,6 +78,10 @@ public class MapsActivity
 
     @Override
     protected void onActivityCreated(Bundle savedInstanceState) {
+        mCoordinator = new MainCoordinator(MapsActivity.this);
+        mCoordinator.onCreate(savedInstanceState);
+        mCoordinator.onActivityCreated(savedInstanceState);
+
         if (savedInstanceState == null) {
             mMapsFragment = MapsFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
@@ -121,12 +91,6 @@ public class MapsActivity
             mMapsFragment = (MapsFragment) getSupportFragmentManager()
                     .findFragmentByTag(MapsFragment.TAG);
         }
-
-        mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
-
-        mSearchBarVerticalMargin = setupSearchBarMargin();
-
-        mBottomSheetManager = new BottomSheetManager(MapsActivity.this, getResources());
 
         mSearchText.setCursorVisible(false);
         mSearchText.setOnClickListener(MapsActivity.this);
@@ -160,13 +124,6 @@ public class MapsActivity
 
         mMyLocationFab.setOnClickListener(MapsActivity.this);
         mMyLocationFab.setOnLongClickListener(MapsActivity.this);
-        mBottomSheetFab.setOnClickListener(MapsActivity.this);
-
-        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(500);
-        mBottomSheetBehavior.setHideable(true);
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        mBottomSheetBehavior.setBottomSheetCallback(mBottomSheetManager);
 
         mContentView = findViewById(R.id.content);
 
@@ -175,39 +132,17 @@ public class MapsActivity
         }
     }
 
-    private int setupSearchBarMargin() {
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mSearchBar.getLayoutParams();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            params.setMargins(
-                    params.leftMargin,
-                    params.topMargin + mStatusBarHeight,
-                    params.rightMargin,
-                    params.bottomMargin
-            );
-        }
-        return params.topMargin + params.bottomMargin;
-    }
-
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mBottomSheetManager.onRestoreInstanceState(savedInstanceState);
+        mCoordinator.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     public void onBackPressed() {
-        if (mBottomSheetManager.isBottomSheetOpen()) {
-            mBottomSheetManager.closeBottomSheet();
-        } else {
+        if (!mCoordinator.onBackPressed()) {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onParallaxTranslation(float translationY) {
-        mParallaxMapsPaddingTop = (int) -translationY;
-        updateMapsPaddingTop();
-        updateMapsPaddingBottom();
     }
 
     @Override
@@ -254,22 +189,13 @@ public class MapsActivity
     @Override
     public void showFullMap() {
         focusOnMap();
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        mCoordinator.closeBottomSheet();
     }
 
     @Override
     public void onMapReady() {
         ParallaxBehavior<View> parallaxBehavior = ParallaxBehavior.from(mContentView);
-        parallaxBehavior.setOnParallaxTranslationListener(MapsActivity.this);
-    }
-
-    private void removeBottomSheetFragment() {
-        if (mBottomSheetFragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .remove(mBottomSheetFragment)
-                    .commit();
-            mBottomSheetFragment = null;
-        }
+        parallaxBehavior.setOnParallaxTranslationListener(mCoordinator);
     }
 
     @Override
@@ -281,9 +207,6 @@ public class MapsActivity
                 break;
             case R.id.my_location_fab:
                 onMyLocationFabClick();
-                break;
-            case R.id.bottom_sheet_fab:
-                onBottomSheetFabClick();
                 break;
             case R.id.search_clear:
                 onSearchClearClick();
@@ -318,14 +241,6 @@ public class MapsActivity
         return true;
     }
 
-    private void onBottomSheetFabClick() {
-        if (mBottomSheetManager.isPartnerBottomSheetOpened()) {
-            mMapsFragment.startDirection((long) mBottomSheetFab.getTag());
-        } else if (mBottomSheetManager.isBottomSheetClose()) {
-            mBottomSheetManager.showFilters();
-        }
-    }
-
     private void onSearchClearClick() {
         focusOnMap();
         String currentText = mSearchText.getText().toString();
@@ -337,35 +252,72 @@ public class MapsActivity
     @Override
     public void showPartner(long partnerId, boolean zoom) {
         focusOnMap();
-        mBottomSheetManager.showPartner(partnerId, zoom);
+        mCoordinator.showPartner(partnerId, zoom);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mBottomSheetManager.onSaveInstanceState(outState);
+        mCoordinator.onSaveInstanceState(outState);
     }
 
     private void onSearchTextChanged(String search) {
         mMapsFragment.filterPartner(search);
-        if (mBottomSheetManager.isFiltersBottomSheetOpened()) {
+        FiltersFragment filtersFragment = mCoordinator.geFiltersFragment();
+        if (filtersFragment != null) {
             //noinspection ConstantConditions
-            mBottomSheetManager.geFiltersFragment().filterPartner(search);
+            filtersFragment.filterPartner(search);
         }
     }
 
     @Override
-    public void onMove(View child, int translationY) {
-        mSearchBarMapsPaddingTop = child.getBottom() + translationY;
-        updateMapsPaddingTop();
+    public Context getContext() {
+        return MapsActivity.this;
     }
 
-    private void updateMapsPaddingTop() {
-        mMapsFragment.updateMapPaddingTop(mParallaxMapsPaddingTop + mSearchBarMapsPaddingTop);
+    @Override
+    public Fragment getBottomSheetFragment() {
+        return mBottomSheetFragment;
     }
 
-    private void updateMapsPaddingBottom() {
-        mMapsFragment.updateMapPaddingBottom(mParallaxMapsPaddingTop);
+    @Override
+    public CoordinatorLayout getCoordinatorLayout() {
+        return mCoordinatorLayout;
+    }
+
+    @Override
+    public FloatingActionButton getMyLocationFab() {
+        return mMyLocationFab;
+    }
+
+    @Override
+    public FloatingActionButton getBottomSheetFab() {
+        return mBottomSheetFab;
+    }
+
+    @Override
+    public View getSearchBar() {
+        return mSearchBar;
+    }
+
+    @Override
+    public TextView getSearchText() {
+        return mSearchText;
+    }
+
+    @Override
+    public View getBottomSheet() {
+        return mBottomSheet;
+    }
+
+    @Override
+    public void updateMapPaddingTop(int paddingTop) {
+        mMapsFragment.updateMapPaddingTop(paddingTop);
+    }
+
+    @Override
+    public void updateMapPaddingBottom(int paddingBottom) {
+        mMapsFragment.updateMapPaddingBottom(paddingBottom);
     }
 
     private void focusOnMap() {
@@ -373,323 +325,57 @@ public class MapsActivity
         SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
     }
 
-    public class BottomSheetManager extends BottomSheetBehavior.BottomSheetCallback {
+    @Override
+    public void showPartner(long partnerId, boolean zoom, @Nullable GoogleMap.CancelableCallback callback) {
+        mMapsFragment.showPartner(partnerId, zoom, callback);
+    }
 
-        public static final String STATE_BOTTOM_SHEET_TYPE = "state:bottom_sheet_type";
-
-        @BottomSheetType
-        private int mBottomSheetType = BOTTOM_SHEET_NONE;
-
-        private Interpolator mInterpolator = new DecelerateInterpolator();
-
-        private boolean mShowPartnerAfterBottomSheetClose = false;
-
-        private boolean mSwitchPartnerAfterBottomSheetCollapsed = false;
-
-        private boolean mLoadFiltersAfterBottomSheetCollapsed = false;
-
-        private long mSelectedPartnerId = GonetteContract.NO_ID;
-
-        private boolean mZoomForPartnerId;
-
-        private final float mFABElevationPrimary;
-
-        private final float mFABElevationSecondary;
-
-        private int mBottomSheetBackgroundColor;
-
-        private int mFiltersBottomSheetBackgroundColor;
-
-        private final int mFabBottomMargin;
-
-        private boolean mIsDirectionVisible = false;
-
-        private GonetteDisappearBehavior mMyLocationFabBehavior;
-
-        private GonetteDisappearBehavior mBottomSheetFabBehavior;
-
-        private GonetteDisappearBehavior mSearchBarBehavior;
-
-        public BottomSheetManager(@NonNull Context context, @NonNull Resources resources) {
-            mFABElevationPrimary = resources.getDimension(R.dimen.fab_elevation_primary);
-            mFABElevationSecondary = resources.getDimension(R.dimen.fab_elevation_secondary);
-            mFiltersBottomSheetBackgroundColor = ContextCompat.getColor(context, R.color.colorPrimary);
-            mBottomSheetBackgroundColor = ContextCompat.getColor(context, android.R.color.background_light);
-            mFabBottomMargin = ((CoordinatorLayout.LayoutParams) mBottomSheetFab.getLayoutParams()).bottomMargin;
-            mMyLocationFabBehavior = GonetteDisappearBehavior.from(mMyLocationFab);
-            mBottomSheetFabBehavior = GonetteDisappearBehavior.from(mBottomSheetFab);
-            mSearchBarBehavior = GonetteDisappearBehavior.from(mSearchBar);
-            mSearchBarBehavior.setOnMoveListener(MapsActivity.this);
-        }
-
-        public void onSaveInstanceState(@NonNull Bundle outState) {
-            outState.putInt(STATE_BOTTOM_SHEET_TYPE, mBottomSheetType);
-        }
-
-        // TODO put this in onCreate ?
-        public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-            //noinspection WrongConstant
-            mBottomSheetType = savedInstanceState.getInt(STATE_BOTTOM_SHEET_TYPE, BOTTOM_SHEET_NONE);
-
-            if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
-                mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
-            } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
-                mBottomSheetFab.setImageResource(R.drawable.ic_directions_white_24dp);
-                mIsDirectionVisible = true;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mBottomSheetFab.setCompatElevation(mFABElevationPrimary);
-                }
-            }
-
-            if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    updateBottomSheetPadding(mBottomSheet, mSearchBarVerticalMargin + mSearchBar.getHeight());
-                }
-            } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                // Workaround to prevent undefined fab state on configuration change.
-                mBottomSheet.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        onSlide(mBottomSheet, 0);
-                    }
-                });
-            }
-        }
-
-        @Override
-        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-            if (BottomSheetBehavior.STATE_HIDDEN == newState) {
-                removeBottomSheetFragment();
-                mBottomSheetType = BOTTOM_SHEET_NONE;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mBottomSheetFab.setCompatElevation(mFABElevationSecondary);
-                }
-                mBottomSheetFab.setTag(null);
-                mBottomSheet.setBackgroundColor(mBottomSheetBackgroundColor);
-                mBottomSheet.getLayoutParams().height = CoordinatorLayout.LayoutParams.MATCH_PARENT;
-                mMyLocationFabBehavior.setLeaveLength(mMyLocationFab.getHeight());
-                mMyLocationFabBehavior.setLeaveOffset(0);
-                mMyLocationFabBehavior.setMoveOffset(0);
-                mBottomSheetFabBehavior.setLeaveLength(mBottomSheetFab.getHeight());
-                mBottomSheetFabBehavior.setLeaveOffset(0);
-                mBottomSheetFabBehavior.setMoveLength(mBottomSheetFab.getHeight());
-                mBottomSheetFabBehavior.setMoveOffset(0);
-                mBottomSheetFabBehavior.setLeaveMethod(GonetteDisappearBehavior.LEAVE_METHOD_ALPHA);
-                if (mShowPartnerAfterBottomSheetClose) {
-                    mShowPartnerAfterBottomSheetClose = false;
-                    showPartner(mSelectedPartnerId, mZoomForPartnerId);
-                }
-            } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
-                if (mSwitchPartnerAfterBottomSheetCollapsed) {
-                    mSwitchPartnerAfterBottomSheetCollapsed = false;
-                    switchPartner(mSelectedPartnerId);
-                }
-
-                if (mLoadFiltersAfterBottomSheetCollapsed) {
-                    mLoadFiltersAfterBottomSheetCollapsed = false;
-                    FiltersFragment fragment = geFiltersFragment();
-                    if (fragment != null) {
-                        fragment.LoadFilters();
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-            manageStatusBarPaddingOnBottomSheetSlide(bottomSheet);
-            if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
-                int translationY = mCoordinatorLayout.getBottom() - bottomSheet.getTop();
-                manageBottomSheetFabOnPartnerSlide(translationY, slideOffset);
-            }
-        }
-
-        private void manageBottomSheetFabOnPartnerSlide(int translationY, float slideOffset) {
-            float scale = slideOffset * 4 - 1;
-            scale = scale > 1
-                    ? 1
-                    : scale < 0
-                    ? 0
-                    : scale;
-            scale = 1 - scale;
-            scale = mInterpolator.getInterpolation(scale);
-            mBottomSheetFab.setScaleX(scale);
-            mBottomSheetFab.setScaleY(scale);
-
-            int fabCenter = mBottomSheetFab.getHeight() / 2 + mFabBottomMargin;
-            if (!mIsDirectionVisible && translationY > fabCenter) {
-                mBottomSheetFab.setImageResource(R.drawable.ic_directions_white_24dp);
-                mIsDirectionVisible = true;
-            } else if (mIsDirectionVisible && translationY <= fabCenter) {
-                mBottomSheetFab.setImageResource(R.drawable.ic_filter_list_white_24dp);
-                mIsDirectionVisible = false;
-            }
-        }
-
-        private void manageStatusBarPaddingOnBottomSheetSlide(@NonNull View bottomSheet) {
-            int height = mSearchBar.getHeight();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                height += mSearchBarVerticalMargin;
-            }
-            int padding = mBottomSheet.getTop();
-            padding = padding > height
-                    ? height
-                    : padding < 0
-                    ? 0
-                    : padding;
-            padding = height - padding;
-            updateBottomSheetPadding(bottomSheet, padding);
-        }
-
-        private void updateBottomSheetPadding(@NonNull View bottomSheet, int top) {
-            bottomSheet.setPadding(
-                    bottomSheet.getPaddingLeft(),
-                    top,
-                    bottomSheet.getPaddingRight(),
-                    bottomSheet.getPaddingBottom()
+    @Override
+    public void replaceBottomSheetByPartnerDetails(long partnerId, boolean animate) {
+        mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (animate) {
+            transaction
+                    .setCustomAnimations(
+                    android.R.anim.fade_in,
+                    android.R.anim.fade_out
             );
         }
+        transaction
+                .replace(
+                        R.id.bottom_sheet,
+                        mBottomSheetFragment,
+                        PartnerDetailFragment.TAG
+                )
+                .commit();
+    }
 
-        public void showPartner(long partnerId, boolean zoom) {
-            if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
-                mShowPartnerAfterBottomSheetClose = true;
-                mSelectedPartnerId = partnerId;
-                mZoomForPartnerId = zoom;
-                closeBottomSheet();
-            } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
-                switchPartner(partnerId);
-            } else {
-                openPartner(partnerId, zoom);
-            }
-        }
+    @Override
+    public void replaceBottomSheetByFilters() {
+        mBottomSheetFragment = FiltersPresenter.newInstance(mSearchText.getText().toString());
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(
+                        R.id.bottom_sheet,
+                        mBottomSheetFragment,
+                        FiltersFragment.TAG
+                )
+                .commit();
+    }
 
-        public void openPartner(final long partnerId, boolean zoom) {
-            mMapsFragment.showPartner(partnerId, zoom, new GoogleMap.CancelableCallback() {
-                @Override
-                public void onFinish() {
-                    mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(
-                                    R.id.bottom_sheet,
-                                    mBottomSheetFragment,
-                                    PartnerDetailFragment.TAG
-                            )
-                            .commit();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mBottomSheetFab.setCompatElevation(mFABElevationPrimary);
-                    }
-                    mBottomSheetFab.setTag(partnerId);
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    mBottomSheet.getLayoutParams().height = mCoordinatorLayout.getHeight() * 3 / 4;
-                    int offset = mBottomSheetFab.getHeight() / 2 + ((CoordinatorLayout.LayoutParams) mBottomSheetFab.getLayoutParams()).bottomMargin;
-                    mMyLocationFabBehavior.setLeaveLength(mMyLocationFab.getHeight());
-                    mMyLocationFabBehavior.setLeaveOffset(offset);
-                    mMyLocationFabBehavior.setMoveOffset(offset);
-                    mBottomSheetFabBehavior.setLeaveLength(mBottomSheetFab.getHeight());
-                    mBottomSheetFabBehavior.setLeaveOffset(mBottomSheetBehavior.getPeekHeight() + offset * 2);
-                    mBottomSheetFabBehavior.setMoveLength(mBottomSheetFab.getHeight() + mBottomSheetBehavior.getPeekHeight() + offset * 2);
-                    mBottomSheetFabBehavior.setMoveOffset(offset);
-                    mBottomSheetFabBehavior.setLeaveMethod(GonetteDisappearBehavior.LEAVE_METHOD_SCALE);
-                    mSearchBarBehavior.enable();
-                    mSearchBarBehavior.setLeaveLength(mMyLocationFab.getHeight());
-                    mSearchBarBehavior.setLeaveOffset(offset); // TODO improve: do this only one time.
-                    mSearchBarBehavior.setMoveLength(mSearchBar.getBottom() - mStatusBarHeight);
-                    mSearchBarBehavior.setMoveOffset(offset);
-                    mBottomSheetType = BOTTOM_SHEET_PARTNER;
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
-        }
-
-        public void switchPartner(long partnerId) {
-            if (BottomSheetBehavior.STATE_COLLAPSED != mBottomSheetBehavior.getState()) {
-                mSwitchPartnerAfterBottomSheetCollapsed = true;
-                mSelectedPartnerId = partnerId;
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            } else {
-                long currentPartnerId = (long) mBottomSheetFab.getTag();
-                if (currentPartnerId != partnerId) {
-                    mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
-                    getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(
-                                    android.R.anim.fade_in,
-                                    android.R.anim.fade_out
-                            )
-                            .replace(
-                                    R.id.bottom_sheet,
-                                    mBottomSheetFragment,
-                                    PartnerDetailFragment.TAG
-                            )
-                            .commit();
-                    mBottomSheetFab.setTag(partnerId);
-                }
-                mMapsFragment.showPartner(partnerId, false, null);
-                mBottomSheetType = BOTTOM_SHEET_PARTNER;
-            }
-        }
-
-        public void showFilters() {
-            if (mBottomSheetType == BOTTOM_SHEET_NONE) {
-                openFilters();
-            }
-        }
-
-        public void expandFilters() {
-            if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        }
-
-        private void openFilters() {
-            mBottomSheetFragment = FiltersPresenter.newInstance(mSearchText.getText().toString());
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(
-                            R.id.bottom_sheet,
-                            mBottomSheetFragment,
-                            FiltersFragment.TAG
-                    )
+    @Override
+    public void removeBottomSheetFragment() {
+        if (mBottomSheetFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(mBottomSheetFragment)
                     .commit();
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
-            mSearchBarBehavior.disable();
-            mLoadFiltersAfterBottomSheetCollapsed = true;
-            mBottomSheetType = BOTTOM_SHEET_FILTERS;
+            mBottomSheetFragment = null;
         }
+    }
 
-        private void closeBottomSheet() {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
-
-        public boolean isBottomSheetOpen() {
-            return mBottomSheetType != BOTTOM_SHEET_NONE;
-        }
-
-        public boolean isPartnerBottomSheetOpened() {
-            return mBottomSheetType == BOTTOM_SHEET_PARTNER;
-        }
-
-        public boolean isBottomSheetClose() {
-            return mBottomSheetType == BOTTOM_SHEET_NONE;
-        }
-
-        public boolean isFiltersBottomSheetOpened() {
-            return mBottomSheetType == BOTTOM_SHEET_FILTERS;
-        }
-
-        @Nullable
-        public FiltersFragment geFiltersFragment() {
-            if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
-                return (FiltersFragment) mBottomSheetFragment;
-            } else {
-                return null;
-            }
-        }
+    @Override
+    public void startDirection(long partnerId) {
+        mMapsFragment.startDirection(partnerId);
     }
 
 }

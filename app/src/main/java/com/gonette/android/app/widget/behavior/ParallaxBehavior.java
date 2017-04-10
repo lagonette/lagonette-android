@@ -20,6 +20,8 @@ public class ParallaxBehavior<V extends View>
         void onParallaxTranslation(float translationY);
     }
 
+    private static final String TAG = "ParallaxBehavior";
+
     @IdRes
     private int mDependencyId = 0;
 
