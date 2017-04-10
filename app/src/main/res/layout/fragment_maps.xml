@@ -18,4 +18,4 @@
           map:uiTiltGestures="true"
           map:uiZoomControls="false"
           map:uiZoomGestures="true"
-          tools:context="com.gonette.android.app.activity.MapsActivity"/>
+          tools:context="org.lagonette.android.app.activity.MapsActivity"/>

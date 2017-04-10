@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.gonette.android"
+        applicationId "org.lagonette.android"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -18,7 +18,7 @@ android {
             buildConfigField "String", "CONTENT_AUTHORITY", "\"${defaultConfig.applicationId}${applicationIdSuffix}.content\""
 
             buildConfigField "boolean", "LOG_SQL", "true"
-            buildConfigField "boolean", "INSERT_DATA", "false"
+            buildConfigField "boolean", "INSERT_DATA", "true"
         }
         release {
 

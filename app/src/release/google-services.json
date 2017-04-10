@@ -8,20 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1043289964222:android:e1f029d3f1c74f6f",
+        "mobilesdk_app_id": "1:526593597141:android:4415bcad8a37b32d",
         "android_client_info": {
-          "package_name": "com.gonette.android"
+          "package_name": "org.lagonette.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1043289964222-c1fldl4qcgrpvf29l7asbjt8ula4tnr6.apps.googleusercontent.com",
+          "client_id": "526593597141-f5jp60u0oov1hoco24vp117e2q4heu2t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAXJ7utFfs74KqdrUFveeGwNcGJkZdwd6w"
+          "current_key": "AIzaSyAfPJq4XSWe4LvT3pG-9C1FXsH3VRVdiM4"
         }
       ],
       "services": {

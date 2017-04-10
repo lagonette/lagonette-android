@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.gonette.android">
+          package="org.lagonette.android">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
-        android:name="com.gonette.android.app.GonetteApplication"
+        android:name="org.lagonette.android.app.GonetteApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,7 +19,7 @@
 
 
         <activity
-            android:name="com.gonette.android.app.activity.MapsActivity"
+            android:name="org.lagonette.android.app.activity.MapsActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -28,7 +28,7 @@
         </activity>
 
         <provider
-            android:name="com.gonette.android.content.GonetteContentProvider"
+            android:name="org.lagonette.android.content.GonetteContentProvider"
             android:authorities="${applicationId}.content"
             android:enabled="true"
             android:exported="false"
