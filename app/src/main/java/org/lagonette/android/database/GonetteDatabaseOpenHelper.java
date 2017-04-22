@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.stream.JsonReader;
+
 import org.lagonette.android.R;
 import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.parser.FeatureCollectionJsonParser;
@@ -50,13 +51,40 @@ public class GonetteDatabaseOpenHelper
     }
 
     private void createDatabase(SQLiteDatabase db) {
+        Log.d(TAG, "onCreate: Create table " + Tables.CATEGORY);
+        db.execSQL("CREATE TABLE " + Tables.CATEGORY + " ("
+                + CategoryColumns.ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
+                + CategoryColumns.LABEL + " TEXT NOT NULL, "
+                + CategoryColumns.ICON + " TEXT NOT NULL "
+                + ")");
+
+        Log.d(TAG, "onCreate: Create table " + Tables.PARTNER_SIDE_CATEGORIES);
+        db.execSQL("CREATE TABLE " + Tables.PARTNER_SIDE_CATEGORIES + " ("
+                + PartnerSideCategoriesColumns.CATEGORY_ID + " INTEGER, "
+                + PartnerSideCategoriesColumns.PARTNER_ID + " INTEGER, "
+                + "PRIMARY KEY (" + PartnerSideCategoriesColumns.CATEGORY_ID + ", " + PartnerSideCategoriesColumns.PARTNER_ID + ") ON CONFLICT REPLACE "
+                + ")");
+
         Log.d(TAG, "onCreate: Create table " + Tables.PARTNER);
         db.execSQL("CREATE TABLE " + Tables.PARTNER + " ("
                 + PartnerColumns.ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-                + PartnerColumns.NAME + " TEXT NOT NULL, "
-                + PartnerColumns.DESCRIPTION + " TEXT NOT NULL, "
+                + PartnerColumns.CLIENT_CODE + " TEXT NOT NULL, "
+                + PartnerColumns.NAME + " TEXT, "
                 + PartnerColumns.LATITUDE + " NUMERIC NOT NULL, "
-                + PartnerColumns.LONGITUDE + " NUMERIC NOT NULL "
+                + PartnerColumns.LONGITUDE + " NUMERIC NOT NULL, "
+                + PartnerColumns.DESCRIPTION + " TEXT, "
+                + PartnerColumns.ADDRESS + " TEXT, "
+                + PartnerColumns.CITY + " TEXT, "
+                + PartnerColumns.LOGO + " TEXT, "
+                + PartnerColumns.ZIP_CODE + " TEXT, "
+                + PartnerColumns.PHONE + " TEXT, "
+                + PartnerColumns.WEBSITE + " TEXT, "
+                + PartnerColumns.EMAIL + " TEXT, "
+                + PartnerColumns.OPENING_HOURS + " TEXT, "
+                + PartnerColumns.IS_EXCHANGE_OFFICE + " INTEGER, "
+                + PartnerColumns.SHORT_DESCRIPTION + " TEXT, "
+                + PartnerColumns.MAIN_CATEGORY + " INTEGER, "
+                + PartnerColumns.PARTNER_SIDE_CATEGORIES_ID + " INTEGER "
                 + ")");
 
         Log.d(TAG, "onCreate: Create table " + Tables.PARTNER_METADATA);
@@ -67,11 +95,17 @@ public class GonetteDatabaseOpenHelper
     }
 
     private void dropDatabase(SQLiteDatabase db) {
+        Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER_METADATA);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER_METADATA);
+
         Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER);
 
-        Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER_METADATA);
-        db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER_METADATA);
+        Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER_SIDE_CATEGORIES);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER_SIDE_CATEGORIES);
+
+        Log.d(TAG, "dropDatabase: Drop table " + Tables.CATEGORY);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.CATEGORY);
     }
 
     public static void parseData(Context context) {
@@ -96,13 +130,13 @@ public class GonetteDatabaseOpenHelper
         try {
             operations.add(
                     ContentProviderOperation.newDelete(GonetteContract.Partner.CONTENT_URI)
-                    .withYieldAllowed(true)
-                    .build()
+                            .withYieldAllowed(true)
+                            .build()
             );
             operations.add(
                     ContentProviderOperation.newDelete(GonetteContract.PartnerMetadata.CONTENT_URI)
-                    .withYieldAllowed(true)
-                    .build()
+                            .withYieldAllowed(true)
+                            .build()
             );
 
             InputStream inputStream = context.getResources().openRawResource(R.raw.gonette);
