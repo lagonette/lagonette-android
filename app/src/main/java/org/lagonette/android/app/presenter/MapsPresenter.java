@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -19,20 +20,25 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.firebase.crash.FirebaseCrash;
+
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.MapsContract;
 import org.lagonette.android.app.presenter.base.BasePresenter;
 import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.loader.GetPartnersLoader;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
+import org.lagonette.android.content.loader.callbacks.BundleLoaderCallbacks;
 import org.lagonette.android.content.loader.callbacks.CursorLoaderCallbacks;
 import org.lagonette.android.content.reader.PartnerReader;
-import com.google.firebase.crash.FirebaseCrash;
 
 public class MapsPresenter
         extends BasePresenter
         implements MapsContract.Presenter,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, CursorLoaderCallbacks.Callbacks {
+        GoogleApiClient.OnConnectionFailedListener,
+        CursorLoaderCallbacks.Callbacks,
+        BundleLoaderCallbacks.Callbacks {
 
     private static final String TAG = "MapsPresenter";
 
@@ -44,6 +50,8 @@ public class MapsPresenter
     private final MapsContract.View mView;
 
     private CursorLoaderCallbacks mCursorLoaderCallbacks;
+
+    private BundleLoaderCallbacks mBundleLoaderCallbacks;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -81,11 +89,19 @@ public class MapsPresenter
         }
 
         mCursorLoaderCallbacks = new CursorLoaderCallbacks(MapsPresenter.this);
+        mBundleLoaderCallbacks = new BundleLoaderCallbacks(MapsPresenter.this);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            mBundleLoaderCallbacks.initLoader(
+                    R.id.loader_get_partners,
+                    null
+            );
+        }
     }
 
     @Override
@@ -158,7 +174,7 @@ public class MapsPresenter
     }
 
     @Override
-    public boolean onCursorLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public boolean onCursorLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_query_map_partners:
@@ -178,7 +194,7 @@ public class MapsPresenter
     }
 
     @Override
-    public boolean onCursorLoaderReset(Loader<Cursor> loader) {
+    public boolean onCursorLoaderReset(@NonNull Loader<Cursor> loader) {
         int id = loader.getId();
         switch (id) {
             case R.id.loader_query_map_partners:
@@ -280,4 +296,59 @@ public class MapsPresenter
         );
     }
 
+
+    @CallSuper
+    @Override
+    public Loader<Bundle> onCreateBundleLoader(int id, Bundle args) {
+        switch (id) {
+            case R.id.loader_get_partners:
+                return new GetPartnersLoader(mView.getContext(), args);
+            default:
+                return null;
+        }
+    }
+
+    @CallSuper
+    @Override
+    public boolean onBundleLoadFinished(@NonNull Loader<Bundle> loader, @NonNull Bundle data) {
+        int id = loader.getId();
+        switch (id) {
+            case R.id.loader_get_partners:
+                onGetPartnersLoaderFinished(data);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void onGetPartnersLoaderFinished(@NonNull Bundle data) {
+        int status = data.getInt(GetPartnersLoader.ARG_STATUS);
+        switch (status) {
+            case GetPartnersLoader.STATUS_OK:
+                break;
+            case GetPartnersLoader.STATUS_ERROR:
+                mView.errorGettingPartners();
+                break;
+        }
+    }
+
+    @CallSuper
+    @Override
+    public boolean onBundleLoaderReset(@NonNull Loader<Bundle> loader) {
+        int id = loader.getId();
+        switch (id) {
+            case R.id.loader_get_partners:
+                // Do nothing
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public int[] getBundleLoaderIds() {
+        return new int[]{
+                R.id.loader_get_partners
+        };
+    }
 }

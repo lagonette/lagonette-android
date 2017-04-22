@@ -18,14 +18,12 @@ android {
             buildConfigField "String", "CONTENT_AUTHORITY", "\"${defaultConfig.applicationId}${applicationIdSuffix}.content\""
 
             buildConfigField "boolean", "LOG_SQL", "true"
-            buildConfigField "boolean", "INSERT_DATA", "true"
         }
         release {
 
             buildConfigField "String", "CONTENT_AUTHORITY", "\"${defaultConfig.applicationId}.content\""
 
             buildConfigField "boolean", "LOG_SQL", "false"
-            buildConfigField "boolean", "INSERT_DATA", "false"
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -43,6 +41,8 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:10.2.1'
     compile 'com.google.maps.android:android-maps-utils:0.5'
     compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

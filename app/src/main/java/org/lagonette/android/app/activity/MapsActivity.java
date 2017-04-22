@@ -15,7 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import org.lagonette.android.BuildConfig;
+import com.google.android.gms.maps.GoogleMap;
+
 import org.lagonette.android.R;
 import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.fragment.MapsFragment;
@@ -23,10 +24,8 @@ import org.lagonette.android.app.fragment.PartnerDetailFragment;
 import org.lagonette.android.app.presenter.FiltersPresenter;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.app.widget.coordinator.MainCoordinator;
-import org.lagonette.android.database.GonetteDatabaseOpenHelper;
 import org.lagonette.android.util.SearchUtil;
 import org.lagonette.android.util.SoftKeyboardUtil;
-import com.google.android.gms.maps.GoogleMap;
 
 public class MapsActivity
         extends BaseActivity
@@ -127,9 +126,6 @@ public class MapsActivity
 
         mContentView = findViewById(R.id.content);
 
-        if (BuildConfig.INSERT_DATA && savedInstanceState == null) {
-            GonetteDatabaseOpenHelper.parseData(MapsActivity.this);
-        }
     }
 
     @Override

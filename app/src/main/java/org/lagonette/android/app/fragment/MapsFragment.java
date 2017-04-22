@@ -27,6 +27,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
+
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.MapsContract;
 import org.lagonette.android.app.presenter.MapsPresenter;
@@ -461,6 +462,17 @@ public class MapsFragment
                 .make(
                         SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
                         R.string.error_no_direction_app_found,
+                        Snackbar.LENGTH_LONG
+                )
+                .show();
+    }
+
+    @Override
+    public void errorGettingPartners() {
+        Snackbar
+                .make(
+                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        R.string.error_getting_partners,
                         Snackbar.LENGTH_LONG
                 )
                 .show();

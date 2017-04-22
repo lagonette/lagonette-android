@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.OnMapReadyCallback;
+
 import org.lagonette.android.app.contract.base.BaseContract;
 import org.lagonette.android.content.reader.PartnerReader;
 
@@ -30,6 +31,8 @@ public class MapsContract {
         void showPartners(@Nullable PartnerReader partnerReader);
 
         void errorNoDirectionAppFound();
+
+        void errorGettingPartners();
 
     }
 }

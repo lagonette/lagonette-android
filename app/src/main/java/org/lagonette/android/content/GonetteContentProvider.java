@@ -135,6 +135,16 @@ public class GonetteContentProvider
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
                 uris.add(GonetteContract.Partner.METADATA_CONTENT_URI);
                 break;
+            case R.id.content_uri_partners_side_categories:
+                table = Tables.PARTNER_SIDE_CATEGORIES;
+                baseUri = GonetteContract.PartnerSideCategories.CONTENT_URI;
+                uris.add(GonetteContract.PartnerSideCategories.CONTENT_URI);
+                break;
+            case R.id.content_uri_categories:
+                table = Tables.CATEGORY;
+                baseUri = GonetteContract.Category.CONTENT_URI;
+                uris.add(GonetteContract.Category.CONTENT_URI);
+                break;
             default:
                 throw new IllegalArgumentException(String.format(
                         "Unknown content uri code: %s",
@@ -175,6 +185,16 @@ public class GonetteContentProvider
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
                 uris.add(GonetteContract.Partner.METADATA_CONTENT_URI);
                 break;
+            case R.id.content_uri_partners_side_categories:
+                table = Tables.PARTNER_SIDE_CATEGORIES;
+                baseUri = GonetteContract.PartnerSideCategories.CONTENT_URI;
+                uris.add(GonetteContract.PartnerSideCategories.CONTENT_URI);
+                break;
+            case R.id.content_uri_categories:
+                table = Tables.CATEGORY;
+                baseUri = GonetteContract.Category.CONTENT_URI;
+                uris.add(GonetteContract.Category.CONTENT_URI);
+                break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
         }
@@ -189,7 +209,7 @@ public class GonetteContentProvider
         Log.d(TAG, "delete: Notify " + baseUri);
         contentResolver.notifyChange(baseUri, null);
         for (Uri u : uris) {
-            Log.d(TAG, "insert: Notify " + u);
+            Log.d(TAG, "delete: Notify " + u);
             contentResolver.notifyChange(GonetteContract.Partner.METADATA_CONTENT_URI, null);
         }
 
@@ -213,6 +233,16 @@ public class GonetteContentProvider
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
                 uris.add(GonetteContract.Partner.METADATA_CONTENT_URI);
                 break;
+            case R.id.content_uri_partners_side_categories:
+                table = Tables.PARTNER_SIDE_CATEGORIES;
+                baseUri = GonetteContract.PartnerSideCategories.CONTENT_URI;
+                uris.add(GonetteContract.PartnerSideCategories.CONTENT_URI);
+                break;
+            case R.id.content_uri_categories:
+                table = Tables.CATEGORY;
+                baseUri = GonetteContract.Category.CONTENT_URI;
+                uris.add(GonetteContract.Category.CONTENT_URI);
+                break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
         }
@@ -227,7 +257,7 @@ public class GonetteContentProvider
         Log.d(TAG, "update: Notify " + baseUri);
         contentResolver.notifyChange(baseUri, null);
         for (Uri u : uris) {
-            Log.d(TAG, "insert: Notify " + u);
+            Log.d(TAG, "update: Notify " + u);
             contentResolver.notifyChange(GonetteContract.Partner.METADATA_CONTENT_URI, null);
         }
 
@@ -258,6 +288,18 @@ public class GonetteContentProvider
                 GonetteContract.AUTHORITY,
                 GonetteContract.PartnerMetadata.CONTENT_URI.getPath(),
                 R.id.content_uri_partners_metadata
+        );
+        addUriToUriMatcher(
+                mUriMatcher,
+                GonetteContract.AUTHORITY,
+                GonetteContract.PartnerSideCategories.CONTENT_URI.getPath(),
+                R.id.content_uri_partners_side_categories
+        );
+        addUriToUriMatcher(
+                mUriMatcher,
+                GonetteContract.AUTHORITY,
+                GonetteContract.Category.CONTENT_URI.getPath(),
+                R.id.content_uri_categories
         );
     }
 

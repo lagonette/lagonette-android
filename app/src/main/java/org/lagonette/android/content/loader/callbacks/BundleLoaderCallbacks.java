@@ -14,7 +14,7 @@ public class BundleLoaderCallbacks
 
         Loader<Bundle> onCreateBundleLoader(int id, Bundle args);
 
-        boolean onBundleLoadFinished(@NonNull Loader<Bundle> loader, @Nullable Bundle cursor);
+        boolean onBundleLoadFinished(@NonNull Loader<Bundle> loader, @NonNull Bundle data);
 
         boolean onBundleLoaderReset(@NonNull Loader<Bundle> loader);
 
