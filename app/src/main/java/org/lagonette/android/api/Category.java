@@ -13,7 +13,7 @@ import java.util.List;
 public class Category implements ContentObject {
 
     @SerializedName("id")
-    private String mId;
+    private long mId;
 
     @SerializedName("label")
     private String mLabel;
