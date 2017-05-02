@@ -1,19 +1,17 @@
 package org.lagonette.android.app.presenter;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -24,21 +22,23 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.MapsContract;
-import org.lagonette.android.app.presenter.base.BasePresenter;
+import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
 import org.lagonette.android.content.contract.GonetteContract;
-import org.lagonette.android.content.loader.GetPartnersLoader;
+import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
-import org.lagonette.android.content.loader.callbacks.BundleLoaderCallbacks;
-import org.lagonette.android.content.loader.callbacks.CursorLoaderCallbacks;
+import org.lagonette.android.content.loader.callbacks.GetPartnersCallbacks;
+import org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks;
+import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
 import org.lagonette.android.content.reader.PartnerReader;
 
 public class MapsPresenter
-        extends BasePresenter
+        extends BundleLoaderPresenter
         implements MapsContract.Presenter,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         CursorLoaderCallbacks.Callbacks,
-        BundleLoaderCallbacks.Callbacks {
+        GetPartnersCallbacks.Callbacks,
+        LoadPartnerCallbacks.Callbacks {
 
     private static final String TAG = "MapsPresenter";
 
@@ -49,9 +49,9 @@ public class MapsPresenter
     @NonNull
     private final MapsContract.View mView;
 
-    private CursorLoaderCallbacks mCursorLoaderCallbacks;
+    private org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks mLoadPartnerCallbacks;
 
-    private BundleLoaderCallbacks mBundleLoaderCallbacks;
+    private GetPartnersCallbacks mGetPartnersCallbacks;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -63,6 +63,11 @@ public class MapsPresenter
 
     public MapsPresenter(@NonNull MapsContract.View view) {
         mView = view;
+    }
+
+    @Override
+    public Context getContext() {
+        return mView.getContext();
     }
 
     @NonNull
@@ -88,8 +93,11 @@ public class MapsPresenter
                     .build();
         }
 
-        mCursorLoaderCallbacks = new CursorLoaderCallbacks(MapsPresenter.this);
-        mBundleLoaderCallbacks = new BundleLoaderCallbacks(MapsPresenter.this);
+        mGetPartnersCallbacks = new GetPartnersCallbacks(MapsPresenter.this);
+        mLoadPartnerCallbacks = new org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks(
+                MapsPresenter.this,
+                R.id.loader_query_map_partners
+        );
     }
 
     @Override
@@ -97,11 +105,13 @@ public class MapsPresenter
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
-            mBundleLoaderCallbacks.initLoader(
-                    R.id.loader_get_partners,
-                    null
-            );
+            mGetPartnersCallbacks.getParners();
         }
+    }
+
+    @Override
+    protected void reattachLoaders() {
+        mGetPartnersCallbacks.reattachLoader();
     }
 
     @Override
@@ -147,76 +157,13 @@ public class MapsPresenter
     }
 
     @Override
-    public Loader<Cursor> onCreateCursorLoader(int id, Bundle args) {
-        switch (id) {
-            case R.id.loader_query_map_partners:
-                String search = PartnerCursorLoaderHelper.getSearch(args);
-                return new CursorLoader(
-                        mView.getContext(),
-                        GonetteContract.Partner.METADATA_CONTENT_URI,
-                        new String[]{
-                                GonetteContract.Partner.ID,
-                                GonetteContract.Partner.NAME,
-                                GonetteContract.Partner.DESCRIPTION,
-                                GonetteContract.Partner.LATITUDE,
-                                GonetteContract.Partner.LONGITUDE
-                        },
-                        GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1 AND " + GonetteContract.Partner.NAME + " LIKE ?",
-
-                        new String[]{
-                                "%" + search + "%"
-                        },
-                        null
-                );
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public boolean onCursorLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_query_map_partners:
-                onQueryPartnerLoadFinished(cursor);
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    private void onQueryPartnerLoadFinished(Cursor cursor) {
-        mView.showPartners(
-                cursor != null
-                        ? new PartnerReader(cursor)
-                        : null
-        );
-    }
-
-    @Override
-    public boolean onCursorLoaderReset(@NonNull Loader<Cursor> loader) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_query_map_partners:
-                // Do nothing.
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
     public void loadPartners() {
-        mCursorLoaderCallbacks.initLoader(
-                R.id.loader_query_map_partners,
-                null
-        );
+        mLoadPartnerCallbacks.loadPartners();
     }
 
     @Override
     public void loadPartners(@NonNull String search) {
-        mCursorLoaderCallbacks.restartLoader(
-                R.id.loader_query_map_partners,
+        mLoadPartnerCallbacks.loadPartners(
                 PartnerCursorLoaderHelper.getArgs(search)
         );
     }
@@ -296,59 +243,37 @@ public class MapsPresenter
         );
     }
 
-
-    @CallSuper
     @Override
-    public Loader<Bundle> onCreateBundleLoader(int id, Bundle args) {
-        switch (id) {
-            case R.id.loader_get_partners:
-                return new GetPartnersLoader(mView.getContext(), args);
-            default:
-                return null;
-        }
-    }
-
-    @CallSuper
-    @Override
-    public boolean onBundleLoadFinished(@NonNull Loader<Bundle> loader, @NonNull Bundle data) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_get_partners:
-                onGetPartnersLoaderFinished(data);
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    private void onGetPartnersLoaderFinished(@NonNull Bundle data) {
-        int status = data.getInt(GetPartnersLoader.ARG_STATUS);
-        switch (status) {
-            case GetPartnersLoader.STATUS_OK:
-                break;
-            case GetPartnersLoader.STATUS_ERROR:
-                mView.errorGettingPartners();
-                break;
-        }
-    }
-
-    @CallSuper
-    @Override
-    public boolean onBundleLoaderReset(@NonNull Loader<Bundle> loader) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_get_partners:
-                // Do nothing
-                return true;
-            default:
-                return false;
-        }
+    public void errorGettingPartners() {
+        mView.errorGettingPartners();
     }
 
     @Override
-    public int[] getBundleLoaderIds() {
-        return new int[]{
-                R.id.loader_get_partners
-        };
+    public void setPartnerReader(@Nullable PartnerReader reader) {
+        mView.showPartners(reader);
+    }
+
+    @Override
+    public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
+        String search = PartnerCursorLoaderHelper.getSearch(args);
+        return new CursorLoaderParams(
+                GonetteContract.Partner.METADATA_CONTENT_URI,
+                new String[]{
+                        GonetteContract.Partner.ID,
+                        GonetteContract.Partner.NAME,
+                        GonetteContract.Partner.DESCRIPTION,
+                        GonetteContract.Partner.LATITUDE,
+                        GonetteContract.Partner.LONGITUDE
+                }
+        )
+                .setSelection(!TextUtils.isEmpty(search)
+                        ? GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1 AND " + GonetteContract.Partner.NAME + " LIKE ?"
+                        : GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1"
+                )
+                .setSelectionArgs(!TextUtils.isEmpty(search)
+                        ? new String[]{"%" + search + "%"}
+                        : null
+                )
+                .setSortOrder(null);
     }
 }

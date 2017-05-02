@@ -4,27 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 
-import org.lagonette.android.content.loader.callbacks.BundleLoaderCallbacks;
-
 public abstract class BundleLoaderPresenter
-        extends BasePresenter
-        implements BundleLoaderCallbacks.Callbacks {
-
-    protected BundleLoaderCallbacks mBundleLoaderCallbacks;
-
-    @CallSuper
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mBundleLoaderCallbacks = new BundleLoaderCallbacks(BundleLoaderPresenter.this);
-    }
+        extends BasePresenter {
 
     @CallSuper
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mBundleLoaderCallbacks.reattachLoaders();
+            reattachLoaders();
         }
     }
+
+    protected abstract void reattachLoaders();
 
 }

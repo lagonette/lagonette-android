@@ -55,6 +55,7 @@ public class GetPartnersLoader extends BundleLoader {
             return mBundle;
 
         } catch (IOException | RemoteException | OperationApplicationException e) {
+            Log.e(TAG, "loadInBackground: ", e);
             FirebaseCrash.report(e);
             mBundle.putInt(ARG_STATUS, STATUS_ERROR);
             return mBundle;

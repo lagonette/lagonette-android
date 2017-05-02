@@ -1,11 +1,19 @@
 package org.lagonette.android.content.reader;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.lagonette.android.content.contract.GonetteContract;
 
 public class PartnerReader
         extends CursorReader {
+
+    public static PartnerReader create(@Nullable Cursor cursor) {
+        return cursor != null
+                ? new PartnerReader(cursor)
+                : null;
+    }
 
     public PartnerReader(Cursor cursor) {
         super(cursor);
@@ -19,6 +27,7 @@ public class PartnerReader
         );
     }
 
+    @NonNull
     public String getName() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
@@ -27,6 +36,7 @@ public class PartnerReader
         );
     }
 
+    @NonNull
     public String getDescription() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
@@ -35,7 +45,7 @@ public class PartnerReader
         );
     }
 
-    public Double getLatitude() {
+    public double getLatitude() {
         return mCursor.getDouble(
                 mCursor.getColumnIndex(
                         GonetteContract.Partner.LATITUDE
@@ -43,7 +53,7 @@ public class PartnerReader
         );
     }
 
-    public Double getLongitude() {
+    public double getLongitude() {
         return mCursor.getDouble(
                 mCursor.getColumnIndex(
                         GonetteContract.Partner.LONGITUDE
