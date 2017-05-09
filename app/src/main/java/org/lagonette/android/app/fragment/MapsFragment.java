@@ -445,7 +445,8 @@ public class MapsFragment
                         PartnerItem item = new PartnerItem(
                                 partnerReader.getId(),
                                 partnerReader.getLatitude(),
-                                partnerReader.getLongitude()
+                                partnerReader.getLongitude(),
+                                partnerReader.isExchangeOffice()
                         );
                         mPartnerItems.put(item.getId(), item);
                         mClusterManager.addItem(item);

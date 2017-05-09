@@ -14,8 +14,11 @@ public class PartnerItem
 
     private long mId;
 
-    public PartnerItem(long id, double lat, double lng) {
+    private boolean mIsExchangeOffice;
+
+    public PartnerItem(long id, double lat, double lng, boolean isExchangeOffice) {
         mId = id;
+        mIsExchangeOffice = isExchangeOffice;
         mPosition = new LatLng(lat, lng);
         mTitle = null;
         mSnippet = null;
@@ -40,4 +43,7 @@ public class PartnerItem
         return mSnippet;
     }
 
+    public boolean isExchangeOffice() {
+        return mIsExchangeOffice;
+    }
 }

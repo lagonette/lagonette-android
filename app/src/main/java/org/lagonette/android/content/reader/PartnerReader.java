@@ -61,7 +61,15 @@ public class PartnerReader
         );
     }
 
-    public boolean getIsVisible() {
+    public boolean isExchangeOffice() {
+        return 1 == mCursor.getInt(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.IS_EXCHANGE_OFFICE
+                )
+        );
+    }
+
+    public boolean isVisible() {
         return 1 == mCursor.getInt(
                 mCursor.getColumnIndex(
                         GonetteContract.PartnerMetadata.IS_VISIBLE

@@ -263,7 +263,8 @@ public class MapsPresenter
                         GonetteContract.Partner.NAME,
                         GonetteContract.Partner.DESCRIPTION,
                         GonetteContract.Partner.LATITUDE,
-                        GonetteContract.Partner.LONGITUDE
+                        GonetteContract.Partner.LONGITUDE,
+                        GonetteContract.Partner.IS_EXCHANGE_OFFICE
                 }
         )
                 .setSelection(!TextUtils.isEmpty(search)

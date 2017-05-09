@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#E94E1B</color>
+
+    <color name="la_gonnette_primary">#E6411C</color>
+    <color name="la_gonnette_secondary_1">#798287</color>
+    <color name="la_gonnette_secondary_2">#19AEB0</color>
+
+    <color name="colorPrimary">#E6411C</color>
     <color name="colorPrimaryDark">#C6461D</color>
     <color name="colorAccent">#FF9100</color>
 

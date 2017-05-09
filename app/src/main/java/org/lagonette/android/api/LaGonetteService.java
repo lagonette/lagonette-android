@@ -3,6 +3,7 @@ package org.lagonette.android.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.lagonette.android.api.adapter.BooleanTypeAdapter;
 import org.lagonette.android.api.adapter.LongTypeAdapter;
 
 import retrofit2.Call;
@@ -14,6 +15,7 @@ public interface LaGonetteService {
 
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(Long.class, new LongTypeAdapter())
+            .registerTypeAdapter(Boolean.class, new BooleanTypeAdapter())
             .create();
 
     Retrofit retrofit = new Retrofit.Builder()

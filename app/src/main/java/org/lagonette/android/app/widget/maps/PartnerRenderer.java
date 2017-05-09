@@ -13,6 +13,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+
 import org.lagonette.android.R;
 
 public class PartnerRenderer
@@ -23,6 +24,8 @@ public class PartnerRenderer
     private final IconGenerator mClusterIconGenerator;
 
     private final BitmapDescriptor mPartnerBitmapDescriptor;
+
+    private final BitmapDescriptor mExchangeOfficeBitmapDescriptor;
 
     public PartnerRenderer(
             Context context,
@@ -42,8 +45,12 @@ public class PartnerRenderer
         View partnerView = layoutInflater.inflate(R.layout.item_partner, null);
         mIconGenerator.setContentView(partnerView);
         mIconGenerator.setBackground(null);
-
         mPartnerBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon());
+
+        View exchangePartnerView = layoutInflater.inflate(R.layout.item_exchange_office, null);
+        mIconGenerator.setContentView(exchangePartnerView);
+        mIconGenerator.setBackground(null);
+        mExchangeOfficeBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon());
 
         setMinClusterSize(MIN_CLUSTER_SIZE);
     }
@@ -52,7 +59,9 @@ public class PartnerRenderer
     protected void onBeforeClusterItemRendered(
             PartnerItem partnerItem,
             MarkerOptions markerOptions) {
-        markerOptions.icon(mPartnerBitmapDescriptor)
+        markerOptions.icon(partnerItem.isExchangeOffice()
+                ? mExchangeOfficeBitmapDescriptor
+                : mPartnerBitmapDescriptor)
                 .anchor(0.5f, 0.5f)
                 .flat(true)
                 .title(partnerItem.getTitle());

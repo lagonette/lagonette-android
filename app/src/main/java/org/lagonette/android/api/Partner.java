@@ -56,7 +56,7 @@ public class Partner implements ContentObject {
     private String mOpeningHours;
 
     @SerializedName("isExchangeOffice")
-    private boolean mIsExchangeOffice;
+    private Boolean mIsExchangeOffice; // TODO Use custom adapter to handle boolean correctly.
 
     @SerializedName("shortDescription")
     private String mShortDescription;

@@ -257,7 +257,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void onBindPartnerViewHolder(@NonNull PartnerViewHolder holder, int position) {
         if (mPartnerReader.moveToPosition(position)) {
             holder.partnerId = mPartnerReader.getId();
-            holder.isVisible = mPartnerReader.getIsVisible();
+            holder.isVisible = mPartnerReader.isVisible();
             holder.nameTextView.setText(mPartnerReader.getName());
             holder.itemView.setClickable(holder.isVisible);
             if (holder.isVisible) {
