@@ -1,2 +1,4 @@
 # La Gonette
-An unofficial app for Lyon's local currency.
+The app for Lyon's local currency.
+
+// TODO make a better README
