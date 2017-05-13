@@ -30,8 +30,9 @@ public class GonetteContract {
                 .appendPath(Tables.PARTNER)
                 .build();
 
-        Uri METADATA_CONTENT_URI = CONTENT_URI.buildUpon()
+        Uri EXTENDED_CONTENT_URI = CONTENT_URI.buildUpon()
                 .appendPath(Tables.PARTNER_METADATA)
+                .appendPath(Tables.CATEGORY)
                 .build();
 
         String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.PARTNER;

@@ -257,14 +257,16 @@ public class MapsPresenter
     public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
         String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoaderParams(
-                GonetteContract.Partner.METADATA_CONTENT_URI,
+                GonetteContract.Partner.EXTENDED_CONTENT_URI,
                 new String[]{
                         GonetteContract.Partner.ID,
                         GonetteContract.Partner.NAME,
                         GonetteContract.Partner.DESCRIPTION,
                         GonetteContract.Partner.LATITUDE,
                         GonetteContract.Partner.LONGITUDE,
-                        GonetteContract.Partner.IS_EXCHANGE_OFFICE
+                        GonetteContract.Partner.IS_EXCHANGE_OFFICE,
+                        GonetteContract.Partner.MAIN_CATEGORY,
+                        GonetteContract.Category.ICON
                 }
         )
                 .setSelection(!TextUtils.isEmpty(search)

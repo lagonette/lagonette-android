@@ -9,4 +9,6 @@
     <dimen name="search_bar_margin_top">12dp</dimen>
     <dimen name="search_bar_margin_bottom">0dp</dimen>
 
+    <dimen name="map_item_size">16dp</dimen>
+
 </resources>

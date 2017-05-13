@@ -76,4 +76,21 @@ public class PartnerReader
                 )
         );
     }
+
+    @NonNull
+    public String getCategoryIconUrl() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Category.ICON
+                )
+        );
+    }
+
+    public long getMainCategoryId() {
+        return mCursor.getLong(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.MAIN_CATEGORY
+                )
+        );
+    }
 }

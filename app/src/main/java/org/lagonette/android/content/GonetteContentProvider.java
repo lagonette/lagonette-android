@@ -56,8 +56,8 @@ public class GonetteContentProvider
             case R.id.content_uri_partners:
                 qb.setTables(Tables.PARTNER);
                 break;
-            case R.id.content_uri_partners_partners_metadata:
-                qb.setTables(GonetteContentProviderHelper.getPartnerWithMetadataStatement());
+            case R.id.content_uri_partners_extended:
+                qb.setTables(GonetteContentProviderHelper.getExtendedPartnerStatement());
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown uri: %s", uri));
@@ -105,7 +105,7 @@ public class GonetteContentProvider
                 return GonetteContract.Partner.CONTENT_TYPE_ITEM;
             case R.id.content_uri_partners:
                 return GonetteContract.Partner.CONTENT_TYPE_DIR;
-            case R.id.content_uri_partners_partners_metadata:
+            case R.id.content_uri_partners_extended:
                 return GonetteContract.Partner.CONTENT_TYPE_DIR;
             case R.id.content_uri_partners_metadata:
                 return GonetteContract.PartnerMetadata.CONTENT_TYPE_DIR;
@@ -133,7 +133,7 @@ public class GonetteContentProvider
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
-                uris.add(GonetteContract.Partner.METADATA_CONTENT_URI);
+                uris.add(GonetteContract.Partner.EXTENDED_CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
@@ -162,7 +162,7 @@ public class GonetteContentProvider
         contentResolver.notifyChange(newUri, null);
         for (Uri u : uris) {
             Log.d(TAG, "insert: Notify " + u);
-            contentResolver.notifyChange(GonetteContract.Partner.METADATA_CONTENT_URI, null);
+            contentResolver.notifyChange(GonetteContract.Partner.EXTENDED_CONTENT_URI, null);
         }
 
         return newUri;
@@ -183,7 +183,7 @@ public class GonetteContentProvider
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
-                uris.add(GonetteContract.Partner.METADATA_CONTENT_URI);
+                uris.add(GonetteContract.Partner.EXTENDED_CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
@@ -210,7 +210,7 @@ public class GonetteContentProvider
         contentResolver.notifyChange(baseUri, null);
         for (Uri u : uris) {
             Log.d(TAG, "delete: Notify " + u);
-            contentResolver.notifyChange(GonetteContract.Partner.METADATA_CONTENT_URI, null);
+            contentResolver.notifyChange(GonetteContract.Partner.EXTENDED_CONTENT_URI, null);
         }
 
         return n;
@@ -231,7 +231,7 @@ public class GonetteContentProvider
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
-                uris.add(GonetteContract.Partner.METADATA_CONTENT_URI);
+                uris.add(GonetteContract.Partner.EXTENDED_CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
@@ -258,7 +258,7 @@ public class GonetteContentProvider
         contentResolver.notifyChange(baseUri, null);
         for (Uri u : uris) {
             Log.d(TAG, "update: Notify " + u);
-            contentResolver.notifyChange(GonetteContract.Partner.METADATA_CONTENT_URI, null);
+            contentResolver.notifyChange(GonetteContract.Partner.EXTENDED_CONTENT_URI, null);
         }
 
         return n;
@@ -280,8 +280,8 @@ public class GonetteContentProvider
         addUriToUriMatcher(
                 mUriMatcher,
                 GonetteContract.AUTHORITY,
-                GonetteContract.Partner.METADATA_CONTENT_URI.getPath(),
-                R.id.content_uri_partners_partners_metadata
+                GonetteContract.Partner.EXTENDED_CONTENT_URI.getPath(),
+                R.id.content_uri_partners_extended
         );
         addUriToUriMatcher(
                 mUriMatcher,

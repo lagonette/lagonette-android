@@ -144,7 +144,7 @@ public class FiltersPresenter
     public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
         String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoaderParams(
-                GonetteContract.Partner.METADATA_CONTENT_URI,
+                GonetteContract.Partner.EXTENDED_CONTENT_URI,
                 new String[]{
                         GonetteContract.Partner.ID,
                         GonetteContract.Partner.NAME,
@@ -175,7 +175,7 @@ public class FiltersPresenter
     @Override
     public CursorLoaderParams getPartnersVisibilityLoaderParams(@Nullable Bundle args) {
         return new CursorLoaderParams(
-                GonetteContract.Partner.METADATA_CONTENT_URI,
+                GonetteContract.Partner.EXTENDED_CONTENT_URI,
                 new String[]{
                         PartnersVisibilityReader.getPartnerVisibilityCountProjection()
                 }

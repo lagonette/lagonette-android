@@ -28,6 +28,7 @@ import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 
+import org.json.JSONException;
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.MapsContract;
 import org.lagonette.android.app.presenter.MapsPresenter;
@@ -38,8 +39,6 @@ import org.lagonette.android.content.reader.PartnerReader;
 import org.lagonette.android.util.SharedPreferencesUtil;
 import org.lagonette.android.util.SnackbarUtil;
 import org.lagonette.android.util.UiUtil;
-
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -442,12 +441,7 @@ public class MapsFragment
             if (partnerReader != null) {
                 if (partnerReader.moveToFirst()) {
                     do {
-                        PartnerItem item = new PartnerItem(
-                                partnerReader.getId(),
-                                partnerReader.getLatitude(),
-                                partnerReader.getLongitude(),
-                                partnerReader.isExchangeOffice()
-                        );
+                        PartnerItem item = new PartnerItem(partnerReader);
                         mPartnerItems.put(item.getId(), item);
                         mClusterManager.addItem(item);
                     } while (partnerReader.moveToNext());
