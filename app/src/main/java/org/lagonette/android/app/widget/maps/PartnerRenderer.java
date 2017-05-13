@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,8 +102,6 @@ public class PartnerRenderer
     protected void onBeforeClusterItemRendered(
             final PartnerItem partnerItem,
             final MarkerOptions markerOptions) {
-
-        Log.d(TAG, "onBeforeClusterItemRendered: " + partnerItem.getIconUrl());
 
         boolean isExchangeOffice = partnerItem.isExchangeOffice();
 

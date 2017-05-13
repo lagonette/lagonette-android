@@ -73,9 +73,15 @@ public class GonetteDatabaseOpenHelper
                 + PartnerMetadataColumns.PARTNER_ID + " INTEGER PRIMARY KEY ON CONFLICT IGNORE, "
                 + PartnerMetadataColumns.IS_VISIBLE + " INTEGER NOT NULL "
                 + ")");
+
+        Log.d(TAG, "onCreate: Create view " + Views.FILTERS);
+        db.execSQL(FilterColumns.SQL);
     }
 
     private void dropDatabase(SQLiteDatabase db) {
+        Log.d(TAG, "dropDatabase: Drop view " + Views.FILTERS);
+        db.execSQL("DROP VIEW IF EXISTS " + Views.FILTERS);
+
         Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER_METADATA);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER_METADATA);
 

@@ -6,5 +6,6 @@
       android:layout_marginLeft="16dp"
       android:layout_marginRight="16dp"
       android:layout_marginStart="16dp"
+      android:layout_marginBottom="4dp"
       android:background="@drawable/bg_row_footer"
       android:elevation="4dp"/>

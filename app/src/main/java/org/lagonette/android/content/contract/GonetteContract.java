@@ -4,10 +4,12 @@ import android.net.Uri;
 
 import org.lagonette.android.BuildConfig;
 import org.lagonette.android.database.CategoryColumns;
+import org.lagonette.android.database.FilterColumns;
 import org.lagonette.android.database.PartnerColumns;
 import org.lagonette.android.database.PartnerMetadataColumns;
 import org.lagonette.android.database.PartnerSideCategoriesColumns;
 import org.lagonette.android.database.Tables;
+import org.lagonette.android.database.Views;
 
 public class GonetteContract {
 
@@ -22,6 +24,26 @@ public class GonetteContract {
     public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
     public static final long NO_ID = -1;
+
+    public interface Filter extends FilterColumns {
+
+        interface Category extends CategoryColumns {
+        }
+
+        interface Partner extends PartnerColumns {
+        }
+
+        interface PartnerMetadata extends PartnerMetadataColumns {
+        }
+
+        Uri CONTENT_URI = BASE_URI.buildUpon()
+                .appendPath(Views.FILTERS)
+                .build();
+
+        String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Views.FILTERS;
+
+        String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Views.FILTERS;
+    }
 
     public interface Partner
             extends PartnerColumns {

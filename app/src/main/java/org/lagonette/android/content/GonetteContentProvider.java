@@ -19,6 +19,7 @@ import org.lagonette.android.R;
 import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.database.GonetteDatabaseOpenHelper;
 import org.lagonette.android.database.Tables;
+import org.lagonette.android.database.Views;
 import org.lagonette.android.util.DebugContentProviderUtil;
 
 import java.util.ArrayList;
@@ -58,6 +59,9 @@ public class GonetteContentProvider
                 break;
             case R.id.content_uri_partners_extended:
                 qb.setTables(GonetteContentProviderHelper.getExtendedPartnerStatement());
+                break;
+            case R.id.content_uri_filters:
+                qb.setTables(Views.FILTERS);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown uri: %s", uri));
@@ -294,6 +298,12 @@ public class GonetteContentProvider
                 GonetteContract.AUTHORITY,
                 GonetteContract.PartnerSideCategories.CONTENT_URI.getPath(),
                 R.id.content_uri_partners_side_categories
+        );
+        addUriToUriMatcher(
+                mUriMatcher,
+                GonetteContract.AUTHORITY,
+                GonetteContract.Filter.CONTENT_URI.getPath(),
+                R.id.content_uri_filters
         );
         addUriToUriMatcher(
                 mUriMatcher,

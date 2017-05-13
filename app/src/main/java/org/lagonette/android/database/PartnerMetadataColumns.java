@@ -6,4 +6,6 @@ public interface PartnerMetadataColumns {
 
     String IS_VISIBLE = Tables.PARTNER_METADATA + "_is_visible";
 
+    // TODO Create table SQL
+
 }

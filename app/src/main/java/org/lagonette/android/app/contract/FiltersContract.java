@@ -4,8 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.app.contract.base.BaseContract;
-import org.lagonette.android.content.reader.PartnerReader;
-import org.lagonette.android.content.reader.PartnersVisibilityReader;
+import org.lagonette.android.content.reader.FilterReader;
 
 public abstract class FiltersContract {
 
@@ -13,23 +12,15 @@ public abstract class FiltersContract {
 
         void setPartnerVisibility(long partnerId, boolean visibility);
 
-        void setPartnersVisibility(boolean visibility);
-
         void filterPartners(@NonNull String search);
 
-        void LoadFilters();
+        void loadFilters();
 
     }
 
     public interface View extends BaseContract.BaseView {
 
-        void displayPartnersVisibility(@Nullable PartnersVisibilityReader visibilityReader);
-
-        void displayPartners(@Nullable PartnerReader partnerReader);
-
-        void resetPartnersVisibility();
-
-        void resetPartners();
+        void displayFilters(@Nullable FilterReader filterReader);
 
     }
 

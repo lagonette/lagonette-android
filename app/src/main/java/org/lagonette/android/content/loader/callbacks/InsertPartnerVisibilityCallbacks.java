@@ -10,14 +10,14 @@ import org.lagonette.android.content.loader.InsertPartnerVisibilityLoader;
 import org.lagonette.android.content.loader.callbacks.base.BaseLoaderCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.BundleLoaderCallbacks;
 
-public class InsertPartnerCallbacks extends BundleLoaderCallbacks<InsertPartnerCallbacks.Callbacks> {
+public class InsertPartnerVisibilityCallbacks extends BundleLoaderCallbacks<InsertPartnerVisibilityCallbacks.Callbacks> {
 
 
     public interface Callbacks extends BaseLoaderCallbacks.Callbacks {
 
     }
 
-    public InsertPartnerCallbacks(@NonNull Callbacks callbacks) {
+    public InsertPartnerVisibilityCallbacks(@NonNull Callbacks callbacks) {
         super(callbacks);
     }
 

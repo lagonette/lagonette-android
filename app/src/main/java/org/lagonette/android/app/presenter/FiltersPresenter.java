@@ -14,31 +14,24 @@ import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
 import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
-import org.lagonette.android.content.loader.callbacks.InsertPartnerCallbacks;
-import org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks;
-import org.lagonette.android.content.loader.callbacks.LoadPartnersVisibilityCallbacks;
+import org.lagonette.android.content.loader.callbacks.InsertPartnerVisibilityCallbacks;
+import org.lagonette.android.content.loader.callbacks.LoadFilterCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
-import org.lagonette.android.content.reader.PartnerReader;
-import org.lagonette.android.content.reader.PartnersVisibilityReader;
+import org.lagonette.android.content.reader.FilterReader;
 import org.lagonette.android.util.SearchUtil;
 
 public class FiltersPresenter
         extends BundleLoaderPresenter
         implements FiltersContract.Presenter,
         CursorLoaderCallbacks.Callbacks,
-        InsertPartnerCallbacks.Callbacks,
-        LoadPartnerCallbacks.Callbacks,
-        LoadPartnersVisibilityCallbacks.Callbacks {
+        InsertPartnerVisibilityCallbacks.Callbacks,
+        LoadFilterCallbacks.Callbacks {
 
     private static final String ARG_SEARCH = "arg:search";
 
-    private LoadPartnerCallbacks mLoadPartnerCallbacks;
+    private LoadFilterCallbacks mLoadFilterCallbacks;
 
-    private LoadPartnersVisibilityCallbacks mLoadPartnersVisibilityCallbacks;
-
-    private InsertPartnerCallbacks mInsertPartnerCallbacks;
-
-    private boolean mStartUp = true;
+    private InsertPartnerVisibilityCallbacks mInsertPartnerVisibilityCallbacks;
 
     public static FiltersFragment newInstance(@NonNull String search) {
         Bundle args = new Bundle(1);
@@ -65,15 +58,11 @@ public class FiltersPresenter
         if (arguments != null) {
             mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
         }
-        mLoadPartnersVisibilityCallbacks = new LoadPartnersVisibilityCallbacks(
-                FiltersPresenter.this,
-                R.id.loader_query_filters_partners_visibility
-        );
-        mLoadPartnerCallbacks = new LoadPartnerCallbacks(
+        mLoadFilterCallbacks = new LoadFilterCallbacks(
                 FiltersPresenter.this,
                 R.id.loader_query_filters_partners
         );
-        mInsertPartnerCallbacks = new InsertPartnerCallbacks(FiltersPresenter.this);
+        mInsertPartnerVisibilityCallbacks = new InsertPartnerVisibilityCallbacks(FiltersPresenter.this);
     }
 
     @Override
@@ -83,7 +72,7 @@ public class FiltersPresenter
 
     @Override
     protected void reattachLoaders() {
-        mInsertPartnerCallbacks.reattachLoader();
+        mInsertPartnerVisibilityCallbacks.reattachLoader();
     }
 
     @Override
@@ -99,90 +88,58 @@ public class FiltersPresenter
 
     @Override
     public void setPartnerVisibility(long partnerId, boolean visibility) {
-        mInsertPartnerCallbacks.insertPartnerVisibility(partnerId, visibility);
-    }
-
-    @Override
-    public void setPartnersVisibility(boolean visibility) {
-        mInsertPartnerCallbacks.insertPartnersVisibility(visibility);
+        mInsertPartnerVisibilityCallbacks.insertPartnerVisibility(partnerId, visibility);
     }
 
     @Override
     public void filterPartners(@NonNull String search) {
         if (!mCurrentSearch.equals(search)) {
             mCurrentSearch = search;
-            loadPartners(mCurrentSearch);
+            loadFilters(mCurrentSearch);
         }
     }
 
     @Override
-    public void LoadFilters() {
-        loadPartnersVisibility();
+    public void loadFilters() {
+        mLoadFilterCallbacks.loadFilters();
     }
 
-    private void loadPartners() {
-        mLoadPartnerCallbacks.loadPartners();
-    }
-
-    private void loadPartners(@NonNull String search) {
-        mLoadPartnerCallbacks.loadPartners(
+    private void loadFilters(@NonNull String search) {
+        mLoadFilterCallbacks.loadFilters(
                 PartnerCursorLoaderHelper.getArgs(search)
         );
     }
 
-    private void loadPartnersVisibility() {
-        mLoadPartnersVisibilityCallbacks.loadPartnersVisibility();
+    @Override
+    public void setFilterReaders(@Nullable FilterReader filterReader) {
+        mView.displayFilters(filterReader);
     }
 
     @Override
-    public void setPartnerReader(@Nullable PartnerReader reader) {
-        mView.displayPartners(reader);
-        mStartUp = false;
-    }
-
-    @Override
-    public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
+    public CursorLoaderParams getFilterLoaderParams(@Nullable Bundle args) {
         String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoaderParams(
-                GonetteContract.Partner.EXTENDED_CONTENT_URI,
+                GonetteContract.Filter.CONTENT_URI,
                 new String[]{
-                        GonetteContract.Partner.ID,
-                        GonetteContract.Partner.NAME,
-                        GonetteContract.PartnerMetadata.IS_VISIBLE
+                        GonetteContract.Filter.ROW_TYPE,
+                        GonetteContract.Filter.Category.ID,
+                        GonetteContract.Filter.Category.LABEL,
+                        GonetteContract.Filter.Partner.ID,
+                        GonetteContract.Filter.Partner.NAME,
+                        GonetteContract.Filter.PartnerMetadata.IS_VISIBLE
                 }
         )
                 .setSelection(!TextUtils.isEmpty(search)
-                        ? GonetteContract.Partner.NAME + " LIKE ?"
+                        ? GonetteContract.Filter.ROW_TYPE + " <> " + GonetteContract.Filter.VALUE_ROW_PARTNER
+                        + " OR " + GonetteContract.Partner.NAME + " LIKE ?"
                         : null
                 )
                 .setSelectionArgs(!TextUtils.isEmpty(search)
                         ? new String[]{"%" + search + "%"}
                         : null
                 )
-                .setSortOrder(GonetteContract.Partner.NAME + " ASC");
+                .setSortOrder(null);
 
     }
 
-    @Override
-    public void setPartnersVisibilityReader(@Nullable PartnersVisibilityReader reader) {
-        mView.displayPartnersVisibility(reader);
-
-        if (mStartUp) {
-            loadPartners();
-        }
-    }
-
-    @Override
-    public CursorLoaderParams getPartnersVisibilityLoaderParams(@Nullable Bundle args) {
-        return new CursorLoaderParams(
-                GonetteContract.Partner.EXTENDED_CONTENT_URI,
-                new String[]{
-                        PartnersVisibilityReader.getPartnerVisibilityCountProjection()
-                }
-        )
-                .setSelection(GonetteContract.PartnerMetadata.IS_VISIBLE + " > ?")
-                .setSelectionArgs(new String[]{
-                        String.valueOf(0)
-                });
-    }
 }

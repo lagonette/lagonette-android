@@ -38,4 +38,6 @@ public interface PartnerColumns {
 
     String PARTNER_SIDE_CATEGORIES_ID = Tables.PARTNER + "_partner_side_categories_id";
 
+    // TODO Create table SQL
+
 }

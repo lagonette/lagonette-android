@@ -15,7 +15,7 @@ public class PartnerReader
                 : null;
     }
 
-    public PartnerReader(Cursor cursor) {
+    public PartnerReader(@NonNull Cursor cursor) {
         super(cursor);
     }
 

@@ -1,21 +1,23 @@
 package org.lagonette.android.content.reader;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 public abstract class CursorReader {
 
+    @NonNull
     protected Cursor mCursor;
 
-    public CursorReader(Cursor mCursor) {
-        this.mCursor = mCursor;
+    public CursorReader(@NonNull Cursor cursor) {
+        this.mCursor = cursor;
     }
 
     public boolean moveToNext() {
         return mCursor.moveToNext();
     }
 
-    public boolean moveToPosition(int positon) {
-        return mCursor.moveToPosition(positon);
+    public boolean moveToPosition(int position) {
+        return mCursor.moveToPosition(position);
     }
 
     public int getPosition() {

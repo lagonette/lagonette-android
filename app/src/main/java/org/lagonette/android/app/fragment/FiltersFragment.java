@@ -14,12 +14,12 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.contract.FiltersContract;
 import org.lagonette.android.app.presenter.FiltersPresenter;
 import org.lagonette.android.app.widget.adapter.FilterAdapter;
-import org.lagonette.android.content.reader.PartnerReader;
-import org.lagonette.android.content.reader.PartnersVisibilityReader;
+import org.lagonette.android.content.reader.FilterReader;
 
 public class FiltersFragment
         extends Fragment
-        implements FiltersContract.View, FilterAdapter.OnPartnerClickListener {
+        implements FiltersContract.View,
+        FilterAdapter.OnPartnerClickListener {
 
     public interface Callback {
 
@@ -87,8 +87,8 @@ public class FiltersFragment
     }
 
     @Override
-    public void onAllPartnerVisibilityClick(@NonNull FilterAdapter.AllPartnerViewHolder holder) {
-        mPresenter.setPartnersVisibility(!holder.isVisible);
+    public void onCategoryClick(@NonNull FilterAdapter.CategoryViewHolder holder) {
+        // TODO
     }
 
     @Override
@@ -97,7 +97,7 @@ public class FiltersFragment
     }
 
     public void LoadFilters() {
-        mPresenter.LoadFilters();
+        mPresenter.loadFilters();
     }
 
     public void filterPartner(@NonNull String search) {
@@ -105,23 +105,8 @@ public class FiltersFragment
     }
 
     @Override
-    public void displayPartnersVisibility(@Nullable PartnersVisibilityReader visibilityReader) {
-        mFilterAdapter.setPartnersVisibilityReader(visibilityReader);
-    }
-
-    @Override
-    public void displayPartners(@Nullable PartnerReader partnerReader) {
-        mFilterAdapter.setPartnerReader(partnerReader);
-    }
-
-    @Override
-    public void resetPartnersVisibility() {
-        mFilterAdapter.setPartnersVisibilityReader(null);
-    }
-
-    @Override
-    public void resetPartners() {
-        mFilterAdapter.setPartnerReader(null);
+    public void displayFilters(@Nullable FilterReader filterReader) {
+        mFilterAdapter.setFilterReader(filterReader);
     }
 
 }

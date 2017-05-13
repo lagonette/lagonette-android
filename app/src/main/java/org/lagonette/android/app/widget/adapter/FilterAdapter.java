@@ -11,8 +11,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.lagonette.android.R;
-import org.lagonette.android.content.reader.PartnerReader;
-import org.lagonette.android.content.reader.PartnersVisibilityReader;
+import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.reader.FilterReader;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -20,7 +20,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         void onPartnerClick(@NonNull FilterAdapter.PartnerViewHolder holder);
 
-        void onAllPartnerVisibilityClick(@NonNull FilterAdapter.AllPartnerViewHolder holder);
+        void onCategoryClick(@NonNull FilterAdapter.CategoryViewHolder holder);
 
         void onPartnerVisibilityClick(@NonNull FilterAdapter.PartnerViewHolder holder);
 
@@ -28,28 +28,17 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final String TAG = "FilterAdapter";
 
-    private static final int HEADER_ID = -2;
+    private static final int LOADING_ID = -1;
 
-    private static final int FOOTER_ID = -3;
-
-    private static final int LOADING_ID = -4;
-
-    private static final int HEADER_COUNT = 1;
-
-    private static final int FOOTER_COUNT = 1;
+    private static final int OFFSET_CATEGORY_ID = LOADING_ID;
 
     private static final int LOADING_COUNT = 1;
 
     @Nullable
-    private PartnerReader mPartnerReader;
-
-    @Nullable
-    private PartnersVisibilityReader mPartnersVisibilityReader;
+    private FilterReader mFilterReader;
 
     @Nullable
     private OnPartnerClickListener mOnPartnerClickListener;
-
-    private boolean mIsExpanded = true;
 
     public FilterAdapter(@Nullable OnPartnerClickListener onPartnerClickListener/*, @NonNull String search*/) {
         mOnPartnerClickListener = onPartnerClickListener;
@@ -57,68 +46,66 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        if (mPartnersVisibilityReader == null) {
+        if (mFilterReader == null) {
             return LOADING_COUNT;
-        } else if (mPartnerReader == null) {
-            return HEADER_COUNT + LOADING_COUNT;
         } else {
-            return HEADER_COUNT + getPartnerCount() + FOOTER_COUNT;
+            return mFilterReader.getCount();
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mPartnersVisibilityReader == null) {
+        if (mFilterReader == null) {
             return R.id.view_type_loading;
-        } else {
-            if (position < HEADER_COUNT) {
-                return R.id.view_type_partner_all;
-            }
-            position -= HEADER_COUNT;
-
-            if (mPartnerReader == null) {
-                return R.id.view_type_loading;
-            } else {
-                if (position < getPartnerCount()) {
+        } else if (position < mFilterReader.getCount()) {
+            if (mFilterReader.moveToPosition(position)) {
+                int rowType = mFilterReader.getRowType();
+                if (rowType == GonetteContract.Filter.VALUE_ROW_CATEGORY) {
+                    return R.id.view_type_category;
+                } else if (rowType == GonetteContract.Filter.VALUE_ROW_PARTNER) {
                     return R.id.view_type_partner;
-                } else {
+                } else if (rowType == GonetteContract.Filter.VALUE_ROW_FOOTER) {
                     return R.id.view_type_footer;
+                } else {
+                    throw new IllegalStateException("Filter row must be a PARTNER or a CATEGORY.");
                 }
+            } else {
+                throw new IllegalStateException("Cursor can not reach position " + position);
             }
+        } else {
+            throw new IllegalStateException("Try to reach a position(" + position + ") out of bounds");
         }
     }
 
     @Override
     public long getItemId(int position) {
-        if (mPartnersVisibilityReader == null) {
+        if (mFilterReader == null) {
             return LOADING_ID;
-        } else {
-            if (position < HEADER_COUNT) {
-                return HEADER_ID;
-            }
-            position -= HEADER_COUNT;
-
-            if (mPartnerReader == null) {
-                return LOADING_ID;
-            } else {
-                if (position < getPartnerCount()) {
-                    if (mPartnerReader.moveToPosition(position)) {
-                        return mPartnerReader.getId();
-                    } else {
-                        return RecyclerView.NO_ID;
-                    }
+        } else if (position < mFilterReader.getCount()) {
+            if (mFilterReader.moveToPosition(position)) {
+                int rowType = mFilterReader.getRowType();
+                if (rowType == GonetteContract.Filter.VALUE_ROW_CATEGORY) {
+                    return OFFSET_CATEGORY_ID - (mFilterReader.categoryReader.getId() * 2);
+                } else if (rowType == GonetteContract.Filter.VALUE_ROW_FOOTER) {
+                    return OFFSET_CATEGORY_ID - (mFilterReader.categoryReader.getId() * 2 + 1);
+                } else if (rowType == GonetteContract.Filter.VALUE_ROW_PARTNER) {
+                    return mFilterReader.partnerReader.getId();
                 } else {
-                    return FOOTER_ID;
+                    return RecyclerView.NO_ID;
                 }
+            } else {
+                return RecyclerView.NO_ID;
             }
+        } else {
+            return RecyclerView.NO_ID;
         }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case R.id.view_type_partner_all:
-                return onCreateAllPartnerViewHolder(parent);
+            case R.id.view_type_category:
+                return onCreateCategoryViewHolder(parent);
             case R.id.view_type_partner:
                 return onCreatePartnerViewHolder(parent);
             case R.id.view_type_footer:
@@ -186,8 +173,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return holder;
     }
 
-    private AllPartnerViewHolder onCreateAllPartnerViewHolder(ViewGroup parent) {
-        AllPartnerViewHolder holder = new AllPartnerViewHolder(
+    private CategoryViewHolder onCreateCategoryViewHolder(ViewGroup parent) {
+        CategoryViewHolder holder = new CategoryViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
                         .inflate(
@@ -201,7 +188,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         holder.expandButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onAllPartnerExpandClick((AllPartnerViewHolder) v.getTag());
+                // TODO
             }
         });
 
@@ -210,7 +197,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             holder.visibilityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnPartnerClickListener.onAllPartnerVisibilityClick((AllPartnerViewHolder) v.getTag());
+                    mOnPartnerClickListener.onCategoryClick((CategoryViewHolder) v.getTag());
                 }
             });
         }
@@ -222,11 +209,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = holder.getItemViewType();
         switch (viewType) {
-            case R.id.view_type_partner_all:
-                onBindAllPartnerViewHolder((AllPartnerViewHolder) holder);
+            case R.id.view_type_category:
+                onBindCategoryViewHolder((CategoryViewHolder) holder, position);
                 break;
             case R.id.view_type_partner:
-                onBindPartnerViewHolder((PartnerViewHolder) holder, position - /*SEARCH_COUNT -*/ HEADER_COUNT);
+                onBindPartnerViewHolder((PartnerViewHolder) holder, position);
                 break;
             case R.id.view_type_footer:
             case R.id.view_type_loading:
@@ -236,29 +223,31 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private void onBindAllPartnerViewHolder(@NonNull AllPartnerViewHolder holder) {
-        if (mPartnersVisibilityReader.moveToFirst()) {
-            holder.isVisible = mPartnersVisibilityReader.getPartnersVisibilityCount() > 0;
+    private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
+        if (mFilterReader.moveToPosition(position)) {
+            // TODO
             if (holder.isVisible) {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
             } else {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
             }
 
-            holder.isExpanded = mIsExpanded;
+            // TODO
             if (holder.isExpanded) {
                 holder.expandButton.setImageResource(R.drawable.ic_expand_less_grey_24dp);
             } else {
                 holder.expandButton.setImageResource(R.drawable.ic_expand_more_grey_24dp);
             }
+
+            holder.categoryTextView.setText(mFilterReader.categoryReader.getLabel());
         }
     }
 
     private void onBindPartnerViewHolder(@NonNull PartnerViewHolder holder, int position) {
-        if (mPartnerReader.moveToPosition(position)) {
-            holder.partnerId = mPartnerReader.getId();
-            holder.isVisible = mPartnerReader.isVisible();
-            holder.nameTextView.setText(mPartnerReader.getName());
+        if (mFilterReader.moveToPosition(position)) {
+            holder.partnerId = mFilterReader.partnerReader.getId();
+            holder.isVisible = mFilterReader.partnerReader.isVisible();
+            holder.nameTextView.setText(mFilterReader.partnerReader.getName());
             holder.itemView.setClickable(holder.isVisible);
             if (holder.isVisible) {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
@@ -268,32 +257,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private void onAllPartnerExpandClick(@NonNull AllPartnerViewHolder holder) {
-        mIsExpanded = !mIsExpanded;
-        notifyDataSetChanged();
-    }
-
-    private int getPartnerCount() {
-        if (mPartnerReader != null && mIsExpanded) {
-            return mPartnerReader.getCount();
-        } else {
-            return 0;
-        }
-    }
-
-    public void setPartnerReader(@Nullable PartnerReader partnerReader) {
-        if (mPartnerReader == partnerReader) {
+    public void setFilterReader(@Nullable FilterReader filterReader) {
+        if (mFilterReader == filterReader) {
             return;
         }
-        mPartnerReader = partnerReader;
-        notifyDataSetChanged();
-    }
-
-    public void setPartnersVisibilityReader(@Nullable PartnersVisibilityReader partnersVisibilityReader) {
-        if (mPartnersVisibilityReader == partnersVisibilityReader) {
-            return;
-        }
-        mPartnersVisibilityReader = partnersVisibilityReader;
+        mFilterReader = filterReader;
         notifyDataSetChanged();
     }
 
@@ -314,7 +282,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public class AllPartnerViewHolder extends RecyclerView.ViewHolder {
+    public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         public boolean isVisible;
 
@@ -324,10 +292,13 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public final ImageButton expandButton;
 
-        public AllPartnerViewHolder(View itemView) {
+        public final TextView categoryTextView;
+
+        public CategoryViewHolder(View itemView) {
             super(itemView);
             visibilityButton = (ImageButton) itemView.findViewById(R.id.partners_visibility);
             expandButton = (ImageButton) itemView.findViewById(R.id.partners_expand);
+            categoryTextView = (TextView) itemView.findViewById(R.id.category_label);
         }
     }
 
