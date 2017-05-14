@@ -16,9 +16,10 @@
     <item name="loader_get_partners" type="id"/>
     <item name="loader_insert_partner_visibility" type="id"/>
 
-    <item name="view_type_category" type="id"/>
-    <item name="view_type_partner" type="id"/>
-    <item name="view_type_footer" type="id"/>
     <item name="view_type_loading" type="id"/>
+    <item name="view_type_category" type="id"/>
+    <item name="view_type_partner_main" type="id"/>
+    <item name="view_type_partner_side" type="id"/>
+    <item name="view_type_footer" type="id"/>
 
 </resources>

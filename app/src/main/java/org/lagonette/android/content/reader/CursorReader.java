@@ -32,4 +32,8 @@ public abstract class CursorReader {
         return mCursor.moveToFirst();
     }
 
+    @NonNull
+    public Cursor getCursor() {
+        return mCursor;
+    }
 }

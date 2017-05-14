@@ -10,7 +10,7 @@ public class GonetteDatabaseOpenHelper
 
     private static final String TAG = "GonetteDatabaseOpenHelp";
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     private static final String DATABASE_NAME = "gonette.db";
 

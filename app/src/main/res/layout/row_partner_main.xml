@@ -13,12 +13,12 @@
     android:elevation="4dp"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:minHeight="48dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:layout_marginTop="32dp">
 
     <ImageButton
         android:id="@+id/partner_visibility"
         style="?android:attr/borderlessButtonStyle"
-        android:background="?selectableItemBackgroundBorderless"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
@@ -26,6 +26,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:background="?selectableItemBackgroundBorderless"
         android:src="@drawable/ic_visibility_accent_24dp"/>
 
     <TextView

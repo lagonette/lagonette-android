@@ -82,7 +82,7 @@ public class FiltersFragment
     }
 
     @Override
-    public void onPartnerClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
+    public void onPartnerClick(@NonNull FilterAdapter.MainPartnerViewHolder holder) {
         mCallback.showPartner(holder.partnerId, true);
     }
 
@@ -92,7 +92,7 @@ public class FiltersFragment
     }
 
     @Override
-    public void onPartnerVisibilityClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
+    public void onPartnerVisibilityClick(@NonNull FilterAdapter.MainPartnerViewHolder holder) {
         mPresenter.setPartnerVisibility(holder.partnerId, !holder.isVisible);
     }
 

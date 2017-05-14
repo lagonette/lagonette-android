@@ -130,16 +130,18 @@ public class FiltersPresenter
                 }
         )
                 .setSelection(!TextUtils.isEmpty(search)
-                        ? GonetteContract.Filter.ROW_TYPE + " <> " + GonetteContract.Filter.VALUE_ROW_PARTNER
-                        + " OR " + GonetteContract.Partner.NAME + " LIKE ?"
+                        ? "(" + GonetteContract.Filter.ROW_TYPE + " <> " + GonetteContract.Filter.VALUE_ROW_MAIN_PARTNER
+                        + " OR " + GonetteContract.Partner.NAME + " LIKE ?)"
+                        + " AND "
+                        + "(" + GonetteContract.Filter.ROW_TYPE + " <> " + GonetteContract.Filter.VALUE_ROW_SIDE_PARTNER
+                        + " OR " + GonetteContract.Partner.NAME + " LIKE ?)"
                         : null
                 )
                 .setSelectionArgs(!TextUtils.isEmpty(search)
-                        ? new String[]{"%" + search + "%"}
+                        ? new String[]{"%" + search + "%", "%" + search + "%"}
                         : null
                 )
                 .setSortOrder(null);
-
     }
 
 }
