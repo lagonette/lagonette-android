@@ -178,7 +178,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 LayoutInflater
                         .from(parent.getContext())
                         .inflate(
-                                R.layout.row_all_partner,
+                                R.layout.row_category,
                                 parent,
                                 false
                         )
@@ -296,8 +296,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
-            visibilityButton = (ImageButton) itemView.findViewById(R.id.partners_visibility);
-            expandButton = (ImageButton) itemView.findViewById(R.id.partners_expand);
+            visibilityButton = (ImageButton) itemView.findViewById(R.id.category_visibility);
+            expandButton = (ImageButton) itemView.findViewById(R.id.category_expand);
             categoryTextView = (TextView) itemView.findViewById(R.id.category_label);
         }
     }
