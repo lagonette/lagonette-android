@@ -1,5 +1,7 @@
 package org.lagonette.android.database;
 
+import org.lagonette.android.util.SqlUtil;
+
 public interface FilterColumns {
 
     String VALUE_NULL = "NULL";
@@ -14,64 +16,69 @@ public interface FilterColumns {
 
     int VALUE_ROW_FOOTER = 3;
 
-    String SQL = "CREATE VIEW " + Views.FILTERS + " AS "
+    String SQL = SqlUtil.build()
+            .createViewAs(Views.FILTERS)
 
             // CATEGORIES
-            + "SELECT "
-            + "\"" + VALUE_ROW_CATEGORY + "\" AS " + ROW_TYPE + ", "
-            + CategoryColumns.ID + ", "
-            + CategoryColumns.LABEL + ", "
-            + VALUE_NULL + " AS " + PartnerColumns.ID + ", "
-            + VALUE_NULL + " AS " + PartnerColumns.NAME + ", "
-            + VALUE_NULL + " AS " + PartnerMetadataColumns.IS_VISIBLE
-            + " FROM " + Tables.CATEGORY
+            .select()
+                .column(String.valueOf(VALUE_ROW_CATEGORY), ROW_TYPE)
+                .column(CategoryColumns.ID)
+                .column(CategoryColumns.LABEL)
+                .column(VALUE_NULL, PartnerColumns.ID)
+                .column(VALUE_NULL, PartnerColumns.NAME)
+                .column(VALUE_NULL, PartnerMetadataColumns.IS_VISIBLE)
+            .from(Tables.CATEGORY)
 
-            + " UNION "
+            .union()
 
-            // PARTNERS
-            + "SELECT "
-            + "\"" + VALUE_ROW_MAIN_PARTNER + "\"" + " AS " + ROW_TYPE + ", "
-            + CategoryColumns.ID + ", "
-            + VALUE_NULL + " AS " + CategoryColumns.LABEL + ", "
-            + PartnerColumns.ID + ", "
-            + PartnerColumns.NAME + ", "
-            + PartnerMetadataColumns.IS_VISIBLE
-            + " FROM " + Tables.CATEGORY
-            + " JOIN " + Tables.PARTNER
-            + " ON " + CategoryColumns.ID + " = " + PartnerColumns.MAIN_CATEGORY
-            + " JOIN " + Tables.PARTNER_METADATA
-            + " ON " + PartnerColumns.ID + " = " + PartnerMetadataColumns.PARTNER_ID
+            // MAIN PARTNERS
+            .select()
+                .column(String.valueOf(VALUE_ROW_MAIN_PARTNER), ROW_TYPE)
+                .column(CategoryColumns.ID)
+                .column(VALUE_NULL, CategoryColumns.LABEL)
+                .column(PartnerColumns.ID)
+                .column(PartnerColumns.NAME)
+                .column(PartnerMetadataColumns.IS_VISIBLE)
+            .from(Tables.CATEGORY)
+            .join(Tables.PARTNER)
+                .on(CategoryColumns.ID, PartnerColumns.MAIN_CATEGORY)
+            .join(Tables.PARTNER_METADATA)
+                .on(PartnerColumns.ID, PartnerMetadataColumns.PARTNER_ID)
 
-            + " UNION "
+            .union()
 
             // SIDE PARTNERS
-            + "SELECT "
-            + "\"" + VALUE_ROW_SIDE_PARTNER + "\"" + " AS " + ROW_TYPE + ", "
-            + CategoryColumns.ID + ", "
-            + VALUE_NULL + " AS " + CategoryColumns.LABEL + ", "
-            + PartnerColumns.ID + ", "
-            + PartnerColumns.NAME + ", "
-            + PartnerMetadataColumns.IS_VISIBLE
-            + " FROM " + Tables.CATEGORY
-            + " JOIN " + Tables.PARTNER_SIDE_CATEGORIES
-            + " ON " + CategoryColumns.ID + " = " + PartnerSideCategoriesColumns.CATEGORY_ID
-            + " JOIN " + Tables.PARTNER
-            + " ON " + PartnerSideCategoriesColumns.PARTNER_ID + " = " + PartnerColumns.ID
-            + " JOIN " + Tables.PARTNER_METADATA
-            + " ON " + PartnerColumns.ID + " = " + PartnerMetadataColumns.PARTNER_ID
+            .select()
+                .column(String.valueOf(VALUE_ROW_SIDE_PARTNER), ROW_TYPE)
+                .column(CategoryColumns.ID)
+                .column(VALUE_NULL, CategoryColumns.LABEL)
+                .column(PartnerColumns.ID)
+                .column(PartnerColumns.NAME)
+                .column(PartnerMetadataColumns.IS_VISIBLE)
+            .from(Tables.CATEGORY)
+            .join(Tables.PARTNER_SIDE_CATEGORIES)
+                .on(CategoryColumns.ID, PartnerSideCategoriesColumns.CATEGORY_ID)
+            .join(Tables.PARTNER)
+                .on(PartnerSideCategoriesColumns.PARTNER_ID, PartnerColumns.ID)
+            .join(Tables.PARTNER_METADATA)
+                .on(PartnerColumns.ID, PartnerMetadataColumns.PARTNER_ID)
 
-            + " UNION "
+            .union()
 
-            // FOOTERS
-            + "SELECT "
-            + "\"" + VALUE_ROW_FOOTER + "\" AS " + ROW_TYPE + ", "
-            + CategoryColumns.ID + ", "
-            + VALUE_NULL + " AS " + CategoryColumns.LABEL + ", "
-            + VALUE_NULL + " AS " + PartnerColumns.ID + ", "
-            + VALUE_NULL + " AS " + PartnerColumns.NAME + ", "
-            + VALUE_NULL + " AS " + PartnerMetadataColumns.IS_VISIBLE
-            + " FROM " + Tables.CATEGORY
+            // Footers
+            .select()
+                .column(String.valueOf(VALUE_ROW_FOOTER), ROW_TYPE)
+                .column(CategoryColumns.ID)
+                .column(VALUE_NULL, CategoryColumns.LABEL)
+                .column(VALUE_NULL, PartnerColumns.ID)
+                .column(VALUE_NULL, PartnerColumns.NAME)
+                .column(VALUE_NULL, PartnerMetadataColumns.IS_VISIBLE)
+            .from(Tables.CATEGORY)
 
-            + " ORDER BY " + CategoryColumns.ID + " ASC, " + ROW_TYPE + " ASC";
+            .order()
+                .by(CategoryColumns.ID, true)
+                .by(ROW_TYPE, true)
+
+            .toString();
 
 }

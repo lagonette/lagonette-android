@@ -5,12 +5,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.lagonette.android.util.SqlUtil;
+
 public class GonetteDatabaseOpenHelper
         extends SQLiteOpenHelper {
 
     private static final String TAG = "GonetteDatabaseOpenHelp";
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String DATABASE_NAME = "gonette.db";
 
@@ -32,67 +34,72 @@ public class GonetteDatabaseOpenHelper
     }
 
     private void createDatabase(SQLiteDatabase db) {
-        Log.d(TAG, "onCreate: Create table " + Tables.CATEGORY);
-        db.execSQL("CREATE TABLE " + Tables.CATEGORY + " ("
-                + CategoryColumns.ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-                + CategoryColumns.LABEL + " TEXT NOT NULL, "
-                + CategoryColumns.ICON + " TEXT NOT NULL "
-                + ")");
+        db.execSQL(
+                SqlUtil.build()
+                        .createTable(Tables.CATEGORY)
+                            .field(CategoryColumns.ID).integer().primaryKey().onConflictReplace()
+                            .field(CategoryColumns.LABEL).text().notNull()
+                            .field(CategoryColumns.ICON).text().notNull()
+                        .endTable()
+                        .toString()
+        );
 
-        Log.d(TAG, "onCreate: Create table " + Tables.PARTNER_SIDE_CATEGORIES);
-        db.execSQL("CREATE TABLE " + Tables.PARTNER_SIDE_CATEGORIES + " ("
-                + PartnerSideCategoriesColumns.CATEGORY_ID + " INTEGER, "
-                + PartnerSideCategoriesColumns.PARTNER_ID + " INTEGER, "
-                + "PRIMARY KEY (" + PartnerSideCategoriesColumns.CATEGORY_ID + ", " + PartnerSideCategoriesColumns.PARTNER_ID + ") ON CONFLICT REPLACE "
-                + ")");
+        db.execSQL(
+                SqlUtil.build()
+                        .createTable(Tables.PARTNER)
+                            .field(PartnerColumns.ID).integer().primaryKey().onConflictReplace()
+                            .field(PartnerColumns.CLIENT_CODE).text().notNull()
+                            .field(PartnerColumns.NAME).text()
+                            .field(PartnerColumns.LATITUDE).numeric().notNull()
+                            .field(PartnerColumns.LONGITUDE).numeric().notNull()
+                            .field(PartnerColumns.DESCRIPTION).text()
+                            .field(PartnerColumns.ADDRESS).text()
+                            .field(PartnerColumns.CITY).text()
+                            .field(PartnerColumns.LOGO).text()
+                            .field(PartnerColumns.ZIP_CODE).text()
+                            .field(PartnerColumns.PHONE).text()
+                            .field(PartnerColumns.WEBSITE).text()
+                            .field(PartnerColumns.EMAIL).text()
+                            .field(PartnerColumns.OPENING_HOURS ).text()
+                            .field(PartnerColumns.IS_EXCHANGE_OFFICE).integer()
+                            .field(PartnerColumns.SHORT_DESCRIPTION).text()
+                            .field(PartnerColumns.MAIN_CATEGORY).integer()
+                            .field(PartnerColumns.PARTNER_SIDE_CATEGORIES_ID).integer()
+                        .endTable()
+                        .toString()
+        );
 
-        Log.d(TAG, "onCreate: Create table " + Tables.PARTNER);
-        db.execSQL("CREATE TABLE " + Tables.PARTNER + " ("
-                + PartnerColumns.ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-                + PartnerColumns.CLIENT_CODE + " TEXT NOT NULL, "
-                + PartnerColumns.NAME + " TEXT, "
-                + PartnerColumns.LATITUDE + " NUMERIC NOT NULL, "
-                + PartnerColumns.LONGITUDE + " NUMERIC NOT NULL, "
-                + PartnerColumns.DESCRIPTION + " TEXT, "
-                + PartnerColumns.ADDRESS + " TEXT, "
-                + PartnerColumns.CITY + " TEXT, "
-                + PartnerColumns.LOGO + " TEXT, "
-                + PartnerColumns.ZIP_CODE + " TEXT, "
-                + PartnerColumns.PHONE + " TEXT, "
-                + PartnerColumns.WEBSITE + " TEXT, "
-                + PartnerColumns.EMAIL + " TEXT, "
-                + PartnerColumns.OPENING_HOURS + " TEXT, "
-                + PartnerColumns.IS_EXCHANGE_OFFICE + " INTEGER, "
-                + PartnerColumns.SHORT_DESCRIPTION + " TEXT, "
-                + PartnerColumns.MAIN_CATEGORY + " INTEGER, "
-                + PartnerColumns.PARTNER_SIDE_CATEGORIES_ID + " INTEGER "
-                + ")");
+        db.execSQL(
+                SqlUtil.build()
+                        .createTable(Tables.PARTNER_SIDE_CATEGORIES)
+                            .field(PartnerSideCategoriesColumns.CATEGORY_ID).integer()
+                            .field(PartnerSideCategoriesColumns.PARTNER_ID).integer()
+                            .setPrimaryKey()
+                                .key(PartnerSideCategoriesColumns.CATEGORY_ID)
+                                .key(PartnerSideCategoriesColumns.PARTNER_ID)
+                            .endPrimaryKey()
+                        .endTable()
+                        .toString()
+        );
 
-        Log.d(TAG, "onCreate: Create table " + Tables.PARTNER_METADATA);
-        db.execSQL("CREATE TABLE " + Tables.PARTNER_METADATA + " ("
-                + PartnerMetadataColumns.PARTNER_ID + " INTEGER PRIMARY KEY ON CONFLICT IGNORE, "
-                + PartnerMetadataColumns.IS_VISIBLE + " INTEGER NOT NULL "
-                + ")");
+        db.execSQL(
+                SqlUtil.build()
+                        .createTable(Tables.PARTNER_METADATA)
+                            .field(PartnerMetadataColumns.PARTNER_ID).integer().primaryKey().onConflictIgnore()
+                            .field(PartnerMetadataColumns.IS_VISIBLE).integer().notNull()
+                        .endTable()
+                        .toString()
+        );
 
-        Log.d(TAG, "onCreate: Create view " + Views.FILTERS);
         db.execSQL(FilterColumns.SQL);
     }
 
     private void dropDatabase(SQLiteDatabase db) {
-        Log.d(TAG, "dropDatabase: Drop view " + Views.FILTERS);
-        db.execSQL("DROP VIEW IF EXISTS " + Views.FILTERS);
-
-        Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER_METADATA);
-        db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER_METADATA);
-
-        Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER);
-        db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER);
-
-        Log.d(TAG, "dropDatabase: Drop table " + Tables.PARTNER_SIDE_CATEGORIES);
-        db.execSQL("DROP TABLE IF EXISTS " + Tables.PARTNER_SIDE_CATEGORIES);
-
-        Log.d(TAG, "dropDatabase: Drop table " + Tables.CATEGORY);
-        db.execSQL("DROP TABLE IF EXISTS " + Tables.CATEGORY);
+        db.execSQL(SqlUtil.build().dropViewIfExists(Views.FILTERS).toString());
+        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER_METADATA).toString());
+        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER_SIDE_CATEGORIES).toString());
+        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER).toString());
+        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.CATEGORY).toString());
     }
 
 }
