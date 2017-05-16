@@ -1,28 +1,23 @@
 package org.lagonette.android.app.fragment;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.lagonette.android.R;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.app.contract.PartnerDetailContract;
+import org.lagonette.android.app.presenter.PartnerDetailPresenter;
 import org.lagonette.android.content.reader.PartnerReader;
 
 public class PartnerDetailFragment
         extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements PartnerDetailContract.View {
 
-    public static final String TAG = "PartnerDetailFragment";
-
-    private static final String ARG_PARTNER_ID = "arg:partner_id";
+    public static final String TAG = "PartnerDetailContract";
 
     private TextView mNameTextView;
 
@@ -32,21 +27,13 @@ public class PartnerDetailFragment
 
     private TextView mLongitudeTextView;
 
-    private long mPartnerId = GonetteContract.NO_ID;
-
-    public static PartnerDetailFragment newInstance(long partnerId) {
-        Bundle args = new Bundle(1);
-        args.putLong(ARG_PARTNER_ID, partnerId);
-        PartnerDetailFragment partnerDetailFragment = new PartnerDetailFragment();
-        partnerDetailFragment.setArguments(args);
-        return partnerDetailFragment;
-    }
-
+    private PartnerDetailPresenter mPresenter;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        mPartnerId = args.getLong(ARG_PARTNER_ID, GonetteContract.NO_ID);
+
+        mPresenter = new PartnerDetailPresenter(PartnerDetailFragment.this);
+        mPresenter.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -69,73 +56,17 @@ public class PartnerDetailFragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        queryPartner();
+        mPresenter.onActivityCreated(savedInstanceState);
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (id) {
-            case R.id.loader_query_detail_partner:
-                return new CursorLoader(
-                        getContext(),
-                        GonetteContract.Partner.CONTENT_URI,
-                        new String[]{
-                                GonetteContract.Partner.ID,
-                                GonetteContract.Partner.NAME,
-                                GonetteContract.Partner.DESCRIPTION,
-                                GonetteContract.Partner.LATITUDE,
-                                GonetteContract.Partner.LONGITUDE
-                        },
-                        GonetteContract.Partner.ID + " = ?",
-                        new String[]{
-                                String.valueOf(args.getLong(ARG_PARTNER_ID, GonetteContract.NO_ID))
-                        },
-                        null
-                );
-            default:
-                throw new IllegalArgumentException("Unknown loader id: " + id);
+    public void displayPartner(@Nullable PartnerReader reader) {
+        if (reader != null && reader.moveToFirst()) {
+            mNameTextView.setText(reader.getName());
+            mDescriptionTextView.setText(reader.getDescription());
+            mLatitudeTextView.setText(String.valueOf(reader.getLatitude()));
+            mLongitudeTextView.setText(String.valueOf(reader.getLongitude()));
         }
     }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_query_detail_partner:
-                onQueryPartnerLoadFinished(cursor);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown loader id: " + id);
-        }
-    }
-
-    private void onQueryPartnerLoadFinished(Cursor cursor) {
-        if (cursor != null && cursor.moveToFirst()) {
-            PartnerReader partnerReader = new PartnerReader(cursor);
-            mNameTextView.setText(partnerReader.getName());
-            mDescriptionTextView.setText(partnerReader.getDescription());
-            mLatitudeTextView.setText(String.valueOf(partnerReader.getLatitude()));
-            mLongitudeTextView.setText(String.valueOf(partnerReader.getLongitude()));
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        int id = loader.getId();
-        switch (id) {
-            case R.id.loader_query_detail_partner:
-                // Do nothing.
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown loader id: " + id);
-        }
-    }
-
-
-    private void queryPartner() {
-        Bundle args = new Bundle(1);
-        args.putLong(ARG_PARTNER_ID, mPartnerId);
-        LoaderManager loaderManager = getLoaderManager();
-        loaderManager.initLoader(R.id.loader_query_detail_partner, args, PartnerDetailFragment.this);
-    }
 }

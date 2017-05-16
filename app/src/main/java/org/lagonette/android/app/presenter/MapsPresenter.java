@@ -94,7 +94,7 @@ public class MapsPresenter
         }
 
         mGetPartnersCallbacks = new GetPartnersCallbacks(MapsPresenter.this);
-        mLoadPartnerCallbacks = new org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks(
+        mLoadPartnerCallbacks = new LoadPartnerCallbacks(
                 MapsPresenter.this,
                 R.id.loader_query_map_partners
         );
@@ -164,7 +164,7 @@ public class MapsPresenter
     @Override
     public void loadPartners(@NonNull String search) {
         mLoadPartnerCallbacks.loadPartners(
-                PartnerCursorLoaderHelper.getArgs(search)
+                PartnerCursorLoaderHelper.createArgs(search)
         );
     }
 

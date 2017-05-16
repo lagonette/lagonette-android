@@ -106,7 +106,7 @@ public class FiltersPresenter
 
     private void loadFilters(@NonNull String search) {
         mLoadFilterCallbacks.loadFilters(
-                PartnerCursorLoaderHelper.getArgs(search)
+                PartnerCursorLoaderHelper.createArgs(search)
         );
     }
 
