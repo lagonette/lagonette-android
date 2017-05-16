@@ -51,6 +51,14 @@ public class SqlBuilder {
 
     private static final String ORDER_BY = " ORDER BY ";
 
+    private static final String WHERE = " WHERE ";
+
+    private static final String AND = " AND ";
+
+    private static final String OR = " OR ";
+
+    private static final String IS_NOT_NULL = " IS NOT NULL";
+
     private static final String UNION = " UNION ";
 
     private static final String ASC = " ASC";
@@ -210,6 +218,7 @@ public class SqlBuilder {
 
     @NonNull
     public SqlBuilder leftJoin(@NonNull String table) {
+        mAppendOnComma = false;
         mSql += LEFT_JOIN + table + ON;
         return SqlBuilder.this;
     }
@@ -239,6 +248,48 @@ public class SqlBuilder {
     public SqlBuilder by(@NonNull String by, boolean asc) {
         appendByCommaIfNeeded();
         mSql += by + (asc ? ASC : DESC);
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder where() {
+        mSql += WHERE;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder statement(@NonNull String statement) {
+        mSql += statement;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder startGroup() {
+        mSql += BRACKET_OPEN;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder endGroup() {
+        mSql += BRACKET_CLOSE;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder and() {
+        mSql += AND;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder or() {
+        mSql += OR;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder isNotNull() {
+        mSql += IS_NOT_NULL;
         return SqlBuilder.this;
     }
 

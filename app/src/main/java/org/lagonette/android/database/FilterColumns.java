@@ -28,6 +28,32 @@ public interface FilterColumns {
                 .column(VALUE_NULL, PartnerColumns.NAME)
                 .column(VALUE_NULL, PartnerMetadataColumns.IS_VISIBLE)
             .from(Tables.CATEGORY)
+            .leftJoin(Tables.PARTNER)
+                .on(CategoryColumns.ID, PartnerColumns.MAIN_CATEGORY)
+            .leftJoin(Tables.PARTNER_SIDE_CATEGORIES)
+                .on(CategoryColumns.ID, PartnerSideCategoriesColumns.CATEGORY_ID)
+            .where()
+                .statement(PartnerColumns.MAIN_CATEGORY).isNotNull().or()
+                .statement(PartnerSideCategoriesColumns.CATEGORY_ID).isNotNull()
+
+            .union()
+
+            // Footers
+            .select()
+                .column(String.valueOf(VALUE_ROW_FOOTER), ROW_TYPE)
+                .column(CategoryColumns.ID)
+                .column(VALUE_NULL, CategoryColumns.LABEL)
+                .column(VALUE_NULL, PartnerColumns.ID)
+                .column(VALUE_NULL, PartnerColumns.NAME)
+                .column(VALUE_NULL, PartnerMetadataColumns.IS_VISIBLE)
+            .from(Tables.CATEGORY)
+                .leftJoin(Tables.PARTNER)
+            .on(CategoryColumns.ID, PartnerColumns.MAIN_CATEGORY)
+                .leftJoin(Tables.PARTNER_SIDE_CATEGORIES)
+            .on(CategoryColumns.ID, PartnerSideCategoriesColumns.CATEGORY_ID)
+            .where()
+                .statement(PartnerColumns.MAIN_CATEGORY).isNotNull().or()
+                .statement(PartnerSideCategoriesColumns.CATEGORY_ID).isNotNull()
 
             .union()
 
@@ -62,18 +88,6 @@ public interface FilterColumns {
                 .on(PartnerSideCategoriesColumns.PARTNER_ID, PartnerColumns.ID)
             .join(Tables.PARTNER_METADATA)
                 .on(PartnerColumns.ID, PartnerMetadataColumns.PARTNER_ID)
-
-            .union()
-
-            // Footers
-            .select()
-                .column(String.valueOf(VALUE_ROW_FOOTER), ROW_TYPE)
-                .column(CategoryColumns.ID)
-                .column(VALUE_NULL, CategoryColumns.LABEL)
-                .column(VALUE_NULL, PartnerColumns.ID)
-                .column(VALUE_NULL, PartnerColumns.NAME)
-                .column(VALUE_NULL, PartnerMetadataColumns.IS_VISIBLE)
-            .from(Tables.CATEGORY)
 
             .order()
                 .by(CategoryColumns.ID, true)
