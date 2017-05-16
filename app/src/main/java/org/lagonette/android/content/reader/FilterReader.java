@@ -15,10 +15,10 @@ public class FilterReader extends CursorReader {
     }
 
     @NonNull
-    public CategoryReader categoryReader;
+    public final CategoryReader categoryReader;
 
     @NonNull
-    public PartnerReader partnerReader;
+    public final PartnerReader partnerReader;
 
     public FilterReader(@NonNull Cursor cursor) {
         super(cursor);

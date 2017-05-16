@@ -37,7 +37,7 @@ public class PartnerItem
                 partnerReader.getLongitude(),
                 partnerReader.isExchangeOffice(),
                 partnerReader.getMainCategoryId(),
-                partnerReader.getCategoryIconUrl()
+                partnerReader.categoryReader.getIcon()
         );
     }
 

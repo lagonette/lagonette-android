@@ -15,8 +15,11 @@ public class PartnerReader
                 : null;
     }
 
+    public final CategoryReader categoryReader;
+
     public PartnerReader(@NonNull Cursor cursor) {
         super(cursor);
+        categoryReader = new CategoryReader(cursor);
     }
 
     public long getId() {
@@ -77,15 +80,6 @@ public class PartnerReader
         );
     }
 
-    @NonNull
-    public String getCategoryIconUrl() {
-        return mCursor.getString(
-                mCursor.getColumnIndex(
-                        GonetteContract.Category.ICON
-                )
-        );
-    }
-
     public long getMainCategoryId() {
         return mCursor.getLong(
                 mCursor.getColumnIndex(
@@ -93,4 +87,77 @@ public class PartnerReader
                 )
         );
     }
+
+    public String getShortDescription() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.SHORT_DESCRIPTION
+                )
+        );
+    }
+
+    public String getAddress() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.ADDRESS
+                )
+        );
+    }
+
+    public String getCity() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.CITY
+                )
+        );
+    }
+
+    public String getZipCode() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.ZIP_CODE
+                )
+        );
+    }
+
+    public String getPhone() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.PHONE
+                )
+        );
+    }
+
+    public String getEmail() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.EMAIL
+                )
+        );
+    }
+
+    public String getWebsite() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.WEBSITE
+                )
+        );
+    }
+
+    public String getOpeningHours() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.OPENING_HOURS
+                )
+        );
+    }
+
+    public String getLogo() {
+        return mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.LOGO
+                )
+        );
+    }
+
 }

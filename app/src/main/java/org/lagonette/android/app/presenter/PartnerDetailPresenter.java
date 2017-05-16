@@ -99,13 +99,24 @@ public class PartnerDetailPresenter
     @Override
     public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
         return new CursorLoaderParams(
-                GonetteContract.Partner.CONTENT_URI,
+                GonetteContract.Partner.EXTENDED_CONTENT_URI,
                 new String[]{
                         GonetteContract.Partner.ID,
                         GonetteContract.Partner.NAME,
                         GonetteContract.Partner.DESCRIPTION,
+                        GonetteContract.Partner.SHORT_DESCRIPTION,
                         GonetteContract.Partner.LATITUDE,
-                        GonetteContract.Partner.LONGITUDE
+                        GonetteContract.Partner.LONGITUDE,
+                        GonetteContract.Partner.ADDRESS,
+                        GonetteContract.Partner.CITY,
+                        GonetteContract.Partner.ZIP_CODE,
+                        GonetteContract.Partner.EMAIL,
+                        GonetteContract.Partner.WEBSITE,
+                        GonetteContract.Partner.PHONE,
+                        GonetteContract.Partner.OPENING_HOURS,
+                        GonetteContract.Partner.LOGO,
+                        GonetteContract.Category.LABEL,
+                        GonetteContract.Category.ICON
                 }
         )
                 .setSelection(GonetteContract.Partner.ID + " = ?")
