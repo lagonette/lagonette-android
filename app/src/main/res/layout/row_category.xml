@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,58 +13,78 @@
     android:background="@drawable/bg_row_header"
     android:elevation="4dp"
     android:minHeight="48dp"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:layout_height="48dp"
     tools:layout_marginTop="32dp">
 
-    <ImageButton
-        android:id="@+id/category_visibility"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:background="?selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_visibility_accent_24dp"/>
-
-    <ImageButton
-        android:id="@+id/category_expand"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:src="@drawable/ic_expand_less_grey_24dp"/>
-
-    <TextView
-        android:id="@+id/category_label"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical"
-        android:layout_toEndOf="@id/category_visibility"
-        android:layout_toLeftOf="@id/category_expand"
-        android:layout_toRightOf="@id/category_visibility"
-        android:layout_toStartOf="@id/category_expand"
-        android:text="@string/row_partners"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/category_icon_bg"
+            android:layout_width="@dimen/filters_category_size"
+            android:layout_height="@dimen/filters_category_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_item_category">
+
+            <ImageView
+                android:id="@+id/category_icon"
+                android:layout_width="@dimen/filters_category_icon_size"
+                android:layout_height="@dimen/filters_category_icon_size"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_item_category"
+                android:src="@drawable/img_item_default"/>
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/category_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:text="@string/row_partners"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/text_secondary"/>
+
+        <ImageButton
+            android:id="@+id/category_expand"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_expand_less_grey_24dp"/>
+
+        <ImageButton
+            android:id="@+id/category_visibility"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_visibility_accent_24dp"/>
+
+    </LinearLayout>
 
     <View
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
         android:background="@color/divider"/>
 
-</RelativeLayout>
+</LinearLayout>

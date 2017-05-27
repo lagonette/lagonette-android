@@ -124,8 +124,13 @@ public class FiltersPresenter
                         GonetteContract.Filter.ROW_TYPE,
                         GonetteContract.Filter.Category.ID,
                         GonetteContract.Filter.Category.LABEL,
+                        GonetteContract.Filter.Category.ICON,
                         GonetteContract.Filter.Partner.ID,
                         GonetteContract.Filter.Partner.NAME,
+                        GonetteContract.Filter.Partner.ADDRESS,
+                        GonetteContract.Filter.Partner.ZIP_CODE,
+                        GonetteContract.Filter.Partner.CITY,
+                        GonetteContract.Filter.Partner.IS_EXCHANGE_OFFICE,
                         GonetteContract.Filter.PartnerMetadata.IS_VISIBLE
                 }
         )

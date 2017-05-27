@@ -33,6 +33,7 @@
     <color name="icon">@color/la_gonette_09</color>
     <color name="icon_dark">@color/la_gonette_08</color>
 
+    <color name="row_partner_main_background">@android:color/white</color>
     <color name="row_partner_side_background">@color/la_gonette_11</color>
 
 </resources>

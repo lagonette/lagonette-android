@@ -3,6 +3,7 @@ package org.lagonette.android.content.reader;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.lagonette.android.content.contract.GonetteContract;
 
@@ -158,6 +159,37 @@ public class PartnerReader
                         GonetteContract.Partner.LOGO
                 )
         );
+    }
+
+    public void getFullAddress(@NonNull StringBuilder builder) {
+        builder.setLength(0);
+        String address = mCursor.getString(
+                mCursor.getColumnIndex(
+                        GonetteContract.Partner.ADDRESS
+                )
+        );
+        if (!TextUtils.isEmpty(address)) {
+
+            builder.append(
+                    address
+            );
+            builder.append(", ");
+            builder.append(
+                    mCursor.getString(
+                            mCursor.getColumnIndex(
+                                    GonetteContract.Partner.ZIP_CODE
+                            )
+                    )
+            );
+            builder.append(" ");
+            builder.append(
+                    mCursor.getString(
+                            mCursor.getColumnIndex(
+                                    GonetteContract.Partner.CITY
+                            )
+                    )
+            );
+        }
     }
 
 }
