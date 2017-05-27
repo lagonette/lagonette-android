@@ -39,9 +39,7 @@
             android:layout_gravity="center_horizontal"
             android:text="Partenaire"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-            android:textSize="10sp"
-            />
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
     </LinearLayout>
 
@@ -67,9 +65,7 @@
             android:layout_gravity="center_horizontal"
             android:text="Comptoir de change"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-            android:textSize="10sp"
-            />
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
     </LinearLayout>
 
@@ -104,9 +100,7 @@
             android:layout_gravity="center_horizontal"
             android:text="La Gonette"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-            android:textSize="10sp"
-            />
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
     </LinearLayout>
 
@@ -141,9 +135,7 @@
             android:layout_gravity="center_horizontal"
             android:text="Banque"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-            android:textSize="10sp"
-            />
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
     </LinearLayout>
 
