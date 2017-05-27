@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Partenaire"
+            android:text="@string/shortcut_partner"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Comptoir de change"
+            android:text="@string/shortcut_exchange_office"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
@@ -98,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="La Gonette"
+            android:text="@string/shortcut_la_gonette"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
@@ -133,7 +133,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Banque"
+            android:text="@string/shortcut_bank"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
