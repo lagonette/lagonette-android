@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.lagonette.android.R;
-import org.lagonette.android.app.contract.FiltersContract;
 import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.content.reader.FilterReader;
 import org.lagonette.android.database.FilterColumns;
@@ -41,9 +40,13 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final int LOADING_COUNT = 1;
 
+    private static final int SHORTCUT_COUNT = 1;
+
     private static final int ROW_TYPE_LOADING = GonetteContract.Filter.ROW_TYPE_COUNT + 1;
 
-    public static final int ROW_TYPE_COUNT = GonetteContract.Filter.ROW_TYPE_COUNT + 1;
+    private static final int ROW_TYPE_SHORTCUT = ROW_TYPE_LOADING + 1;
+
+    public static final int ROW_TYPE_COUNT = GonetteContract.Filter.ROW_TYPE_COUNT + 2;
 
     @NonNull
     private final StringBuilder mStringBuilder;
@@ -94,7 +97,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public int getItemViewType(int position) {
         if (mFilterReader == null) {
             return R.id.view_type_loading;
-        } else if (position < mFilterReader.getCount()) {
+        } else if (position < SHORTCUT_COUNT) {
+            return R.id.view_type_shortcut;
+        }
+        position -= SHORTCUT_COUNT;
+        if (position < mFilterReader.getCount()) {
             if (mFilterReader.moveToPosition(position)) {
                 @FilterColumns.RowType
                 int rowType = mFilterReader.getRowType();
@@ -125,7 +132,15 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     ROW_TYPE_COUNT,
                     0
             );
-        } else if (position < mFilterReader.getCount()) {
+        } else if (position < SHORTCUT_COUNT) {
+            return AdapterUtil.createItemId(
+                    ROW_TYPE_SHORTCUT,
+                    ROW_TYPE_COUNT,
+                    0
+            );
+        }
+        position -= SHORTCUT_COUNT;
+        if (position < mFilterReader.getCount()) {
             if (mFilterReader.moveToPosition(position)) {
                 @FilterColumns.RowType
                 int rowType = mFilterReader.getRowType();
@@ -163,6 +178,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
+            case R.id.view_type_shortcut:
+                return onCreateShortcutViewHolder(parent);
             case R.id.view_type_category:
                 return onCreateCategoryViewHolder(parent);
             case R.id.view_type_partner:
@@ -176,7 +193,19 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private LoadingViewHolder onCreateLoadingViewHolder(ViewGroup parent) {
+    private ShortcutViewHolder onCreateShortcutViewHolder(@NonNull ViewGroup parent) {
+        return new ShortcutViewHolder(
+                LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(
+                                R.layout.row_shortcut,
+                                parent,
+                                false
+                        )
+        );
+    }
+
+    private LoadingViewHolder onCreateLoadingViewHolder(@NonNull ViewGroup parent) {
         return new LoadingViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
@@ -188,7 +217,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         );
     }
 
-    private FooterViewHolder onCreateFooterViewHolder(ViewGroup parent) {
+    private FooterViewHolder onCreateFooterViewHolder(@NonNull ViewGroup parent) {
         return new FooterViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
@@ -200,7 +229,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         );
     }
 
-    private PartnerViewHolder onCreatePartnerViewHolder(ViewGroup parent) {
+    private PartnerViewHolder onCreatePartnerViewHolder(@NonNull ViewGroup parent) {
         PartnerViewHolder holder = new PartnerViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
@@ -232,7 +261,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return holder;
     }
 
-    private CategoryViewHolder onCreateCategoryViewHolder(ViewGroup parent) {
+    private CategoryViewHolder onCreateCategoryViewHolder(@NonNull ViewGroup parent) {
         CategoryViewHolder holder = new CategoryViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
@@ -268,11 +297,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = holder.getItemViewType();
         switch (viewType) {
+            case R.id.view_type_shortcut:
+                onBindShortcutViewHolder((ShortcutViewHolder) holder, position);
+                break;
             case R.id.view_type_category:
-                onBindCategoryViewHolder((CategoryViewHolder) holder, position);
+                onBindCategoryViewHolder((CategoryViewHolder) holder, position - SHORTCUT_COUNT);
                 break;
             case R.id.view_type_partner:
-                onBindPartnerViewHolder((PartnerViewHolder) holder, position);
+                onBindPartnerViewHolder((PartnerViewHolder) holder, position - SHORTCUT_COUNT);
                 break;
             case R.id.view_type_footer:
             case R.id.view_type_loading:
@@ -280,6 +312,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             default:
                 throw new IllegalArgumentException("Unknown view type:" + viewType);
         }
+    }
+
+    private void onBindShortcutViewHolder(@NonNull ShortcutViewHolder holder, int position) {
+
     }
 
     private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
@@ -414,11 +450,18 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public class FooterViewHolder extends RecyclerView.ViewHolder {
+    public class ShortcutViewHolder extends RecyclerView.ViewHolder {
 
+        public ShortcutViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public class FooterViewHolder extends RecyclerView.ViewHolder {
         public FooterViewHolder(View itemView) {
             super(itemView);
         }
+
     }
 
     public class LoadingViewHolder extends RecyclerView.ViewHolder {

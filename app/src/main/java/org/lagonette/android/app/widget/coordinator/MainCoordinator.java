@@ -23,6 +23,7 @@ import org.lagonette.android.app.widget.behavior.GonetteDisappearBehavior;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.util.UiUtil;
+
 import com.google.android.gms.maps.GoogleMap;
 
 import java.lang.annotation.Retention;
@@ -167,7 +168,6 @@ public class MainCoordinator
         mSearchBarVerticalMargin = setupSearchBarMargin();
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mCallbacks.getBottomSheet());
-        mBottomSheetBehavior.setPeekHeight(500);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         mBottomSheetBehavior.setBottomSheetCallback(MainCoordinator.this);
