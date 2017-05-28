@@ -3,8 +3,10 @@ package org.lagonette.android.database.statement;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.database.Tables;
 import org.lagonette.android.database.columns.CategoryColumns;
+import org.lagonette.android.database.columns.CategoryMetadataColumns;
 import org.lagonette.android.database.columns.FilterColumns;
 import org.lagonette.android.database.columns.PartnerColumns;
 import org.lagonette.android.database.columns.PartnerMetadataColumns;
@@ -27,6 +29,8 @@ public class FilterStatement implements FilterColumns {
                     .column(CategoryColumns.ID)
                     .column(CategoryColumns.LABEL)
                     .column(CategoryColumns.ICON)
+                    .column(CategoryMetadataColumns.IS_VISIBLE)
+                    .column(CategoryMetadataColumns.IS_COLLAPSED)
                     .column(VALUE_NULL, PartnerColumns.ID)
                     .column(VALUE_NULL, PartnerColumns.NAME)
                     .column(VALUE_NULL, PartnerColumns.ADDRESS)
@@ -35,6 +39,8 @@ public class FilterStatement implements FilterColumns {
                     .column(VALUE_NULL, PartnerColumns.IS_EXCHANGE_OFFICE)
                     .column(VALUE_NULL, PartnerMetadataColumns.IS_VISIBLE)
                 .from(Tables.CATEGORY)
+                .join(Tables.CATEGORY_METADATA)
+                    .on(CategoryColumns.ID, GonetteContract.CategoryMetadata.CATEGORY_ID)
                 .leftJoin(Tables.PARTNER, MAIN_PARTNER)
                     .on(CategoryColumns.ID, MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY)
                 .leftJoin(Tables.PARTNER_SIDE_CATEGORIES)
@@ -44,9 +50,9 @@ public class FilterStatement implements FilterColumns {
                 .where()
                     .statement(MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY).isNotNull()
                     .and()
-                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME + " LIKE ?")
+                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME + " LIKE ?") // TODO Extract as function .like().wildcard()
                     .or()
-                    .statement(PartnerSideCategoriesColumns.CATEGORY_ID).isNotNull()
+                    .statement(PartnerSideCategoriesColumns.CATEGORY_ID).isNotNull() // TODO Maybe test SIDE_PARTNER + "." + PartnerColumns.NAME
                     .and()
                     .statement(SIDE_PARTNER + "." + PartnerColumns.NAME + " LIKE ?")
                 .groupBy().by(CategoryColumns.ID)
@@ -59,6 +65,8 @@ public class FilterStatement implements FilterColumns {
                     .column(CategoryColumns.ID)
                     .column(VALUE_NULL, CategoryColumns.LABEL)
                     .column(VALUE_NULL, CategoryColumns.ICON)
+                    .column(VALUE_NULL, CategoryMetadataColumns.IS_VISIBLE)
+                    .column(VALUE_NULL, CategoryMetadataColumns.IS_COLLAPSED)
                     .column(VALUE_NULL, PartnerColumns.ID)
                     .column(VALUE_NULL, PartnerColumns.NAME)
                     .column(VALUE_NULL, PartnerColumns.ADDRESS)
@@ -91,6 +99,8 @@ public class FilterStatement implements FilterColumns {
                     .column(CategoryColumns.ID)
                     .column(VALUE_NULL, CategoryColumns.LABEL)
                     .column(VALUE_NULL, CategoryColumns.ICON)
+                    .column(CategoryMetadataColumns.IS_VISIBLE)
+                    .column(VALUE_NULL, CategoryMetadataColumns.IS_COLLAPSED)
                     .column(PartnerColumns.ID)
                     .column(PartnerColumns.NAME)
                     .column(PartnerColumns.ADDRESS)
@@ -99,6 +109,8 @@ public class FilterStatement implements FilterColumns {
                     .column(PartnerColumns.IS_EXCHANGE_OFFICE)
                     .column(PartnerMetadataColumns.IS_VISIBLE)
                 .from(Tables.CATEGORY)
+                .join(Tables.CATEGORY_METADATA)
+                    .on(CategoryColumns.ID, GonetteContract.CategoryMetadata.CATEGORY_ID)
                 .join(Tables.PARTNER)
                     .on(CategoryColumns.ID, PartnerColumns.MAIN_CATEGORY)
                 .join(Tables.PARTNER_METADATA)
@@ -114,6 +126,8 @@ public class FilterStatement implements FilterColumns {
                     .column(CategoryColumns.ID)
                     .column(VALUE_NULL, CategoryColumns.LABEL)
                     .column(VALUE_NULL, CategoryColumns.ICON)
+                    .column(CategoryMetadataColumns.IS_VISIBLE)
+                    .column(VALUE_NULL, CategoryMetadataColumns.IS_COLLAPSED)
                     .column(PartnerColumns.ID)
                     .column(PartnerColumns.NAME)
                     .column(PartnerColumns.ADDRESS)
@@ -122,6 +136,8 @@ public class FilterStatement implements FilterColumns {
                     .column(PartnerColumns.IS_EXCHANGE_OFFICE)
                     .column(PartnerMetadataColumns.IS_VISIBLE)
                 .from(Tables.CATEGORY)
+                .join(Tables.CATEGORY_METADATA)
+                    .on(CategoryColumns.ID, GonetteContract.CategoryMetadata.CATEGORY_ID)
                 .join(Tables.PARTNER_SIDE_CATEGORIES)
                     .on(CategoryColumns.ID, PartnerSideCategoriesColumns.CATEGORY_ID)
                 .join(Tables.PARTNER)

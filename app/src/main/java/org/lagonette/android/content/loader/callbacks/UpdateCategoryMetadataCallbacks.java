@@ -6,29 +6,30 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.lagonette.android.R;
-import org.lagonette.android.content.loader.InsertPartnerVisibilityLoader;
+import org.lagonette.android.content.loader.UpdateCategoryMetadataLoader;
 import org.lagonette.android.content.loader.callbacks.base.BaseLoaderCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.BundleLoaderCallbacks;
 
-public class InsertPartnerVisibilityCallbacks extends BundleLoaderCallbacks<InsertPartnerVisibilityCallbacks.Callbacks> {
+public class UpdateCategoryMetadataCallbacks
+        extends BundleLoaderCallbacks<UpdateCategoryMetadataCallbacks.Callbacks> {
 
 
     public interface Callbacks extends BaseLoaderCallbacks.Callbacks {
 
     }
 
-    public InsertPartnerVisibilityCallbacks(@NonNull Callbacks callbacks) {
+    public UpdateCategoryMetadataCallbacks(@NonNull Callbacks callbacks) {
         super(callbacks);
     }
 
     @Override
     public void reattachLoader() {
-        reattachLoader(R.id.loader_insert_partner_visibility);
+        reattachLoader(R.id.loader_insert_category_visibility);
     }
 
     @Override
     public Loader<Bundle> onCreateLoader(int id, Bundle args) {
-        return new InsertPartnerVisibilityLoader(mCallbacks.getContext(), args);
+        return new UpdateCategoryMetadataLoader(mCallbacks.getContext(), args);
     }
 
     @CallSuper
@@ -43,13 +44,13 @@ public class InsertPartnerVisibilityCallbacks extends BundleLoaderCallbacks<Inse
         // Do nothing
     }
 
-    public void insertPartnerVisibility(long partnerId, boolean isVisible) {
-        Bundle args = InsertPartnerVisibilityLoader.getArgs(
-                partnerId,
+    public void updateCategoryVisibility(long categoryId, boolean isVisible) {
+        Bundle args = UpdateCategoryMetadataLoader.getUpdateVisibilityArgs(
+                categoryId,
                 isVisible
         );
         initLoader(
-                R.id.loader_insert_partner_visibility,
+                R.id.loader_insert_category_visibility,
                 args
         );
     }

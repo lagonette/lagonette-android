@@ -6,6 +6,7 @@ import org.lagonette.android.BuildConfig;
 import org.lagonette.android.database.Statements;
 import org.lagonette.android.database.Tables;
 import org.lagonette.android.database.columns.CategoryColumns;
+import org.lagonette.android.database.columns.CategoryMetadataColumns;
 import org.lagonette.android.database.columns.FilterColumns;
 import org.lagonette.android.database.columns.PartnerColumns;
 import org.lagonette.android.database.columns.PartnerMetadataColumns;
@@ -30,6 +31,9 @@ public class GonetteContract {
         interface Category extends CategoryColumns {
         }
 
+        interface CategoryMetadata extends CategoryMetadataColumns {
+        }
+
         interface Partner extends PartnerColumns {
         }
 
@@ -52,9 +56,10 @@ public class GonetteContract {
                 .appendPath(Tables.PARTNER)
                 .build();
 
-        Uri EXTENDED_CONTENT_URI = CONTENT_URI.buildUpon()
+        Uri EXTENDED_CONTENT_URI = CONTENT_URI.buildUpon() // TODO Not in use ?
                 .appendPath(Tables.PARTNER_METADATA)
                 .appendPath(Tables.CATEGORY)
+                .appendPath(Tables.CATEGORY_METADATA)
                 .build();
 
         String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.PARTNER;
@@ -67,6 +72,10 @@ public class GonetteContract {
 
         Uri CONTENT_URI = BASE_URI.buildUpon()
                 .appendPath(Tables.CATEGORY)
+                .build();
+
+        Uri EXTENDED_CONTENT_URI = CONTENT_URI.buildUpon()
+                .appendPath(Tables.CATEGORY_METADATA)
                 .build();
 
         String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.CATEGORY;
@@ -96,6 +105,18 @@ public class GonetteContract {
         String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.PARTNER_METADATA;
 
         String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Tables.PARTNER_METADATA;
+    }
+
+    public interface CategoryMetadata
+            extends CategoryMetadataColumns {
+
+        Uri CONTENT_URI = BASE_URI.buildUpon()
+                .appendPath(Tables.CATEGORY_METADATA)
+                .build();
+
+        String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Tables.CATEGORY_METADATA;
+
+        String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Tables.CATEGORY_METADATA;
     }
 
 }

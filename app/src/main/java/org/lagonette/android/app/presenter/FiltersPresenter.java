@@ -13,6 +13,7 @@ import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
 import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
+import org.lagonette.android.content.loader.callbacks.UpdateCategoryMetadataCallbacks;
 import org.lagonette.android.content.loader.callbacks.InsertPartnerVisibilityCallbacks;
 import org.lagonette.android.content.loader.callbacks.LoadFilterCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
@@ -24,14 +25,21 @@ public class FiltersPresenter
         extends BundleLoaderPresenter
         implements FiltersContract.Presenter,
         CursorLoaderCallbacks.Callbacks,
+        LoadFilterCallbacks.Callbacks,
         InsertPartnerVisibilityCallbacks.Callbacks,
-        LoadFilterCallbacks.Callbacks {
+        UpdateCategoryMetadataCallbacks.Callbacks {
 
     private static final String ARG_SEARCH = "arg:search";
 
     private LoadFilterCallbacks mLoadFilterCallbacks;
 
+    @SuppressWarnings("NullableProblems")
+    @NonNull
     private InsertPartnerVisibilityCallbacks mInsertPartnerVisibilityCallbacks;
+
+    @SuppressWarnings("NullableProblems")
+    @NonNull
+    private UpdateCategoryMetadataCallbacks mUpdateCategoryMetadataCallbacks;
 
     public static FiltersFragment newInstance(@NonNull String search) {
         Bundle args = new Bundle(1);
@@ -62,7 +70,12 @@ public class FiltersPresenter
                 FiltersPresenter.this,
                 R.id.loader_query_filters_partners
         );
-        mInsertPartnerVisibilityCallbacks = new InsertPartnerVisibilityCallbacks(FiltersPresenter.this);
+        mInsertPartnerVisibilityCallbacks = new InsertPartnerVisibilityCallbacks(
+                FiltersPresenter.this
+        );
+        mUpdateCategoryMetadataCallbacks = new UpdateCategoryMetadataCallbacks(
+                FiltersPresenter.this
+        );
     }
 
     @Override
@@ -89,6 +102,11 @@ public class FiltersPresenter
     @Override
     public void setPartnerVisibility(long partnerId, boolean visibility) {
         mInsertPartnerVisibilityCallbacks.insertPartnerVisibility(partnerId, visibility);
+    }
+
+    @Override
+    public void setCategoryVisibility(long categoryId, boolean visibility) {
+        mUpdateCategoryMetadataCallbacks.updateCategoryVisibility(categoryId, visibility);
     }
 
     @Override
@@ -125,6 +143,8 @@ public class FiltersPresenter
                         GonetteContract.Filter.Category.ID,
                         GonetteContract.Filter.Category.LABEL,
                         GonetteContract.Filter.Category.ICON,
+                        GonetteContract.Filter.CategoryMetadata.IS_VISIBLE,
+                        GonetteContract.Filter.CategoryMetadata.IS_COLLAPSED,
                         GonetteContract.Filter.Partner.ID,
                         GonetteContract.Filter.Partner.NAME,
                         GonetteContract.Filter.Partner.ADDRESS,

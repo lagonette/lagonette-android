@@ -26,11 +26,11 @@ import org.lagonette.android.util.AdapterUtil;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public interface OnPartnerClickListener {
+    public interface OnFilterClickListener {
 
         void onPartnerClick(@NonNull PartnerViewHolder holder);
 
-        void onCategoryClick(@NonNull FilterAdapter.CategoryViewHolder holder);
+        void onCategoryVisibilityClick(@NonNull FilterAdapter.CategoryViewHolder holder);
 
         void onPartnerVisibilityClick(@NonNull PartnerViewHolder holder);
 
@@ -69,11 +69,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private FilterReader mFilterReader;
 
     @Nullable
-    private OnPartnerClickListener mOnPartnerClickListener;
+    private OnFilterClickListener mOnFilterClickListener;
 
-    public FilterAdapter(@NonNull Context context, @NonNull Resources resources, @Nullable OnPartnerClickListener onPartnerClickListener) {
+    public FilterAdapter(@NonNull Context context, @NonNull Resources resources, @Nullable OnFilterClickListener onFilterClickListener) {
         mStringBuilder = new StringBuilder();
-        mOnPartnerClickListener = onPartnerClickListener;
+        mOnFilterClickListener = onFilterClickListener;
 
         mCategoryIconSize = resources.getDimensionPixelSize(R.dimen.filters_category_icon_size);
 
@@ -240,12 +240,12 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         )
         );
 
-        if (mOnPartnerClickListener != null) {
+        if (mOnFilterClickListener != null) {
             holder.itemView.setTag(holder);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnPartnerClickListener.onPartnerClick((PartnerViewHolder) v.getTag());
+                    mOnFilterClickListener.onPartnerClick((PartnerViewHolder) v.getTag());
                 }
             });
 
@@ -253,7 +253,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             holder.visibilityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnPartnerClickListener.onPartnerVisibilityClick((PartnerViewHolder) v.getTag());
+                    mOnFilterClickListener.onPartnerVisibilityClick((PartnerViewHolder) v.getTag());
                 }
             });
         }
@@ -280,12 +280,12 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
 
-        if (mOnPartnerClickListener != null) {
+        if (mOnFilterClickListener != null) {
             holder.visibilityButton.setTag(holder);
             holder.visibilityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnPartnerClickListener.onCategoryClick((CategoryViewHolder) v.getTag());
+                    mOnFilterClickListener.onCategoryVisibilityClick((CategoryViewHolder) v.getTag());
                 }
             });
         }
@@ -320,18 +320,20 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
-            // TODO
+            holder.categoryId = mFilterReader.categoryReader.getId();
+            holder.isVisible = mFilterReader.categoryReader.isVisible();
+            holder.isCollapsed = mFilterReader.categoryReader.isCollapsed();
+
             if (holder.isVisible) {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
             } else {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
             }
 
-            // TODO
-            if (holder.isExpanded) {
-                holder.expandButton.setImageResource(R.drawable.ic_expand_less_grey_24dp);
-            } else {
+            if (holder.isCollapsed) {
                 holder.expandButton.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+            } else {
+                holder.expandButton.setImageResource(R.drawable.ic_expand_less_grey_24dp);
             }
 
             holder.categoryTextView.setText(mFilterReader.categoryReader.getLabel());
@@ -349,6 +351,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (mFilterReader.moveToPosition(position)) {
             holder.partnerId = mFilterReader.partnerReader.getId();
             holder.isVisible = mFilterReader.partnerReader.isVisible();
+            holder.isCategoryVisible = mFilterReader.categoryReader.isVisible();
             holder.isExchangeOffice = mFilterReader.partnerReader.isExchangeOffice();
             holder.isMainPartner = mFilterReader.getRowType() == FilterColumns.VALUE_ROW_MAIN_PARTNER;
 
@@ -364,8 +367,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 holder.addressTextView.setVisibility(View.GONE);
             }
 
-            if (holder.isVisible) {
+            if (holder.isVisible && holder.isCategoryVisible) {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
+            } else if (holder.isVisible) {
+                holder.visibilityButton.setImageResource(R.drawable.ic_visibility_grey_24dp);
             } else {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
             }
@@ -398,6 +403,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public boolean isVisible;
 
+        public boolean isCategoryVisible;
+
         public boolean isMainPartner;
 
         public boolean isExchangeOffice;
@@ -425,9 +432,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
+        public long categoryId;
+
         public boolean isVisible;
 
-        public boolean isExpanded;
+        public boolean isCollapsed;
 
         @NonNull
         public final ImageView iconImageView;

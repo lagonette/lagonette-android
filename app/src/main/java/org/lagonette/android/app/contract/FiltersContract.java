@@ -12,10 +12,11 @@ public abstract class FiltersContract {
 
         void setPartnerVisibility(long partnerId, boolean visibility);
 
+        void setCategoryVisibility(long categoryId, boolean visibility);
+
         void filterPartners(@NonNull String search);
 
         void loadFilters();
-
     }
 
     public interface View extends BaseContract.BaseView {

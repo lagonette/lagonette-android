@@ -19,7 +19,7 @@ import org.lagonette.android.content.reader.FilterReader;
 public class FiltersFragment
         extends Fragment
         implements FiltersContract.View,
-        FilterAdapter.OnPartnerClickListener {
+        FilterAdapter.OnFilterClickListener {
 
     public interface Callback {
 
@@ -87,8 +87,8 @@ public class FiltersFragment
     }
 
     @Override
-    public void onCategoryClick(@NonNull FilterAdapter.CategoryViewHolder holder) {
-        // TODO
+    public void onCategoryVisibilityClick(@NonNull FilterAdapter.CategoryViewHolder holder) {
+        mPresenter.setCategoryVisibility(holder.categoryId, !holder.isVisible);
     }
 
     @Override

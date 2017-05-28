@@ -44,4 +44,21 @@ public class CategoryReader
                 )
         );
     }
+
+    // TODO Use a metadata reader
+    public boolean isVisible() {
+        return 1 == mCursor.getLong(
+                mCursor.getColumnIndex(
+                        GonetteContract.CategoryMetadata.IS_VISIBLE
+                )
+        );
+    }
+
+    public boolean isCollapsed() {
+        return 1 == mCursor.getLong(
+                mCursor.getColumnIndex(
+                        GonetteContract.CategoryMetadata.IS_COLLAPSED
+                )
+        );
+    }
 }

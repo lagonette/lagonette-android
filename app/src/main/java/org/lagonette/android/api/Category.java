@@ -23,6 +23,7 @@ public class Category implements ContentObject {
 
     @Override
     public void prepareInsert(@NonNull List<ContentProviderOperation> operations, @NonNull ContentValues contentValues) {
+        // Insert Category
         contentValues.clear();
         contentValues.put(GonetteContract.Category.ID, mId);
         contentValues.put(GonetteContract.Category.LABEL, mLabel);
@@ -30,6 +31,19 @@ public class Category implements ContentObject {
         operations.add(
                 ContentProviderOperation
                         .newInsert(GonetteContract.Category.CONTENT_URI)
+                        .withValues(contentValues)
+                        .withYieldAllowed(true)
+                        .build()
+        );
+
+        // Insert Category metadata
+        contentValues.clear();
+        contentValues.put(GonetteContract.CategoryMetadata.CATEGORY_ID, mId);
+        contentValues.put(GonetteContract.CategoryMetadata.IS_VISIBLE, true);
+        contentValues.put(GonetteContract.CategoryMetadata.IS_COLLAPSED, false);
+        operations.add(
+                ContentProviderOperation
+                        .newInsert(GonetteContract.CategoryMetadata.CONTENT_URI)
                         .withValues(contentValues)
                         .withYieldAllowed(true)
                         .build()

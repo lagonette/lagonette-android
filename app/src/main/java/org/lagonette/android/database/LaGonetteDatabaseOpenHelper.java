@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.lagonette.android.database.columns.CategoryColumns;
+import org.lagonette.android.database.columns.CategoryMetadataColumns;
 import org.lagonette.android.database.columns.PartnerColumns;
 import org.lagonette.android.database.columns.PartnerMetadataColumns;
 import org.lagonette.android.database.columns.PartnerSideCategoriesColumns;
@@ -93,12 +94,23 @@ public class LaGonetteDatabaseOpenHelper
                         .endTable()
                         .toString()
         );
+
+        db.execSQL(
+                SqlUtil.build()
+                        .createTable(Tables.CATEGORY_METADATA)
+                            .field(CategoryMetadataColumns.CATEGORY_ID).integer().primaryKey().onConflictIgnore()
+                            .field(CategoryMetadataColumns.IS_VISIBLE).integer().notNull()
+                            .field(CategoryMetadataColumns.IS_COLLAPSED).integer().notNull()
+                        .endTable()
+                        .toString()
+        );
     }
 
     private void dropDatabase(SQLiteDatabase db) {
         db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER_METADATA).toString());
         db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER_SIDE_CATEGORIES).toString());
         db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER).toString());
+        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.CATEGORY_METADATA).toString());
         db.execSQL(SqlUtil.build().dropTableIfExists(Tables.CATEGORY).toString());
     }
 

@@ -154,6 +154,13 @@ public class LaGonetteContentProvider
                 uris.add(GonetteContract.Category.CONTENT_URI);
                 uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
+            case R.id.content_uri_categories_metadata:
+                table = Tables.CATEGORY_METADATA;
+                baseUri = GonetteContract.CategoryMetadata.CONTENT_URI;
+                uris.add(GonetteContract.Category.EXTENDED_CONTENT_URI);
+                uris.add(GonetteContract.CategoryMetadata.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
+                break;
             default:
                 throw new IllegalArgumentException(String.format(
                         "Unknown content uri code: %s",
@@ -260,6 +267,12 @@ public class LaGonetteContentProvider
                 uris.add(GonetteContract.Category.CONTENT_URI);
                 uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
+            case R.id.content_uri_categories_metadata:
+                table = Tables.CATEGORY_METADATA;
+                baseUri = GonetteContract.Category.CONTENT_URI;
+                uris.add(GonetteContract.Category.EXTENDED_CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
+                break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
         }
@@ -323,6 +336,18 @@ public class LaGonetteContentProvider
                 GonetteContract.AUTHORITY,
                 GonetteContract.Category.CONTENT_URI.getPath(),
                 R.id.content_uri_categories
+        );
+        addUriToUriMatcher(
+                mUriMatcher,
+                GonetteContract.AUTHORITY,
+                GonetteContract.Category.EXTENDED_CONTENT_URI.getPath(),
+                R.id.content_uri_categories_extended
+        );
+        addUriToUriMatcher(
+                mUriMatcher,
+                GonetteContract.AUTHORITY,
+                GonetteContract.CategoryMetadata.CONTENT_URI.getPath(),
+                R.id.content_uri_categories_metadata
         );
     }
 

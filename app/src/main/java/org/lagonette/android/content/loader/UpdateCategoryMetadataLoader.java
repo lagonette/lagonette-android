@@ -15,33 +15,33 @@ import org.lagonette.android.content.loader.base.BundleLoader;
 
 import java.util.ArrayList;
 
-public class InsertPartnerVisibilityLoader extends BundleLoader {
+public class UpdateCategoryMetadataLoader extends BundleLoader {
 
-    private static final String TAG = "InsertPartnerVisibility";
+    private static final String TAG = "UpdateCategoryMetadataL";
 
-    private static final String ARG_PARTNER_ID = "arg:partner_id";
+    private static final String ARG_CATEGORY_ID = "arg:category_id";
 
     private static final String ARG_IS_VISIBLE = "arg:is_visible";
 
     private boolean mIsVisible;
 
-    private long mPartnerId;
+    private long mCategoryId;
 
     @NonNull
-    public static Bundle getArgs(long partnerId, boolean isVisible) {
+    public static Bundle getUpdateVisibilityArgs(long categoryId, boolean isVisible) {
         Bundle args = new Bundle(2);
-        args.putLong(ARG_PARTNER_ID, partnerId);
+        args.putLong(ARG_CATEGORY_ID, categoryId);
         args.putBoolean(ARG_IS_VISIBLE, isVisible);
         return args;
     }
 
-    public InsertPartnerVisibilityLoader(Context context, Bundle args) {
+    public UpdateCategoryMetadataLoader(Context context, Bundle args) {
         super(context, args);
     }
 
     @Override
     protected void readArguments(@NonNull Bundle args) {
-        mPartnerId = args.getLong(ARG_PARTNER_ID, GonetteContract.NO_ID);
+        mCategoryId = args.getLong(ARG_CATEGORY_ID, GonetteContract.NO_ID);
         mIsVisible = args.getBoolean(ARG_IS_VISIBLE, false);
     }
 
@@ -49,12 +49,12 @@ public class InsertPartnerVisibilityLoader extends BundleLoader {
     public Bundle loadInBackground() {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         operations.add(
-                ContentProviderOperation.newUpdate(GonetteContract.PartnerMetadata.CONTENT_URI)
-                        .withValue(GonetteContract.PartnerMetadata.IS_VISIBLE, mIsVisible)
+                ContentProviderOperation.newUpdate(GonetteContract.CategoryMetadata.CONTENT_URI)
+                        .withValue(GonetteContract.CategoryMetadata.IS_VISIBLE, mIsVisible)
                         .withSelection(
-                                GonetteContract.PartnerMetadata.PARTNER_ID + " = ?",
+                                GonetteContract.CategoryMetadata.CATEGORY_ID + " = ?",
                                 new String[]{
-                                        String.valueOf(mPartnerId)
+                                        String.valueOf(mCategoryId)
                                 }
                         )
                         .build()
