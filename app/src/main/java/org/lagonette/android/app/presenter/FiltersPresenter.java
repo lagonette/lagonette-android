@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-import android.text.TextUtils;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.FiltersContract;
@@ -18,6 +17,7 @@ import org.lagonette.android.content.loader.callbacks.InsertPartnerVisibilityCal
 import org.lagonette.android.content.loader.callbacks.LoadFilterCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
 import org.lagonette.android.content.reader.FilterReader;
+import org.lagonette.android.database.statement.FilterStatement;
 import org.lagonette.android.util.SearchUtil;
 
 public class FiltersPresenter
@@ -134,18 +134,8 @@ public class FiltersPresenter
                         GonetteContract.Filter.PartnerMetadata.IS_VISIBLE
                 }
         )
-                .setSelection(!TextUtils.isEmpty(search)
-                        ? "(" + GonetteContract.Filter.ROW_TYPE + " <> " + GonetteContract.Filter.VALUE_ROW_MAIN_PARTNER
-                        + " OR " + GonetteContract.Partner.NAME + " LIKE ?)"
-                        + " AND "
-                        + "(" + GonetteContract.Filter.ROW_TYPE + " <> " + GonetteContract.Filter.VALUE_ROW_SIDE_PARTNER
-                        + " OR " + GonetteContract.Partner.NAME + " LIKE ?)"
-                        : null
-                )
-                .setSelectionArgs(!TextUtils.isEmpty(search)
-                        ? new String[]{"%" + search + "%", "%" + search + "%"}
-                        : null
-                )
+                .setSelection(null)
+                .setSelectionArgs(FilterStatement.getSelectionsArgs(search)) // TODO Do not call directly FilterStatement because of separation of concern
                 .setSortOrder(null);
     }
 

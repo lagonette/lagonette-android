@@ -59,6 +59,8 @@ public class SqlBuilder {
 
     private static final String IS_NOT_NULL = " IS NOT NULL";
 
+    private static final String GROUP_BY = " GROUP BY ";
+
     private static final String UNION = " UNION ";
 
     private static final String ASC = " ASC";
@@ -226,9 +228,23 @@ public class SqlBuilder {
     }
 
     @NonNull
+    public SqlBuilder join(@NonNull String table, @NonNull String as) {
+        mAppendOnComma = false;
+        mSql += JOIN + table + AS + as + ON;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
     public SqlBuilder leftJoin(@NonNull String table) {
         mAppendOnComma = false;
         mSql += LEFT_JOIN + table + ON;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder leftJoin(@NonNull String table, @NonNull String as) {
+        mAppendOnComma = false;
+        mSql += LEFT_JOIN + table + AS + as + ON;
         return SqlBuilder.this;
     }
 
@@ -269,6 +285,13 @@ public class SqlBuilder {
     @NonNull
     public SqlBuilder statement(@NonNull String statement) {
         mSql += statement;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder groupBy() {
+        mAppendByComma = false;
+        mSql += GROUP_BY;
         return SqlBuilder.this;
     }
 

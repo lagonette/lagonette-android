@@ -1,5 +1,8 @@
 package org.lagonette.android.database.statement;
 
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
 import org.lagonette.android.database.Tables;
 import org.lagonette.android.database.columns.CategoryColumns;
 import org.lagonette.android.database.columns.FilterColumns;
@@ -9,6 +12,10 @@ import org.lagonette.android.database.columns.PartnerSideCategoriesColumns;
 import org.lagonette.android.util.SqlUtil;
 
 public class FilterStatement implements FilterColumns {
+
+    private static final String SIDE_PARTNER = "side_partner";
+
+    private static final String MAIN_PARTNER = "main_partner";
 
     public static String getFilterStatement() {
         return SqlUtil.build()
@@ -28,13 +35,21 @@ public class FilterStatement implements FilterColumns {
                     .column(VALUE_NULL, PartnerColumns.IS_EXCHANGE_OFFICE)
                     .column(VALUE_NULL, PartnerMetadataColumns.IS_VISIBLE)
                 .from(Tables.CATEGORY)
-                .leftJoin(Tables.PARTNER)
-                    .on(CategoryColumns.ID, PartnerColumns.MAIN_CATEGORY)
+                .leftJoin(Tables.PARTNER, MAIN_PARTNER)
+                    .on(CategoryColumns.ID, MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY)
                 .leftJoin(Tables.PARTNER_SIDE_CATEGORIES)
                     .on(CategoryColumns.ID, PartnerSideCategoriesColumns.CATEGORY_ID)
+                .leftJoin(Tables.PARTNER, SIDE_PARTNER)
+                    .on(PartnerSideCategoriesColumns.PARTNER_ID, SIDE_PARTNER + "." + PartnerColumns.ID)
                 .where()
-                    .statement(PartnerColumns.MAIN_CATEGORY).isNotNull().or()
+                    .statement(MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY).isNotNull()
+                    .and()
+                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME + " LIKE ?")
+                    .or()
                     .statement(PartnerSideCategoriesColumns.CATEGORY_ID).isNotNull()
+                    .and()
+                    .statement(SIDE_PARTNER + "." + PartnerColumns.NAME + " LIKE ?")
+                .groupBy().by(CategoryColumns.ID)
 
                 .union()
 
@@ -52,13 +67,21 @@ public class FilterStatement implements FilterColumns {
                     .column(VALUE_NULL, PartnerColumns.IS_EXCHANGE_OFFICE)
                     .column(VALUE_NULL, PartnerMetadataColumns.IS_VISIBLE)
                 .from(Tables.CATEGORY)
-                .leftJoin(Tables.PARTNER)
-                    .on(CategoryColumns.ID, PartnerColumns.MAIN_CATEGORY)
+                .leftJoin(Tables.PARTNER, MAIN_PARTNER)
+                    .on(CategoryColumns.ID, MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY)
                 .leftJoin(Tables.PARTNER_SIDE_CATEGORIES)
                     .on(CategoryColumns.ID, PartnerSideCategoriesColumns.CATEGORY_ID)
+                .leftJoin(Tables.PARTNER, SIDE_PARTNER)
+                    .on(PartnerSideCategoriesColumns.PARTNER_ID, SIDE_PARTNER + "." + PartnerColumns.ID)
                 .where()
-                    .statement(PartnerColumns.MAIN_CATEGORY).isNotNull().or()
+                    .statement(MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY).isNotNull()
+                    .and()
+                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME + " LIKE ?")
+                    .or()
                     .statement(PartnerSideCategoriesColumns.CATEGORY_ID).isNotNull()
+                    .and()
+                    .statement(SIDE_PARTNER + "." + PartnerColumns.NAME + " LIKE ?")
+                .groupBy().by(CategoryColumns.ID)
 
                 .union()
 
@@ -80,6 +103,8 @@ public class FilterStatement implements FilterColumns {
                     .on(CategoryColumns.ID, PartnerColumns.MAIN_CATEGORY)
                 .join(Tables.PARTNER_METADATA)
                     .on(PartnerColumns.ID, PartnerMetadataColumns.PARTNER_ID)
+                .where()
+                    .statement(PartnerColumns.NAME + " LIKE ?")
 
                 .union()
 
@@ -103,6 +128,8 @@ public class FilterStatement implements FilterColumns {
                     .on(PartnerSideCategoriesColumns.PARTNER_ID, PartnerColumns.ID)
                 .join(Tables.PARTNER_METADATA)
                     .on(PartnerColumns.ID, PartnerMetadataColumns.PARTNER_ID)
+                .where()
+                    .statement(PartnerColumns.NAME + " LIKE ?")
 
                 .order()
                     .by(CategoryColumns.ID, true)
@@ -110,5 +137,17 @@ public class FilterStatement implements FilterColumns {
 
                 .endGroup()
                 .toString();
+    }
+
+    public static String[] getSelectionsArgs(@Nullable String search) {
+        search = !TextUtils.isEmpty(search) ? "%" + search + "%" : "%";
+        return new String[]{
+                search,
+                search,
+                search,
+                search,
+                search,
+                search
+        };
     }
 }
