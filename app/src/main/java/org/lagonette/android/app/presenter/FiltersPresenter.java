@@ -14,7 +14,7 @@ import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
 import org.lagonette.android.content.loader.callbacks.UpdateCategoryMetadataCallbacks;
-import org.lagonette.android.content.loader.callbacks.InsertPartnerVisibilityCallbacks;
+import org.lagonette.android.content.loader.callbacks.UpdatePartnerMetadataCallbacks;
 import org.lagonette.android.content.loader.callbacks.LoadFilterCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
 import org.lagonette.android.content.reader.FilterReader;
@@ -26,7 +26,7 @@ public class FiltersPresenter
         implements FiltersContract.Presenter,
         CursorLoaderCallbacks.Callbacks,
         LoadFilterCallbacks.Callbacks,
-        InsertPartnerVisibilityCallbacks.Callbacks,
+        UpdatePartnerMetadataCallbacks.Callbacks,
         UpdateCategoryMetadataCallbacks.Callbacks {
 
     private static final String ARG_SEARCH = "arg:search";
@@ -35,7 +35,7 @@ public class FiltersPresenter
 
     @SuppressWarnings("NullableProblems")
     @NonNull
-    private InsertPartnerVisibilityCallbacks mInsertPartnerVisibilityCallbacks;
+    private UpdatePartnerMetadataCallbacks mUpdatePartnerMetadataCallbacks;
 
     @SuppressWarnings("NullableProblems")
     @NonNull
@@ -70,7 +70,7 @@ public class FiltersPresenter
                 FiltersPresenter.this,
                 R.id.loader_query_filters_partners
         );
-        mInsertPartnerVisibilityCallbacks = new InsertPartnerVisibilityCallbacks(
+        mUpdatePartnerMetadataCallbacks = new UpdatePartnerMetadataCallbacks(
                 FiltersPresenter.this
         );
         mUpdateCategoryMetadataCallbacks = new UpdateCategoryMetadataCallbacks(
@@ -85,7 +85,7 @@ public class FiltersPresenter
 
     @Override
     protected void reattachLoaders() {
-        mInsertPartnerVisibilityCallbacks.reattachLoader();
+        mUpdatePartnerMetadataCallbacks.reattachLoader();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class FiltersPresenter
 
     @Override
     public void setPartnerVisibility(long partnerId, boolean visibility) {
-        mInsertPartnerVisibilityCallbacks.insertPartnerVisibility(partnerId, visibility);
+        mUpdatePartnerMetadataCallbacks.updatePartnerVisibility(partnerId, visibility);
     }
 
     @Override

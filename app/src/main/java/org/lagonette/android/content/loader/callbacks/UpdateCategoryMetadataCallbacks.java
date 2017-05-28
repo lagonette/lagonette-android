@@ -24,7 +24,7 @@ public class UpdateCategoryMetadataCallbacks
 
     @Override
     public void reattachLoader() {
-        reattachLoader(R.id.loader_insert_category_visibility);
+        reattachLoader(R.id.loader_update_category_metadata);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class UpdateCategoryMetadataCallbacks
                 isVisible
         );
         initLoader(
-                R.id.loader_insert_category_visibility,
+                R.id.loader_update_category_metadata,
                 args
         );
     }

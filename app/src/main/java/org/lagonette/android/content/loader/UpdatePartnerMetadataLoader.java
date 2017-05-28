@@ -15,9 +15,9 @@ import org.lagonette.android.content.loader.base.BundleLoader;
 
 import java.util.ArrayList;
 
-public class InsertPartnerVisibilityLoader extends BundleLoader {
+public class UpdatePartnerMetadataLoader extends BundleLoader {
 
-    private static final String TAG = "InsertPartnerVisibility";
+    private static final String TAG = "UpdatePartnerMetadataLo";
 
     private static final String ARG_PARTNER_ID = "arg:partner_id";
 
@@ -28,14 +28,14 @@ public class InsertPartnerVisibilityLoader extends BundleLoader {
     private long mPartnerId;
 
     @NonNull
-    public static Bundle getArgs(long partnerId, boolean isVisible) {
+    public static Bundle getUpdateVisibilityArgs(long partnerId, boolean isVisible) {
         Bundle args = new Bundle(2);
         args.putLong(ARG_PARTNER_ID, partnerId);
         args.putBoolean(ARG_IS_VISIBLE, isVisible);
         return args;
     }
 
-    public InsertPartnerVisibilityLoader(Context context, Bundle args) {
+    public UpdatePartnerMetadataLoader(Context context, Bundle args) {
         super(context, args);
     }
 
