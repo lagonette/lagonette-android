@@ -10,8 +10,10 @@ import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 
+import org.lagonette.android.BuildConfig;
 import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.content.loader.base.BundleLoader;
+import org.lagonette.android.database.statement.CategoryMetadataStatement;
 
 import java.util.ArrayList;
 
@@ -23,7 +25,15 @@ public class UpdateCategoryMetadataLoader extends BundleLoader {
 
     private static final String ARG_IS_VISIBLE = "arg:is_visible";
 
+    private static final String ARG_IS_COLLAPSED = "arg:is_collapsed";
+
     private boolean mIsVisible;
+
+    private boolean mIsCollapsed;
+
+    private boolean mUpdateCollapsedState;
+
+    private boolean mUpdateVisibility;
 
     private long mCategoryId;
 
@@ -35,6 +45,14 @@ public class UpdateCategoryMetadataLoader extends BundleLoader {
         return args;
     }
 
+    @NonNull
+    public static Bundle getUpdateCollapsedStateArgs(long categoryId, boolean isColapsed) {
+        Bundle args = new Bundle(2);
+        args.putLong(ARG_CATEGORY_ID, categoryId);
+        args.putBoolean(ARG_IS_COLLAPSED, isColapsed);
+        return args;
+    }
+
     public UpdateCategoryMetadataLoader(Context context, Bundle args) {
         super(context, args);
     }
@@ -42,23 +60,44 @@ public class UpdateCategoryMetadataLoader extends BundleLoader {
     @Override
     protected void readArguments(@NonNull Bundle args) {
         mCategoryId = args.getLong(ARG_CATEGORY_ID, GonetteContract.NO_ID);
-        mIsVisible = args.getBoolean(ARG_IS_VISIBLE, false);
+
+        mUpdateVisibility = args.containsKey(ARG_IS_VISIBLE);
+        if (mUpdateVisibility) {
+            mIsVisible = args.getBoolean(ARG_IS_VISIBLE);
+        }
+
+        mUpdateCollapsedState = args.containsKey(ARG_IS_COLLAPSED);
+        if (mUpdateCollapsedState) {
+            mIsCollapsed = args.getBoolean(ARG_IS_COLLAPSED);
+        }
+
+        if (BuildConfig.DEBUG) {
+            if (mCategoryId == GonetteContract.NO_ID) {
+                throw new IllegalArgumentException("You must provide a category id");
+            }
+        }
     }
 
     @Override
     public Bundle loadInBackground() {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-        operations.add(
-                ContentProviderOperation.newUpdate(GonetteContract.CategoryMetadata.CONTENT_URI)
-                        .withValue(GonetteContract.CategoryMetadata.IS_VISIBLE, mIsVisible)
-                        .withSelection(
-                                GonetteContract.CategoryMetadata.CATEGORY_ID + " = ?",
-                                new String[]{
-                                        String.valueOf(mCategoryId)
-                                }
-                        )
-                        .build()
-        );
+
+        ContentProviderOperation.Builder builder = ContentProviderOperation
+                .newUpdate(GonetteContract.CategoryMetadata.CONTENT_URI)
+                .withSelection(
+                        CategoryMetadataStatement.getSelections(),
+                        CategoryMetadataStatement.getSelectionsArgs(mCategoryId)
+                );
+
+        if (mUpdateVisibility) {
+            builder.withValue(GonetteContract.CategoryMetadata.IS_VISIBLE, mIsVisible);
+        }
+
+        if (mUpdateCollapsedState) {
+            builder.withValue(GonetteContract.CategoryMetadata.IS_COLLAPSED, mIsCollapsed);
+        }
+
+        operations.add(builder.build());
 
         try {
             mContext.getContentResolver().applyBatch(

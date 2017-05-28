@@ -55,4 +55,15 @@ public class UpdateCategoryMetadataCallbacks
         );
     }
 
+    public void updateCategoryCollapsedState(long categoryId, boolean isColapsed) {
+        Bundle args = UpdateCategoryMetadataLoader.getUpdateCollapsedStateArgs(
+                categoryId,
+                isColapsed
+        );
+        initLoader(
+                R.id.loader_update_category_metadata,
+                args
+        );
+    }
+
 }

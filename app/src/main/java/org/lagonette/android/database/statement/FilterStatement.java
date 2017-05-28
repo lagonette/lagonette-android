@@ -117,6 +117,8 @@ public class FilterStatement implements FilterColumns {
                     .on(PartnerColumns.ID, PartnerMetadataColumns.PARTNER_ID)
                 .where()
                     .statement(PartnerColumns.NAME + " LIKE ?")
+                    .and()
+                    .statement(GonetteContract.CategoryMetadata.IS_COLLAPSED + " = 0")
 
                 .union()
 
@@ -146,6 +148,8 @@ public class FilterStatement implements FilterColumns {
                     .on(PartnerColumns.ID, PartnerMetadataColumns.PARTNER_ID)
                 .where()
                     .statement(PartnerColumns.NAME + " LIKE ?")
+                    .and()
+                    .statement(GonetteContract.CategoryMetadata.IS_COLLAPSED + " = 0")
 
                 .order()
                     .by(CategoryColumns.ID, true)

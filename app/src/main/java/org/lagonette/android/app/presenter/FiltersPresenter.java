@@ -100,13 +100,18 @@ public class FiltersPresenter
     }
 
     @Override
-    public void setPartnerVisibility(long partnerId, boolean visibility) {
-        mUpdatePartnerMetadataCallbacks.updatePartnerVisibility(partnerId, visibility);
+    public void setPartnerVisibility(long partnerId, boolean isVisible) {
+        mUpdatePartnerMetadataCallbacks.updatePartnerVisibility(partnerId, isVisible);
     }
 
     @Override
-    public void setCategoryVisibility(long categoryId, boolean visibility) {
-        mUpdateCategoryMetadataCallbacks.updateCategoryVisibility(categoryId, visibility);
+    public void setCategoryVisibility(long categoryId, boolean isVisible) {
+        mUpdateCategoryMetadataCallbacks.updateCategoryVisibility(categoryId, isVisible);
+    }
+
+    @Override
+    public void setCategoryCollapsed(long categoryId, boolean isCollapsed) {
+        mUpdateCategoryMetadataCallbacks.updateCategoryCollapsedState(categoryId, isCollapsed);
     }
 
     @Override

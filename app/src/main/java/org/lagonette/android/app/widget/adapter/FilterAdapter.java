@@ -30,7 +30,9 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         void onPartnerClick(@NonNull PartnerViewHolder holder);
 
-        void onCategoryVisibilityClick(@NonNull FilterAdapter.CategoryViewHolder holder);
+        void onCategoryVisibilityClick(@NonNull CategoryViewHolder holder);
+
+        void onCategoryCollapsedClick(@NonNull CategoryViewHolder holder);
 
         void onPartnerVisibilityClick(@NonNull PartnerViewHolder holder);
 
@@ -272,8 +274,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         )
         );
 
-        holder.expandButton.setTag(holder);
-        holder.expandButton.setOnClickListener(new View.OnClickListener() {
+        holder.collapsedButton.setTag(holder);
+        holder.collapsedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO
@@ -286,6 +288,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View v) {
                     mOnFilterClickListener.onCategoryVisibilityClick((CategoryViewHolder) v.getTag());
+                }
+            });
+
+            holder.collapsedButton.setTag(holder);
+            holder.collapsedButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnFilterClickListener.onCategoryCollapsedClick((CategoryViewHolder) v.getTag());
                 }
             });
         }
@@ -331,9 +341,9 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
 
             if (holder.isCollapsed) {
-                holder.expandButton.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+                holder.collapsedButton.setImageResource(R.drawable.ic_expand_more_grey_24dp);
             } else {
-                holder.expandButton.setImageResource(R.drawable.ic_expand_less_grey_24dp);
+                holder.collapsedButton.setImageResource(R.drawable.ic_expand_less_grey_24dp);
             }
 
             holder.categoryTextView.setText(mFilterReader.categoryReader.getLabel());
@@ -445,7 +455,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public final ImageButton visibilityButton;
 
         @NonNull
-        public final ImageButton expandButton;
+        public final ImageButton collapsedButton;
 
         @NonNull
         public final TextView categoryTextView;
@@ -454,7 +464,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
             iconImageView = (ImageView) itemView.findViewById(R.id.category_icon);
             visibilityButton = (ImageButton) itemView.findViewById(R.id.category_visibility);
-            expandButton = (ImageButton) itemView.findViewById(R.id.category_expand);
+            collapsedButton = (ImageButton) itemView.findViewById(R.id.category_expand);
             categoryTextView = (TextView) itemView.findViewById(R.id.category_label);
         }
     }

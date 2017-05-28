@@ -10,9 +10,11 @@ public abstract class FiltersContract {
 
     public interface Presenter extends BaseContract.BasePresenter {
 
-        void setPartnerVisibility(long partnerId, boolean visibility);
+        void setPartnerVisibility(long partnerId, boolean isVisible);
 
-        void setCategoryVisibility(long categoryId, boolean visibility);
+        void setCategoryVisibility(long categoryId, boolean isVisible);
+
+        void setCategoryCollapsed(long categoryId, boolean isCollapsed);
 
         void filterPartners(@NonNull String search);
 

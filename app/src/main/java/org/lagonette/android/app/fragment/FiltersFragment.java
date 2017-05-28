@@ -71,6 +71,7 @@ public class FiltersFragment
 
         mFilterList.setLayoutManager(layoutManager);
         mFilterList.setAdapter(mFilterAdapter);
+        mFilterList.setItemAnimator(null); // TODO Remove
 
         try {
             mCallback = (Callback) getActivity();
@@ -89,6 +90,11 @@ public class FiltersFragment
     @Override
     public void onCategoryVisibilityClick(@NonNull FilterAdapter.CategoryViewHolder holder) {
         mPresenter.setCategoryVisibility(holder.categoryId, !holder.isVisible);
+    }
+
+    @Override
+    public void onCategoryCollapsedClick(@NonNull FilterAdapter.CategoryViewHolder holder) {
+        mPresenter.setCategoryCollapsed(holder.categoryId, !holder.isCollapsed);
     }
 
     @Override
