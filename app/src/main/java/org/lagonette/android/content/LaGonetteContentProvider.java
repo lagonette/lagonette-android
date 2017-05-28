@@ -134,21 +134,25 @@ public class LaGonetteContentProvider
                 table = Tables.PARTNER;
                 baseUri = GonetteContract.Partner.CONTENT_URI;
                 uris.add(GonetteContract.Partner.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
                 uris.add(GonetteContract.Partner.EXTENDED_CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
                 baseUri = GonetteContract.PartnerSideCategories.CONTENT_URI;
                 uris.add(GonetteContract.PartnerSideCategories.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             case R.id.content_uri_categories:
                 table = Tables.CATEGORY;
                 baseUri = GonetteContract.Category.CONTENT_URI;
                 uris.add(GonetteContract.Category.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format(
@@ -167,7 +171,7 @@ public class LaGonetteContentProvider
         contentResolver.notifyChange(newUri, null);
         for (Uri u : uris) {
             Log.d(TAG, "insert: Notify " + u);
-            contentResolver.notifyChange(GonetteContract.Partner.EXTENDED_CONTENT_URI, null);
+            contentResolver.notifyChange(u, null);
         }
 
         return newUri;
@@ -184,21 +188,25 @@ public class LaGonetteContentProvider
                 table = Tables.PARTNER;
                 baseUri = GonetteContract.Partner.CONTENT_URI;
                 uris.add(GonetteContract.Partner.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
                 uris.add(GonetteContract.Partner.EXTENDED_CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
                 baseUri = GonetteContract.PartnerSideCategories.CONTENT_URI;
                 uris.add(GonetteContract.PartnerSideCategories.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             case R.id.content_uri_categories:
                 table = Tables.CATEGORY;
                 baseUri = GonetteContract.Category.CONTENT_URI;
                 uris.add(GonetteContract.Category.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
@@ -215,7 +223,7 @@ public class LaGonetteContentProvider
         contentResolver.notifyChange(baseUri, null);
         for (Uri u : uris) {
             Log.d(TAG, "delete: Notify " + u);
-            contentResolver.notifyChange(GonetteContract.Partner.EXTENDED_CONTENT_URI, null);
+            contentResolver.notifyChange(u, null);
         }
 
         return n;
@@ -232,21 +240,25 @@ public class LaGonetteContentProvider
                 table = Tables.PARTNER;
                 baseUri = GonetteContract.Partner.CONTENT_URI;
                 uris.add(GonetteContract.Partner.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
                 uris.add(GonetteContract.Partner.EXTENDED_CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
                 baseUri = GonetteContract.PartnerSideCategories.CONTENT_URI;
                 uris.add(GonetteContract.PartnerSideCategories.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             case R.id.content_uri_categories:
                 table = Tables.CATEGORY;
                 baseUri = GonetteContract.Category.CONTENT_URI;
                 uris.add(GonetteContract.Category.CONTENT_URI);
+                uris.add(GonetteContract.Filter.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
@@ -263,7 +275,7 @@ public class LaGonetteContentProvider
         contentResolver.notifyChange(baseUri, null);
         for (Uri u : uris) {
             Log.d(TAG, "update: Notify " + u);
-            contentResolver.notifyChange(GonetteContract.Partner.EXTENDED_CONTENT_URI, null);
+            contentResolver.notifyChange(u, null);
         }
 
         return n;
