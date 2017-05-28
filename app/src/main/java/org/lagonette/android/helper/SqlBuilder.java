@@ -65,6 +65,8 @@ public class SqlBuilder {
 
     private static final String DESC = " DESC";
 
+    private static final String ALL_FIELD = "*";
+
     @NonNull
     private String mSql = "";
 
@@ -206,6 +208,13 @@ public class SqlBuilder {
     public SqlBuilder column(@NonNull String column) {
         appendColumnCommaIfNeeded();
         mSql += column;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder allColumns() {
+        appendColumnCommaIfNeeded();
+        mSql += ALL_FIELD;
         return SqlBuilder.this;
     }
 

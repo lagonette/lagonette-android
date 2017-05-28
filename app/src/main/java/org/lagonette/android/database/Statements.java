@@ -1,7 +1,6 @@
 package org.lagonette.android.database;
 
-public interface Views {
+public interface Statements {
 
     String FILTERS = "filters";
-
 }

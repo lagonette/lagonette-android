@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 import org.lagonette.android.R;
 import org.lagonette.android.content.contract.GonetteContract;
 import org.lagonette.android.content.reader.FilterReader;
-import org.lagonette.android.database.FilterColumns;
+import org.lagonette.android.database.columns.FilterColumns;
 import org.lagonette.android.util.AdapterUtil;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

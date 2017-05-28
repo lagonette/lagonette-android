@@ -17,26 +17,27 @@ import android.util.Log;
 import org.lagonette.android.BuildConfig;
 import org.lagonette.android.R;
 import org.lagonette.android.content.contract.GonetteContract;
-import org.lagonette.android.database.GonetteDatabaseOpenHelper;
+import org.lagonette.android.database.LaGonetteDatabaseOpenHelper;
 import org.lagonette.android.database.Tables;
-import org.lagonette.android.database.Views;
+import org.lagonette.android.database.statement.FilterStatement;
+import org.lagonette.android.database.statement.PartnerStatement;
 import org.lagonette.android.util.DebugContentProviderUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GonetteContentProvider
+public class LaGonetteContentProvider
         extends ContentProvider {
 
-    private static final String TAG = "GonetteContentProvider";
+    private static final String TAG = "LaGonetteContentProvide";
 
     private UriMatcher mUriMatcher;
 
-    private GonetteDatabaseOpenHelper mOpenHelper;
+    private LaGonetteDatabaseOpenHelper mOpenHelper;
 
     @Override
     public boolean onCreate() {
-        mOpenHelper = new GonetteDatabaseOpenHelper(getContext());
+        mOpenHelper = new LaGonetteDatabaseOpenHelper(getContext());
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         setupUriMatcher();
         return true;
@@ -58,10 +59,10 @@ public class GonetteContentProvider
                 qb.setTables(Tables.PARTNER);
                 break;
             case R.id.content_uri_partners_extended:
-                qb.setTables(GonetteContentProviderHelper.getExtendedPartnerStatement());
+                qb.setTables(PartnerStatement.getExtendedPartnerStatement());
                 break;
             case R.id.content_uri_filters:
-                qb.setTables(Views.FILTERS);
+                qb.setTables(FilterStatement.getFilterStatement());
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown uri: %s", uri));

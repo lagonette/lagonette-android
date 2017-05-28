@@ -3,11 +3,14 @@ package org.lagonette.android.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
+import org.lagonette.android.database.columns.CategoryColumns;
+import org.lagonette.android.database.columns.PartnerColumns;
+import org.lagonette.android.database.columns.PartnerMetadataColumns;
+import org.lagonette.android.database.columns.PartnerSideCategoriesColumns;
 import org.lagonette.android.util.SqlUtil;
 
-public class GonetteDatabaseOpenHelper
+public class LaGonetteDatabaseOpenHelper
         extends SQLiteOpenHelper {
 
     private static final String TAG = "GonetteDatabaseOpenHelp";
@@ -16,7 +19,7 @@ public class GonetteDatabaseOpenHelper
 
     private static final String DATABASE_NAME = "gonette.db";
 
-    public GonetteDatabaseOpenHelper(Context context) {
+    public LaGonetteDatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -90,12 +93,9 @@ public class GonetteDatabaseOpenHelper
                         .endTable()
                         .toString()
         );
-
-        db.execSQL(FilterColumns.SQL);
     }
 
     private void dropDatabase(SQLiteDatabase db) {
-        db.execSQL(SqlUtil.build().dropViewIfExists(Views.FILTERS).toString());
         db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER_METADATA).toString());
         db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER_SIDE_CATEGORIES).toString());
         db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER).toString());

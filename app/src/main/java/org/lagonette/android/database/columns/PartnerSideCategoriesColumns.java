@@ -1,4 +1,6 @@
-package org.lagonette.android.database;
+package org.lagonette.android.database.columns;
+
+import org.lagonette.android.database.Tables;
 
 public interface PartnerSideCategoriesColumns {
 

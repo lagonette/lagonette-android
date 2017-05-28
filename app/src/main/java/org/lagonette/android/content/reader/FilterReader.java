@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.content.contract.GonetteContract;
-import org.lagonette.android.database.FilterColumns;
+import org.lagonette.android.database.columns.FilterColumns;
 
 public class FilterReader extends CursorReader {
 
