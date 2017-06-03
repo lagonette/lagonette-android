@@ -59,6 +59,10 @@ public class SqlBuilder {
 
     private static final String IS_NOT_NULL = " IS NOT NULL";
 
+    private static final String LIKE = " LIKE ";
+
+    private static final String WILDCARD = "?";
+
     private static final String GROUP_BY = " GROUP BY ";
 
     private static final String UNION = " UNION ";
@@ -303,6 +307,18 @@ public class SqlBuilder {
     @NonNull
     public SqlBuilder statement(@NonNull String statement) {
         mSql += statement;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder like() {
+        mSql += LIKE;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder wildcard() {
+        mSql += WILDCARD;
         return SqlBuilder.this;
     }
 

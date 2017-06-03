@@ -50,11 +50,11 @@ public class FilterStatement implements FilterColumns {
                 .where()
                     .statement(MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY).isNotNull()
                     .and()
-                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME + " LIKE ?") // TODO Extract as function .like().wildcard()
+                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME).like().wildcard()
                     .or()
                     .statement(PartnerSideCategoriesColumns.CATEGORY_ID).isNotNull() // TODO Maybe test SIDE_PARTNER + "." + PartnerColumns.NAME
                     .and()
-                    .statement(SIDE_PARTNER + "." + PartnerColumns.NAME + " LIKE ?")
+                    .statement(SIDE_PARTNER + "." + PartnerColumns.NAME).like().wildcard()
                 .groupBy().by(CategoryColumns.ID)
 
                 .union()
@@ -84,11 +84,11 @@ public class FilterStatement implements FilterColumns {
                 .where()
                     .statement(MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY).isNotNull()
                     .and()
-                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME + " LIKE ?")
+                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME).like().wildcard()
                     .or()
                     .statement(PartnerSideCategoriesColumns.CATEGORY_ID).isNotNull()
                     .and()
-                    .statement(SIDE_PARTNER + "." + PartnerColumns.NAME + " LIKE ?")
+                    .statement(SIDE_PARTNER + "." + PartnerColumns.NAME).like().wildcard()
                 .groupBy().by(CategoryColumns.ID)
 
                 .union()
@@ -116,7 +116,7 @@ public class FilterStatement implements FilterColumns {
                 .join(Tables.PARTNER_METADATA)
                     .on(PartnerColumns.ID, PartnerMetadataColumns.PARTNER_ID)
                 .where()
-                    .statement(PartnerColumns.NAME + " LIKE ?")
+                    .statement(PartnerColumns.NAME).like().wildcard()
                     .and()
                     .statement(GonetteContract.CategoryMetadata.IS_COLLAPSED + " = 0")
 
@@ -147,7 +147,7 @@ public class FilterStatement implements FilterColumns {
                 .join(Tables.PARTNER_METADATA)
                     .on(PartnerColumns.ID, PartnerMetadataColumns.PARTNER_ID)
                 .where()
-                    .statement(PartnerColumns.NAME + " LIKE ?")
+                    .statement(PartnerColumns.NAME).like().wildcard()
                     .and()
                     .statement(GonetteContract.CategoryMetadata.IS_COLLAPSED + " = 0")
 
