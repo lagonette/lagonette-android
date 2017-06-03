@@ -11,7 +11,7 @@ import org.lagonette.android.database.columns.FilterColumns;
 import org.lagonette.android.database.columns.PartnerColumns;
 import org.lagonette.android.database.columns.PartnerMetadataColumns;
 import org.lagonette.android.database.columns.PartnerSideCategoriesColumns;
-import org.lagonette.android.util.SqlUtil;
+import org.lagonette.android.helper.SqlBuilder;
 
 public class FilterStatement implements FilterColumns {
 
@@ -20,7 +20,7 @@ public class FilterStatement implements FilterColumns {
     private static final String MAIN_PARTNER = "main_partner";
 
     public static String getFilterStatement() {
-        return SqlUtil.build()
+        return new SqlBuilder().build()
                 .startGroup()
 
                 // CATEGORIES

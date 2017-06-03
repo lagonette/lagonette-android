@@ -257,21 +257,21 @@ public class MapsPresenter
     public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
         String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoaderParams(
-                GonetteContract.Partner.EXTENDED_CONTENT_URI,
+                GonetteContract.Map.CONTENT_URI,
                 new String[]{
-                        GonetteContract.Partner.ID,
-                        GonetteContract.Partner.NAME,
-                        GonetteContract.Partner.DESCRIPTION,
-                        GonetteContract.Partner.LATITUDE,
-                        GonetteContract.Partner.LONGITUDE,
-                        GonetteContract.Partner.IS_EXCHANGE_OFFICE,
-                        GonetteContract.Partner.MAIN_CATEGORY,
-                        GonetteContract.Category.ICON
+                        GonetteContract.Map.Partner.ID,
+                        GonetteContract.Map.Partner.NAME,
+                        GonetteContract.Map.Partner.DESCRIPTION,
+                        GonetteContract.Map.Partner.LATITUDE,
+                        GonetteContract.Map.Partner.LONGITUDE,
+                        GonetteContract.Map.Partner.IS_EXCHANGE_OFFICE,
+                        GonetteContract.Map.Partner.MAIN_CATEGORY,
+                        GonetteContract.Map.Category.ICON
                 }
         )
                 .setSelection(!TextUtils.isEmpty(search)
-                        ? GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1 AND " + GonetteContract.Partner.NAME + " LIKE ?"
-                        : GonetteContract.PartnerMetadata.IS_VISIBLE + " = 1"
+                        ? GonetteContract.Map.PartnerMetadata.IS_VISIBLE + " = 1 AND " + GonetteContract.Map.Partner.NAME + " LIKE ? AND (" + GonetteContract.Map.CategoryMetadata.IS_VISIBLE + " > 0 OR " + GonetteContract.Map.SIDE_CATEGORY_METADATA_IS_VISIBLE_SUM + " > 0)"
+                        : GonetteContract.Map.PartnerMetadata.IS_VISIBLE + " = 1 AND (" + GonetteContract.Map.CategoryMetadata.IS_VISIBLE + " > 0 OR " + GonetteContract.Map.SIDE_CATEGORY_METADATA_IS_VISIBLE_SUM + " > 0)"
                 )
                 .setSelectionArgs(!TextUtils.isEmpty(search)
                         ? new String[]{"%" + search + "%"}

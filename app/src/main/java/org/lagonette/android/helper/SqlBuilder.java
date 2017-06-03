@@ -69,6 +69,10 @@ public class SqlBuilder {
 
     private static final String ALL_FIELD = "*";
 
+    private static final String SUM = "SUM";
+
+    private static final String COUNT = "COUNT";
+
     @NonNull
     private String mSql = "";
 
@@ -217,6 +221,20 @@ public class SqlBuilder {
     public SqlBuilder allColumns() {
         appendColumnCommaIfNeeded();
         mSql += ALL_FIELD;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder sum(@NonNull String column, @NonNull String as) {
+        appendColumnCommaIfNeeded();
+        mSql += SUM + BRACKET_OPEN + column + BRACKET_CLOSE + AS + as;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder count(@NonNull String column, @NonNull String as) {
+        appendColumnCommaIfNeeded();
+        mSql += SUM + BRACKET_OPEN + column + BRACKET_CLOSE + AS + as;
         return SqlBuilder.this;
     }
 

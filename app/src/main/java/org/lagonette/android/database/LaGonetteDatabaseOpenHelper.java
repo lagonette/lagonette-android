@@ -9,7 +9,7 @@ import org.lagonette.android.database.columns.CategoryMetadataColumns;
 import org.lagonette.android.database.columns.PartnerColumns;
 import org.lagonette.android.database.columns.PartnerMetadataColumns;
 import org.lagonette.android.database.columns.PartnerSideCategoriesColumns;
-import org.lagonette.android.util.SqlUtil;
+import org.lagonette.android.helper.SqlBuilder;
 
 public class LaGonetteDatabaseOpenHelper
         extends SQLiteOpenHelper {
@@ -38,8 +38,9 @@ public class LaGonetteDatabaseOpenHelper
     }
 
     private void createDatabase(SQLiteDatabase db) {
+        SqlBuilder sql = new SqlBuilder();
         db.execSQL(
-                SqlUtil.build()
+                sql.build()
                         .createTable(Tables.CATEGORY)
                             .field(CategoryColumns.ID).integer().primaryKey().onConflictReplace()
                             .field(CategoryColumns.LABEL).text().notNull()
@@ -49,7 +50,7 @@ public class LaGonetteDatabaseOpenHelper
         );
 
         db.execSQL(
-                SqlUtil.build()
+                sql.build()
                         .createTable(Tables.PARTNER)
                             .field(PartnerColumns.ID).integer().primaryKey().onConflictReplace()
                             .field(PartnerColumns.CLIENT_CODE).text()
@@ -74,7 +75,7 @@ public class LaGonetteDatabaseOpenHelper
         );
 
         db.execSQL(
-                SqlUtil.build()
+                sql.build()
                         .createTable(Tables.PARTNER_SIDE_CATEGORIES)
                             .field(PartnerSideCategoriesColumns.CATEGORY_ID).integer()
                             .field(PartnerSideCategoriesColumns.PARTNER_ID).integer()
@@ -87,7 +88,7 @@ public class LaGonetteDatabaseOpenHelper
         );
 
         db.execSQL(
-                SqlUtil.build()
+                sql.build()
                         .createTable(Tables.PARTNER_METADATA)
                             .field(PartnerMetadataColumns.PARTNER_ID).integer().primaryKey().onConflictIgnore()
                             .field(PartnerMetadataColumns.IS_VISIBLE).integer().notNull()
@@ -96,7 +97,7 @@ public class LaGonetteDatabaseOpenHelper
         );
 
         db.execSQL(
-                SqlUtil.build()
+                sql.build()
                         .createTable(Tables.CATEGORY_METADATA)
                             .field(CategoryMetadataColumns.CATEGORY_ID).integer().primaryKey().onConflictIgnore()
                             .field(CategoryMetadataColumns.IS_VISIBLE).integer().notNull()
@@ -107,11 +108,12 @@ public class LaGonetteDatabaseOpenHelper
     }
 
     private void dropDatabase(SQLiteDatabase db) {
-        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER_METADATA).toString());
-        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER_SIDE_CATEGORIES).toString());
-        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.PARTNER).toString());
-        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.CATEGORY_METADATA).toString());
-        db.execSQL(SqlUtil.build().dropTableIfExists(Tables.CATEGORY).toString());
+        SqlBuilder sql = new SqlBuilder();
+        db.execSQL(sql.build().dropTableIfExists(Tables.PARTNER_METADATA).toString());
+        db.execSQL(sql.build().dropTableIfExists(Tables.PARTNER_SIDE_CATEGORIES).toString());
+        db.execSQL(sql.build().dropTableIfExists(Tables.PARTNER).toString());
+        db.execSQL(sql.build().dropTableIfExists(Tables.CATEGORY_METADATA).toString());
+        db.execSQL(sql.build().dropTableIfExists(Tables.CATEGORY).toString());
     }
 
 }

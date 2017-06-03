@@ -8,6 +8,7 @@ import org.lagonette.android.database.Tables;
 import org.lagonette.android.database.columns.CategoryColumns;
 import org.lagonette.android.database.columns.CategoryMetadataColumns;
 import org.lagonette.android.database.columns.FilterColumns;
+import org.lagonette.android.database.columns.MapColumns;
 import org.lagonette.android.database.columns.PartnerColumns;
 import org.lagonette.android.database.columns.PartnerMetadataColumns;
 import org.lagonette.android.database.columns.PartnerSideCategoriesColumns;
@@ -47,6 +48,29 @@ public class GonetteContract {
         String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Statements.FILTERS;
 
         String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Statements.FILTERS;
+    }
+
+    public interface Map extends MapColumns {
+
+        interface Category extends CategoryColumns {
+        }
+
+        interface CategoryMetadata extends CategoryMetadataColumns {
+        }
+
+        interface Partner extends PartnerColumns {
+        }
+
+        interface PartnerMetadata extends PartnerMetadataColumns {
+        }
+
+        Uri CONTENT_URI = BASE_URI.buildUpon()
+                .appendPath(Statements.MAP)
+                .build();
+
+        String CONTENT_TYPE_ITEM = CONTENT_TYPE_ITEM_BASE + Statements.MAP;
+
+        String CONTENT_TYPE_DIR = CONTENT_TYPE_DIR_BASE + Statements.MAP;
     }
 
     public interface Partner
