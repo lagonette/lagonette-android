@@ -332,10 +332,13 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (mFilterReader.moveToPosition(position)) {
             holder.categoryId = mFilterReader.categoryReader.getId();
             holder.isVisible = mFilterReader.categoryReader.isVisible();
+            holder.isPartnersVisible = mFilterReader.isPartnersVisible();
             holder.isCollapsed = mFilterReader.categoryReader.isCollapsed();
 
-            if (holder.isVisible) {
+            if (holder.isVisible && holder.isPartnersVisible) {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
+            } else if (holder.isVisible) {
+                holder.visibilityButton.setImageResource(R.drawable.ic_visibility_grey_24dp);
             } else {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
             }
@@ -445,6 +448,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public long categoryId;
 
         public boolean isVisible;
+
+        public boolean isPartnersVisible;
 
         public boolean isCollapsed;
 

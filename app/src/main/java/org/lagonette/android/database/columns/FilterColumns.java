@@ -12,6 +12,10 @@ public interface FilterColumns {
 
     String ROW_TYPE = "row_type";
 
+    String MAIN_PARTNER_VISIBILITY_SUM = "main_partner_visibility_sum";
+
+    String SIDE_PARTNER_VISIBILITY_SUM = "side_partner_visibility_sum";
+
     int VALUE_ROW_CATEGORY = 0;
 
     int VALUE_ROW_MAIN_PARTNER = 1;

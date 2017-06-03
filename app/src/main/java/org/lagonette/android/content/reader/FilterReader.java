@@ -37,4 +37,19 @@ public class FilterReader extends CursorReader {
         );
     }
 
+    public boolean isPartnersVisible() {
+        //noinspection WrongConstant
+        int mainVisibilityCount = mCursor.getInt(
+                mCursor.getColumnIndex(
+                        GonetteContract.Filter.MAIN_PARTNER_VISIBILITY_SUM
+                )
+        );
+        int sideVisibilityCount = mCursor.getInt(
+                mCursor.getColumnIndex(
+                        GonetteContract.Filter.SIDE_PARTNER_VISIBILITY_SUM
+                )
+        );
+        return mainVisibilityCount + sideVisibilityCount > 0;
+    }
+
 }

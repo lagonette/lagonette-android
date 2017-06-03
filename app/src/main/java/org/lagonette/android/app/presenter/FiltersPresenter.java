@@ -150,6 +150,8 @@ public class FiltersPresenter
                         GonetteContract.Filter.Category.ICON,
                         GonetteContract.Filter.CategoryMetadata.IS_VISIBLE,
                         GonetteContract.Filter.CategoryMetadata.IS_COLLAPSED,
+                        GonetteContract.Filter.MAIN_PARTNER_VISIBILITY_SUM,
+                        GonetteContract.Filter.SIDE_PARTNER_VISIBILITY_SUM,
                         GonetteContract.Filter.Partner.ID,
                         GonetteContract.Filter.Partner.NAME,
                         GonetteContract.Filter.Partner.ADDRESS,
