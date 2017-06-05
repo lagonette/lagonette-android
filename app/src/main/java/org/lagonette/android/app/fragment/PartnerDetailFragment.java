@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.PartnerDetailContract;
 import org.lagonette.android.app.presenter.PartnerDetailPresenter;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.reader.PartnerReader;
 
 public class PartnerDetailFragment
@@ -115,6 +116,29 @@ public class PartnerDetailFragment
                     .asBitmap()
                     .into(mMainCategoryLogoImageView);
         }
+    }
+
+    @NonNull
+    @Override
+    public String[] getPartnerDetailColumns() {
+        return new String[]{
+                LaGonetteContract.Partner.ID,
+                LaGonetteContract.Partner.NAME,
+                LaGonetteContract.Partner.DESCRIPTION,
+                LaGonetteContract.Partner.SHORT_DESCRIPTION,
+                LaGonetteContract.Partner.LATITUDE,
+                LaGonetteContract.Partner.LONGITUDE,
+                LaGonetteContract.Partner.ADDRESS,
+                LaGonetteContract.Partner.CITY,
+                LaGonetteContract.Partner.ZIP_CODE,
+                LaGonetteContract.Partner.EMAIL,
+                LaGonetteContract.Partner.WEBSITE,
+                LaGonetteContract.Partner.PHONE,
+                LaGonetteContract.Partner.OPENING_HOURS,
+                LaGonetteContract.Partner.LOGO,
+                LaGonetteContract.Category.LABEL,
+                LaGonetteContract.Category.ICON
+        };
     }
 
 }

@@ -24,7 +24,7 @@ public class FilterReader extends CursorReader {
     public FilterReader(@NonNull Cursor cursor) {
         super(cursor);
         categoryReader = new CategoryReader(cursor);
-        partnerReader = new PartnerReader(cursor);
+        partnerReader = new PartnerReader(cursor, categoryReader);
     }
 
     @FilterColumns.RowType

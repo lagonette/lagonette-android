@@ -258,16 +258,7 @@ public class MapsPresenter
         String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoaderParams(
                 LaGonetteContract.Map.CONTENT_URI,
-                new String[]{
-                        LaGonetteContract.Map.Partner.ID,
-                        LaGonetteContract.Map.Partner.NAME,
-                        LaGonetteContract.Map.Partner.DESCRIPTION,
-                        LaGonetteContract.Map.Partner.LATITUDE,
-                        LaGonetteContract.Map.Partner.LONGITUDE,
-                        LaGonetteContract.Map.Partner.IS_EXCHANGE_OFFICE,
-                        LaGonetteContract.Map.Partner.MAIN_CATEGORY,
-                        LaGonetteContract.Map.Category.ICON
-                }
+                mView.getMapColumns()
         )
                 .setSelection(!TextUtils.isEmpty(search)
                         ? LaGonetteContract.Map.PartnerMetadata.IS_VISIBLE + " = 1 AND " + LaGonetteContract.Map.Partner.NAME + " LIKE ? AND (" + LaGonetteContract.Map.CategoryMetadata.IS_VISIBLE + " > 0 OR " + LaGonetteContract.Map.SIDE_CATEGORY_METADATA_IS_VISIBLE_SUM + " > 0)"

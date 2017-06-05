@@ -26,6 +26,9 @@ public class MapsContract {
 
     public interface View extends BaseContract.BaseView, OnMapReadyCallback {
 
+        @NonNull
+        String[] getMapColumns();
+
         void updateLocationUI();
 
         void showPartners(@Nullable PartnerReader partnerReader);
@@ -33,6 +36,5 @@ public class MapsContract {
         void errorNoDirectionAppFound();
 
         void errorGettingPartners();
-
     }
 }

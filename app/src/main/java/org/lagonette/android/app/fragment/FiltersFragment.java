@@ -115,4 +115,10 @@ public class FiltersFragment
         mFilterAdapter.setFilterReader(filterReader);
     }
 
+    @NonNull
+    @Override
+    public String[] getFiltersColumns() {
+        return mFilterAdapter.getColumns();
+    }
+
 }

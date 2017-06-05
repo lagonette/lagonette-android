@@ -1,5 +1,6 @@
 package org.lagonette.android.app.contract;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.app.contract.base.BaseContract;
@@ -14,6 +15,9 @@ public class PartnerDetailContract {
     public interface View extends BaseContract.BaseView {
 
         void displayPartner(@Nullable PartnerReader reader);
+
+        @NonNull
+        String[] getPartnerDetailColumns();
     }
 
 }

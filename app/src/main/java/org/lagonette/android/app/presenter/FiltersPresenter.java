@@ -143,23 +143,7 @@ public class FiltersPresenter
         String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoaderParams(
                 LaGonetteContract.Filter.CONTENT_URI,
-                new String[]{
-                        LaGonetteContract.Filter.ROW_TYPE,
-                        LaGonetteContract.Filter.Category.ID,
-                        LaGonetteContract.Filter.Category.LABEL,
-                        LaGonetteContract.Filter.Category.ICON,
-                        LaGonetteContract.Filter.CategoryMetadata.IS_VISIBLE,
-                        LaGonetteContract.Filter.CategoryMetadata.IS_COLLAPSED,
-                        LaGonetteContract.Filter.MAIN_PARTNER_VISIBILITY_SUM,
-                        LaGonetteContract.Filter.SIDE_PARTNER_VISIBILITY_SUM,
-                        LaGonetteContract.Filter.Partner.ID,
-                        LaGonetteContract.Filter.Partner.NAME,
-                        LaGonetteContract.Filter.Partner.ADDRESS,
-                        LaGonetteContract.Filter.Partner.ZIP_CODE,
-                        LaGonetteContract.Filter.Partner.CITY,
-                        LaGonetteContract.Filter.Partner.IS_EXCHANGE_OFFICE,
-                        LaGonetteContract.Filter.PartnerMetadata.IS_VISIBLE
-                }
+                mView.getFiltersColumns()
         )
                 .setSelection(null)
                 .setSelectionArgs(FilterStatement.getSelectionsArgs(search)) // TODO Do not call directly FilterStatement because of separation of concern

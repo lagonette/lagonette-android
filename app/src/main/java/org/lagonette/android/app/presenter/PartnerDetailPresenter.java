@@ -100,24 +100,7 @@ public class PartnerDetailPresenter
     public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
         return new CursorLoaderParams(
                 LaGonetteContract.Partner.EXTENDED_CONTENT_URI,
-                new String[]{
-                        LaGonetteContract.Partner.ID,
-                        LaGonetteContract.Partner.NAME,
-                        LaGonetteContract.Partner.DESCRIPTION,
-                        LaGonetteContract.Partner.SHORT_DESCRIPTION,
-                        LaGonetteContract.Partner.LATITUDE,
-                        LaGonetteContract.Partner.LONGITUDE,
-                        LaGonetteContract.Partner.ADDRESS,
-                        LaGonetteContract.Partner.CITY,
-                        LaGonetteContract.Partner.ZIP_CODE,
-                        LaGonetteContract.Partner.EMAIL,
-                        LaGonetteContract.Partner.WEBSITE,
-                        LaGonetteContract.Partner.PHONE,
-                        LaGonetteContract.Partner.OPENING_HOURS,
-                        LaGonetteContract.Partner.LOGO,
-                        LaGonetteContract.Category.LABEL,
-                        LaGonetteContract.Category.ICON
-                }
+                mView.getPartnerDetailColumns()
         )
                 .setSelection(LaGonetteContract.Partner.ID + " = ?")
                 .setSelectionArgs(

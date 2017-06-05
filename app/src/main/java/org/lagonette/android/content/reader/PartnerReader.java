@@ -16,11 +16,17 @@ public class PartnerReader
                 : null;
     }
 
+    @NonNull
     public final CategoryReader categoryReader;
 
     public PartnerReader(@NonNull Cursor cursor) {
         super(cursor);
         categoryReader = new CategoryReader(cursor);
+    }
+
+    public PartnerReader(@NonNull Cursor cursor, @NonNull CategoryReader categoryReader) {
+        super(cursor);
+        this.categoryReader = categoryReader;
     }
 
     public long getId() {

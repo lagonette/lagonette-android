@@ -25,6 +25,8 @@ public abstract class FiltersContract {
 
         void displayFilters(@Nullable FilterReader filterReader);
 
+        @NonNull
+        String[] getFiltersColumns();
     }
 
 }

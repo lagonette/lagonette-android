@@ -399,6 +399,21 @@ public class MapsFragment
         }
     }
 
+    @NonNull
+    @Override
+    public String[] getMapColumns() {
+        return new String[]{
+                LaGonetteContract.Map.Partner.ID,
+                LaGonetteContract.Map.Partner.NAME,
+                LaGonetteContract.Map.Partner.DESCRIPTION,
+                LaGonetteContract.Map.Partner.LATITUDE,
+                LaGonetteContract.Map.Partner.LONGITUDE,
+                LaGonetteContract.Map.Partner.IS_EXCHANGE_OFFICE,
+                LaGonetteContract.Map.Partner.MAIN_CATEGORY,
+                LaGonetteContract.Map.Category.ICON
+        };
+    }
+
     public void updateLocationUI() {
         if (mMap == null) {
             return;
