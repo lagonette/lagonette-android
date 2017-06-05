@@ -10,5 +10,4 @@ public interface CategoryColumns {
 
     String ICON = Tables.CATEGORY + "_icon";
 
-    // TODO Create table SQL
 }

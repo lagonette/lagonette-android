@@ -11,5 +11,4 @@ public interface CategoryMetadataColumns {
 
     String IS_COLLAPSED = Tables.CATEGORY_METADATA + "_is_collapsed";
 
-    // TODO Create table SQL or put it in statement class
 }
