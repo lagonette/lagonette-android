@@ -77,6 +77,11 @@ public class SqlBuilder {
 
     private static final String COUNT = "COUNT";
 
+    private static final String EQUALS = " = ";
+
+    private static final String DOT = ".";
+
+    // TODO USE StringBuilder
     @NonNull
     private String mSql = "";
 
@@ -229,9 +234,23 @@ public class SqlBuilder {
     }
 
     @NonNull
+    public SqlBuilder sum(@NonNull String table, @NonNull String column, @NonNull String as) {
+        appendColumnCommaIfNeeded();
+        mSql += SUM + BRACKET_OPEN + table + DOT + column + BRACKET_CLOSE + AS + as;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
     public SqlBuilder sum(@NonNull String column, @NonNull String as) {
         appendColumnCommaIfNeeded();
         mSql += SUM + BRACKET_OPEN + column + BRACKET_CLOSE + AS + as;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder count(@NonNull String table, @NonNull String column, @NonNull String as) {
+        appendColumnCommaIfNeeded();
+        mSql += SUM + BRACKET_OPEN + table + DOT + column + BRACKET_CLOSE + AS + as;
         return SqlBuilder.this;
     }
 
@@ -278,6 +297,13 @@ public class SqlBuilder {
     }
 
     @NonNull
+    public SqlBuilder on(@NonNull String table1, @NonNull String fk1, @NonNull String table2, @NonNull String fk2) {
+        appendOnCommaIfNeeded();
+        mSql += table1 + DOT + fk1 + EQUALS + table2 + DOT + fk2;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
     public SqlBuilder order() {
         mAppendByComma = false;
         mSql += ORDER_BY;
@@ -307,6 +333,28 @@ public class SqlBuilder {
     @NonNull
     public SqlBuilder statement(@NonNull String statement) {
         mSql += statement;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder equals(@NonNull String statement) {
+        mSql += EQUALS + statement;
+        return SqlBuilder.this;
+    }
+
+    @NonNull
+    public SqlBuilder equals(int statement) {
+        return equals(String.valueOf(statement));
+    }
+
+    @NonNull
+    public SqlBuilder equals(long statement) {
+        return equals(String.valueOf(statement));
+    }
+
+    @NonNull
+    public SqlBuilder statement(@NonNull String table, @NonNull String column) {
+        mSql += table + DOT + column;
         return SqlBuilder.this;
     }
 
