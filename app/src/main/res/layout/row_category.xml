@@ -60,7 +60,7 @@
             android:textColor="@color/text_secondary"/>
 
         <ImageButton
-            android:id="@+id/category_expand"
+            android:id="@+id/category_collapsed"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="48dp"
             android:layout_height="48dp"

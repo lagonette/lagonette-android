@@ -274,14 +274,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         )
         );
 
-        holder.collapsedButton.setTag(holder);
-        holder.collapsedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO
-            }
-        });
-
         if (mOnFilterClickListener != null) {
             holder.visibilityButton.setTag(holder);
             holder.visibilityButton.setOnClickListener(new View.OnClickListener() {
@@ -489,7 +481,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
             iconImageView = (ImageView) itemView.findViewById(R.id.category_icon);
             visibilityButton = (ImageButton) itemView.findViewById(R.id.category_visibility);
-            collapsedButton = (ImageButton) itemView.findViewById(R.id.category_expand);
+            collapsedButton = (ImageButton) itemView.findViewById(R.id.category_collapsed);
             categoryTextView = (TextView) itemView.findViewById(R.id.category_label);
         }
     }
