@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.database.columns.FilterColumns;
 
 public class FilterReader extends CursorReader {
@@ -32,7 +32,7 @@ public class FilterReader extends CursorReader {
         //noinspection WrongConstant
         return mCursor.getInt(
                 mCursor.getColumnIndex(
-                        GonetteContract.Filter.ROW_TYPE
+                        LaGonetteContract.Filter.ROW_TYPE
                 )
         );
     }
@@ -41,12 +41,12 @@ public class FilterReader extends CursorReader {
         //noinspection WrongConstant
         int mainVisibilityCount = mCursor.getInt(
                 mCursor.getColumnIndex(
-                        GonetteContract.Filter.MAIN_PARTNER_VISIBILITY_SUM
+                        LaGonetteContract.Filter.MAIN_PARTNER_VISIBILITY_SUM
                 )
         );
         int sideVisibilityCount = mCursor.getInt(
                 mCursor.getColumnIndex(
-                        GonetteContract.Filter.SIDE_PARTNER_VISIBILITY_SUM
+                        LaGonetteContract.Filter.SIDE_PARTNER_VISIBILITY_SUM
                 )
         );
         return mainVisibilityCount + sideVisibilityCount > 0;

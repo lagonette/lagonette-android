@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 
 public class PartnerReader
         extends CursorReader {
@@ -26,7 +26,7 @@ public class PartnerReader
     public long getId() {
         return mCursor.getLong(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.ID
+                        LaGonetteContract.Partner.ID
                 )
         );
     }
@@ -35,7 +35,7 @@ public class PartnerReader
     public String getName() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.NAME
+                        LaGonetteContract.Partner.NAME
                 )
         );
     }
@@ -44,7 +44,7 @@ public class PartnerReader
     public String getDescription() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.DESCRIPTION
+                        LaGonetteContract.Partner.DESCRIPTION
                 )
         );
     }
@@ -52,7 +52,7 @@ public class PartnerReader
     public double getLatitude() {
         return mCursor.getDouble(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.LATITUDE
+                        LaGonetteContract.Partner.LATITUDE
                 )
         );
     }
@@ -60,7 +60,7 @@ public class PartnerReader
     public double getLongitude() {
         return mCursor.getDouble(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.LONGITUDE
+                        LaGonetteContract.Partner.LONGITUDE
                 )
         );
     }
@@ -68,7 +68,7 @@ public class PartnerReader
     public boolean isExchangeOffice() {
         return 1 == mCursor.getInt(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.IS_EXCHANGE_OFFICE
+                        LaGonetteContract.Partner.IS_EXCHANGE_OFFICE
                 )
         );
     }
@@ -76,7 +76,7 @@ public class PartnerReader
     public boolean isVisible() {
         return 1 == mCursor.getInt(
                 mCursor.getColumnIndex(
-                        GonetteContract.PartnerMetadata.IS_VISIBLE
+                        LaGonetteContract.PartnerMetadata.IS_VISIBLE
                 )
         );
     }
@@ -84,7 +84,7 @@ public class PartnerReader
     public long getMainCategoryId() {
         return mCursor.getLong(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.MAIN_CATEGORY
+                        LaGonetteContract.Partner.MAIN_CATEGORY
                 )
         );
     }
@@ -92,7 +92,7 @@ public class PartnerReader
     public String getShortDescription() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.SHORT_DESCRIPTION
+                        LaGonetteContract.Partner.SHORT_DESCRIPTION
                 )
         );
     }
@@ -100,7 +100,7 @@ public class PartnerReader
     public String getAddress() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.ADDRESS
+                        LaGonetteContract.Partner.ADDRESS
                 )
         );
     }
@@ -108,7 +108,7 @@ public class PartnerReader
     public String getCity() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.CITY
+                        LaGonetteContract.Partner.CITY
                 )
         );
     }
@@ -116,7 +116,7 @@ public class PartnerReader
     public String getZipCode() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.ZIP_CODE
+                        LaGonetteContract.Partner.ZIP_CODE
                 )
         );
     }
@@ -124,7 +124,7 @@ public class PartnerReader
     public String getPhone() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.PHONE
+                        LaGonetteContract.Partner.PHONE
                 )
         );
     }
@@ -132,7 +132,7 @@ public class PartnerReader
     public String getEmail() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.EMAIL
+                        LaGonetteContract.Partner.EMAIL
                 )
         );
     }
@@ -140,7 +140,7 @@ public class PartnerReader
     public String getWebsite() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.WEBSITE
+                        LaGonetteContract.Partner.WEBSITE
                 )
         );
     }
@@ -148,7 +148,7 @@ public class PartnerReader
     public String getOpeningHours() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.OPENING_HOURS
+                        LaGonetteContract.Partner.OPENING_HOURS
                 )
         );
     }
@@ -156,7 +156,7 @@ public class PartnerReader
     public String getLogo() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.LOGO
+                        LaGonetteContract.Partner.LOGO
                 )
         );
     }
@@ -165,7 +165,7 @@ public class PartnerReader
         builder.setLength(0);
         String address = mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Partner.ADDRESS
+                        LaGonetteContract.Partner.ADDRESS
                 )
         );
         if (!TextUtils.isEmpty(address)) {
@@ -177,7 +177,7 @@ public class PartnerReader
             builder.append(
                     mCursor.getString(
                             mCursor.getColumnIndex(
-                                    GonetteContract.Partner.ZIP_CODE
+                                    LaGonetteContract.Partner.ZIP_CODE
                             )
                     )
             );
@@ -185,7 +185,7 @@ public class PartnerReader
             builder.append(
                     mCursor.getString(
                             mCursor.getColumnIndex(
-                                    GonetteContract.Partner.CITY
+                                    LaGonetteContract.Partner.CITY
                             )
                     )
             );

@@ -15,7 +15,7 @@ import org.lagonette.android.R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class GonetteDisappearBehavior extends CoordinatorLayout.Behavior<View> {
+public class LaGonetteDisappearBehavior extends CoordinatorLayout.Behavior<View> {
 
     private static final String TAG = "GonetteDisappearBehavior";
 
@@ -87,18 +87,18 @@ public class GonetteDisappearBehavior extends CoordinatorLayout.Behavior<View> {
     @HidingState
     private int mHidingState = HIDING_STATE_INIT;
 
-    public GonetteDisappearBehavior(Context context, AttributeSet attrs) {
+    public LaGonetteDisappearBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         TypedArray a = context.obtainStyledAttributes(
                 attrs,
-                R.styleable.GonetteBehavior
+                R.styleable.LaGonetteBehavior
         );
-        mDependencyId = a.getResourceId(R.styleable.GonetteBehavior_dependency, 0);
-        mLeaveLength = a.getDimensionPixelOffset(R.styleable.GonetteBehavior_leave_length, 250);
-        mLeaveOffset = a.getDimensionPixelOffset(R.styleable.GonetteBehavior_leave_offset, 0);
-        mMoveLength = a.getDimensionPixelOffset(R.styleable.GonetteBehavior_move_length, 250);
-        mMoveOffset = a.getDimensionPixelOffset(R.styleable.GonetteBehavior_move_offset, 0);
+        mDependencyId = a.getResourceId(R.styleable.LaGonetteBehavior_dependency, 0);
+        mLeaveLength = a.getDimensionPixelOffset(R.styleable.LaGonetteBehavior_leave_length, 250);
+        mLeaveOffset = a.getDimensionPixelOffset(R.styleable.LaGonetteBehavior_leave_offset, 0);
+        mMoveLength = a.getDimensionPixelOffset(R.styleable.LaGonetteBehavior_move_length, 250);
+        mMoveOffset = a.getDimensionPixelOffset(R.styleable.LaGonetteBehavior_move_offset, 0);
         a.recycle();
     }
 
@@ -207,23 +207,23 @@ public class GonetteDisappearBehavior extends CoordinatorLayout.Behavior<View> {
     }
 
     /**
-     * A utility function to get the {@link GonetteDisappearBehavior} associated with the {@code view}.
+     * A utility function to get the {@link LaGonetteDisappearBehavior} associated with the {@code view}.
      *
-     * @param view The {@link View} with {@link GonetteDisappearBehavior}.
-     * @return The {@link GonetteDisappearBehavior} associated with the {@code view}.
+     * @param view The {@link View} with {@link LaGonetteDisappearBehavior}.
+     * @return The {@link LaGonetteDisappearBehavior} associated with the {@code view}.
      */
     @SuppressWarnings("unchecked")
-    public static GonetteDisappearBehavior from(View view) {
+    public static LaGonetteDisappearBehavior from(View view) {
         ViewGroup.LayoutParams params = view.getLayoutParams();
         if (!(params instanceof CoordinatorLayout.LayoutParams)) {
             throw new IllegalArgumentException("The view is not a child of CoordinatorLayout");
         }
         CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params)
                 .getBehavior();
-        if (!(behavior instanceof GonetteDisappearBehavior)) {
+        if (!(behavior instanceof LaGonetteDisappearBehavior)) {
             throw new IllegalArgumentException(
                     "The view is not associated with GonetteDisappearBehavior");
         }
-        return (GonetteDisappearBehavior) behavior;
+        return (LaGonetteDisappearBehavior) behavior;
     }
 }

@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.loader.base.BundleLoader;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class UpdatePartnerMetadataLoader extends BundleLoader {
 
     @Override
     protected void readArguments(@NonNull Bundle args) {
-        mPartnerId = args.getLong(ARG_PARTNER_ID, GonetteContract.NO_ID);
+        mPartnerId = args.getLong(ARG_PARTNER_ID, LaGonetteContract.NO_ID);
         mIsVisible = args.getBoolean(ARG_IS_VISIBLE, false);
     }
 
@@ -49,10 +49,10 @@ public class UpdatePartnerMetadataLoader extends BundleLoader {
     public Bundle loadInBackground() {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         operations.add(
-                ContentProviderOperation.newUpdate(GonetteContract.PartnerMetadata.CONTENT_URI)
-                        .withValue(GonetteContract.PartnerMetadata.IS_VISIBLE, mIsVisible)
+                ContentProviderOperation.newUpdate(LaGonetteContract.PartnerMetadata.CONTENT_URI)
+                        .withValue(LaGonetteContract.PartnerMetadata.IS_VISIBLE, mIsVisible)
                         .withSelection(
-                                GonetteContract.PartnerMetadata.PARTNER_ID + " = ?",
+                                LaGonetteContract.PartnerMetadata.PARTNER_ID + " = ?",
                                 new String[]{
                                         String.valueOf(mPartnerId)
                                 }
@@ -62,7 +62,7 @@ public class UpdatePartnerMetadataLoader extends BundleLoader {
 
         try {
             mContext.getContentResolver().applyBatch(
-                    GonetteContract.AUTHORITY,
+                    LaGonetteContract.AUTHORITY,
                     operations
             );
         } catch (RemoteException | OperationApplicationException e) {

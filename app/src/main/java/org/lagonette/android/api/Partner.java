@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 
 import java.util.List;
 
@@ -77,26 +77,26 @@ public class Partner implements ContentObject {
     public void prepareInsert(@NonNull List<ContentProviderOperation> operations, @NonNull ContentValues contentValues) {
         // Insert Partner
         contentValues.clear();
-        contentValues.put(GonetteContract.Partner.ID, mId);
-        contentValues.put(GonetteContract.Partner.NAME, mName);
-        contentValues.put(GonetteContract.Partner.DESCRIPTION, mDescription);
-        contentValues.put(GonetteContract.Partner.LATITUDE, mLatitude);
-        contentValues.put(GonetteContract.Partner.LONGITUDE, mLongitude);
-        contentValues.put(GonetteContract.Partner.CLIENT_CODE, mClientCode);
-        contentValues.put(GonetteContract.Partner.ADDRESS, mAddress);
-        contentValues.put(GonetteContract.Partner.CITY, mCity);
-        contentValues.put(GonetteContract.Partner.LOGO, mLogo);
-        contentValues.put(GonetteContract.Partner.ZIP_CODE, mZipCode);
-        contentValues.put(GonetteContract.Partner.PHONE, mPhone);
-        contentValues.put(GonetteContract.Partner.WEBSITE, mWebsite);
-        contentValues.put(GonetteContract.Partner.EMAIL, mEmail);
-        contentValues.put(GonetteContract.Partner.OPENING_HOURS, mOpeningHours);
-        contentValues.put(GonetteContract.Partner.IS_EXCHANGE_OFFICE, mIsExchangeOffice);
-        contentValues.put(GonetteContract.Partner.SHORT_DESCRIPTION, mShortDescription);
-        contentValues.put(GonetteContract.Partner.MAIN_CATEGORY, mMainCategory);
+        contentValues.put(LaGonetteContract.Partner.ID, mId);
+        contentValues.put(LaGonetteContract.Partner.NAME, mName);
+        contentValues.put(LaGonetteContract.Partner.DESCRIPTION, mDescription);
+        contentValues.put(LaGonetteContract.Partner.LATITUDE, mLatitude);
+        contentValues.put(LaGonetteContract.Partner.LONGITUDE, mLongitude);
+        contentValues.put(LaGonetteContract.Partner.CLIENT_CODE, mClientCode);
+        contentValues.put(LaGonetteContract.Partner.ADDRESS, mAddress);
+        contentValues.put(LaGonetteContract.Partner.CITY, mCity);
+        contentValues.put(LaGonetteContract.Partner.LOGO, mLogo);
+        contentValues.put(LaGonetteContract.Partner.ZIP_CODE, mZipCode);
+        contentValues.put(LaGonetteContract.Partner.PHONE, mPhone);
+        contentValues.put(LaGonetteContract.Partner.WEBSITE, mWebsite);
+        contentValues.put(LaGonetteContract.Partner.EMAIL, mEmail);
+        contentValues.put(LaGonetteContract.Partner.OPENING_HOURS, mOpeningHours);
+        contentValues.put(LaGonetteContract.Partner.IS_EXCHANGE_OFFICE, mIsExchangeOffice);
+        contentValues.put(LaGonetteContract.Partner.SHORT_DESCRIPTION, mShortDescription);
+        contentValues.put(LaGonetteContract.Partner.MAIN_CATEGORY, mMainCategory);
         operations.add(
                 ContentProviderOperation
-                        .newInsert(GonetteContract.Partner.CONTENT_URI)
+                        .newInsert(LaGonetteContract.Partner.CONTENT_URI)
                         .withValues(contentValues)
                         .withYieldAllowed(true)
                         .build()
@@ -104,11 +104,11 @@ public class Partner implements ContentObject {
 
         // Insert Partner metadata
         contentValues.clear();
-        contentValues.put(GonetteContract.PartnerMetadata.PARTNER_ID, mId);
-        contentValues.put(GonetteContract.PartnerMetadata.IS_VISIBLE, true);
+        contentValues.put(LaGonetteContract.PartnerMetadata.PARTNER_ID, mId);
+        contentValues.put(LaGonetteContract.PartnerMetadata.IS_VISIBLE, true);
         operations.add(
                 ContentProviderOperation
-                        .newInsert(GonetteContract.PartnerMetadata.CONTENT_URI)
+                        .newInsert(LaGonetteContract.PartnerMetadata.CONTENT_URI)
                         .withValues(contentValues)
                         .withYieldAllowed(true)
                         .build()
@@ -117,11 +117,11 @@ public class Partner implements ContentObject {
         // Insert Partner Side Categories
         for (Long categoryId : mSideCategoryIds) {
             contentValues.clear();
-            contentValues.put(GonetteContract.PartnerSideCategories.PARTNER_ID, mId);
-            contentValues.put(GonetteContract.PartnerSideCategories.CATEGORY_ID, categoryId);
+            contentValues.put(LaGonetteContract.PartnerSideCategories.PARTNER_ID, mId);
+            contentValues.put(LaGonetteContract.PartnerSideCategories.CATEGORY_ID, categoryId);
             operations.add(
                     ContentProviderOperation
-                            .newInsert(GonetteContract.PartnerSideCategories.CONTENT_URI)
+                            .newInsert(LaGonetteContract.PartnerSideCategories.CONTENT_URI)
                             .withValues(contentValues)
                             .withYieldAllowed(true)
                             .build()

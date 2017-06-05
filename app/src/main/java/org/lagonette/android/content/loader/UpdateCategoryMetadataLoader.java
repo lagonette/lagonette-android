@@ -11,7 +11,7 @@ import android.util.Log;
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.lagonette.android.BuildConfig;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.loader.base.BundleLoader;
 import org.lagonette.android.database.statement.CategoryMetadataStatement;
 
@@ -59,7 +59,7 @@ public class UpdateCategoryMetadataLoader extends BundleLoader {
 
     @Override
     protected void readArguments(@NonNull Bundle args) {
-        mCategoryId = args.getLong(ARG_CATEGORY_ID, GonetteContract.NO_ID);
+        mCategoryId = args.getLong(ARG_CATEGORY_ID, LaGonetteContract.NO_ID);
 
         mUpdateVisibility = args.containsKey(ARG_IS_VISIBLE);
         if (mUpdateVisibility) {
@@ -72,7 +72,7 @@ public class UpdateCategoryMetadataLoader extends BundleLoader {
         }
 
         if (BuildConfig.DEBUG) {
-            if (mCategoryId == GonetteContract.NO_ID) {
+            if (mCategoryId == LaGonetteContract.NO_ID) {
                 throw new IllegalArgumentException("You must provide a category id");
             }
         }
@@ -83,25 +83,25 @@ public class UpdateCategoryMetadataLoader extends BundleLoader {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 
         ContentProviderOperation.Builder builder = ContentProviderOperation
-                .newUpdate(GonetteContract.CategoryMetadata.CONTENT_URI)
+                .newUpdate(LaGonetteContract.CategoryMetadata.CONTENT_URI)
                 .withSelection(
                         CategoryMetadataStatement.getSelections(),
                         CategoryMetadataStatement.getSelectionsArgs(mCategoryId)
                 );
 
         if (mUpdateVisibility) {
-            builder.withValue(GonetteContract.CategoryMetadata.IS_VISIBLE, mIsVisible);
+            builder.withValue(LaGonetteContract.CategoryMetadata.IS_VISIBLE, mIsVisible);
         }
 
         if (mUpdateCollapsedState) {
-            builder.withValue(GonetteContract.CategoryMetadata.IS_COLLAPSED, mIsCollapsed);
+            builder.withValue(LaGonetteContract.CategoryMetadata.IS_COLLAPSED, mIsCollapsed);
         }
 
         operations.add(builder.build());
 
         try {
             mContext.getContentResolver().applyBatch(
-                    GonetteContract.AUTHORITY,
+                    LaGonetteContract.AUTHORITY,
                     operations
             );
         } catch (RemoteException | OperationApplicationException e) {

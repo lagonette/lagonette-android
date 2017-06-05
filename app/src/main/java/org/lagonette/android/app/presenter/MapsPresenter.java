@@ -23,7 +23,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.MapsContract;
 import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
 import org.lagonette.android.content.loader.callbacks.GetPartnersCallbacks;
@@ -257,21 +257,21 @@ public class MapsPresenter
     public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
         String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoaderParams(
-                GonetteContract.Map.CONTENT_URI,
+                LaGonetteContract.Map.CONTENT_URI,
                 new String[]{
-                        GonetteContract.Map.Partner.ID,
-                        GonetteContract.Map.Partner.NAME,
-                        GonetteContract.Map.Partner.DESCRIPTION,
-                        GonetteContract.Map.Partner.LATITUDE,
-                        GonetteContract.Map.Partner.LONGITUDE,
-                        GonetteContract.Map.Partner.IS_EXCHANGE_OFFICE,
-                        GonetteContract.Map.Partner.MAIN_CATEGORY,
-                        GonetteContract.Map.Category.ICON
+                        LaGonetteContract.Map.Partner.ID,
+                        LaGonetteContract.Map.Partner.NAME,
+                        LaGonetteContract.Map.Partner.DESCRIPTION,
+                        LaGonetteContract.Map.Partner.LATITUDE,
+                        LaGonetteContract.Map.Partner.LONGITUDE,
+                        LaGonetteContract.Map.Partner.IS_EXCHANGE_OFFICE,
+                        LaGonetteContract.Map.Partner.MAIN_CATEGORY,
+                        LaGonetteContract.Map.Category.ICON
                 }
         )
                 .setSelection(!TextUtils.isEmpty(search)
-                        ? GonetteContract.Map.PartnerMetadata.IS_VISIBLE + " = 1 AND " + GonetteContract.Map.Partner.NAME + " LIKE ? AND (" + GonetteContract.Map.CategoryMetadata.IS_VISIBLE + " > 0 OR " + GonetteContract.Map.SIDE_CATEGORY_METADATA_IS_VISIBLE_SUM + " > 0)"
-                        : GonetteContract.Map.PartnerMetadata.IS_VISIBLE + " = 1 AND (" + GonetteContract.Map.CategoryMetadata.IS_VISIBLE + " > 0 OR " + GonetteContract.Map.SIDE_CATEGORY_METADATA_IS_VISIBLE_SUM + " > 0)"
+                        ? LaGonetteContract.Map.PartnerMetadata.IS_VISIBLE + " = 1 AND " + LaGonetteContract.Map.Partner.NAME + " LIKE ? AND (" + LaGonetteContract.Map.CategoryMetadata.IS_VISIBLE + " > 0 OR " + LaGonetteContract.Map.SIDE_CATEGORY_METADATA_IS_VISIBLE_SUM + " > 0)"
+                        : LaGonetteContract.Map.PartnerMetadata.IS_VISIBLE + " = 1 AND (" + LaGonetteContract.Map.CategoryMetadata.IS_VISIBLE + " > 0 OR " + LaGonetteContract.Map.SIDE_CATEGORY_METADATA_IS_VISIBLE_SUM + " > 0)"
                 )
                 .setSelectionArgs(!TextUtils.isEmpty(search)
                         ? new String[]{"%" + search + "%"}

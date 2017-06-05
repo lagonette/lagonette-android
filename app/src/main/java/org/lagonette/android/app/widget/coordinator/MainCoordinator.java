@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.fragment.FiltersFragment;
-import org.lagonette.android.app.widget.behavior.GonetteDisappearBehavior;
+import org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.util.UiUtil;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -33,7 +33,7 @@ public class MainCoordinator
         extends BottomSheetBehavior.BottomSheetCallback
         implements BaseCoordinator,
         ParallaxBehavior.OnParallaxTranslationListener,
-        GonetteDisappearBehavior.OnMoveListener, View.OnClickListener {
+        LaGonetteDisappearBehavior.OnMoveListener, View.OnClickListener {
 
     public interface Callbacks {
 
@@ -106,7 +106,7 @@ public class MainCoordinator
 
     private boolean mLoadFiltersAfterBottomSheetCollapsed = false;
 
-    private long mSelectedPartnerId = GonetteContract.NO_ID;
+    private long mSelectedPartnerId = LaGonetteContract.NO_ID;
 
     private boolean mZoomForPartnerId;
 
@@ -130,11 +130,11 @@ public class MainCoordinator
 
     private boolean mIsDirectionVisible = false;
 
-    private GonetteDisappearBehavior mMyLocationFabBehavior;
+    private LaGonetteDisappearBehavior mMyLocationFabBehavior;
 
-    private GonetteDisappearBehavior mBottomSheetFabBehavior;
+    private LaGonetteDisappearBehavior mBottomSheetFabBehavior;
 
-    private GonetteDisappearBehavior mSearchBarBehavior;
+    private LaGonetteDisappearBehavior mSearchBarBehavior;
 
     private BottomSheetBehavior<View> mBottomSheetBehavior;
 
@@ -156,9 +156,9 @@ public class MainCoordinator
         mFiltersBottomSheetBackgroundColor = ContextCompat.getColor(context, R.color.colorPrimary);
         mBottomSheetBackgroundColor = ContextCompat.getColor(context, android.R.color.background_light);
         mFabBottomMargin = ((CoordinatorLayout.LayoutParams) bottomSheetFab.getLayoutParams()).bottomMargin;
-        mMyLocationFabBehavior = GonetteDisappearBehavior.from(myLocationFab);
-        mBottomSheetFabBehavior = GonetteDisappearBehavior.from(bottomSheetFab);
-        mSearchBarBehavior = GonetteDisappearBehavior.from(searchBar);
+        mMyLocationFabBehavior = LaGonetteDisappearBehavior.from(myLocationFab);
+        mBottomSheetFabBehavior = LaGonetteDisappearBehavior.from(bottomSheetFab);
+        mSearchBarBehavior = LaGonetteDisappearBehavior.from(searchBar);
         mSearchBarBehavior.setOnMoveListener(MainCoordinator.this);
     }
 
@@ -235,7 +235,7 @@ public class MainCoordinator
             mBottomSheetFabBehavior.setLeaveOffset(0);
             mBottomSheetFabBehavior.setMoveLength(bottomSheetFab.getHeight());
             mBottomSheetFabBehavior.setMoveOffset(0);
-            mBottomSheetFabBehavior.setLeaveMethod(GonetteDisappearBehavior.LEAVE_METHOD_ALPHA);
+            mBottomSheetFabBehavior.setLeaveMethod(LaGonetteDisappearBehavior.LEAVE_METHOD_ALPHA);
             if (mShowPartnerAfterBottomSheetClose) {
                 mShowPartnerAfterBottomSheetClose = false;
                 showPartner(mSelectedPartnerId, mZoomForPartnerId);
@@ -355,7 +355,7 @@ public class MainCoordinator
         mBottomSheetFabBehavior.setLeaveOffset(mBottomSheetBehavior.getPeekHeight() + offset * 2);
         mBottomSheetFabBehavior.setMoveLength(bottomSheetFab.getHeight() + mBottomSheetBehavior.getPeekHeight() + offset * 2);
         mBottomSheetFabBehavior.setMoveOffset(offset);
-        mBottomSheetFabBehavior.setLeaveMethod(GonetteDisappearBehavior.LEAVE_METHOD_SCALE);
+        mBottomSheetFabBehavior.setLeaveMethod(LaGonetteDisappearBehavior.LEAVE_METHOD_SCALE);
         mSearchBarBehavior.enable();
         mSearchBarBehavior.setLeaveLength(myLocationFab.getHeight());
         mSearchBarBehavior.setLeaveOffset(offset); // TODO improve: do this only one time.

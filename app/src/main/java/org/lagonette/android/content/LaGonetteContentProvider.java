@@ -16,7 +16,7 @@ import android.util.Log;
 
 import org.lagonette.android.BuildConfig;
 import org.lagonette.android.R;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.database.LaGonetteDatabaseOpenHelper;
 import org.lagonette.android.database.Tables;
 import org.lagonette.android.database.statement.FilterStatement;
@@ -110,13 +110,13 @@ public class LaGonetteContentProvider
         int match = mUriMatcher.match(uri);
         switch (match) {
             case R.id.content_uri_partner:
-                return GonetteContract.Partner.CONTENT_TYPE_ITEM;
+                return LaGonetteContract.Partner.CONTENT_TYPE_ITEM;
             case R.id.content_uri_partners:
-                return GonetteContract.Partner.CONTENT_TYPE_DIR;
+                return LaGonetteContract.Partner.CONTENT_TYPE_DIR;
             case R.id.content_uri_partners_extended:
-                return GonetteContract.Partner.CONTENT_TYPE_DIR;
+                return LaGonetteContract.Partner.CONTENT_TYPE_DIR;
             case R.id.content_uri_partners_metadata:
-                return GonetteContract.PartnerMetadata.CONTENT_TYPE_DIR;
+                return LaGonetteContract.PartnerMetadata.CONTENT_TYPE_DIR;
             default:
                 throw new IllegalArgumentException(String.format(
                         "Unknown content uri code: %s",
@@ -135,39 +135,39 @@ public class LaGonetteContentProvider
         switch (match) {
             case R.id.content_uri_partners:
                 table = Tables.PARTNER;
-                baseUri = GonetteContract.Partner.CONTENT_URI;
-                uris.add(GonetteContract.Partner.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.Partner.CONTENT_URI;
+                uris.add(LaGonetteContract.Partner.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
-                baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
-                uris.add(GonetteContract.Partner.EXTENDED_CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.PartnerMetadata.CONTENT_URI;
+                uris.add(LaGonetteContract.Partner.EXTENDED_CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
-                baseUri = GonetteContract.PartnerSideCategories.CONTENT_URI;
-                uris.add(GonetteContract.PartnerSideCategories.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.PartnerSideCategories.CONTENT_URI;
+                uris.add(LaGonetteContract.PartnerSideCategories.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories:
                 table = Tables.CATEGORY;
-                baseUri = GonetteContract.Category.CONTENT_URI;
-                uris.add(GonetteContract.Category.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.Category.CONTENT_URI;
+                uris.add(LaGonetteContract.Category.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories_metadata:
                 table = Tables.CATEGORY_METADATA;
-                baseUri = GonetteContract.CategoryMetadata.CONTENT_URI;
-                uris.add(GonetteContract.Category.EXTENDED_CONTENT_URI);
-                uris.add(GonetteContract.CategoryMetadata.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.CategoryMetadata.CONTENT_URI;
+                uris.add(LaGonetteContract.Category.EXTENDED_CONTENT_URI);
+                uris.add(LaGonetteContract.CategoryMetadata.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format(
@@ -201,31 +201,31 @@ public class LaGonetteContentProvider
         switch (match) {
             case R.id.content_uri_partners:
                 table = Tables.PARTNER;
-                baseUri = GonetteContract.Partner.CONTENT_URI;
-                uris.add(GonetteContract.Partner.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.Partner.CONTENT_URI;
+                uris.add(LaGonetteContract.Partner.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
-                baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
-                uris.add(GonetteContract.Partner.EXTENDED_CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.PartnerMetadata.CONTENT_URI;
+                uris.add(LaGonetteContract.Partner.EXTENDED_CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
-                baseUri = GonetteContract.PartnerSideCategories.CONTENT_URI;
-                uris.add(GonetteContract.PartnerSideCategories.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.PartnerSideCategories.CONTENT_URI;
+                uris.add(LaGonetteContract.PartnerSideCategories.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories:
                 table = Tables.CATEGORY;
-                baseUri = GonetteContract.Category.CONTENT_URI;
-                uris.add(GonetteContract.Category.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.Category.CONTENT_URI;
+                uris.add(LaGonetteContract.Category.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
@@ -257,38 +257,38 @@ public class LaGonetteContentProvider
         switch (match) {
             case R.id.content_uri_partners:
                 table = Tables.PARTNER;
-                baseUri = GonetteContract.Partner.CONTENT_URI;
-                uris.add(GonetteContract.Partner.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.Partner.CONTENT_URI;
+                uris.add(LaGonetteContract.Partner.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
-                baseUri = GonetteContract.PartnerMetadata.CONTENT_URI;
-                uris.add(GonetteContract.Partner.EXTENDED_CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.PartnerMetadata.CONTENT_URI;
+                uris.add(LaGonetteContract.Partner.EXTENDED_CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
-                baseUri = GonetteContract.PartnerSideCategories.CONTENT_URI;
-                uris.add(GonetteContract.PartnerSideCategories.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.PartnerSideCategories.CONTENT_URI;
+                uris.add(LaGonetteContract.PartnerSideCategories.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories:
                 table = Tables.CATEGORY;
-                baseUri = GonetteContract.Category.CONTENT_URI;
-                uris.add(GonetteContract.Category.CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.Category.CONTENT_URI;
+                uris.add(LaGonetteContract.Category.CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories_metadata:
                 table = Tables.CATEGORY_METADATA;
-                baseUri = GonetteContract.Category.CONTENT_URI;
-                uris.add(GonetteContract.Category.EXTENDED_CONTENT_URI);
-                uris.add(GonetteContract.Filter.CONTENT_URI);
-                uris.add(GonetteContract.Map.CONTENT_URI);
+                baseUri = LaGonetteContract.Category.CONTENT_URI;
+                uris.add(LaGonetteContract.Category.EXTENDED_CONTENT_URI);
+                uris.add(LaGonetteContract.Filter.CONTENT_URI);
+                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
@@ -314,62 +314,62 @@ public class LaGonetteContentProvider
     private void setupUriMatcher() {
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.Partner.CONTENT_URI.getPath(),
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.Partner.CONTENT_URI.getPath(),
                 R.id.content_uri_partners
         );
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.Partner.CONTENT_URI.getPath() + "/#",
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.Partner.CONTENT_URI.getPath() + "/#",
                 R.id.content_uri_partner
         );
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.Partner.EXTENDED_CONTENT_URI.getPath(),
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.Partner.EXTENDED_CONTENT_URI.getPath(),
                 R.id.content_uri_partners_extended
         );
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.PartnerMetadata.CONTENT_URI.getPath(),
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.PartnerMetadata.CONTENT_URI.getPath(),
                 R.id.content_uri_partners_metadata
         );
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.PartnerSideCategories.CONTENT_URI.getPath(),
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.PartnerSideCategories.CONTENT_URI.getPath(),
                 R.id.content_uri_partners_side_categories
         );
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.Filter.CONTENT_URI.getPath(),
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.Filter.CONTENT_URI.getPath(),
                 R.id.content_uri_filters
         );
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.Map.CONTENT_URI.getPath(),
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.Map.CONTENT_URI.getPath(),
                 R.id.content_uri_map
         );
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.Category.CONTENT_URI.getPath(),
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.Category.CONTENT_URI.getPath(),
                 R.id.content_uri_categories
         );
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.Category.EXTENDED_CONTENT_URI.getPath(),
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.Category.EXTENDED_CONTENT_URI.getPath(),
                 R.id.content_uri_categories_extended
         );
         addUriToUriMatcher(
                 mUriMatcher,
-                GonetteContract.AUTHORITY,
-                GonetteContract.CategoryMetadata.CONTENT_URI.getPath(),
+                LaGonetteContract.AUTHORITY,
+                LaGonetteContract.CategoryMetadata.CONTENT_URI.getPath(),
                 R.id.content_uri_categories_metadata
         );
     }

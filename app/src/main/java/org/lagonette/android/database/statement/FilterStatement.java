@@ -3,7 +3,7 @@ package org.lagonette.android.database.statement;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.database.Tables;
 import org.lagonette.android.database.columns.CategoryColumns;
 import org.lagonette.android.database.columns.CategoryMetadataColumns;
@@ -46,7 +46,7 @@ public class FilterStatement implements FilterColumns {
                     .column(VALUE_NULL, PartnerMetadataColumns.IS_VISIBLE)
                 .from(Tables.CATEGORY)
                 .join(Tables.CATEGORY_METADATA)
-                    .on(CategoryColumns.ID, GonetteContract.CategoryMetadata.CATEGORY_ID)
+                    .on(CategoryColumns.ID, LaGonetteContract.CategoryMetadata.CATEGORY_ID)
                 .leftJoin(Tables.PARTNER, MAIN_PARTNER)
                     .on(CategoryColumns.ID, MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY)
                 .leftJoin(Tables.PARTNER_METADATA, MAIN_PARTNER_METADATA)
@@ -124,7 +124,7 @@ public class FilterStatement implements FilterColumns {
                     .column(PartnerMetadataColumns.IS_VISIBLE)
                 .from(Tables.CATEGORY)
                 .join(Tables.CATEGORY_METADATA)
-                    .on(CategoryColumns.ID, GonetteContract.CategoryMetadata.CATEGORY_ID)
+                    .on(CategoryColumns.ID, LaGonetteContract.CategoryMetadata.CATEGORY_ID)
                 .join(Tables.PARTNER)
                     .on(CategoryColumns.ID, PartnerColumns.MAIN_CATEGORY)
                 .join(Tables.PARTNER_METADATA)
@@ -132,7 +132,7 @@ public class FilterStatement implements FilterColumns {
                 .where()
                     .statement(PartnerColumns.NAME).like().wildcard()
                     .and()
-                    .statement(GonetteContract.CategoryMetadata.IS_COLLAPSED + " = 0")
+                    .statement(LaGonetteContract.CategoryMetadata.IS_COLLAPSED + " = 0")
 
                 .union()
 
@@ -155,7 +155,7 @@ public class FilterStatement implements FilterColumns {
                     .column(PartnerMetadataColumns.IS_VISIBLE)
                 .from(Tables.CATEGORY)
                 .join(Tables.CATEGORY_METADATA)
-                    .on(CategoryColumns.ID, GonetteContract.CategoryMetadata.CATEGORY_ID)
+                    .on(CategoryColumns.ID, LaGonetteContract.CategoryMetadata.CATEGORY_ID)
                 .join(Tables.PARTNER_SIDE_CATEGORIES)
                     .on(CategoryColumns.ID, PartnerSideCategoriesColumns.CATEGORY_ID)
                 .join(Tables.PARTNER)
@@ -165,7 +165,7 @@ public class FilterStatement implements FilterColumns {
                 .where()
                     .statement(PartnerColumns.NAME).like().wildcard()
                     .and()
-                    .statement(GonetteContract.CategoryMetadata.IS_COLLAPSED + " = 0")
+                    .statement(LaGonetteContract.CategoryMetadata.IS_COLLAPSED + " = 0")
 
                 .order()
                     .by(CategoryColumns.ID, true)

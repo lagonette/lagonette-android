@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 
 public class CategoryReader
         extends CursorReader {
@@ -22,7 +22,7 @@ public class CategoryReader
     public long getId() {
         return mCursor.getLong(
                 mCursor.getColumnIndex(
-                        GonetteContract.Category.ID
+                        LaGonetteContract.Category.ID
                 )
         );
     }
@@ -31,7 +31,7 @@ public class CategoryReader
     public String getLabel() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Category.LABEL
+                        LaGonetteContract.Category.LABEL
                 )
         );
     }
@@ -40,7 +40,7 @@ public class CategoryReader
     public String getIcon() {
         return mCursor.getString(
                 mCursor.getColumnIndex(
-                        GonetteContract.Category.ICON
+                        LaGonetteContract.Category.ICON
                 )
         );
     }
@@ -49,7 +49,7 @@ public class CategoryReader
     public boolean isVisible() {
         return 1 == mCursor.getLong(
                 mCursor.getColumnIndex(
-                        GonetteContract.CategoryMetadata.IS_VISIBLE
+                        LaGonetteContract.CategoryMetadata.IS_VISIBLE
                 )
         );
     }
@@ -57,7 +57,7 @@ public class CategoryReader
     public boolean isCollapsed() {
         return 1 == mCursor.getLong(
                 mCursor.getColumnIndex(
-                        GonetteContract.CategoryMetadata.IS_COLLAPSED
+                        LaGonetteContract.CategoryMetadata.IS_COLLAPSED
                 )
         );
     }

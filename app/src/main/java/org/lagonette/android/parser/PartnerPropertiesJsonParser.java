@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
 import com.google.gson.stream.JsonReader;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.parser.base.ToContentValuesJsonParser;
 
 import java.io.IOException;
@@ -24,10 +24,10 @@ public class PartnerPropertiesJsonParser
     protected boolean onParse(@NonNull String name, @NonNull JsonReader jsonReader)
             throws IOException {
         if (NAME.equals(name)) {
-            mContentValues.put(GonetteContract.Partner.NAME, jsonReader.nextString());
+            mContentValues.put(LaGonetteContract.Partner.NAME, jsonReader.nextString());
             return true;
         } else if (DESCRIPTION.equals(name)) {
-            mContentValues.put(GonetteContract.Partner.DESCRIPTION, jsonReader.nextString());
+            mContentValues.put(LaGonetteContract.Partner.DESCRIPTION, jsonReader.nextString());
             return true;
         } else {
             return false;

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.lagonette.android.R;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.reader.FilterReader;
 import org.lagonette.android.database.columns.FilterColumns;
 import org.lagonette.android.util.AdapterUtil;
@@ -44,11 +44,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final int SHORTCUT_COUNT = 1;
 
-    private static final int ROW_TYPE_LOADING = GonetteContract.Filter.ROW_TYPE_COUNT + 1;
+    private static final int ROW_TYPE_LOADING = LaGonetteContract.Filter.ROW_TYPE_COUNT + 1;
 
     private static final int ROW_TYPE_SHORTCUT = ROW_TYPE_LOADING + 1;
 
-    public static final int ROW_TYPE_COUNT = GonetteContract.Filter.ROW_TYPE_COUNT + 2;
+    public static final int ROW_TYPE_COUNT = LaGonetteContract.Filter.ROW_TYPE_COUNT + 2;
 
     @NonNull
     private final StringBuilder mStringBuilder;

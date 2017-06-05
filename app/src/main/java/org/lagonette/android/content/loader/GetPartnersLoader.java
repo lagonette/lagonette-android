@@ -16,7 +16,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import org.lagonette.android.api.CategoriesResponse;
 import org.lagonette.android.api.LaGonetteService;
 import org.lagonette.android.api.PartnersResponse;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.loader.base.BundleLoader;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class GetPartnersLoader extends BundleLoader {
             if (getCategories(service, operations, contentValues)) {
                 if (getPartners(service, operations, contentValues)) {
                     mContext.getContentResolver().applyBatch(
-                            GonetteContract.AUTHORITY,
+                            LaGonetteContract.AUTHORITY,
                             operations
                     );
                     mBundle.putInt(ARG_STATUS, STATUS_OK);

@@ -7,7 +7,7 @@ import android.support.v4.app.LoaderManager;
 import org.lagonette.android.BuildConfig;
 import org.lagonette.android.util.StrictModeUtil;
 
-public class GonetteApplication
+public class LaGonetteApplication
         extends Application {
 
     @Override

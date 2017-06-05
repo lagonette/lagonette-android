@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 
 import java.util.List;
 
@@ -25,12 +25,12 @@ public class Category implements ContentObject {
     public void prepareInsert(@NonNull List<ContentProviderOperation> operations, @NonNull ContentValues contentValues) {
         // Insert Category
         contentValues.clear();
-        contentValues.put(GonetteContract.Category.ID, mId);
-        contentValues.put(GonetteContract.Category.LABEL, mLabel);
-        contentValues.put(GonetteContract.Category.ICON, mIcon);
+        contentValues.put(LaGonetteContract.Category.ID, mId);
+        contentValues.put(LaGonetteContract.Category.LABEL, mLabel);
+        contentValues.put(LaGonetteContract.Category.ICON, mIcon);
         operations.add(
                 ContentProviderOperation
-                        .newInsert(GonetteContract.Category.CONTENT_URI)
+                        .newInsert(LaGonetteContract.Category.CONTENT_URI)
                         .withValues(contentValues)
                         .withYieldAllowed(true)
                         .build()
@@ -38,12 +38,12 @@ public class Category implements ContentObject {
 
         // Insert Category metadata
         contentValues.clear();
-        contentValues.put(GonetteContract.CategoryMetadata.CATEGORY_ID, mId);
-        contentValues.put(GonetteContract.CategoryMetadata.IS_VISIBLE, true);
-        contentValues.put(GonetteContract.CategoryMetadata.IS_COLLAPSED, false);
+        contentValues.put(LaGonetteContract.CategoryMetadata.CATEGORY_ID, mId);
+        contentValues.put(LaGonetteContract.CategoryMetadata.IS_VISIBLE, true);
+        contentValues.put(LaGonetteContract.CategoryMetadata.IS_COLLAPSED, false);
         operations.add(
                 ContentProviderOperation
-                        .newInsert(GonetteContract.CategoryMetadata.CONTENT_URI)
+                        .newInsert(LaGonetteContract.CategoryMetadata.CONTENT_URI)
                         .withValues(contentValues)
                         .withYieldAllowed(true)
                         .build()

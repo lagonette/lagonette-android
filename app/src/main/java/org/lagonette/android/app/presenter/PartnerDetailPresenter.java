@@ -9,7 +9,7 @@ import android.support.v4.app.LoaderManager;
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.PartnerDetailContract;
 import org.lagonette.android.app.fragment.PartnerDetailFragment;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
 import org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks;
@@ -34,7 +34,7 @@ public class PartnerDetailPresenter
     @NonNull
     private LoadPartnerCallbacks mLoadPartnerCallbacks;
 
-    private long mPartnerId = GonetteContract.NO_ID;
+    private long mPartnerId = LaGonetteContract.NO_ID;
 
     public PartnerDetailPresenter(@NonNull PartnerDetailContract.View view) {
         mView = view;
@@ -43,7 +43,7 @@ public class PartnerDetailPresenter
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Bundle args = mView.getArguments();
-        mPartnerId = args.getLong(ARG_PARTNER_ID, GonetteContract.NO_ID);
+        mPartnerId = args.getLong(ARG_PARTNER_ID, LaGonetteContract.NO_ID);
 
         mLoadPartnerCallbacks = new LoadPartnerCallbacks(
                 PartnerDetailPresenter.this,
@@ -99,27 +99,27 @@ public class PartnerDetailPresenter
     @Override
     public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
         return new CursorLoaderParams(
-                GonetteContract.Partner.EXTENDED_CONTENT_URI,
+                LaGonetteContract.Partner.EXTENDED_CONTENT_URI,
                 new String[]{
-                        GonetteContract.Partner.ID,
-                        GonetteContract.Partner.NAME,
-                        GonetteContract.Partner.DESCRIPTION,
-                        GonetteContract.Partner.SHORT_DESCRIPTION,
-                        GonetteContract.Partner.LATITUDE,
-                        GonetteContract.Partner.LONGITUDE,
-                        GonetteContract.Partner.ADDRESS,
-                        GonetteContract.Partner.CITY,
-                        GonetteContract.Partner.ZIP_CODE,
-                        GonetteContract.Partner.EMAIL,
-                        GonetteContract.Partner.WEBSITE,
-                        GonetteContract.Partner.PHONE,
-                        GonetteContract.Partner.OPENING_HOURS,
-                        GonetteContract.Partner.LOGO,
-                        GonetteContract.Category.LABEL,
-                        GonetteContract.Category.ICON
+                        LaGonetteContract.Partner.ID,
+                        LaGonetteContract.Partner.NAME,
+                        LaGonetteContract.Partner.DESCRIPTION,
+                        LaGonetteContract.Partner.SHORT_DESCRIPTION,
+                        LaGonetteContract.Partner.LATITUDE,
+                        LaGonetteContract.Partner.LONGITUDE,
+                        LaGonetteContract.Partner.ADDRESS,
+                        LaGonetteContract.Partner.CITY,
+                        LaGonetteContract.Partner.ZIP_CODE,
+                        LaGonetteContract.Partner.EMAIL,
+                        LaGonetteContract.Partner.WEBSITE,
+                        LaGonetteContract.Partner.PHONE,
+                        LaGonetteContract.Partner.OPENING_HOURS,
+                        LaGonetteContract.Partner.LOGO,
+                        LaGonetteContract.Category.LABEL,
+                        LaGonetteContract.Category.ICON
                 }
         )
-                .setSelection(GonetteContract.Partner.ID + " = ?")
+                .setSelection(LaGonetteContract.Partner.ID + " = ?")
                 .setSelectionArgs(
                         new String[]{
                                 String.valueOf(PartnerCursorLoaderHelper.getPartnerId(args))

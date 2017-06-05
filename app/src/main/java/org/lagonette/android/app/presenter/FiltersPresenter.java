@@ -10,7 +10,7 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.contract.FiltersContract;
 import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
 import org.lagonette.android.content.loader.callbacks.UpdateCategoryMetadataCallbacks;
@@ -142,23 +142,23 @@ public class FiltersPresenter
     public CursorLoaderParams getFilterLoaderParams(@Nullable Bundle args) {
         String search = PartnerCursorLoaderHelper.getSearch(args);
         return new CursorLoaderParams(
-                GonetteContract.Filter.CONTENT_URI,
+                LaGonetteContract.Filter.CONTENT_URI,
                 new String[]{
-                        GonetteContract.Filter.ROW_TYPE,
-                        GonetteContract.Filter.Category.ID,
-                        GonetteContract.Filter.Category.LABEL,
-                        GonetteContract.Filter.Category.ICON,
-                        GonetteContract.Filter.CategoryMetadata.IS_VISIBLE,
-                        GonetteContract.Filter.CategoryMetadata.IS_COLLAPSED,
-                        GonetteContract.Filter.MAIN_PARTNER_VISIBILITY_SUM,
-                        GonetteContract.Filter.SIDE_PARTNER_VISIBILITY_SUM,
-                        GonetteContract.Filter.Partner.ID,
-                        GonetteContract.Filter.Partner.NAME,
-                        GonetteContract.Filter.Partner.ADDRESS,
-                        GonetteContract.Filter.Partner.ZIP_CODE,
-                        GonetteContract.Filter.Partner.CITY,
-                        GonetteContract.Filter.Partner.IS_EXCHANGE_OFFICE,
-                        GonetteContract.Filter.PartnerMetadata.IS_VISIBLE
+                        LaGonetteContract.Filter.ROW_TYPE,
+                        LaGonetteContract.Filter.Category.ID,
+                        LaGonetteContract.Filter.Category.LABEL,
+                        LaGonetteContract.Filter.Category.ICON,
+                        LaGonetteContract.Filter.CategoryMetadata.IS_VISIBLE,
+                        LaGonetteContract.Filter.CategoryMetadata.IS_COLLAPSED,
+                        LaGonetteContract.Filter.MAIN_PARTNER_VISIBILITY_SUM,
+                        LaGonetteContract.Filter.SIDE_PARTNER_VISIBILITY_SUM,
+                        LaGonetteContract.Filter.Partner.ID,
+                        LaGonetteContract.Filter.Partner.NAME,
+                        LaGonetteContract.Filter.Partner.ADDRESS,
+                        LaGonetteContract.Filter.Partner.ZIP_CODE,
+                        LaGonetteContract.Filter.Partner.CITY,
+                        LaGonetteContract.Filter.Partner.IS_EXCHANGE_OFFICE,
+                        LaGonetteContract.Filter.PartnerMetadata.IS_VISIBLE
                 }
         )
                 .setSelection(null)

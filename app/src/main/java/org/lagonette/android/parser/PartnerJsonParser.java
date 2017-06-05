@@ -5,7 +5,7 @@ import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
 import com.google.gson.stream.JsonReader;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.parser.base.JsonParser;
 import org.lagonette.android.parser.base.ToOperationsJsonParser;
 
@@ -30,7 +30,7 @@ public class PartnerJsonParser
             @NonNull ContentValues partnerContentValues,
             @NonNull JsonParser propertiesJsonParser,
             @NonNull JsonParser geometryJsonParser) {
-        super(operations, partnerContentValues, GonetteContract.Partner.CONTENT_URI);
+        super(operations, partnerContentValues, LaGonetteContract.Partner.CONTENT_URI);
         mPropertiesJsonParser = propertiesJsonParser;
         mGeometryJsonParser = geometryJsonParser;
     }
@@ -51,13 +51,13 @@ public class PartnerJsonParser
 
     @Override
     protected void onAddOperations() {
-        mContentValues.put(GonetteContract.Partner.ID, currentPartnerId);
+        mContentValues.put(LaGonetteContract.Partner.ID, currentPartnerId);
         super.onAddOperations();
         mContentValues.clear();
-        mContentValues.put(GonetteContract.PartnerMetadata.PARTNER_ID, currentPartnerId);
-        mContentValues.put(GonetteContract.PartnerMetadata.IS_VISIBLE, true);
+        mContentValues.put(LaGonetteContract.PartnerMetadata.PARTNER_ID, currentPartnerId);
+        mContentValues.put(LaGonetteContract.PartnerMetadata.IS_VISIBLE, true);
         mOperations.add(
-                ContentProviderOperation.newInsert(GonetteContract.PartnerMetadata.CONTENT_URI)
+                ContentProviderOperation.newInsert(LaGonetteContract.PartnerMetadata.CONTENT_URI)
                         .withValues(mContentValues)
                         .withYieldAllowed(true)
                         .build()

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 
 public class PartnerCursorLoaderHelper {
 
@@ -34,7 +34,7 @@ public class PartnerCursorLoaderHelper {
     }
 
     public static long getPartnerId(@Nullable Bundle bundle) {
-        return bundle != null ? bundle.getLong(ARG_PARTNER_ID, GonetteContract.NO_ID) : GonetteContract.NO_ID;
+        return bundle != null ? bundle.getLong(ARG_PARTNER_ID, LaGonetteContract.NO_ID) : LaGonetteContract.NO_ID;
     }
 
     @Nullable

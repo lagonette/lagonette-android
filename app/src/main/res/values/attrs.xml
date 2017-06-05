@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="GonetteBehavior">
+    <declare-styleable name="LaGonetteBehavior">
         <attr name="dependency" format="reference"/>
         <attr name="leave_length" format="dimension"/>
         <attr name="leave_offset" format="dimension"/>

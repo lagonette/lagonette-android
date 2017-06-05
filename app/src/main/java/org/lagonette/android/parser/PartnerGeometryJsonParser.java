@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
 import com.google.gson.stream.JsonReader;
-import org.lagonette.android.content.contract.GonetteContract;
+import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.parser.base.ToContentValuesJsonParser;
 
 import java.io.IOException;
@@ -23,8 +23,8 @@ public class PartnerGeometryJsonParser
             throws IOException {
         if (COORDINATES.equals(name)) {
             jsonReader.beginArray();
-            mContentValues.put(GonetteContract.Partner.LONGITUDE, jsonReader.nextDouble());
-            mContentValues.put(GonetteContract.Partner.LATITUDE, jsonReader.nextDouble());
+            mContentValues.put(LaGonetteContract.Partner.LONGITUDE, jsonReader.nextDouble());
+            mContentValues.put(LaGonetteContract.Partner.LATITUDE, jsonReader.nextDouble());
             jsonReader.endArray();
             return true;
         } else {
