@@ -58,13 +58,9 @@ public class FilterStatement implements FilterColumns {
                 .leftJoin(Tables.PARTNER_METADATA, SIDE_PARTNER_METADATA)
                     .on(SIDE_PARTNER + "." + PartnerColumns.ID, SIDE_PARTNER_METADATA + "." + PartnerMetadataColumns.PARTNER_ID)
                 .where()
-                    .statement(MAIN_PARTNER + "." + PartnerColumns.MAIN_CATEGORY).isNotNull()
-                    .and()
-                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME).like().wildcard()
+                    .statement(MAIN_PARTNER + "." + PartnerColumns.NAME).like().wildcard() // This filter avoid row not matching search and without a main category
                     .or()
-                    .statement(PartnerSideCategoriesColumns.CATEGORY_ID).isNotNull() // TODO Maybe test SIDE_PARTNER + "." + PartnerColumns.NAME
-                    .and()
-                    .statement(SIDE_PARTNER + "." + PartnerColumns.NAME).like().wildcard()
+                    .statement(SIDE_PARTNER + "." + PartnerColumns.NAME).like().wildcard() // This filter avoid row not matching search and without a side category
                 .groupBy().by(CategoryColumns.ID)
 
                 .union()
