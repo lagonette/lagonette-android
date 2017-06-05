@@ -2,10 +2,17 @@ package org.lagonette.android.app.presenter.base;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public abstract class BundleLoaderPresenter
-        extends BasePresenter {
+import org.lagonette.android.app.contract.base.BaseContract;
+
+public abstract class BundleLoaderPresenter<V extends BaseContract.BaseView>
+        extends LoaderPresenter<V> {
+
+    protected BundleLoaderPresenter(@NonNull V view) {
+        super(view);
+    }
 
     @CallSuper
     @Override

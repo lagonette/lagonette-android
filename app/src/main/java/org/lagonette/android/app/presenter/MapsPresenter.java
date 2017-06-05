@@ -32,7 +32,7 @@ import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks
 import org.lagonette.android.content.reader.PartnerReader;
 
 public class MapsPresenter
-        extends BundleLoaderPresenter
+        extends BundleLoaderPresenter<MapsContract.View>
         implements MapsContract.Presenter,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -45,9 +45,6 @@ public class MapsPresenter
     private static final String STATE_ASK_FOR_MY_LOCATION_PERMISSION = "state:ask_for_my_location_permission";
 
     public static final int PERMISSIONS_REQUEST_LOCATION = 666;
-
-    @NonNull
-    private final MapsContract.View mView;
 
     private org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks mLoadPartnerCallbacks;
 
@@ -62,18 +59,7 @@ public class MapsPresenter
     private boolean mAskFormMyPositionPermission = true;
 
     public MapsPresenter(@NonNull MapsContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public Context getContext() {
-        return mView.getContext();
-    }
-
-    @NonNull
-    @Override
-    public LoaderManager getLoaderManager() {
-        return mView.getLoaderManager();
+        super(view);
     }
 
     @Override

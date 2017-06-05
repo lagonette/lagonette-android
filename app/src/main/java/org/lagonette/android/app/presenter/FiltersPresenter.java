@@ -1,10 +1,8 @@
 package org.lagonette.android.app.presenter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.FiltersContract;
@@ -13,16 +11,16 @@ import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
 import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
+import org.lagonette.android.content.loader.callbacks.LoadFilterCallbacks;
 import org.lagonette.android.content.loader.callbacks.UpdateCategoryMetadataCallbacks;
 import org.lagonette.android.content.loader.callbacks.UpdatePartnerMetadataCallbacks;
-import org.lagonette.android.content.loader.callbacks.LoadFilterCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
 import org.lagonette.android.content.reader.FilterReader;
 import org.lagonette.android.database.statement.FilterStatement;
 import org.lagonette.android.util.SearchUtil;
 
 public class FiltersPresenter
-        extends BundleLoaderPresenter
+        extends BundleLoaderPresenter<FiltersContract.View>
         implements FiltersContract.Presenter,
         CursorLoaderCallbacks.Callbacks,
         LoadFilterCallbacks.Callbacks,
@@ -50,13 +48,10 @@ public class FiltersPresenter
     }
 
     @NonNull
-    private FiltersContract.View mView;
-
-    @NonNull
     private String mCurrentSearch = SearchUtil.DEFAULT_SEARCH;
 
     public FiltersPresenter(@NonNull FiltersContract.View view) {
-        mView = view;
+        super(view);
     }
 
     @Override
@@ -86,17 +81,6 @@ public class FiltersPresenter
     @Override
     protected void reattachLoaders() {
         mUpdatePartnerMetadataCallbacks.reattachLoader();
-    }
-
-    @Override
-    public Context getContext() {
-        return mView.getContext();
-    }
-
-    @NonNull
-    @Override
-    public LoaderManager getLoaderManager() {
-        return mView.getLoaderManager();
     }
 
     @Override

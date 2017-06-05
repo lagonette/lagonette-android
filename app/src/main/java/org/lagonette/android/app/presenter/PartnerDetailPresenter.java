@@ -1,14 +1,14 @@
 package org.lagonette.android.app.presenter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.PartnerDetailContract;
 import org.lagonette.android.app.fragment.PartnerDetailFragment;
+import org.lagonette.android.app.presenter.base.BasePresenter;
+import org.lagonette.android.app.presenter.base.LoaderPresenter;
 import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
@@ -16,7 +16,9 @@ import org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks;
 import org.lagonette.android.content.reader.PartnerReader;
 
 public class PartnerDetailPresenter
-        implements PartnerDetailContract.Presenter, LoadPartnerCallbacks.Callbacks {
+        extends LoaderPresenter<PartnerDetailContract.View>
+        implements PartnerDetailContract.Presenter,
+        LoadPartnerCallbacks.Callbacks {
 
     private static final String ARG_PARTNER_ID = "arg:partner_id";
 
@@ -28,16 +30,14 @@ public class PartnerDetailPresenter
         return partnerDetailFragment;
     }
 
-    @NonNull
-    private final PartnerDetailContract.View mView;
-
+    @SuppressWarnings("NullableProblems")
     @NonNull
     private LoadPartnerCallbacks mLoadPartnerCallbacks;
 
     private long mPartnerId = LaGonetteContract.NO_ID;
 
     public PartnerDetailPresenter(@NonNull PartnerDetailContract.View view) {
-        mView = view;
+        super(view);
     }
 
     @Override
@@ -56,39 +56,6 @@ public class PartnerDetailPresenter
         mLoadPartnerCallbacks.loadPartners(
                 PartnerCursorLoaderHelper.createArgs(mPartnerId)
         );
-    }
-
-    @Override
-    public void onStart() {
-        // TODO Remove
-
-    }
-
-    @Override
-    public void onStop() {
-        // TODO Remove
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // TODO Remove
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        // TODO Remove
-    }
-
-    //TODO Factorize ?
-    @Override
-    public Context getContext() {
-        return mView.getContext();
-    }
-
-    //TODO Factorize ?
-    @Override
-    public LoaderManager getLoaderManager() {
-        return mView.getLoaderManager();
     }
 
     @Override

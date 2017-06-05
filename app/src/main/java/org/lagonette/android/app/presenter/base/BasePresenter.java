@@ -6,7 +6,14 @@ import android.support.annotation.Nullable;
 
 import org.lagonette.android.app.contract.base.BaseContract;
 
-public abstract class BasePresenter implements BaseContract.BasePresenter {
+public abstract class BasePresenter<V extends BaseContract.BaseView> implements BaseContract.BasePresenter {
+
+    @NonNull
+    protected final V mView;
+
+    protected BasePresenter(@NonNull V view) {
+        mView = view;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
