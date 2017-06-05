@@ -5,10 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.content.contract.LaGonetteContract;
+import org.lagonette.android.content.reader.base.CursorReader;
 import org.lagonette.android.database.columns.FilterColumns;
 
 public class FilterReader extends CursorReader {
 
+    @Nullable
     public static FilterReader create(@Nullable Cursor cursor) {
         return cursor != null
                 ? new FilterReader(cursor)

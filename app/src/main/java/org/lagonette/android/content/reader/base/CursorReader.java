@@ -1,4 +1,4 @@
-package org.lagonette.android.content.reader;
+package org.lagonette.android.content.reader.base;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;

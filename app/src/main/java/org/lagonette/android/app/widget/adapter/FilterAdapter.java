@@ -331,9 +331,9 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
             holder.categoryId = mFilterReader.categoryReader.getId();
-            holder.isVisible = mFilterReader.categoryReader.isVisible();
             holder.isPartnersVisible = mFilterReader.isPartnersVisible();
-            holder.isCollapsed = mFilterReader.categoryReader.isCollapsed();
+            holder.isVisible = mFilterReader.categoryReader.metadataReader.isVisible();
+            holder.isCollapsed = mFilterReader.categoryReader.metadataReader.isCollapsed();
 
             if (holder.isVisible && holder.isPartnersVisible) {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
@@ -363,8 +363,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void onBindPartnerViewHolder(@NonNull PartnerViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
             holder.partnerId = mFilterReader.partnerReader.getId();
-            holder.isVisible = mFilterReader.partnerReader.isVisible();
-            holder.isCategoryVisible = mFilterReader.categoryReader.isVisible();
+            holder.isVisible = mFilterReader.partnerReader.metadataReader.isVisible();
+            holder.isCategoryVisible = mFilterReader.categoryReader.metadataReader.isVisible();
             holder.isExchangeOffice = mFilterReader.partnerReader.isExchangeOffice();
             holder.isMainPartner = mFilterReader.getRowType() == FilterColumns.VALUE_ROW_MAIN_PARTNER;
 

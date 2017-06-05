@@ -6,10 +6,12 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.lagonette.android.content.contract.LaGonetteContract;
+import org.lagonette.android.content.reader.base.CursorReader;
 
 public class PartnerReader
         extends CursorReader {
 
+    @Nullable
     public static PartnerReader create(@Nullable Cursor cursor) {
         return cursor != null
                 ? new PartnerReader(cursor)
@@ -19,14 +21,17 @@ public class PartnerReader
     @NonNull
     public final CategoryReader categoryReader;
 
+    @NonNull
+    public final PartnerMetadataReader metadataReader;
+
     public PartnerReader(@NonNull Cursor cursor) {
-        super(cursor);
-        categoryReader = new CategoryReader(cursor);
+        this(cursor, CategoryReader.create(cursor));
     }
 
     public PartnerReader(@NonNull Cursor cursor, @NonNull CategoryReader categoryReader) {
         super(cursor);
         this.categoryReader = categoryReader;
+        this.metadataReader = PartnerMetadataReader.create(cursor);
     }
 
     public long getId() {
@@ -75,14 +80,6 @@ public class PartnerReader
         return 1 == mCursor.getInt(
                 mCursor.getColumnIndex(
                         LaGonetteContract.Partner.IS_EXCHANGE_OFFICE
-                )
-        );
-    }
-
-    public boolean isVisible() {
-        return 1 == mCursor.getInt(
-                mCursor.getColumnIndex(
-                        LaGonetteContract.PartnerMetadata.IS_VISIBLE
                 )
         );
     }

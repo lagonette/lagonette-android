@@ -5,18 +5,24 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.content.contract.LaGonetteContract;
+import org.lagonette.android.content.reader.base.CursorReader;
 
 public class CategoryReader
         extends CursorReader {
 
+    @Nullable
     public static CategoryReader create(@Nullable Cursor cursor) {
         return cursor != null
                 ? new CategoryReader(cursor)
                 : null;
     }
 
+    @NonNull
+    public final CategoryMetadataReader metadataReader;
+
     public CategoryReader(@NonNull Cursor cursor) {
         super(cursor);
+        metadataReader = CategoryMetadataReader.create(cursor);
     }
 
     public long getId() {
@@ -41,23 +47,6 @@ public class CategoryReader
         return mCursor.getString(
                 mCursor.getColumnIndex(
                         LaGonetteContract.Category.ICON
-                )
-        );
-    }
-
-    // TODO Use a metadata reader
-    public boolean isVisible() {
-        return 1 == mCursor.getLong(
-                mCursor.getColumnIndex(
-                        LaGonetteContract.CategoryMetadata.IS_VISIBLE
-                )
-        );
-    }
-
-    public boolean isCollapsed() {
-        return 1 == mCursor.getLong(
-                mCursor.getColumnIndex(
-                        LaGonetteContract.CategoryMetadata.IS_COLLAPSED
                 )
         );
     }
