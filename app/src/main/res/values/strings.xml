@@ -14,4 +14,9 @@
     <string name="shortcut_la_gonette">La Gonette</string>
     <string name="shortcut_bank">Banque</string>
 
+    <string name="format_address_full">%1$s, %2$s %3$s</string>
+
+    <string name="partner_type_partner">Partenaire</string>
+    <string name="partner_type_exchange_office">Partenaire + Comptoir de change</string>
+
 </resources>
