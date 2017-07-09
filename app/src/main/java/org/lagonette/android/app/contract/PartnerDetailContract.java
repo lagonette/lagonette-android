@@ -10,6 +10,14 @@ public class PartnerDetailContract {
 
     public interface Presenter extends BaseContract.BasePresenter {
 
+        void startDirection(double latitude, double longitude);
+
+        void makeCall(@NonNull String phoneNumber);
+
+        void goToWebsite(@NonNull String url);
+
+        void writeEmail(@NonNull String email);
+
     }
 
     public interface View extends BaseContract.BaseView {
@@ -18,6 +26,15 @@ public class PartnerDetailContract {
 
         @NonNull
         String[] getPartnerDetailColumns();
+
+        void errorNoDirectionAppFound();
+
+        void errorNoCallAppFound();
+
+        void errorNoBrowserAppFound();
+
+        void errorNoEmailAppFound();
+
     }
 
 }

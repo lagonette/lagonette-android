@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import org.lagonette.android.app.presenter.PartnerDetailPresenter;
 import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.reader.PartnerReader;
 import org.lagonette.android.util.DisplayUtil;
+import org.lagonette.android.util.SnackbarUtil;
 
 public class PartnerDetailFragment
         extends Fragment
@@ -62,6 +64,10 @@ public class PartnerDetailFragment
     private ImageView mLogoImageView;
 
     private ImageView mMainCategoryLogoImageView;
+
+    private double mLatitude;
+
+    private double mLongitude;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +127,9 @@ public class PartnerDetailFragment
     public void displayPartner(@Nullable PartnerReader reader) {
         if (reader != null && reader.moveToFirst()) {
             Resources resources = getResources();
+
+            mLatitude = reader.getLatitude();
+            mLongitude = reader.getLongitude();
 
             mNameTextView.setText(reader.getName());
             mTypeTextView.setText(
@@ -224,6 +233,52 @@ public class PartnerDetailFragment
         };
     }
 
+    // TODO factorize with MapsFragment
+    // Maybe it is to the activity to manage that
+    @Override
+    public void errorNoDirectionAppFound() {
+        Snackbar
+                .make(
+                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        R.string.error_no_direction_app_found,
+                        Snackbar.LENGTH_LONG
+                )
+                .show();
+    }
+
+    @Override
+    public void errorNoCallAppFound() {
+        Snackbar
+                .make(
+                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        R.string.error_no_call_app_found,
+                        Snackbar.LENGTH_LONG
+                )
+                .show();
+    }
+
+    @Override
+    public void errorNoBrowserAppFound() {
+        Snackbar
+                .make(
+                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        R.string.error_no_browser_app_found,
+                        Snackbar.LENGTH_LONG
+                )
+                .show();
+    }
+
+    @Override
+    public void errorNoEmailAppFound() {
+        Snackbar
+                .make(
+                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        R.string.error_no_email_app_found,
+                        Snackbar.LENGTH_LONG
+                )
+                .show();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -243,19 +298,19 @@ public class PartnerDetailFragment
     }
 
     private void onAddressClick() {
-        Toast.makeText(getContext(), "Address", Toast.LENGTH_SHORT).show();
+        mPresenter.startDirection(mLatitude, mLongitude);
     }
 
     private void onPhoneClick() {
-        Toast.makeText(getContext(), "Phone", Toast.LENGTH_SHORT).show();
+        mPresenter.makeCall((String) mPhoneTextView.getText());
     }
 
     private void onWebsiteClick() {
-        Toast.makeText(getContext(), "Website", Toast.LENGTH_SHORT).show();
+        mPresenter.goToWebsite((String) mWebsiteTextView.getText());
     }
 
     private void onEmailClick() {
-        Toast.makeText(getContext(), "Email", Toast.LENGTH_SHORT).show();
+        mPresenter.writeEmail((String) mEmailTextView.getText());
     }
 
 }

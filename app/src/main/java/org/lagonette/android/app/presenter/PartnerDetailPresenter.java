@@ -7,13 +7,13 @@ import android.support.annotation.Nullable;
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.PartnerDetailContract;
 import org.lagonette.android.app.fragment.PartnerDetailFragment;
-import org.lagonette.android.app.presenter.base.BasePresenter;
 import org.lagonette.android.app.presenter.base.LoaderPresenter;
 import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.content.loader.CursorLoaderParams;
 import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
 import org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks;
 import org.lagonette.android.content.reader.PartnerReader;
+import org.lagonette.android.util.IntentUtil;
 
 public class PartnerDetailPresenter
         extends LoaderPresenter<PartnerDetailContract.View>
@@ -75,5 +75,50 @@ public class PartnerDetailPresenter
                                 String.valueOf(PartnerCursorLoaderHelper.getPartnerId(args))
                         }
                 );
+    }
+
+    @Override
+    public void startDirection(double latitude, double longitude) {
+        boolean success = IntentUtil.startDirection(
+                mView.getContext(),
+                latitude,
+                longitude
+        );
+        if (!success) {
+            mView.errorNoDirectionAppFound();
+        }
+    }
+
+    @Override
+    public void makeCall(@NonNull String phoneNumber) {
+        boolean success = IntentUtil.makeCall(
+                mView.getContext(),
+                phoneNumber
+        );
+        if (!success) {
+            mView.errorNoCallAppFound();
+        }
+    }
+
+    @Override
+    public void goToWebsite(@NonNull String url) {
+        boolean success = IntentUtil.goToWebsite(
+                mView.getContext(),
+                url
+        );
+        if (!success) {
+            mView.errorNoBrowserAppFound();
+        }
+    }
+
+    @Override
+    public void writeEmail(@NonNull String email) {
+        boolean success = IntentUtil.writeEmail(
+                mView.getContext(),
+                email
+        );
+        if (!success) {
+            mView.errorNoEmailAppFound();
+        }
     }
 }

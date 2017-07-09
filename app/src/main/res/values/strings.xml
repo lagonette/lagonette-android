@@ -7,6 +7,9 @@
     <string name="hint_search">Rechercher…</string>
 
     <string name="error_no_direction_app_found">Aucune application GPS trouvée.</string>
+    <string name="error_no_call_app_found">Aucune application téléphonique trouvée.</string>
+    <string name="error_no_browser_app_found">Aucun navigateur web trouvé.</string>
+    <string name="error_no_email_app_found">Aucune application email trouvée.</string>
     <string name="error_getting_partners">Echec de recuperation des partnaires.</string>
 
     <string name="shortcut_partner">Partenaire</string>

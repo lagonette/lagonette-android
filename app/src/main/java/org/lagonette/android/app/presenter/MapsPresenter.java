@@ -30,6 +30,7 @@ import org.lagonette.android.content.loader.callbacks.GetPartnersCallbacks;
 import org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
 import org.lagonette.android.content.reader.PartnerReader;
+import org.lagonette.android.util.IntentUtil;
 
 public class MapsPresenter
         extends BundleLoaderPresenter<MapsContract.View>
@@ -191,14 +192,7 @@ public class MapsPresenter
     }
 
     public void startDirection(double latitude, double longitude) {
-        Intent intent = new Intent(
-                android.content.Intent.ACTION_VIEW,
-                Uri.parse("google.navigation:q=" + latitude + "," + longitude)
-        );
-        PackageManager packageManager = mView.getContext().getPackageManager();
-        if (intent.resolveActivity(packageManager) != null) {
-            mView.getContext().startActivity(intent);
-        } else {
+        if (!IntentUtil.startDirection(mView.getContext(), latitude, longitude)) {
             mView.errorNoDirectionAppFound();
         }
     }
