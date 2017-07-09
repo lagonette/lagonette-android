@@ -33,8 +33,6 @@ public class MapsContract {
 
         void showPartners(@Nullable PartnerReader partnerReader);
 
-        void errorNoDirectionAppFound();
-
         void errorGettingPartners();
     }
 }

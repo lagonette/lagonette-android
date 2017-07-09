@@ -1,15 +1,11 @@
 package org.lagonette.android.app.presenter;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,7 +26,6 @@ import org.lagonette.android.content.loader.callbacks.GetPartnersCallbacks;
 import org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
 import org.lagonette.android.content.reader.PartnerReader;
-import org.lagonette.android.util.IntentUtil;
 
 public class MapsPresenter
         extends BundleLoaderPresenter<MapsContract.View>
@@ -189,12 +184,6 @@ public class MapsPresenter
         }
 
         return mLocationPermissionGranted;
-    }
-
-    public void startDirection(double latitude, double longitude) {
-        if (!IntentUtil.startDirection(mView.getContext(), latitude, longitude)) {
-            mView.errorNoDirectionAppFound();
-        }
     }
 
     @Override

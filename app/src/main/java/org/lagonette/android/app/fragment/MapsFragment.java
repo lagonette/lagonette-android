@@ -436,14 +436,6 @@ public class MapsFragment
         mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void startDirection(long partnerId) {
-        PartnerItem partnerItem = mPartnerItems.get(partnerId);
-        if (partnerItem != null) {
-            LatLng position = partnerItem.getPosition();
-            mPresenter.startDirection(position.latitude, position.longitude);
-        }
-    }
-
     public void filterPartner(@NonNull String search) {
         mPresenter.loadPartners(search);
     }
@@ -464,17 +456,6 @@ public class MapsFragment
                 mClusterManager.cluster();
             }
         }
-    }
-
-    @Override
-    public void errorNoDirectionAppFound() {
-        Snackbar
-                .make(
-                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
-                        R.string.error_no_direction_app_found,
-                        Snackbar.LENGTH_LONG
-                )
-                .show();
     }
 
     @Override

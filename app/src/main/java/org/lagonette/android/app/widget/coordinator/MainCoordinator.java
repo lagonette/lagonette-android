@@ -17,14 +17,14 @@ import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import org.lagonette.android.R;
 import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.util.UiUtil;
-
-import com.google.android.gms.maps.GoogleMap;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -47,7 +47,7 @@ public class MainCoordinator
 
         FloatingActionButton getMyLocationFab();
 
-        FloatingActionButton getBottomSheetFab();
+        FloatingActionButton getFiltersFab();
 
         View getSearchBar();
 
@@ -67,7 +67,6 @@ public class MainCoordinator
 
         void removeBottomSheetFragment();
 
-        void startDirection(long partnerId);
     }
 
     @Retention(RetentionPolicy.SOURCE)
@@ -110,29 +109,17 @@ public class MainCoordinator
 
     private boolean mZoomForPartnerId;
 
-    private float mFABElevationPrimary;
-
-    private float mFABElevationSecondary;
-
     private int mBottomSheetBackgroundColor;
 
     private int mFiltersBottomSheetBackgroundColor;
 
     private int mStatusBarHeight;
 
-    private int mFabBottomMargin;
-
     private int mSearchBarVerticalMargin;
 
     private int mParallaxMapsPaddingTop = 0;
 
     private int mSearchBarMapsPaddingTop = 0;
-
-    private boolean mIsDirectionVisible = false;
-
-    private LaGonetteDisappearBehavior mMyLocationFabBehavior;
-
-    private LaGonetteDisappearBehavior mBottomSheetFabBehavior;
 
     private LaGonetteDisappearBehavior mSearchBarBehavior;
 
@@ -146,18 +133,10 @@ public class MainCoordinator
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Context context = mCallbacks.getContext();
-        Resources resources = context.getResources();
-        FloatingActionButton bottomSheetFab = mCallbacks.getBottomSheetFab();
-        FloatingActionButton myLocationFab = mCallbacks.getMyLocationFab();
         View searchBar = mCallbacks.getSearchBar();
 
-        mFABElevationPrimary = resources.getDimension(R.dimen.fab_elevation_primary);
-        mFABElevationSecondary = resources.getDimension(R.dimen.fab_elevation_secondary);
         mFiltersBottomSheetBackgroundColor = ContextCompat.getColor(context, R.color.colorPrimary);
         mBottomSheetBackgroundColor = ContextCompat.getColor(context, android.R.color.background_light);
-        mFabBottomMargin = ((CoordinatorLayout.LayoutParams) bottomSheetFab.getLayoutParams()).bottomMargin;
-        mMyLocationFabBehavior = LaGonetteDisappearBehavior.from(myLocationFab);
-        mBottomSheetFabBehavior = LaGonetteDisappearBehavior.from(bottomSheetFab);
         mSearchBarBehavior = LaGonetteDisappearBehavior.from(searchBar);
         mSearchBarBehavior.setOnMoveListener(MainCoordinator.this);
     }
@@ -172,7 +151,7 @@ public class MainCoordinator
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         mBottomSheetBehavior.setBottomSheetCallback(MainCoordinator.this);
 
-        mCallbacks.getBottomSheetFab().setOnClickListener(MainCoordinator.this);
+        mCallbacks.getFiltersFab().setOnClickListener(MainCoordinator.this);
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -181,7 +160,6 @@ public class MainCoordinator
 
     // TODO put this in onCreate ?
     public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        FloatingActionButton bottomSheetFab = mCallbacks.getBottomSheetFab();
         View searchBar = mCallbacks.getSearchBar();
         final View bottomSheet = mCallbacks.getBottomSheet();
 
@@ -191,12 +169,6 @@ public class MainCoordinator
         // TODO put in xml
         if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
             bottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
-        } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
-            bottomSheetFab.setImageResource(R.drawable.ic_directions_white_24dp);
-            mIsDirectionVisible = true;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                bottomSheetFab.setCompatElevation(mFABElevationPrimary);
-            }
         }
 
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
@@ -217,25 +189,11 @@ public class MainCoordinator
     @Override
     public void onStateChanged(@NonNull View bottomSheet, int newState) {
         if (BottomSheetBehavior.STATE_HIDDEN == newState) {
-            FloatingActionButton bottomSheetFab = mCallbacks.getBottomSheetFab();
-            FloatingActionButton myLocationFab = mCallbacks.getMyLocationFab();
-
             mCallbacks.removeBottomSheetFragment();
             mBottomSheetType = BOTTOM_SHEET_NONE;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                bottomSheetFab.setCompatElevation(mFABElevationSecondary);
-            }
-            bottomSheetFab.setTag(null);
+            bottomSheet.setTag(null);
             bottomSheet.setBackgroundColor(mBottomSheetBackgroundColor);
             bottomSheet.getLayoutParams().height = CoordinatorLayout.LayoutParams.MATCH_PARENT;
-            mMyLocationFabBehavior.setLeaveLength(myLocationFab.getHeight());
-            mMyLocationFabBehavior.setLeaveOffset(0);
-            mMyLocationFabBehavior.setMoveOffset(0);
-            mBottomSheetFabBehavior.setLeaveLength(bottomSheetFab.getHeight());
-            mBottomSheetFabBehavior.setLeaveOffset(0);
-            mBottomSheetFabBehavior.setMoveLength(bottomSheetFab.getHeight());
-            mBottomSheetFabBehavior.setMoveOffset(0);
-            mBottomSheetFabBehavior.setLeaveMethod(LaGonetteDisappearBehavior.LEAVE_METHOD_ALPHA);
             if (mShowPartnerAfterBottomSheetClose) {
                 mShowPartnerAfterBottomSheetClose = false;
                 showPartner(mSelectedPartnerId, mZoomForPartnerId);
@@ -243,7 +201,7 @@ public class MainCoordinator
         } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
             if (mSwitchPartnerAfterBottomSheetCollapsed) {
                 mSwitchPartnerAfterBottomSheetCollapsed = false;
-                switchPartner();
+                switchPartner(bottomSheet);
             }
 
             if (mLoadFiltersAfterBottomSheetCollapsed) {
@@ -261,14 +219,13 @@ public class MainCoordinator
         manageStatusBarPaddingOnBottomSheetSlide(bottomSheet);
         if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
             //TODO Optimize !
-            int translationY = mCallbacks.getCoordinatorLayout().getBottom() - bottomSheet.getTop();
-            manageBottomSheetFabOnPartnerSlide(translationY, slideOffset);
+            manageBottomSheetFabOnPartnerSlide(slideOffset);
         }
     }
 
-    private void manageBottomSheetFabOnPartnerSlide(int translationY, float slideOffset) {
+    private void manageBottomSheetFabOnPartnerSlide(float slideOffset) {
         //TODO Optimize !
-        FloatingActionButton bottomSheetFab = mCallbacks.getBottomSheetFab();
+        FloatingActionButton filtersFab = mCallbacks.getFiltersFab();
         float scale = slideOffset * 4 - 1;
         scale = scale > 1
                 ? 1
@@ -277,17 +234,8 @@ public class MainCoordinator
                 : scale;
         scale = 1 - scale;
         scale = mInterpolator.getInterpolation(scale);
-        bottomSheetFab.setScaleX(scale);
-        bottomSheetFab.setScaleY(scale);
-
-        int fabCenter = bottomSheetFab.getHeight() / 2 + mFabBottomMargin;
-        if (!mIsDirectionVisible && translationY > fabCenter) {
-            bottomSheetFab.setImageResource(R.drawable.ic_directions_white_24dp);
-            mIsDirectionVisible = true;
-        } else if (mIsDirectionVisible && translationY <= fabCenter) {
-            bottomSheetFab.setImageResource(R.drawable.ic_filter_list_white_24dp);
-            mIsDirectionVisible = false;
-        }
+        filtersFab.setScaleX(scale);
+        filtersFab.setScaleY(scale);
     }
 
     private void manageStatusBarPaddingOnBottomSheetSlide(@NonNull View bottomSheet) {
@@ -322,7 +270,7 @@ public class MainCoordinator
             mZoomForPartnerId = zoom;
             closeBottomSheet();
         } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
-            switchPartner();
+            switchPartner(mCallbacks.getBottomSheet());
         } else {
             moveMapAndOpenPartner(zoom);
         }
@@ -337,42 +285,23 @@ public class MainCoordinator
 
         View coordinatorLayout = mCallbacks.getCoordinatorLayout();
         View bottomSheet = mCallbacks.getBottomSheet();
-        View searchBar = mCallbacks.getSearchBar();
-        FloatingActionButton bottomSheetFab = mCallbacks.getBottomSheetFab();
-        FloatingActionButton myLocationFab = mCallbacks.getMyLocationFab();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            bottomSheetFab.setCompatElevation(mFABElevationPrimary);
-        }
-        bottomSheetFab.setTag(mSelectedPartnerId);
+        bottomSheet.setTag(mSelectedPartnerId);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheet.getLayoutParams().height = coordinatorLayout.getHeight() * 3 / 4;
-        int offset = bottomSheetFab.getHeight() / 2 + ((CoordinatorLayout.LayoutParams) bottomSheetFab.getLayoutParams()).bottomMargin;
-        mMyLocationFabBehavior.setLeaveLength(myLocationFab.getHeight());
-        mMyLocationFabBehavior.setLeaveOffset(offset);
-        mMyLocationFabBehavior.setMoveOffset(offset);
-        mBottomSheetFabBehavior.setLeaveLength(bottomSheetFab.getHeight());
-        mBottomSheetFabBehavior.setLeaveOffset(mBottomSheetBehavior.getPeekHeight() + offset * 2);
-        mBottomSheetFabBehavior.setMoveLength(bottomSheetFab.getHeight() + mBottomSheetBehavior.getPeekHeight() + offset * 2);
-        mBottomSheetFabBehavior.setMoveOffset(offset);
-        mBottomSheetFabBehavior.setLeaveMethod(LaGonetteDisappearBehavior.LEAVE_METHOD_SCALE);
         mSearchBarBehavior.enable();
-        mSearchBarBehavior.setLeaveLength(myLocationFab.getHeight());
-        mSearchBarBehavior.setLeaveOffset(offset); // TODO improve: do this only one time.
-        mSearchBarBehavior.setMoveLength(searchBar.getBottom() - mStatusBarHeight);
-        mSearchBarBehavior.setMoveOffset(offset);
         mBottomSheetType = BOTTOM_SHEET_PARTNER;
     }
 
-    private void switchPartner() {
+    private void switchPartner(@NonNull View bottomSheet) {
         if (BottomSheetBehavior.STATE_COLLAPSED != mBottomSheetBehavior.getState()) {
             mSwitchPartnerAfterBottomSheetCollapsed = true;
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
-            long currentPartnerId = (long) mCallbacks.getBottomSheetFab().getTag();
+            long currentPartnerId = (long) bottomSheet.getTag();
             if (currentPartnerId != mSelectedPartnerId) {
                 mCallbacks.replaceBottomSheetByPartnerDetails(mSelectedPartnerId, true);
-                mCallbacks.getBottomSheetFab().setTag(mSelectedPartnerId);
+                bottomSheet.setTag(mSelectedPartnerId);
             }
             mCallbacks.showPartner(mSelectedPartnerId, false, null);
             mBottomSheetType = BOTTOM_SHEET_PARTNER;
@@ -451,6 +380,7 @@ public class MainCoordinator
 
     @Override
     public void onParallaxTranslation(float translationY) {
+        // TODO useless ?
 //        mParallaxMapsPaddingTop = (int) -translationY;
 //        updateMapPaddingTop();
 //        updateMapPaddingBottom();
@@ -460,6 +390,7 @@ public class MainCoordinator
         mCallbacks.updateMapPaddingTop(mParallaxMapsPaddingTop + mSearchBarMapsPaddingTop);
     }
 
+    // TODO useless ?
     public void updateMapPaddingBottom() {
         mCallbacks.updateMapPaddingBottom(mParallaxMapsPaddingTop);
     }
@@ -477,7 +408,7 @@ public class MainCoordinator
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.bottom_sheet_fab:
+            case R.id.filters_fab:
                 onBottomSheetFabClick();
                 break;
             default:
@@ -486,11 +417,7 @@ public class MainCoordinator
     }
 
     private void onBottomSheetFabClick() {
-        if (isPartnerBottomSheetOpened()) {
-            mCallbacks.startDirection((long) mCallbacks.getBottomSheetFab().getTag());
-        } else if (isBottomSheetClose()) {
-            showFilters();
-        }
+        showFilters();
     }
 
 }

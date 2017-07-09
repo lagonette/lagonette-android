@@ -54,7 +54,7 @@ public class MapsActivity
 
     private FloatingActionButton mMyLocationFab;
 
-    private FloatingActionButton mBottomSheetFab;
+    private FloatingActionButton mFiltersFab;
 
     private CoordinatorLayout mCoordinatorLayout;
 
@@ -73,7 +73,7 @@ public class MapsActivity
         mSearchClear = (ImageButton) findViewById(R.id.search_clear);
         mBottomSheet = findViewById(R.id.bottom_sheet);
         mMyLocationFab = (FloatingActionButton) findViewById(R.id.my_location_fab);
-        mBottomSheetFab = (FloatingActionButton) findViewById(R.id.bottom_sheet_fab);
+        mFiltersFab = (FloatingActionButton) findViewById(R.id.filters_fab);
     }
 
     @Override
@@ -288,8 +288,8 @@ public class MapsActivity
     }
 
     @Override
-    public FloatingActionButton getBottomSheetFab() {
-        return mBottomSheetFab;
+    public FloatingActionButton getFiltersFab() {
+        return mFiltersFab;
     }
 
     @Override
@@ -334,9 +334,9 @@ public class MapsActivity
         if (animate) {
             transaction
                     .setCustomAnimations(
-                    android.R.anim.fade_in,
-                    android.R.anim.fade_out
-            );
+                            android.R.anim.fade_in,
+                            android.R.anim.fade_out
+                    );
         }
         transaction
                 .replace(
@@ -368,11 +368,6 @@ public class MapsActivity
                     .commit();
             mBottomSheetFragment = null;
         }
-    }
-
-    @Override
-    public void startDirection(long partnerId) {
-        mMapsFragment.startDirection(partnerId);
     }
 
 }

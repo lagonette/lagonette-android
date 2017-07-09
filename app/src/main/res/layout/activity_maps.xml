@@ -46,10 +46,12 @@
         app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_behavior="org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior"/>
+        app:layout_behavior="org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior"
+        app:leave_length="56dp"
+        app:move_length="56dp"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/bottom_sheet_fab"
+        android:id="@+id/filters_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -58,7 +60,9 @@
         app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_behavior="org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior"/>
+        app:layout_behavior="org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior"
+        app:leave_length="56dp"
+        app:move_length="56dp"/>
 
     <include
         layout="@layout/widget_search"
@@ -72,7 +76,9 @@
         android:layout_marginStart="@dimen/search_bar_margin_start"
         android:layout_marginTop="@dimen/search_bar_margin_top"
         app:dependency="@id/bottom_sheet"
-        app:layout_behavior="org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior"/>
+        app:layout_behavior="org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior"
+        app:leave_length="56dp"
+        app:move_length="56dp"/>
 
 
 </android.support.design.widget.CoordinatorLayout>
