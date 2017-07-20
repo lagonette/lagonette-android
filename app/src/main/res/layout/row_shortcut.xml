@@ -104,39 +104,4 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="84dp"
-        android:layout_height="84dp"
-        android:layout_weight="1"
-        android:background="?selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <FrameLayout
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="8dp"
-            android:background="@drawable/bg_item_exchange_office">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:background="@drawable/bg_item_category"
-                android:src="@drawable/img_item_default"/>
-
-        </FrameLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/shortcut_bank"
-            android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
-
-    </LinearLayout>
-
 </LinearLayout>
