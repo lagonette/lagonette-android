@@ -13,7 +13,7 @@
 
     <dimen name="filters_category_icon_size">24dp</dimen>
     <dimen name="filters_category_size">28dp</dimen>
-    <dimen name="filters_peek_height">124dp</dimen>
+    <dimen name="filters_peek_height">96dp</dimen>
 
 
 </resources>

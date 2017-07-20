@@ -10,9 +10,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -35,7 +35,11 @@ public class PartnerDetailFragment
 
     private TextView mNameTextView;
 
-    private TextView mTypeTextView;
+    private ImageButton mBackImageButton;
+
+    private TextView mPartnerTypeTextView;
+
+    private TextView mShortDescriptionTextView;
 
     private TextView mDescriptionTextView;
 
@@ -88,8 +92,12 @@ public class PartnerDetailFragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        mBackImageButton = (ImageButton) view.findViewById(R.id.back);
+
+        mPartnerTypeTextView = (TextView) view.findViewById(R.id.type_partner);
+
         mNameTextView = (TextView) view.findViewById(R.id.name);
-        mTypeTextView = (TextView) view.findViewById(R.id.partner_type);
+        mShortDescriptionTextView = (TextView) view.findViewById(R.id.short_description);
         mDescriptionTextView = (TextView) view.findViewById(R.id.description);
 
         mAddressTextView = (TextView) view.findViewById(R.id.address);
@@ -111,6 +119,7 @@ public class PartnerDetailFragment
         mLogoImageView = (ImageView) view.findViewById(R.id.logo);
         mMainCategoryLogoImageView = (ImageView) view.findViewById(R.id.main_category_logo);
 
+        mBackImageButton.setOnClickListener(PartnerDetailFragment.this);
         mAddressLayout.setOnClickListener(PartnerDetailFragment.this);
         mPhoneLayout.setOnClickListener(PartnerDetailFragment.this);
         mWebsiteLayout.setOnClickListener(PartnerDetailFragment.this);
@@ -131,12 +140,14 @@ public class PartnerDetailFragment
             mLatitude = reader.getLatitude();
             mLongitude = reader.getLongitude();
 
-            mNameTextView.setText(reader.getName());
-            mTypeTextView.setText(
+            mPartnerTypeTextView.setText(
                     reader.isExchangeOffice()
                             ? getString(R.string.partner_type_exchange_office)
                             : getString(R.string.partner_type_partner)
             );
+
+            mNameTextView.setText(reader.getName());
+            mShortDescriptionTextView.setText(reader.getShortDescription());
             mDescriptionTextView.setText(reader.getDescription());
 
             // OPENING HOURS
@@ -293,6 +304,9 @@ public class PartnerDetailFragment
                 break;
             case R.id.container_email:
                 onEmailClick();
+                break;
+            case R.id.back:
+                getActivity().onBackPressed();
                 break;
         }
     }
