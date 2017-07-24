@@ -1,9 +1,12 @@
 package org.lagonette.android.content;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,6 +37,8 @@ public class LaGonetteContentProvider
     private UriMatcher mUriMatcher;
 
     private LaGonetteDatabaseOpenHelper mOpenHelper;
+
+    private boolean mNotifyUri = true;
 
     @Override
     public boolean onCreate() {
@@ -128,7 +133,6 @@ public class LaGonetteContentProvider
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        List<Uri> uris = new ArrayList<>();
         String table;
         Uri baseUri;
         int match = mUriMatcher.match(uri);
@@ -136,38 +140,22 @@ public class LaGonetteContentProvider
             case R.id.content_uri_partners:
                 table = Tables.PARTNER;
                 baseUri = LaGonetteContract.Partner.CONTENT_URI;
-                uris.add(LaGonetteContract.Partner.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = LaGonetteContract.PartnerMetadata.CONTENT_URI;
-                uris.add(LaGonetteContract.Partner.EXTENDED_CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
                 baseUri = LaGonetteContract.PartnerSideCategories.CONTENT_URI;
-                uris.add(LaGonetteContract.PartnerSideCategories.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories:
                 table = Tables.CATEGORY;
                 baseUri = LaGonetteContract.Category.CONTENT_URI;
-                uris.add(LaGonetteContract.Category.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories_metadata:
                 table = Tables.CATEGORY_METADATA;
                 baseUri = LaGonetteContract.CategoryMetadata.CONTENT_URI;
-                uris.add(LaGonetteContract.Category.EXTENDED_CONTENT_URI);
-                uris.add(LaGonetteContract.CategoryMetadata.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format(
@@ -179,14 +167,12 @@ public class LaGonetteContentProvider
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         long rowID = db.insert(table, null, values);
         Uri newUri = ContentUris.withAppendedId(baseUri, rowID);
-        // getContext() not null because called after onCreate()
-        //noinspection ConstantConditions
-        ContentResolver contentResolver = getContext().getContentResolver();
-        Log.d(TAG, "insert: Notify " + newUri);
-        contentResolver.notifyChange(newUri, null);
-        for (Uri u : uris) {
-            Log.d(TAG, "insert: Notify " + u);
-            contentResolver.notifyChange(u, null);
+
+        if (mNotifyUri) {
+            Log.d(TAG, "insert: Notify " + newUri);
+            // getContext() not null because called after onCreate()
+            // noinspection ConstantConditions
+            getContext().getContentResolver().notifyChange(newUri, null);
         }
 
         return newUri;
@@ -194,7 +180,6 @@ public class LaGonetteContentProvider
 
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        List<Uri> uris = new ArrayList<>();
         String table;
         Uri baseUri;
         int match = mUriMatcher.match(uri);
@@ -202,30 +187,18 @@ public class LaGonetteContentProvider
             case R.id.content_uri_partners:
                 table = Tables.PARTNER;
                 baseUri = LaGonetteContract.Partner.CONTENT_URI;
-                uris.add(LaGonetteContract.Partner.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = LaGonetteContract.PartnerMetadata.CONTENT_URI;
-                uris.add(LaGonetteContract.Partner.EXTENDED_CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
                 baseUri = LaGonetteContract.PartnerSideCategories.CONTENT_URI;
-                uris.add(LaGonetteContract.PartnerSideCategories.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories:
                 table = Tables.CATEGORY;
                 baseUri = LaGonetteContract.Category.CONTENT_URI;
-                uris.add(LaGonetteContract.Category.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
@@ -235,14 +208,11 @@ public class LaGonetteContentProvider
         int n = db.delete(table, selection, selectionArgs);
         Log.d(TAG, "delete: Delete " + n + " rows in " + table);
 
-        // getContext() not null because called after onCreate()
-        //noinspection ConstantConditions
-        ContentResolver contentResolver = getContext().getContentResolver();
-        Log.d(TAG, "delete: Notify " + baseUri);
-        contentResolver.notifyChange(baseUri, null);
-        for (Uri u : uris) {
-            Log.d(TAG, "delete: Notify " + u);
-            contentResolver.notifyChange(u, null);
+        if (mNotifyUri && n > 0) {
+            Log.d(TAG, "delete: Notify " + baseUri);
+            // getContext() not null because called after onCreate()
+            // noinspection ConstantConditions
+            getContext().getContentResolver().notifyChange(baseUri, null);
         }
 
         return n;
@@ -258,37 +228,22 @@ public class LaGonetteContentProvider
             case R.id.content_uri_partners:
                 table = Tables.PARTNER;
                 baseUri = LaGonetteContract.Partner.CONTENT_URI;
-                uris.add(LaGonetteContract.Partner.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_metadata:
                 table = Tables.PARTNER_METADATA;
                 baseUri = LaGonetteContract.PartnerMetadata.CONTENT_URI;
-                uris.add(LaGonetteContract.Partner.EXTENDED_CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_partners_side_categories:
                 table = Tables.PARTNER_SIDE_CATEGORIES;
                 baseUri = LaGonetteContract.PartnerSideCategories.CONTENT_URI;
-                uris.add(LaGonetteContract.PartnerSideCategories.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories:
                 table = Tables.CATEGORY;
                 baseUri = LaGonetteContract.Category.CONTENT_URI;
-                uris.add(LaGonetteContract.Category.CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             case R.id.content_uri_categories_metadata:
                 table = Tables.CATEGORY_METADATA;
                 baseUri = LaGonetteContract.Category.CONTENT_URI;
-                uris.add(LaGonetteContract.Category.EXTENDED_CONTENT_URI);
-                uris.add(LaGonetteContract.Filter.CONTENT_URI);
-                uris.add(LaGonetteContract.Map.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown content uri code: %s", match));
@@ -298,14 +253,11 @@ public class LaGonetteContentProvider
         int n = db.update(table, values, selection, selectionArgs);
         Log.d(TAG, "update: Update " + n + " rows in " + table);
 
-        // getContext() not null because called after onCreate()
-        //noinspection ConstantConditions
-        ContentResolver contentResolver = getContext().getContentResolver();
-        Log.d(TAG, "update: Notify " + baseUri);
-        contentResolver.notifyChange(baseUri, null);
-        for (Uri u : uris) {
-            Log.d(TAG, "update: Notify " + u);
-            contentResolver.notifyChange(u, null);
+        if (mNotifyUri && n > 0) {
+            Log.d(TAG, "update: Notify " + baseUri);
+            // getContext() not null because called after onCreate()
+            // noinspection ConstantConditions
+            getContext().getContentResolver().notifyChange(baseUri, null);
         }
 
         return n;
@@ -383,5 +335,84 @@ public class LaGonetteContentProvider
             path = path.substring(1);
         }
         uriMatcher.addURI(authority, path, code);
+    }
+
+    private static boolean addUri(ArrayList<Uri> uris, Uri uri) {
+        if (!uris.contains(uri)) {
+            uris.add(uri);
+
+            if (BuildConfig.DEBUG) {
+                Uri debugUri = DebugContentProviderUtil.removeForceLog(uri);
+                debugUri = DebugContentProviderUtil.removeSlowDown(debugUri);
+                if (!uris.contains(debugUri)) {
+                    uris.add(debugUri);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @NonNull
+    @Override
+    public ContentProviderResult[] applyBatch(@NonNull ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
+        ArrayList<Uri> uris = new ArrayList<>();
+        mNotifyUri = false;
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        db.beginTransactionNonExclusive();
+        try {
+            int numOperations = operations.size();
+            ContentProviderResult[] results = new ContentProviderResult[numOperations];
+            for (int i = 0; i < numOperations; i++) {
+                ContentProviderOperation operation = operations.get(i);
+                if (operation.isYieldAllowed()) {
+                    db.yieldIfContendedSafely();
+                }
+                results[i] = operation.apply(this, results, i);
+                Uri uri = operation.getUri();
+                if (addUri(uris, uri)) {
+                    int match = mUriMatcher.match(uri);
+                    switch (match) {
+                        case R.id.content_uri_partners:
+                            addUri(uris, LaGonetteContract.Partner.CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Filter.CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Map.CONTENT_URI);
+                            break;
+                        case R.id.content_uri_partners_metadata:
+                            addUri(uris, LaGonetteContract.Partner.EXTENDED_CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Filter.CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Map.CONTENT_URI);
+                            break;
+                        case R.id.content_uri_partners_side_categories:
+                            addUri(uris, LaGonetteContract.PartnerSideCategories.CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Filter.CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Map.CONTENT_URI);
+                            break;
+                        case R.id.content_uri_categories:
+                            addUri(uris, LaGonetteContract.Category.CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Filter.CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Map.CONTENT_URI);
+                            break;
+                    }
+                }
+            }
+            db.setTransactionSuccessful();
+            return results;
+        } finally {
+            db.endTransaction();
+            mNotifyUri = true;
+            if (!uris.isEmpty()) {
+                // getContext() not null because called after onCreate()
+                // noinspection ConstantConditions
+                ContentResolver contentResolver = getContext().getContentResolver();
+
+                for (Uri uri : uris) {
+                    Log.d(TAG, "applyBatch() notifyChange uri = " + uri.toString());
+                    contentResolver.notifyChange(uri, null);
+                }
+
+                uris.clear();
+            }
+        }
     }
 }
