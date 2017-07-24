@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -30,7 +31,7 @@ import org.lagonette.android.util.SoftKeyboardUtil;
 
 public class MapsActivity
         extends BaseActivity
-        implements MapsFragment.Callback,
+        implements MapsFragment.ActivityCallback,
         FiltersFragment.Callback,
         MainCoordinator.Callbacks,
         View.OnClickListener,
@@ -47,6 +48,8 @@ public class MapsActivity
     private EditText mSearchText;
 
     private ImageButton mSearchClear;
+
+    private ProgressBar mProgressBar;
 
     private View mBottomSheet;
 
@@ -71,6 +74,7 @@ public class MapsActivity
         mSearchBar = findViewById(R.id.search_bar);
         mSearchText = (EditText) findViewById(R.id.search_text);
         mSearchClear = (ImageButton) findViewById(R.id.search_clear);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mBottomSheet = findViewById(R.id.bottom_sheet);
         mMyLocationFab = (FloatingActionButton) findViewById(R.id.my_location_fab);
         mFiltersFab = (FloatingActionButton) findViewById(R.id.filters_fab);
@@ -193,6 +197,16 @@ public class MapsActivity
     public void onMapReady() {
         ParallaxBehavior<View> parallaxBehavior = ParallaxBehavior.from(mContentView);
         parallaxBehavior.setOnParallaxTranslationListener(mCoordinator);
+    }
+
+    @Override
+    public void showProgressBar() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override

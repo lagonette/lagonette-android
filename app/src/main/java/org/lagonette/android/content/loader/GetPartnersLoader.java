@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class GetPartnersLoader extends BundleLoader {
 
     @Override
     public Bundle loadInBackground() {
+        SystemClock.sleep(5000);
         try {
             LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
             ArrayList<ContentProviderOperation> operations = new ArrayList<>();

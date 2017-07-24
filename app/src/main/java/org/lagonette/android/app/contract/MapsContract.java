@@ -33,6 +33,10 @@ public class MapsContract {
 
         void showPartners(@Nullable PartnerReader partnerReader);
 
+        void showProgressBar();
+
+        void hideProgressBar();
+
         void errorGettingPartners();
     }
 }

@@ -14,6 +14,10 @@ public class GetPartnersCallbacks extends BundleLoaderCallbacks<GetPartnersCallb
 
     public interface Callbacks extends BaseLoaderCallbacks.Callbacks {
 
+        void showProgressBar();
+
+        void hideProgressBar();
+
         void errorGettingPartners();
 
     }
@@ -41,6 +45,7 @@ public class GetPartnersCallbacks extends BundleLoaderCallbacks<GetPartnersCallb
     }
 
     private void onGetPartnersLoaderFinished(@NonNull Bundle data) {
+        mCallbacks.hideProgressBar();
         int status = data.getInt(GetPartnersLoader.ARG_STATUS);
         switch (status) {
             case GetPartnersLoader.STATUS_OK:
@@ -58,6 +63,7 @@ public class GetPartnersCallbacks extends BundleLoaderCallbacks<GetPartnersCallb
     }
 
     public void getParners() {
+        mCallbacks.showProgressBar();
         initLoader(
                 R.id.loader_get_partners,
                 null

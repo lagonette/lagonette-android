@@ -51,7 +51,7 @@ public class MapsFragment
         ClusterManager.OnClusterItemClickListener<PartnerItem>,
         GoogleMap.OnMapClickListener {
 
-    public interface Callback {
+    public interface ActivityCallback {
 
         void hideMyLocationButton();
 
@@ -62,6 +62,10 @@ public class MapsFragment
         void showFullMap();
 
         void onMapReady();
+
+        void showProgressBar();
+
+        void hideProgressBar();
 
     }
 
@@ -87,7 +91,7 @@ public class MapsFragment
 
     private int mStatusBarHeight;
 
-    private Callback mCallback;
+    private ActivityCallback mActivityCallback;
 
     private Map<Long, PartnerItem> mPartnerItems;
 
@@ -158,9 +162,9 @@ public class MapsFragment
         mapFragment.getMapAsync(mPresenter);
 
         try {
-            mCallback = (Callback) getActivity();
+            mActivityCallback = (ActivityCallback) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
+            throw new ClassCastException(mActivityCallback.toString() + " must implement " + ActivityCallback.class);
         }
 
         mPresenter.onActivityCreated(savedInstanceState);
@@ -206,7 +210,7 @@ public class MapsFragment
         mMap = googleMap;
         setupMap();
         setupFootprint();
-        mCallback.onMapReady();
+        mActivityCallback.onMapReady();
     }
 
     private void setupMap() {
@@ -247,7 +251,7 @@ public class MapsFragment
                 // If so, we simulate a click on the marker behind.
                 if (!mClusterManager.onMarkerClick(marker)) {
                     if (marker.getId().equals(mSelectedMarker.getId())) {
-                        mCallback.showPartner(mSelectedMarkerId, false);
+                        mActivityCallback.showPartner(mSelectedMarkerId, false);
                         return true;
                     } else {
                         return false;
@@ -291,7 +295,7 @@ public class MapsFragment
 
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
-        mCallback.showPartner(partnerItem.getId(), false);
+        mActivityCallback.showPartner(partnerItem.getId(), false);
         return true;
     }
 
@@ -302,7 +306,7 @@ public class MapsFragment
 
     private void showFullMap() {
         removeSelectedMarker();
-        mCallback.showFullMap();
+        mActivityCallback.showFullMap();
     }
 
     private void addSelectedMarker(long partnerId, @NonNull LatLng position) {
@@ -421,10 +425,10 @@ public class MapsFragment
 
         if (mPresenter.checkLocationPermission()) {
             mMap.setMyLocationEnabled(true);
-            mCallback.showMyLocationButton();
+            mActivityCallback.showMyLocationButton();
         } else {
             mMap.setMyLocationEnabled(false);
-            mCallback.hideMyLocationButton();
+            mActivityCallback.hideMyLocationButton();
         }
     }
 
@@ -456,6 +460,16 @@ public class MapsFragment
                 mClusterManager.cluster();
             }
         }
+    }
+
+    @Override
+    public void showProgressBar() {
+        mActivityCallback.showProgressBar();
+    }
+
+    @Override
+    public void hideProgressBar() {
+        mActivityCallback.hideProgressBar();
     }
 
     @Override

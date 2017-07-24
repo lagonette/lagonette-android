@@ -213,6 +213,16 @@ public class MapsPresenter
     }
 
     @Override
+    public void showProgressBar() {
+        mView.showProgressBar();
+    }
+
+    @Override
+    public void hideProgressBar() {
+        mView.hideProgressBar();
+    }
+
+    @Override
     public void errorGettingPartners() {
         mView.errorGettingPartners();
     }
