@@ -38,7 +38,6 @@ public class GetPartnersLoader extends BundleLoader {
 
     @Override
     public Bundle loadInBackground() {
-        SystemClock.sleep(5000);
         try {
             LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
             ArrayList<ContentProviderOperation> operations = new ArrayList<>();
