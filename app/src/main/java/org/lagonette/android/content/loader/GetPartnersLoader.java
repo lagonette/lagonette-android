@@ -73,7 +73,7 @@ public class GetPartnersLoader extends BundleLoader {
 
         if (response.isSuccessful()) {
             CategoriesResponse result = response.body();
-            result.prepareInsert(operations, contentValues);
+            result.prepareInsert(mContext, operations, contentValues);
             return true;
         } else {
             mBundle.putInt(ARG_STATUS, STATUS_ERROR);
@@ -94,7 +94,7 @@ public class GetPartnersLoader extends BundleLoader {
 
         if (response.isSuccessful()) {
             PartnersResponse result = response.body();
-            result.prepareInsert(operations, contentValues);
+            result.prepareInsert(mContext, operations, contentValues);
             return true;
         } else {
             mBundle.putInt(ARG_STATUS, STATUS_ERROR);

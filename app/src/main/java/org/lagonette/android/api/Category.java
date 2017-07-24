@@ -2,6 +2,7 @@ package org.lagonette.android.api;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -22,7 +23,7 @@ public class Category implements ContentObject {
     private String mIcon;
 
     @Override
-    public void prepareInsert(@NonNull List<ContentProviderOperation> operations, @NonNull ContentValues contentValues) {
+    public void prepareInsert(@NonNull Context context, @NonNull List<ContentProviderOperation> operations, @NonNull ContentValues contentValues) {
         // Insert Category
         contentValues.clear();
         contentValues.put(LaGonetteContract.Category.ID, mId);
