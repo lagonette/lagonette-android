@@ -393,6 +393,11 @@ public class LaGonetteContentProvider
                             addUri(uris, LaGonetteContract.Filter.CONTENT_URI);
                             addUri(uris, LaGonetteContract.Map.CONTENT_URI);
                             break;
+                        case R.id.content_uri_categories_metadata:
+                            addUri(uris, LaGonetteContract.Category.CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Filter.CONTENT_URI);
+                            addUri(uris, LaGonetteContract.Map.CONTENT_URI);
+                            break;
                     }
                 }
             }
