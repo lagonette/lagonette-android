@@ -6,6 +6,7 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity(
+        tableName = "category_metadata",
         foreignKeys = @ForeignKey(
                 entity = Category.class,
                 parentColumns = "id",

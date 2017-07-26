@@ -5,8 +5,12 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import org.lagonette.android.room.embedded.Address;
 
-@Entity
+
+@Entity(
+        tableName = "partner"
+)
 public class Partner {
 
     @PrimaryKey

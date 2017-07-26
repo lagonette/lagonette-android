@@ -1,8 +1,8 @@
-package org.lagonette.android.room.entity;
+package org.lagonette.android.room.embedded;
 
 import android.arch.persistence.room.ColumnInfo;
 
-class Address {
+public class Address {
 
     @ColumnInfo(name = "zip_code")
     public String zipCode;

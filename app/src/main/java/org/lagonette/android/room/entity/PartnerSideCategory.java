@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 
 @Entity(
+        tableName = "partner_side_category",
         primaryKeys = {
                 "partner_id",
                 "category_id"
@@ -12,13 +13,13 @@ import android.arch.persistence.room.ForeignKey;
         foreignKeys = {
                 @ForeignKey(
                         entity = Partner.class,
-                        parentColumns = "partner_id",
+                        parentColumns = "id",
                         childColumns = "partner_id",
                         onDelete = ForeignKey.CASCADE
                 ),
                 @ForeignKey(
                         entity = Category.class,
-                        parentColumns = "category_id",
+                        parentColumns = "id",
                         childColumns = "category_id",
                         onDelete = ForeignKey.CASCADE
                 )
