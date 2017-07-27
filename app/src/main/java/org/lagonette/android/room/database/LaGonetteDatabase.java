@@ -3,8 +3,8 @@ package org.lagonette.android.room.database;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
+import org.lagonette.android.room.dao.EntityDao;
 import org.lagonette.android.room.dao.MainDao;
-import org.lagonette.android.room.dao.PartnerDao;
 import org.lagonette.android.room.entity.Category;
 import org.lagonette.android.room.entity.CategoryMetadata;
 import org.lagonette.android.room.entity.Partner;
@@ -25,6 +25,6 @@ public abstract class LaGonetteDatabase extends RoomDatabase {
 
     public abstract MainDao mainDao();
 
-    public abstract PartnerDao partnerDao();
+    public abstract EntityDao partnerDao();
 
 }
