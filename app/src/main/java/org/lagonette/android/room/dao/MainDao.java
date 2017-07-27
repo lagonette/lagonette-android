@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 @Dao
-public interface LaGonetteDao {
+public interface MainDao {
 
     @Query(
             "SELECT partner.id, " +
