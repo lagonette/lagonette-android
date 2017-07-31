@@ -2,28 +2,27 @@ package org.lagonette.android.room.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 
 @Entity(
         tableName = "partner_side_category",
         primaryKeys = {
                 "partner_id",
                 "category_id"
-        },
-        foreignKeys = {
-                @ForeignKey(
-                        entity = Partner.class,
-                        parentColumns = "id",
-                        childColumns = "partner_id",
-                        onDelete = ForeignKey.CASCADE
-                ),
-                @ForeignKey(
-                        entity = Category.class,
-                        parentColumns = "id",
-                        childColumns = "category_id",
-                        onDelete = ForeignKey.CASCADE
-                )
-        }
+        }//,
+//        foreignKeys = {
+//                @ForeignKey(
+//                        entity = Partner.class,
+//                        parentColumns = "id",
+//                        childColumns = "partner_id",
+//                        onDelete = ForeignKey.CASCADE
+//                ),
+//                @ForeignKey(
+//                        entity = Category.class,
+//                        parentColumns = "id",
+//                        childColumns = "category_id",
+//                        onDelete = ForeignKey.CASCADE
+//                )
+//        }
 )
 public class PartnerSideCategory {
 

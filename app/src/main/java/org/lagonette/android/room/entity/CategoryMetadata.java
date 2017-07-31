@@ -21,9 +21,9 @@ public class CategoryMetadata {
     public long categoryId;
 
     @ColumnInfo(name = "is_visible")
-    public String isVisible;
+    public boolean isVisible;
 
     @ColumnInfo(name = "is_collapsed")
-    public String isCollapsed;
+    public boolean isCollapsed;
 
 }

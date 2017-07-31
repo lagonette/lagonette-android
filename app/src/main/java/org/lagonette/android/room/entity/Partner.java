@@ -54,7 +54,7 @@ public class Partner {
     public String shortDescription;
 
     @ColumnInfo(name = "main_category")
-    public int mainCategory;
+    public long mainCategory;
 
     @Embedded
     public Address address;
