@@ -1,8 +1,6 @@
 package org.lagonette.android.content.loader;
 
 
-import android.content.ContentProviderOperation;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.os.Bundle;
@@ -13,14 +11,21 @@ import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.lagonette.android.api.CategoriesResponse;
-import org.lagonette.android.api.LaGonetteService;
-import org.lagonette.android.api.PartnersResponse;
-import org.lagonette.android.content.contract.LaGonetteContract;
+import org.lagonette.android.api.response.CategoriesResponse;
+import org.lagonette.android.api.response.PartnersResponse;
+import org.lagonette.android.api.service.LaGonetteService;
+import org.lagonette.android.app.LaGonetteApplication;
 import org.lagonette.android.content.loader.base.BundleLoader;
+import org.lagonette.android.room.database.LaGonetteDatabase;
+import org.lagonette.android.room.entity.Category;
+import org.lagonette.android.room.entity.CategoryMetadata;
+import org.lagonette.android.room.entity.Partner;
+import org.lagonette.android.room.entity.PartnerMetadata;
+import org.lagonette.android.room.entity.PartnerSideCategory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -39,18 +44,29 @@ public class GetPartnersLoader extends BundleLoader {
     public Bundle loadInBackground() {
         try {
             LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
-            ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-            ContentValues contentValues = new ContentValues();
+            LaGonetteDatabase database = LaGonetteApplication.getDatabase(mContext);
+            List<Category> categories = new ArrayList<>();
+            List<CategoryMetadata> categoryMetadataList = new ArrayList<>();
+            List<Partner> partners = new ArrayList<>();
+            List<PartnerMetadata> partnerMetadataList = new ArrayList<>();
+            List<PartnerSideCategory> partnerSideCategories = new ArrayList<>();
 
-            if (getCategories(service, operations, contentValues)) {
-                if (getPartners(service, operations, contentValues)) {
-                    mContext.getContentResolver().applyBatch(
-                            LaGonetteContract.AUTHORITY,
-                            operations
-                    );
+            // TODO Exception ? Finally ?
+            database.beginTransaction();
+
+            if (getCategories(service, categories, categoryMetadataList)) {
+                database.categoryDao().deleteCategories();
+                database.categoryDao().insertCategories(categories);
+                if (getPartners(service, partners, partnerMetadataList, partnerSideCategories)) {
+                    database.partnerDao().deletePartners();
+                    database.partnerDao().insertPartners(partners);
+                    database.partnerDao().deletePartnerSideCategories();
+                    database.partnerDao().insertPartnersSideCategories(partnerSideCategories);
                     mBundle.putInt(ARG_STATUS, STATUS_OK);
                 }
             }
+
+            database.endTransaction();
 
             return mBundle;
 
@@ -64,8 +80,8 @@ public class GetPartnersLoader extends BundleLoader {
 
     private boolean getCategories(
             @NonNull LaGonetteService service,
-            @NonNull ArrayList<ContentProviderOperation> operations,
-            @NonNull ContentValues contentValues)
+            @NonNull List<Category> categories,
+            @NonNull List<CategoryMetadata> categoryMetadataList)
             throws IOException, RemoteException, OperationApplicationException {
 
         Call<CategoriesResponse> categoryCall = service.getCategories();
@@ -73,7 +89,7 @@ public class GetPartnersLoader extends BundleLoader {
 
         if (response.isSuccessful()) {
             CategoriesResponse result = response.body();
-            result.prepareInsert(operations, contentValues);
+            result.prepareInsert(categories, categoryMetadataList);
             return true;
         } else {
             mBundle.putInt(ARG_STATUS, STATUS_ERROR);
@@ -85,8 +101,9 @@ public class GetPartnersLoader extends BundleLoader {
 
     private boolean getPartners(
             @NonNull LaGonetteService service,
-            @NonNull ArrayList<ContentProviderOperation> operations,
-            @NonNull ContentValues contentValues)
+            @NonNull List<Partner> partners,
+            @NonNull List<PartnerMetadata> partnerMetadataList,
+            @NonNull List<PartnerSideCategory> partnerSideCategories)
             throws IOException, RemoteException, OperationApplicationException {
 
         Call<PartnersResponse> partnersCall = service.getPartners();
@@ -94,7 +111,7 @@ public class GetPartnersLoader extends BundleLoader {
 
         if (response.isSuccessful()) {
             PartnersResponse result = response.body();
-            result.prepareInsert(operations, contentValues);
+            result.prepareInsert(partners, partnerMetadataList, partnerSideCategories);
             return true;
         } else {
             mBundle.putInt(ARG_STATUS, STATUS_ERROR);

@@ -1,10 +1,12 @@
-package org.lagonette.android.api;
+package org.lagonette.android.api.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.lagonette.android.api.adapter.BooleanTypeAdapter;
 import org.lagonette.android.api.adapter.LongTypeAdapter;
+import org.lagonette.android.api.response.CategoriesResponse;
+import org.lagonette.android.api.response.PartnersResponse;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;

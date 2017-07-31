@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import org.lagonette.android.api.Partner;
 import org.lagonette.android.content.reader.PartnerReader;
 
 public class PartnerItem

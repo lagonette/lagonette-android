@@ -1,4 +1,4 @@
-package org.lagonette.android.api;
+package org.lagonette.android.api.response;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
@@ -15,15 +15,11 @@ public class CategoriesResponse extends ApiResponse {
     @SerializedName("categories")
     private List<Category> mCategories;
 
-    @Override
-    public void prepareInsert(@NonNull List<ContentProviderOperation> operations, @NonNull ContentValues contentValues) {
-        operations.add(ContentProviderOperation
-                .newDelete(LaGonetteContract.PartnerSideCategories.CONTENT_URI)
-                .withYieldAllowed(true)
-                .build()
-        );
+    public void prepareInsert(
+            @NonNull List<org.lagonette.android.room.entity.Category> categories,
+            @NonNull List<org.lagonette.android.room.entity.CategoryMetadata> categoryMetadataList) {
         for (Category category : mCategories) {
-            category.prepareInsert(operations, contentValues);
+            category.prepareInsert(categories, categoryMetadataList);
         }
     }
 }
