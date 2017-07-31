@@ -36,6 +36,7 @@ public class LaGonetteApplication
                         LaGonetteDatabase.class,
                         DatabaseUtil.DATABASE_NAME
                 )
+                .allowMainThreadQueries() // TODO /!\ Testing purpose
                 .build();
     }
 }

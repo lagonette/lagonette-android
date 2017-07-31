@@ -1,43 +1,41 @@
 package org.lagonette.android.database.columns;
 
-import org.lagonette.android.database.Tables;
-
 public interface PartnerColumns {
 
-    String ID = Tables.PARTNER + "_id";
+    String ID = "id";
 
-    String NAME = Tables.PARTNER + "_name";
+    String NAME = "name";
 
-    String DESCRIPTION = Tables.PARTNER + "_description";
+    String DESCRIPTION = "description";
 
-    String LATITUDE = Tables.PARTNER + "_latitude";
+    String LATITUDE = "latitude";
 
-    String LONGITUDE = Tables.PARTNER + "_longitude";
+    String LONGITUDE = "longitude";
 
-    String CLIENT_CODE = Tables.PARTNER + "_client_code";
+    String CLIENT_CODE = "client_code";
 
-    String ADDRESS = Tables.PARTNER + "_address";
+    String ADDRESS = "street";
 
-    String CITY = Tables.PARTNER + "_city";
+    String CITY = "city";
 
-    String LOGO = Tables.PARTNER + "_logo";
+    String LOGO = "logo";
 
-    String ZIP_CODE = Tables.PARTNER + "_zip_code";
+    String ZIP_CODE = "zip_code";
 
-    String PHONE = Tables.PARTNER + "_phone";
+    String PHONE = "phone";
 
-    String WEBSITE = Tables.PARTNER + "_website";
+    String WEBSITE = "website";
 
-    String EMAIL = Tables.PARTNER + "_email";
+    String EMAIL = "email";
 
-    String OPENING_HOURS = Tables.PARTNER + "_opening_hours";
+    String OPENING_HOURS = "opening_hours";
 
-    String IS_EXCHANGE_OFFICE = Tables.PARTNER + "_is_exchange_office";
+    String IS_EXCHANGE_OFFICE = "is_exchange_office";
 
-    String SHORT_DESCRIPTION = Tables.PARTNER + "_short_description";
+    String SHORT_DESCRIPTION = "short_description";
 
-    String MAIN_CATEGORY = Tables.PARTNER + "_main_category";
+    String MAIN_CATEGORY = "main_category";
 
-    String PARTNER_SIDE_CATEGORIES_ID = Tables.PARTNER + "_partner_side_categories_id";
+    String PARTNER_SIDE_CATEGORIES_ID = "partner_side_categories_id";
 
 }

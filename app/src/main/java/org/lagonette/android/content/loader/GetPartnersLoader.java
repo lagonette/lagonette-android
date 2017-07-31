@@ -57,11 +57,14 @@ public class GetPartnersLoader extends BundleLoader {
             if (getCategories(service, categories, categoryMetadataList)) {
                 database.categoryDao().deleteCategories();
                 database.categoryDao().insertCategories(categories);
+                database.categoryDao().insertCategoriesMetadatas(categoryMetadataList);
                 if (getPartners(service, partners, partnerMetadataList, partnerSideCategories)) {
                     database.partnerDao().deletePartners();
                     database.partnerDao().insertPartners(partners);
+                    database.partnerDao().insertPartnersMetadatas(partnerMetadataList);
                     database.partnerDao().deletePartnerSideCategories();
                     database.partnerDao().insertPartnersSideCategories(partnerSideCategories);
+                    database.setTransactionSuccessful();
                     mBundle.putInt(ARG_STATUS, STATUS_OK);
                 }
             }

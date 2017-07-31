@@ -2,12 +2,12 @@ package org.lagonette.android.app.presenter;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -16,16 +16,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.lagonette.android.R;
+import org.lagonette.android.app.LaGonetteApplication;
 import org.lagonette.android.app.contract.MapsContract;
 import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
-import org.lagonette.android.content.contract.LaGonetteContract;
-import org.lagonette.android.content.loader.CursorLoaderParams;
-import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
 import org.lagonette.android.content.loader.callbacks.GetPartnersCallbacks;
-import org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
 import org.lagonette.android.content.reader.PartnerReader;
+import org.lagonette.android.room.database.LaGonetteDatabase;
 
 public class MapsPresenter
         extends BundleLoaderPresenter<MapsContract.View>
@@ -33,8 +30,7 @@ public class MapsPresenter
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         CursorLoaderCallbacks.Callbacks,
-        GetPartnersCallbacks.Callbacks,
-        LoadPartnerCallbacks.Callbacks {
+        GetPartnersCallbacks.Callbacks {
 
     private static final String TAG = "MapsPresenter";
 
@@ -42,7 +38,6 @@ public class MapsPresenter
 
     public static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
-    private org.lagonette.android.content.loader.callbacks.LoadPartnerCallbacks mLoadPartnerCallbacks;
 
     private GetPartnersCallbacks mGetPartnersCallbacks;
 
@@ -76,10 +71,6 @@ public class MapsPresenter
         }
 
         mGetPartnersCallbacks = new GetPartnersCallbacks(MapsPresenter.this);
-        mLoadPartnerCallbacks = new LoadPartnerCallbacks(
-                MapsPresenter.this,
-                R.id.loader_query_map_partners
-        );
     }
 
     @Override
@@ -140,14 +131,18 @@ public class MapsPresenter
 
     @Override
     public void loadPartners() {
-        mLoadPartnerCallbacks.loadPartners();
+        LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
+        Cursor cursor = database.mainDao().getMapPartner(/*"%"*/);
+        PartnerReader reader = PartnerReader.create(cursor);
+        mView.showPartners(reader);
     }
 
     @Override
     public void loadPartners(@NonNull String search) {
-        mLoadPartnerCallbacks.loadPartners(
-                PartnerCursorLoaderHelper.createArgs(search)
-        );
+        LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
+        Cursor cursor = database.mainDao().getMapPartner(/*"%" + search + "%"*/);
+        PartnerReader reader = PartnerReader.create(cursor);
+        mView.showPartners(reader);
     }
 
     @Override
@@ -188,6 +183,7 @@ public class MapsPresenter
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        // TODO Use LiveData
         // Called when location service is connected and my position available.
         // Do nothing here.
     }
@@ -217,26 +213,4 @@ public class MapsPresenter
         mView.errorGettingPartners();
     }
 
-    @Override
-    public void setPartnerReader(@Nullable PartnerReader reader) {
-        mView.showPartners(reader);
-    }
-
-    @Override
-    public CursorLoaderParams getPartnerLoaderParams(@Nullable Bundle args) {
-        String search = PartnerCursorLoaderHelper.getSearch(args);
-        return new CursorLoaderParams(
-                LaGonetteContract.Map.CONTENT_URI,
-                mView.getMapColumns()
-        )
-                .setSelection(!TextUtils.isEmpty(search)
-                        ? LaGonetteContract.Map.PartnerMetadata.IS_VISIBLE + " = 1 AND " + LaGonetteContract.Map.Partner.NAME + " LIKE ? AND (" + LaGonetteContract.Map.CategoryMetadata.IS_VISIBLE + " > 0 OR " + LaGonetteContract.Map.SIDE_CATEGORY_METADATA_IS_VISIBLE_SUM + " > 0)"
-                        : LaGonetteContract.Map.PartnerMetadata.IS_VISIBLE + " = 1 AND (" + LaGonetteContract.Map.CategoryMetadata.IS_VISIBLE + " > 0 OR " + LaGonetteContract.Map.SIDE_CATEGORY_METADATA_IS_VISIBLE_SUM + " > 0)"
-                )
-                .setSelectionArgs(!TextUtils.isEmpty(search)
-                        ? new String[]{"%" + search + "%"}
-                        : null
-                )
-                .setSortOrder(null);
-    }
 }

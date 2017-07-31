@@ -1,35 +1,31 @@
 package org.lagonette.android.app.presenter;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.android.R;
+import org.lagonette.android.app.LaGonetteApplication;
 import org.lagonette.android.app.contract.FiltersContract;
 import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
-import org.lagonette.android.content.contract.LaGonetteContract;
-import org.lagonette.android.content.loader.CursorLoaderParams;
-import org.lagonette.android.content.loader.PartnerCursorLoaderHelper;
-import org.lagonette.android.content.loader.callbacks.LoadFilterCallbacks;
 import org.lagonette.android.content.loader.callbacks.UpdateCategoryMetadataCallbacks;
 import org.lagonette.android.content.loader.callbacks.UpdatePartnerMetadataCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
 import org.lagonette.android.content.reader.FilterReader;
-import org.lagonette.android.database.statement.FilterStatement;
+import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.util.SearchUtil;
 
 public class FiltersPresenter
         extends BundleLoaderPresenter<FiltersContract.View>
         implements FiltersContract.Presenter,
         CursorLoaderCallbacks.Callbacks,
-        LoadFilterCallbacks.Callbacks,
         UpdatePartnerMetadataCallbacks.Callbacks,
         UpdateCategoryMetadataCallbacks.Callbacks {
 
-    private static final String ARG_SEARCH = "arg:search";
+    private static final String TAG = "FiltersPresenter";
 
-    private LoadFilterCallbacks mLoadFilterCallbacks;
+    private static final String ARG_SEARCH = "arg:search";
 
     @SuppressWarnings("NullableProblems")
     @NonNull
@@ -61,10 +57,6 @@ public class FiltersPresenter
         if (arguments != null) {
             mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
         }
-        mLoadFilterCallbacks = new LoadFilterCallbacks(
-                FiltersPresenter.this,
-                R.id.loader_query_filters_partners
-        );
         mUpdatePartnerMetadataCallbacks = new UpdatePartnerMetadataCallbacks(
                 FiltersPresenter.this
         );
@@ -108,30 +100,17 @@ public class FiltersPresenter
 
     @Override
     public void loadFilters() {
-        mLoadFilterCallbacks.loadFilters();
+        LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
+        Cursor cursor = database.mainDao().getFilters("%");
+        FilterReader reader = FilterReader.create(cursor);
+        mView.displayFilters(reader);
     }
 
     private void loadFilters(@NonNull String search) {
-        mLoadFilterCallbacks.loadFilters(
-                PartnerCursorLoaderHelper.createArgs(search)
-        );
-    }
-
-    @Override
-    public void setFilterReaders(@Nullable FilterReader filterReader) {
-        mView.displayFilters(filterReader);
-    }
-
-    @Override
-    public CursorLoaderParams getFilterLoaderParams(@Nullable Bundle args) {
-        String search = PartnerCursorLoaderHelper.getSearch(args);
-        return new CursorLoaderParams(
-                LaGonetteContract.Filter.CONTENT_URI,
-                mView.getFiltersColumns()
-        )
-                .setSelection(null)
-                .setSelectionArgs(FilterStatement.getSelectionsArgs(search)) // TODO Do not call directly FilterStatement because of separation of concern
-                .setSortOrder(null);
+        LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
+        Cursor cursor = database.mainDao().getFilters("%" + search + "%");
+        FilterReader reader = FilterReader.create(cursor);
+        mView.displayFilters(reader);
     }
 
 }

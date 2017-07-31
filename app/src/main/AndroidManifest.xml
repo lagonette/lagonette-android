@@ -29,13 +29,6 @@
             </intent-filter>
         </activity>
 
-        <provider
-            android:name="org.lagonette.android.content.LaGonetteContentProvider"
-            android:authorities="${applicationId}.content"
-            android:enabled="true"
-            android:exported="false"
-            android:syncable="true"/>
-
     </application>
 
 </manifest>
