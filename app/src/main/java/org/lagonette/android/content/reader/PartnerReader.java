@@ -11,6 +11,8 @@ import org.lagonette.android.content.reader.base.CursorReader;
 public class PartnerReader
         extends CursorReader {
 
+    // TODO Delete old reader
+
     @Nullable
     public static PartnerReader create(@Nullable Cursor cursor) {
         return cursor != null

@@ -10,8 +10,8 @@ import org.lagonette.android.app.contract.PartnerDetailContract;
 import org.lagonette.android.app.fragment.PartnerDetailFragment;
 import org.lagonette.android.app.presenter.base.LoaderPresenter;
 import org.lagonette.android.content.contract.LaGonetteContract;
-import org.lagonette.android.content.reader.PartnerReader;
 import org.lagonette.android.room.database.LaGonetteDatabase;
+import org.lagonette.android.room.reader.PartnerDetailReader;
 import org.lagonette.android.util.IntentUtil;
 
 public class PartnerDetailPresenter
@@ -44,8 +44,8 @@ public class PartnerDetailPresenter
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
-        Cursor cursor = database.partnerDao().getPartner(mPartnerId);
-        PartnerReader reader = PartnerReader.create(cursor);
+        Cursor cursor = database.mainDao().getPartnerDetail(mPartnerId);
+        PartnerDetailReader reader = PartnerDetailReader.create(cursor);
         mView.displayPartner(reader);
     }
 

@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.app.contract.base.BaseContract;
-import org.lagonette.android.content.reader.PartnerReader;
+import org.lagonette.android.room.reader.PartnerDetailReader;
 
 public class PartnerDetailContract {
 
@@ -22,10 +22,7 @@ public class PartnerDetailContract {
 
     public interface View extends BaseContract.BaseView {
 
-        void displayPartner(@Nullable PartnerReader reader);
-
-        @NonNull
-        String[] getPartnerDetailColumns();
+        void displayPartner(@Nullable PartnerDetailReader reader);
 
         void errorNoDirectionAppFound();
 

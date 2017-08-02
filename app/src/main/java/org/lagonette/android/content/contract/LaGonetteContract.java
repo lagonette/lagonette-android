@@ -13,6 +13,7 @@ import org.lagonette.android.database.columns.PartnerColumns;
 import org.lagonette.android.database.columns.PartnerMetadataColumns;
 import org.lagonette.android.database.columns.PartnerSideCategoriesColumns;
 
+// TODO Delete old contract
 public class LaGonetteContract {
 
     public static final String CONTENT_TYPE_APP_BASE = BuildConfig.APPLICATION_ID;

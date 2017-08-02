@@ -20,8 +20,7 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.contract.PartnerDetailContract;
 import org.lagonette.android.app.presenter.PartnerDetailPresenter;
 import org.lagonette.android.content.contract.LaGonetteContract;
-import org.lagonette.android.content.reader.PartnerReader;
-import org.lagonette.android.util.DisplayUtil;
+import org.lagonette.android.room.reader.PartnerDetailReader;
 import org.lagonette.android.util.SnackbarUtil;
 
 public class PartnerDetailFragment
@@ -133,7 +132,7 @@ public class PartnerDetailFragment
     }
 
     @Override
-    public void displayPartner(@Nullable PartnerReader reader) {
+    public void displayPartner(@Nullable PartnerDetailReader reader) {
         if (reader != null && reader.moveToFirst()) {
             Resources resources = getResources();
 
@@ -160,21 +159,11 @@ public class PartnerDetailFragment
             }
 
             // ADDRESS
+            // TODO use DisplayUtil.formatAddress
             String address = reader.getAddress();
-            String zipCode = reader.getZipCode();
-            String city = reader.getCity();
-            if (!TextUtils.isEmpty(address)
-                    && !TextUtils.isEmpty(zipCode)
-                    && !TextUtils.isEmpty(city)) {
+            if (!TextUtils.isEmpty(address)) {
                 mAddressLayout.setVisibility(View.VISIBLE);
-                mAddressTextView.setText(
-                        DisplayUtil.formatAddress(
-                                resources,
-                                address,
-                                zipCode,
-                                city
-                        )
-                );
+                mAddressTextView.setText(address);
             } else {
                 mAddressLayout.setVisibility(View.GONE);
             }
@@ -206,7 +195,7 @@ public class PartnerDetailFragment
                 mEmailLayout.setVisibility(View.GONE);
             }
 
-            mMainCategoryLabelTextView.setText(reader.categoryReader.getLabel());
+            mMainCategoryLabelTextView.setText(reader.getCategoryLabel());
 
             Glide.with(getContext())
                     .load(reader.getLogo())
@@ -214,34 +203,10 @@ public class PartnerDetailFragment
                     .into(mLogoImageView);
 
             Glide.with(getContext())
-                    .load(reader.categoryReader.getIcon())
+                    .load(reader.getCategoryIcon())
                     .asBitmap()
                     .into(mMainCategoryLogoImageView);
         }
-    }
-
-    @NonNull
-    @Override
-    public String[] getPartnerDetailColumns() {
-        return new String[]{
-                LaGonetteContract.Partner.ID,
-                LaGonetteContract.Partner.NAME,
-                LaGonetteContract.Partner.DESCRIPTION,
-                LaGonetteContract.Partner.SHORT_DESCRIPTION,
-                LaGonetteContract.Partner.LATITUDE,
-                LaGonetteContract.Partner.LONGITUDE,
-                LaGonetteContract.Partner.ADDRESS,
-                LaGonetteContract.Partner.CITY,
-                LaGonetteContract.Partner.ZIP_CODE,
-                LaGonetteContract.Partner.EMAIL,
-                LaGonetteContract.Partner.WEBSITE,
-                LaGonetteContract.Partner.PHONE,
-                LaGonetteContract.Partner.OPENING_HOURS,
-                LaGonetteContract.Partner.LOGO,
-                LaGonetteContract.Partner.IS_EXCHANGE_OFFICE,
-                LaGonetteContract.Category.LABEL,
-                LaGonetteContract.Category.ICON
-        };
     }
 
     // TODO factorize with MapsFragment

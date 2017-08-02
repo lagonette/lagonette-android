@@ -35,7 +35,7 @@ import org.lagonette.android.app.presenter.MapsPresenter;
 import org.lagonette.android.app.widget.maps.PartnerItem;
 import org.lagonette.android.app.widget.maps.PartnerRenderer;
 import org.lagonette.android.content.contract.LaGonetteContract;
-import org.lagonette.android.content.reader.PartnerReader;
+import org.lagonette.android.room.reader.MapPartnerReader;
 import org.lagonette.android.util.SharedPreferencesUtil;
 import org.lagonette.android.util.SnackbarUtil;
 import org.lagonette.android.util.UiUtil;
@@ -399,21 +399,6 @@ public class MapsFragment
         }
     }
 
-    @NonNull
-    @Override
-    public String[] getMapColumns() {
-        return new String[]{
-                LaGonetteContract.Map.Partner.ID,
-                LaGonetteContract.Map.Partner.NAME,
-                LaGonetteContract.Map.Partner.DESCRIPTION,
-                LaGonetteContract.Map.Partner.LATITUDE,
-                LaGonetteContract.Map.Partner.LONGITUDE,
-                LaGonetteContract.Map.Partner.IS_EXCHANGE_OFFICE,
-                LaGonetteContract.Map.Partner.MAIN_CATEGORY,
-                LaGonetteContract.Map.Category.ICON
-        };
-    }
-
     public void updateLocationUI() {
         if (mMap == null) {
             return;
@@ -441,7 +426,7 @@ public class MapsFragment
     }
 
     @Override
-    public void showPartners(@Nullable PartnerReader partnerReader) {
+    public void showPartners(@Nullable MapPartnerReader partnerReader) {
         if (mMap != null) {
             mPartnerItems.clear();
             mClusterManager.clearItems();

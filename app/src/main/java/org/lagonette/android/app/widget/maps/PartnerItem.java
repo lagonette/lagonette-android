@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import org.lagonette.android.content.reader.PartnerReader;
+import org.lagonette.android.room.reader.MapPartnerReader;
 
 public class PartnerItem
         implements ClusterItem {
@@ -29,14 +29,14 @@ public class PartnerItem
 
     private long mCategoryId;
 
-    public PartnerItem(@NonNull PartnerReader partnerReader) {
+    public PartnerItem(@NonNull MapPartnerReader partnerReader) {
         this(
                 partnerReader.getId(),
                 partnerReader.getLatitude(),
                 partnerReader.getLongitude(),
                 partnerReader.isExchangeOffice(),
-                partnerReader.getMainCategoryId(),
-                partnerReader.categoryReader.getIcon()
+                partnerReader.getMainCategory(),
+                partnerReader.getIcon()
         );
     }
 

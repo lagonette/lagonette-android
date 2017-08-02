@@ -21,8 +21,8 @@ import org.lagonette.android.app.contract.MapsContract;
 import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
 import org.lagonette.android.content.loader.callbacks.GetPartnersCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
-import org.lagonette.android.content.reader.PartnerReader;
 import org.lagonette.android.room.database.LaGonetteDatabase;
+import org.lagonette.android.room.reader.MapPartnerReader;
 
 public class MapsPresenter
         extends BundleLoaderPresenter<MapsContract.View>
@@ -133,7 +133,7 @@ public class MapsPresenter
     public void loadPartners() {
         LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
         Cursor cursor = database.mainDao().getMapPartner(/*"%"*/);
-        PartnerReader reader = PartnerReader.create(cursor);
+        MapPartnerReader reader = MapPartnerReader.create(cursor);
         mView.showPartners(reader);
     }
 
@@ -141,7 +141,7 @@ public class MapsPresenter
     public void loadPartners(@NonNull String search) {
         LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
         Cursor cursor = database.mainDao().getMapPartner(/*"%" + search + "%"*/);
-        PartnerReader reader = PartnerReader.create(cursor);
+        MapPartnerReader reader = MapPartnerReader.create(cursor);
         mView.showPartners(reader);
     }
 

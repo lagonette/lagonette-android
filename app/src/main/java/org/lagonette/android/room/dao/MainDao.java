@@ -5,34 +5,18 @@ import android.arch.persistence.room.Query;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import org.lagonette.android.room.statement.MapPartnerStatement;
+import org.lagonette.android.room.statement.PartnerDetailStatement;
+
 @Dao
 public interface MainDao {
 
-    @Query(
-            "SELECT partner.id, " +
-                    "partner.name, " +
-                    "partner.description, " +
-                    "partner.latitude, " +
-                    "partner.longitude, " +
-                    "partner.is_exchange_office, " +
-                    "partner.main_category, " +
-                    "main_category.icon, " +
-                    "SUM (side_category_metadata.is_visible) AS side_is_visible_sum " +
-            "FROM partner " +
-            "JOIN partner_metadata " +
-                    "ON partner.id = partner_metadata.partner_id " +
-            "JOIN category AS main_category " +
-                    "ON partner.main_category = main_category.id " +
-            "JOIN category_metadata AS main_category_metadata " +
-                    "ON main_category.id = main_category_metadata.category_id " +
-            "LEFT JOIN partner_side_category " +
-                    "ON partner.id = partner_side_category.partner_id LEFT " +
-            "JOIN category AS side_category " +
-                    "ON partner_side_category.category_id = side_category.id " +
-            "LEFT JOIN category_metadata AS side_category_metadata " +
-                    "ON side_category.id = side_category_metadata.category_id " +
-            "GROUP BY partner.id"
-    )
+    // TODO Return Partner ?
+    @Query(PartnerDetailStatement.sql)
+    Cursor getPartnerDetail(long id);
+
+    // TODO Return reader (TypeAdapter) ?
+    @Query(MapPartnerStatement.sql)
     Cursor getMapPartner();
 
     @Query("SELECT 0 AS row_type, " +

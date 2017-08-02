@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import org.lagonette.android.app.contract.base.BaseContract;
-import org.lagonette.android.content.reader.PartnerReader;
+import org.lagonette.android.room.reader.MapPartnerReader;
 
 public class MapsContract {
 
@@ -26,12 +26,9 @@ public class MapsContract {
 
     public interface View extends BaseContract.BaseView, OnMapReadyCallback {
 
-        @NonNull
-        String[] getMapColumns();
-
         void updateLocationUI();
 
-        void showPartners(@Nullable PartnerReader partnerReader);
+        void showPartners(@Nullable MapPartnerReader partnerReader);
 
         void errorGettingPartners();
     }
