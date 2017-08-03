@@ -14,7 +14,7 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.contract.FiltersContract;
 import org.lagonette.android.app.presenter.FiltersPresenter;
 import org.lagonette.android.app.widget.adapter.FilterAdapter;
-import org.lagonette.android.content.reader.FilterReader;
+import org.lagonette.android.room.reader.FilterReader;
 
 public class FiltersFragment
         extends Fragment
@@ -113,12 +113,6 @@ public class FiltersFragment
     @Override
     public void displayFilters(@Nullable FilterReader filterReader) {
         mFilterAdapter.setFilterReader(filterReader);
-    }
-
-    @NonNull
-    @Override
-    public String[] getFiltersColumns() {
-        return mFilterAdapter.getColumns();
     }
 
 }

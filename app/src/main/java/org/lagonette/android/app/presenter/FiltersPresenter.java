@@ -12,8 +12,8 @@ import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
 import org.lagonette.android.content.loader.callbacks.UpdateCategoryMetadataCallbacks;
 import org.lagonette.android.content.loader.callbacks.UpdatePartnerMetadataCallbacks;
 import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
-import org.lagonette.android.content.reader.FilterReader;
 import org.lagonette.android.room.database.LaGonetteDatabase;
+import org.lagonette.android.room.reader.FilterReader;
 import org.lagonette.android.util.SearchUtil;
 
 public class FiltersPresenter

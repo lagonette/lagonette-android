@@ -93,6 +93,7 @@ public class PartnerDetailReader extends CursorReader implements PartnerDetailSt
 
     @Override
     public String getAddress() {
+        // TODO use DisplayUtil.formatAddress
         String street = mCursor.getString(PartnerDetailStatement.STREET);
         String zipCode = mCursor.getString(PartnerDetailStatement.ZIP_CODE);
         String city = mCursor.getString(PartnerDetailStatement.CITY);

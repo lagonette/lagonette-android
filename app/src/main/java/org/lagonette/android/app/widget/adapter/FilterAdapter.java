@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,8 @@ import com.bumptech.glide.Glide;
 
 import org.lagonette.android.R;
 import org.lagonette.android.content.contract.LaGonetteContract;
-import org.lagonette.android.content.reader.FilterReader;
 import org.lagonette.android.database.columns.FilterColumns;
+import org.lagonette.android.room.reader.FilterReader;
 import org.lagonette.android.util.AdapterUtil;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -152,19 +153,19 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         return AdapterUtil.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
-                                mFilterReader.categoryReader.getId()
+                                mFilterReader.getCategoryId()
                         );
                     case FilterColumns.VALUE_ROW_MAIN_PARTNER:
                         return AdapterUtil.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
-                                mFilterReader.partnerReader.getId()
+                                mFilterReader.getPartnerId()
                         );
                     case FilterColumns.VALUE_ROW_SIDE_PARTNER:
                         return AdapterUtil.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
-                                mFilterReader.partnerReader.getId()
+                                mFilterReader.getPartnerId()
                         );
                     default:
                         return RecyclerView.NO_ID;
@@ -322,10 +323,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
-            holder.categoryId = mFilterReader.categoryReader.getId();
-            holder.isPartnersVisible = mFilterReader.isPartnersVisible();
-            holder.isVisible = mFilterReader.categoryReader.metadataReader.isVisible();
-            holder.isCollapsed = mFilterReader.categoryReader.metadataReader.isCollapsed();
+            holder.categoryId = mFilterReader.getCategoryId();
+            holder.isPartnersVisible = mFilterReader.isPartnerVisible();
+            holder.isVisible = mFilterReader.isCategoryVisible();
+            holder.isCollapsed = mFilterReader.isCategoryCollapsed();
 
             if (holder.isVisible && holder.isPartnersVisible) {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
@@ -341,10 +342,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 holder.collapsedButton.setImageResource(R.drawable.ic_expand_less_grey_24dp);
             }
 
-            holder.categoryTextView.setText(mFilterReader.categoryReader.getLabel());
+            holder.categoryTextView.setText(mFilterReader.getCategoryLabel());
 
             Glide.with(holder.itemView.getContext())
-                    .load(mFilterReader.categoryReader.getIcon())
+                    .load(mFilterReader.getCategoryIcon())
                     .asBitmap()
                     .override(mCategoryIconSize, mCategoryIconSize)
                     .placeholder(R.drawable.img_item_default)
@@ -354,19 +355,18 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void onBindPartnerViewHolder(@NonNull PartnerViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
-            holder.partnerId = mFilterReader.partnerReader.getId();
-            holder.isVisible = mFilterReader.partnerReader.metadataReader.isVisible();
-            holder.isCategoryVisible = mFilterReader.categoryReader.metadataReader.isVisible();
-            holder.isExchangeOffice = mFilterReader.partnerReader.isExchangeOffice();
+            holder.partnerId = mFilterReader.getPartnerId();
+            holder.isVisible = mFilterReader.isPartnerVisible();
+            holder.isCategoryVisible = mFilterReader.isCategoryVisible();
+            holder.isExchangeOffice = mFilterReader.isPartnerExchangeOffice();
             holder.isMainPartner = mFilterReader.getRowType() == FilterColumns.VALUE_ROW_MAIN_PARTNER;
 
-            holder.nameTextView.setText(mFilterReader.partnerReader.getName());
-            holder.addressTextView.setText(mFilterReader.partnerReader.getName());
+            holder.nameTextView.setText(mFilterReader.getPartnerName());
             holder.itemView.setClickable(holder.isVisible);
 
-            mFilterReader.partnerReader.getFullAddress(mStringBuilder);
-            if (mStringBuilder.length() != 0) {
-                holder.addressTextView.setText(mStringBuilder.toString());
+            String address = mFilterReader.getPartnerAddress();
+            if (!TextUtils.isEmpty(address)) {
+                holder.addressTextView.setText(address);
                 holder.addressTextView.setVisibility(View.VISIBLE);
             } else {
                 holder.addressTextView.setVisibility(View.GONE);

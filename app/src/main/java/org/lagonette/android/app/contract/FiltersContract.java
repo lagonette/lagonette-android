@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.app.contract.base.BaseContract;
-import org.lagonette.android.content.reader.FilterReader;
+import org.lagonette.android.room.reader.FilterReader;
 
 public abstract class FiltersContract {
 
@@ -24,9 +24,6 @@ public abstract class FiltersContract {
     public interface View extends BaseContract.BaseView {
 
         void displayFilters(@Nullable FilterReader filterReader);
-
-        @NonNull
-        String[] getFiltersColumns();
     }
 
 }
