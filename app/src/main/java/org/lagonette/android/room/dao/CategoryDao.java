@@ -22,4 +22,10 @@ public interface CategoryDao {
     @Insert
     long[] insertCategoriesMetadatas(List<CategoryMetadata> categoriesMetadatas);
 
+    @Query("UPDATE category_metadata SET is_visible = :isVisible WHERE category_id = :id")
+    int updateCategoryVisibility(long id, boolean isVisible);
+
+    @Query("UPDATE category_metadata SET is_collapsed = :isCollapsed WHERE category_id = :id")
+    int updateCategoryCollapsed(long id, boolean isCollapsed);
+
 }

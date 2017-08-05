@@ -65,12 +65,10 @@ public class Partner {
     @SerializedName("sideCategories")
     private List<Long> mSideCategoryIds;
 
-
     @Override
     public String toString() {
         return mId + " [" + mClientCode + " - " + mName + "]";
     }
-
 
     public void prepareInsert(
             @NonNull List<org.lagonette.android.room.entity.Partner> partners,

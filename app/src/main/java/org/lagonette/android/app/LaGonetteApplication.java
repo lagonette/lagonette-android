@@ -2,8 +2,6 @@ package org.lagonette.android.app;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
-import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 
@@ -16,10 +14,6 @@ public class LaGonetteApplication
         extends Application {
 
     public LaGonetteDatabase database;
-
-    public static LaGonetteDatabase getDatabase(@NonNull Context context) {
-        return ((LaGonetteApplication) context.getApplicationContext()).database;
-    }
 
     @Override
     public void onCreate() {

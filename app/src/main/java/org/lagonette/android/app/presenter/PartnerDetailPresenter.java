@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.android.app.LaGonetteApplication;
 import org.lagonette.android.app.contract.PartnerDetailContract;
 import org.lagonette.android.app.fragment.PartnerDetailFragment;
 import org.lagonette.android.app.presenter.base.LoaderPresenter;
-import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.room.reader.PartnerDetailReader;
+import org.lagonette.android.room.statement.PartnerDetailStatement;
+import org.lagonette.android.room.statement.Statement;
+import org.lagonette.android.util.DB;
 import org.lagonette.android.util.IntentUtil;
 
 public class PartnerDetailPresenter
@@ -28,7 +29,7 @@ public class PartnerDetailPresenter
         return partnerDetailFragment;
     }
 
-    private long mPartnerId = LaGonetteContract.NO_ID;
+    private long mPartnerId = PartnerDetailStatement.NO_ID;
 
     public PartnerDetailPresenter(@NonNull PartnerDetailContract.View view) {
         super(view);
@@ -37,13 +38,13 @@ public class PartnerDetailPresenter
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Bundle args = mView.getArguments();
-        mPartnerId = args.getLong(ARG_PARTNER_ID, LaGonetteContract.NO_ID);
+        mPartnerId = args.getLong(ARG_PARTNER_ID, Statement.NO_ID);
 
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
+        LaGonetteDatabase database = DB.get(mView.getContext());
         Cursor cursor = database.mainDao().getPartnerDetail(mPartnerId);
         PartnerDetailReader reader = PartnerDetailReader.create(cursor);
         mView.displayPartner(reader);

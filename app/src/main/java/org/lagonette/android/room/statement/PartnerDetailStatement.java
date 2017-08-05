@@ -1,6 +1,7 @@
 package org.lagonette.android.room.statement;
 
-public class PartnerDetailStatement {
+public abstract class PartnerDetailStatement
+        extends Statement {
 
     public static final String sql =
             "SELECT " +

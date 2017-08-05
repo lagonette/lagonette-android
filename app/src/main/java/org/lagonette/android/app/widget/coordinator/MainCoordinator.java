@@ -23,7 +23,7 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
-import org.lagonette.android.content.contract.LaGonetteContract;
+import org.lagonette.android.room.statement.Statement;
 import org.lagonette.android.util.UiUtil;
 
 import java.lang.annotation.Retention;
@@ -105,7 +105,7 @@ public class MainCoordinator
 
     private boolean mLoadFiltersAfterBottomSheetCollapsed = false;
 
-    private long mSelectedPartnerId = LaGonetteContract.NO_ID;
+    private long mSelectedPartnerId = Statement.NO_ID;
 
     private boolean mZoomForPartnerId;
 

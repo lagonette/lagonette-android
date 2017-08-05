@@ -1,12 +1,8 @@
 package org.lagonette.android.api.response;
 
-import android.content.ContentProviderOperation;
-import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-
-import org.lagonette.android.content.contract.LaGonetteContract;
 
 import java.util.List;
 

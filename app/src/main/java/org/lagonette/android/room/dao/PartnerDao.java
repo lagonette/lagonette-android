@@ -31,4 +31,7 @@ public interface PartnerDao {
     @Insert
     long[] insertPartnersSideCategories(List<PartnerSideCategory> partnersSideCategories);
 
+    @Query("UPDATE partner_metadata SET is_visible = :isVisible WHERE partner_id = :id")
+    int updatePartnerVisibility(long id, boolean isVisible);
+
 }

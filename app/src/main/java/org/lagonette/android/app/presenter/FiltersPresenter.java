@@ -5,35 +5,23 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.android.app.LaGonetteApplication;
 import org.lagonette.android.app.contract.FiltersContract;
 import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
-import org.lagonette.android.content.loader.callbacks.UpdateCategoryMetadataCallbacks;
-import org.lagonette.android.content.loader.callbacks.UpdatePartnerMetadataCallbacks;
-import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
+import org.lagonette.android.content.loader.callbacks.base.BaseLoaderCallbacks;
 import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.room.reader.FilterReader;
+import org.lagonette.android.util.DB;
 import org.lagonette.android.util.SearchUtil;
 
 public class FiltersPresenter
         extends BundleLoaderPresenter<FiltersContract.View>
         implements FiltersContract.Presenter,
-        CursorLoaderCallbacks.Callbacks,
-        UpdatePartnerMetadataCallbacks.Callbacks,
-        UpdateCategoryMetadataCallbacks.Callbacks {
+        BaseLoaderCallbacks.Callbacks {
 
     private static final String TAG = "FiltersPresenter";
 
     private static final String ARG_SEARCH = "arg:search";
-
-    @SuppressWarnings("NullableProblems")
-    @NonNull
-    private UpdatePartnerMetadataCallbacks mUpdatePartnerMetadataCallbacks;
-
-    @SuppressWarnings("NullableProblems")
-    @NonNull
-    private UpdateCategoryMetadataCallbacks mUpdateCategoryMetadataCallbacks;
 
     public static FiltersFragment newInstance(@NonNull String search) {
         Bundle args = new Bundle(1);
@@ -57,12 +45,6 @@ public class FiltersPresenter
         if (arguments != null) {
             mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
         }
-        mUpdatePartnerMetadataCallbacks = new UpdatePartnerMetadataCallbacks(
-                FiltersPresenter.this
-        );
-        mUpdateCategoryMetadataCallbacks = new UpdateCategoryMetadataCallbacks(
-                FiltersPresenter.this
-        );
     }
 
     @Override
@@ -72,22 +54,28 @@ public class FiltersPresenter
 
     @Override
     protected void reattachLoaders() {
-        mUpdatePartnerMetadataCallbacks.reattachLoader();
+        // do nothing
     }
 
     @Override
     public void setPartnerVisibility(long partnerId, boolean isVisible) {
-        mUpdatePartnerMetadataCallbacks.updatePartnerVisibility(partnerId, isVisible);
+        DB.get(getContext())
+                .partnerDao()
+                .updatePartnerVisibility(partnerId, isVisible);
     }
 
     @Override
     public void setCategoryVisibility(long categoryId, boolean isVisible) {
-        mUpdateCategoryMetadataCallbacks.updateCategoryVisibility(categoryId, isVisible);
+        DB.get(getContext())
+                .categoryDao()
+                .updateCategoryVisibility(categoryId, isVisible);
     }
 
     @Override
     public void setCategoryCollapsed(long categoryId, boolean isCollapsed) {
-        mUpdateCategoryMetadataCallbacks.updateCategoryCollapsedState(categoryId, isCollapsed);
+        DB.get(getContext())
+                .categoryDao()
+                .updateCategoryCollapsed(categoryId, isCollapsed);
     }
 
     @Override
@@ -100,14 +88,14 @@ public class FiltersPresenter
 
     @Override
     public void loadFilters() {
-        LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
+        LaGonetteDatabase database = DB.get(mView.getContext());
         Cursor cursor = database.mainDao().getFilters("%");
         FilterReader reader = FilterReader.create(cursor);
         mView.displayFilters(reader);
     }
 
     private void loadFilters(@NonNull String search) {
-        LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
+        LaGonetteDatabase database = DB.get(mView.getContext());
         Cursor cursor = database.mainDao().getFilters("%" + search + "%");
         FilterReader reader = FilterReader.create(cursor);
         mView.displayFilters(reader);

@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.lagonette.android.content.reader.base.CursorReader;
+import org.lagonette.android.room.reader.base.CursorReader;
 import org.lagonette.android.room.statement.FilterStatement;
 
 // TODO Make entity reader and build them with field position

@@ -16,20 +16,20 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.lagonette.android.app.LaGonetteApplication;
 import org.lagonette.android.app.contract.MapsContract;
 import org.lagonette.android.app.presenter.base.BundleLoaderPresenter;
 import org.lagonette.android.content.loader.callbacks.GetPartnersCallbacks;
-import org.lagonette.android.content.loader.callbacks.base.CursorLoaderCallbacks;
+import org.lagonette.android.content.loader.callbacks.base.BaseLoaderCallbacks;
 import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.room.reader.MapPartnerReader;
+import org.lagonette.android.util.DB;
 
 public class MapsPresenter
         extends BundleLoaderPresenter<MapsContract.View>
         implements MapsContract.Presenter,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        CursorLoaderCallbacks.Callbacks,
+        BaseLoaderCallbacks.Callbacks,
         GetPartnersCallbacks.Callbacks {
 
     private static final String TAG = "MapsPresenter";
@@ -131,7 +131,7 @@ public class MapsPresenter
 
     @Override
     public void loadPartners() {
-        LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
+        LaGonetteDatabase database = DB.get(mView.getContext());
         Cursor cursor = database.mainDao().getMapPartner(/*"%"*/);
         MapPartnerReader reader = MapPartnerReader.create(cursor);
         mView.showPartners(reader);
@@ -139,7 +139,7 @@ public class MapsPresenter
 
     @Override
     public void loadPartners(@NonNull String search) {
-        LaGonetteDatabase database = LaGonetteApplication.getDatabase(mView.getContext());
+        LaGonetteDatabase database = DB.get(mView.getContext());
         Cursor cursor = database.mainDao().getMapPartner(/*"%" + search + "%"*/);
         MapPartnerReader reader = MapPartnerReader.create(cursor);
         mView.showPartners(reader);

@@ -34,8 +34,8 @@ import org.lagonette.android.app.contract.MapsContract;
 import org.lagonette.android.app.presenter.MapsPresenter;
 import org.lagonette.android.app.widget.maps.PartnerItem;
 import org.lagonette.android.app.widget.maps.PartnerRenderer;
-import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.room.reader.MapPartnerReader;
+import org.lagonette.android.room.statement.Statement;
 import org.lagonette.android.util.SharedPreferencesUtil;
 import org.lagonette.android.util.SnackbarUtil;
 import org.lagonette.android.util.UiUtil;
@@ -103,7 +103,7 @@ public class MapsFragment
 
     private LatLng mSelectedMarkerPosition = null;
 
-    private long mSelectedMarkerId = LaGonetteContract.NO_ID;
+    private long mSelectedMarkerId = Statement.NO_ID;
 
     private int mTopPadding;
 
@@ -318,7 +318,7 @@ public class MapsFragment
         if (mSelectedMarker != null) {
             mSelectedMarker.remove();
             mSelectedMarker = null;
-            mSelectedMarkerId = LaGonetteContract.NO_ID;
+            mSelectedMarkerId = Statement.NO_ID;
         }
     }
 

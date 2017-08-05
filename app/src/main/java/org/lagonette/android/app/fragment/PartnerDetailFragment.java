@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide;
 import org.lagonette.android.R;
 import org.lagonette.android.app.contract.PartnerDetailContract;
 import org.lagonette.android.app.presenter.PartnerDetailPresenter;
-import org.lagonette.android.content.contract.LaGonetteContract;
 import org.lagonette.android.room.reader.PartnerDetailReader;
 import org.lagonette.android.util.SnackbarUtil;
 

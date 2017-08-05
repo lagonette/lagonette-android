@@ -20,9 +20,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.lagonette.android.R;
-import org.lagonette.android.content.contract.LaGonetteContract;
-import org.lagonette.android.database.columns.FilterColumns;
 import org.lagonette.android.room.reader.FilterReader;
+import org.lagonette.android.room.statement.FilterStatement;
 import org.lagonette.android.util.AdapterUtil;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -45,11 +44,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final int SHORTCUT_COUNT = 1;
 
-    private static final int ROW_TYPE_LOADING = LaGonetteContract.Filter.ROW_TYPE_COUNT + 1;
+    private static final int ROW_TYPE_LOADING = FilterStatement.ROW_TYPE_COUNT + 1;
 
     private static final int ROW_TYPE_SHORTCUT = ROW_TYPE_LOADING + 1;
 
-    public static final int ROW_TYPE_COUNT = LaGonetteContract.Filter.ROW_TYPE_COUNT + 2;
+    public static final int ROW_TYPE_COUNT = FilterStatement.ROW_TYPE_COUNT + 2;
 
     @NonNull
     private final StringBuilder mStringBuilder;
@@ -106,15 +105,15 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         position -= SHORTCUT_COUNT;
         if (position < mFilterReader.getCount()) {
             if (mFilterReader.moveToPosition(position)) {
-                @FilterColumns.RowType
+                @FilterStatement.RowType
                 int rowType = mFilterReader.getRowType();
                 switch (rowType) {
-                    case FilterColumns.VALUE_ROW_CATEGORY:
+                    case FilterStatement.VALUE_ROW_CATEGORY:
                         return R.id.view_type_category;
-                    case FilterColumns.VALUE_ROW_FOOTER:
+                    case FilterStatement.VALUE_ROW_FOOTER:
                         return R.id.view_type_footer;
-                    case FilterColumns.VALUE_ROW_MAIN_PARTNER:
-                    case FilterColumns.VALUE_ROW_SIDE_PARTNER:
+                    case FilterStatement.VALUE_ROW_MAIN_PARTNER:
+                    case FilterStatement.VALUE_ROW_SIDE_PARTNER:
                         return R.id.view_type_partner;
                     default:
                         throw new IllegalStateException("Filter row must be a PARTNER or a CATEGORY.");
@@ -145,23 +144,23 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         position -= SHORTCUT_COUNT;
         if (position < mFilterReader.getCount()) {
             if (mFilterReader.moveToPosition(position)) {
-                @FilterColumns.RowType
+                @FilterStatement.RowType
                 int rowType = mFilterReader.getRowType();
                 switch (rowType) {
-                    case FilterColumns.VALUE_ROW_CATEGORY:
-                    case FilterColumns.VALUE_ROW_FOOTER:
+                    case FilterStatement.VALUE_ROW_CATEGORY:
+                    case FilterStatement.VALUE_ROW_FOOTER:
                         return AdapterUtil.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
                                 mFilterReader.getCategoryId()
                         );
-                    case FilterColumns.VALUE_ROW_MAIN_PARTNER:
+                    case FilterStatement.VALUE_ROW_MAIN_PARTNER:
                         return AdapterUtil.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
                                 mFilterReader.getPartnerId()
                         );
-                    case FilterColumns.VALUE_ROW_SIDE_PARTNER:
+                    case FilterStatement.VALUE_ROW_SIDE_PARTNER:
                         return AdapterUtil.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
@@ -324,7 +323,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
             holder.categoryId = mFilterReader.getCategoryId();
-            holder.isPartnersVisible = mFilterReader.isPartnerVisible();
+            holder.isPartnersVisible = (mFilterReader.getMainPartnerVisibilitySum() + mFilterReader.getSidePartnerVisibilitySum()) > 0;
             holder.isVisible = mFilterReader.isCategoryVisible();
             holder.isCollapsed = mFilterReader.isCategoryCollapsed();
 
@@ -359,7 +358,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             holder.isVisible = mFilterReader.isPartnerVisible();
             holder.isCategoryVisible = mFilterReader.isCategoryVisible();
             holder.isExchangeOffice = mFilterReader.isPartnerExchangeOffice();
-            holder.isMainPartner = mFilterReader.getRowType() == FilterColumns.VALUE_ROW_MAIN_PARTNER;
+            holder.isMainPartner = mFilterReader.getRowType() == FilterStatement.VALUE_ROW_MAIN_PARTNER;
 
             holder.nameTextView.setText(mFilterReader.getPartnerName());
             holder.itemView.setClickable(holder.isVisible);
@@ -400,26 +399,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         mFilterReader = filterReader;
         notifyDataSetChanged();
-    }
-
-    public String[] getColumns() {
-        return new String[]{
-                LaGonetteContract.Filter.ROW_TYPE,
-                LaGonetteContract.Filter.Category.ID,
-                LaGonetteContract.Filter.Category.LABEL,
-                LaGonetteContract.Filter.Category.ICON,
-                LaGonetteContract.Filter.CategoryMetadata.IS_VISIBLE,
-                LaGonetteContract.Filter.CategoryMetadata.IS_COLLAPSED,
-                LaGonetteContract.Filter.MAIN_PARTNER_VISIBILITY_SUM,
-                LaGonetteContract.Filter.SIDE_PARTNER_VISIBILITY_SUM,
-                LaGonetteContract.Filter.Partner.ID,
-                LaGonetteContract.Filter.Partner.NAME,
-                LaGonetteContract.Filter.Partner.ADDRESS,
-                LaGonetteContract.Filter.Partner.ZIP_CODE,
-                LaGonetteContract.Filter.Partner.CITY,
-                LaGonetteContract.Filter.Partner.IS_EXCHANGE_OFFICE,
-                LaGonetteContract.Filter.PartnerMetadata.IS_VISIBLE
-        };
     }
 
     public class PartnerViewHolder extends RecyclerView.ViewHolder {
