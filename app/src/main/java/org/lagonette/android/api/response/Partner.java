@@ -60,7 +60,7 @@ public class Partner {
     private String mShortDescription;
 
     @SerializedName("mainCategory")
-    private long mMainCategory;
+    private long mMainCategoryId;
 
     @SerializedName("sideCategories")
     private List<Long> mSideCategoryIds;
@@ -94,7 +94,7 @@ public class Partner {
         partner.openingHours = mOpeningHours;
         partner.isExchangeOffice = mIsExchangeOffice;
         partner.shortDescription = mShortDescription;
-        partner.mainCategory = mMainCategory;
+        partner.mainCategoryId = mMainCategoryId;
         partners.add(partner);
 
         org.lagonette.android.room.entity.PartnerMetadata partnerMetadata = new org.lagonette.android.room.entity.PartnerMetadata();

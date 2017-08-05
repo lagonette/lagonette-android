@@ -53,8 +53,8 @@ public class Partner {
     @ColumnInfo(name = "short_description")
     public String shortDescription;
 
-    @ColumnInfo(name = "main_category")
-    public long mainCategory;
+    @ColumnInfo(name = "main_category_id")
+    public long mainCategoryId;
 
     @Embedded
     public Address address;

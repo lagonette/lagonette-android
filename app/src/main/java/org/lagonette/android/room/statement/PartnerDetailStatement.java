@@ -2,8 +2,6 @@ package org.lagonette.android.room.statement;
 
 public class PartnerDetailStatement {
 
-    // TODO main_category -> main_category_id
-
     public static final String sql =
             "SELECT " +
                     "partner.id, " +
@@ -19,7 +17,7 @@ public class PartnerDetailStatement {
                     "partner.opening_hours, " +
                     "partner.is_exchange_office, " +
                     "partner.short_description, " +
-                    "partner.main_category, " +
+                    "partner.main_category_id, " +
                     "partner.street, " +
                     "partner.zip_code, " +
                     "partner.city, " +
@@ -27,7 +25,7 @@ public class PartnerDetailStatement {
                     "category.icon " +
             "FROM partner " +
             "JOIN category " +
-                    "ON partner.main_category = category.id " +
+                    "ON partner.main_category_id = category.id " +
             "WHERE partner.id = :id " +
             "LIMIT 1";
 
@@ -57,7 +55,7 @@ public class PartnerDetailStatement {
 
     public static int SHORT_DESCRIPTION;
 
-    public static int MAIN_CATEGORY;
+    public static int MAIN_CATEGORY_ID;
 
     public static int STREET;
 
@@ -84,7 +82,7 @@ public class PartnerDetailStatement {
         OPENING_HOURS = i++;
         IS_EXCHANGE_OFFICE = i++;
         SHORT_DESCRIPTION = i++;
-        MAIN_CATEGORY = i++;
+        MAIN_CATEGORY_ID = i++;
         STREET = i++;
         ZIP_CODE = i++;
         CITY = i++;
@@ -118,7 +116,7 @@ public class PartnerDetailStatement {
 
         String getShortDescription();
 
-        long getMainCategory();
+        long getMainCategoryId();
 
         String getAddress();
 

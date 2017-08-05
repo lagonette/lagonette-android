@@ -8,7 +8,9 @@ import android.text.TextUtils;
 import org.lagonette.android.room.reader.base.CursorReader;
 import org.lagonette.android.room.statement.PartnerDetailStatement;
 
-public class PartnerDetailReader extends CursorReader implements PartnerDetailStatement.Contract {
+public class PartnerDetailReader
+        extends CursorReader
+        implements PartnerDetailStatement.Contract {
 
     @Nullable
     public static PartnerDetailReader create(@Nullable Cursor cursor) {
@@ -87,8 +89,8 @@ public class PartnerDetailReader extends CursorReader implements PartnerDetailSt
     }
 
     @Override
-    public long getMainCategory() {
-        return mCursor.getLong(PartnerDetailStatement.MAIN_CATEGORY);
+    public long getMainCategoryId() {
+        return mCursor.getLong(PartnerDetailStatement.MAIN_CATEGORY_ID);
     }
 
     @Override

@@ -23,7 +23,7 @@ public class FilterStatement {
             "JOIN category_metadata " +
                 "ON category.id = category_metadata.category_id " +
             "LEFT JOIN partner AS main_partner " +
-                "ON category.id = main_partner.main_category " +
+                "ON category.id = main_partner.main_category_id " +
             "LEFT JOIN partner_metadata AS main_partner_metadata " +
                 "ON main_partner.id = main_partner_metadata.partner_id " +
             "LEFT JOIN partner_side_category " +
@@ -56,12 +56,12 @@ public class FilterStatement {
                 "NULL AS is_visible " +
             "FROM category " +
             "LEFT JOIN partner AS main_partner " +
-                "ON category.id = main_partner.main_category " +
+                "ON category.id = main_partner.main_category_id " +
             "LEFT JOIN partner_side_category " +
                 "ON category.id = partner_side_category.category_id " +
             "LEFT JOIN partner AS side_partner " +
                 "ON partner_side_category.partner_id = side_partner.id " +
-            "WHERE main_partner.main_category IS NOT NULL " +
+            "WHERE main_partner.main_category_id IS NOT NULL " +
                 "AND main_partner.name LIKE :search " +
                 "OR category.id IS NOT NULL " +
                 "AND side_partner.name LIKE :search " +
@@ -88,7 +88,7 @@ public class FilterStatement {
             "JOIN category_metadata " +
                 "ON category.id = category_metadata.category_id " +
             "JOIN partner " +
-                "ON category.id = partner.main_category " +
+                "ON category.id = partner.main_category_id " +
             "JOIN partner_metadata " +
                 "ON partner.id = partner_metadata.partner_id " +
             "WHERE partner.name LIKE :search AND category_metadata.is_collapsed = 0 " +

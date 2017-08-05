@@ -9,14 +9,14 @@ public abstract class MapPartnerStatement {
                 "partner.latitude, " +
                 "partner.longitude, " +
                 "partner.is_exchange_office, " +
-                "partner.main_category, " +
+                "partner.main_category_id, " +
                 "main_category.icon, " +
                 "SUM (side_category_metadata.is_visible) AS side_is_visible_sum " +
             "FROM partner " +
             "JOIN partner_metadata " +
                 "ON partner.id = partner_metadata.partner_id " +
             "JOIN category AS main_category " +
-                "ON partner.main_category = main_category.id " +
+                "ON partner.main_category_id = main_category.id " +
             "JOIN category_metadata AS main_category_metadata " +
                 "ON main_category.id = main_category_metadata.category_id " +
             "LEFT JOIN partner_side_category " +
