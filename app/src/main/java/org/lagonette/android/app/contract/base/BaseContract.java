@@ -1,5 +1,6 @@
 package org.lagonette.android.app.contract.base;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,10 +11,16 @@ public abstract class BaseContract {
 
     public interface BaseView {
 
+        @NonNull
+        LifecycleOwner getLifecycleOwner();
+
+        @NonNull
         Context getContext();
 
+        @NonNull
         Bundle getArguments();
 
+        @NonNull
         LoaderManager getLoaderManager();
 
         void requestPermissions(@NonNull String[] permissions, int requestCode);
@@ -29,6 +36,8 @@ public abstract class BaseContract {
         void onStart();
 
         void onStop();
+
+        void onDestroy();
 
         void onSaveInstanceState(Bundle outState);
 

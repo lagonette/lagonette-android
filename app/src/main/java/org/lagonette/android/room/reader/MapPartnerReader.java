@@ -63,9 +63,4 @@ public class MapPartnerReader
         return mCursor.getString(MapPartnerStatement.ICON);
     }
 
-    @Override
-    public int getSideIsVisibleSum() {
-        return mCursor.getInt(MapPartnerStatement.SIDE_IS_VISIBLE_SUM);
-    }
-
 }

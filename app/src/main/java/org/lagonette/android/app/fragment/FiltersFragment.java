@@ -1,9 +1,10 @@
 package org.lagonette.android.app.fragment;
 
+import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.LifecycleOwner;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +18,7 @@ import org.lagonette.android.app.widget.adapter.FilterAdapter;
 import org.lagonette.android.room.reader.FilterReader;
 
 public class FiltersFragment
-        extends Fragment
+        extends LifecycleFragment
         implements FiltersContract.View,
         FilterAdapter.OnFilterClickListener {
 
@@ -83,6 +84,12 @@ public class FiltersFragment
     }
 
     @Override
+    public void onDestroy() {
+        mPresenter.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
     public void onPartnerClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
         mCallback.showPartner(holder.partnerId, true);
     }
@@ -113,6 +120,12 @@ public class FiltersFragment
     @Override
     public void displayFilters(@Nullable FilterReader filterReader) {
         mFilterAdapter.setFilterReader(filterReader);
+    }
+
+    @NonNull
+    @Override
+    public LifecycleOwner getLifecycleOwner() {
+        return FiltersFragment.this;
     }
 
 }

@@ -51,6 +51,11 @@ public class PartnerDetailPresenter
     }
 
     @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
     public void startDirection(double latitude, double longitude) {
         boolean success = IntentUtil.startDirection(
                 mView.getContext(),

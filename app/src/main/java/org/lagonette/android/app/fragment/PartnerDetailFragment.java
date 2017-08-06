@@ -1,11 +1,12 @@
 package org.lagonette.android.app.fragment;
 
+import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,7 @@ import org.lagonette.android.room.reader.PartnerDetailReader;
 import org.lagonette.android.util.SnackbarUtil;
 
 public class PartnerDetailFragment
-        extends Fragment
+        extends LifecycleFragment
         implements PartnerDetailContract.View, View.OnClickListener {
 
     public static final String TAG = "PartnerDetailContract";
@@ -291,4 +292,9 @@ public class PartnerDetailFragment
         mPresenter.writeEmail((String) mEmailTextView.getText());
     }
 
+    @NonNull
+    @Override
+    public LifecycleOwner getLifecycleOwner() {
+        return PartnerDetailFragment.this;
+    }
 }

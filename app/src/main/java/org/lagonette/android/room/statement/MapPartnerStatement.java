@@ -11,8 +11,7 @@ public abstract class MapPartnerStatement
                 "partner.longitude, " +
                 "partner.is_exchange_office, " +
                 "partner.main_category_id, " +
-                "main_category.icon, " +
-                "SUM (side_category_metadata.is_visible) AS side_is_visible_sum " +
+                "main_category.icon " +
             "FROM partner " +
             "JOIN partner_metadata " +
                 "ON partner.id = partner_metadata.partner_id " +
@@ -26,7 +25,9 @@ public abstract class MapPartnerStatement
                 "ON partner_side_category.category_id = side_category.id " +
             "LEFT JOIN category_metadata AS side_category_metadata " +
                 "ON side_category.id = side_category_metadata.category_id " +
-            "GROUP BY partner.id";
+            "GROUP BY partner.id " +
+            "HAVING partner_metadata.is_visible > 0 " +
+                "AND SUM (side_category_metadata.is_visible) > 0";
 
     public static final int ID;
 
@@ -44,8 +45,6 @@ public abstract class MapPartnerStatement
 
     public static final int ICON;
 
-    public static final int SIDE_IS_VISIBLE_SUM;
-
     static {
         int i = 0;
         ID = i++;
@@ -56,7 +55,6 @@ public abstract class MapPartnerStatement
         IS_EXCHANGE_OFFICE = i++;
         MAIN_CATEGORY = i++;
         ICON = i++;
-        SIDE_IS_VISIBLE_SUM = i++;
     }
 
     public interface Contract {
@@ -76,9 +74,6 @@ public abstract class MapPartnerStatement
         long getMainCategory();
 
         String getIcon();
-
-        // TODO ???
-        int getSideIsVisibleSum();
     }
 
 }

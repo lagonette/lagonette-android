@@ -2,7 +2,6 @@ package org.lagonette.android.app.contract;
 
 
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -16,7 +15,7 @@ public class MapsContract {
 
         void loadPartners();
 
-        void loadPartners(@NonNull String search);
+        void loadPartners(@Nullable String search);
 
         Location getLastLocation();
 

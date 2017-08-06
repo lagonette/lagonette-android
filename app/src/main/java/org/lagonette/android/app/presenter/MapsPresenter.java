@@ -1,8 +1,10 @@
 package org.lagonette.android.app.presenter;
 
 import android.Manifest;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.persistence.room.InvalidationTracker;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +26,8 @@ import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.room.reader.MapPartnerReader;
 import org.lagonette.android.util.DB;
 
+import java.util.Set;
+
 public class MapsPresenter
         extends BundleLoaderPresenter<MapsContract.View>
         implements MapsContract.Presenter,
@@ -38,6 +42,11 @@ public class MapsPresenter
 
     public static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
+    @Nullable
+    private MutableLiveData<MapPartnerReader> mMapPartnerLiveData;
+
+    @NonNull
+    private InvalidationTracker.Observer mDbObserver;
 
     private GetPartnersCallbacks mGetPartnersCallbacks;
 
@@ -71,11 +80,32 @@ public class MapsPresenter
         }
 
         mGetPartnersCallbacks = new GetPartnersCallbacks(MapsPresenter.this);
+
+        mMapPartnerLiveData = new MutableLiveData<>();
+
+        mDbObserver = new InvalidationTracker.Observer(
+                "partner", "partner_metadata", "category", "category_metadata", "partner_side_category"
+        ) {
+            @Override
+            public void onInvalidated(@NonNull Set<String> tables) {
+                updatePartnerLiveData();
+            }
+        };
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mMapPartnerLiveData.observe(
+                mView.getLifecycleOwner(),
+                new Observer<MapPartnerReader>() {
+                    @Override
+                    public void onChanged(@Nullable MapPartnerReader reader) {
+                        mView.showPartners(reader);
+                    }
+                }
+        );
 
         if (savedInstanceState == null) {
             mGetPartnersCallbacks.getParners();
@@ -95,6 +125,11 @@ public class MapsPresenter
     @Override
     public void onStop() {
         mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onDestroy() {
+        DB.get(mView.getContext()).getInvalidationTracker().removeObserver(mDbObserver);
     }
 
     @Override
@@ -131,18 +166,22 @@ public class MapsPresenter
 
     @Override
     public void loadPartners() {
-        LaGonetteDatabase database = DB.get(mView.getContext());
-        Cursor cursor = database.mainDao().getMapPartner(/*"%"*/);
-        MapPartnerReader reader = MapPartnerReader.create(cursor);
-        mView.showPartners(reader);
+        loadPartners(null);
     }
 
     @Override
-    public void loadPartners(@NonNull String search) {
-        LaGonetteDatabase database = DB.get(mView.getContext());
-        Cursor cursor = database.mainDao().getMapPartner(/*"%" + search + "%"*/);
-        MapPartnerReader reader = MapPartnerReader.create(cursor);
-        mView.showPartners(reader);
+    public void loadPartners(@Nullable final String search) {
+        final LaGonetteDatabase database = DB.get(mView.getContext());
+        database.getInvalidationTracker().addObserver(mDbObserver);
+        updatePartnerLiveData();
+    }
+
+    private void updatePartnerLiveData() {
+        mMapPartnerLiveData.postValue(
+                MapPartnerReader.create(
+                        DB.get(mView.getContext()).mainDao().getMapPartner()
+                )
+        );
     }
 
     @Override

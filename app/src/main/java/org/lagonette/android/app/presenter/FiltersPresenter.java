@@ -1,6 +1,8 @@
 package org.lagonette.android.app.presenter;
 
-import android.database.Cursor;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.persistence.room.InvalidationTracker;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +15,8 @@ import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.room.reader.FilterReader;
 import org.lagonette.android.util.DB;
 import org.lagonette.android.util.SearchUtil;
+
+import java.util.Set;
 
 public class FiltersPresenter
         extends BundleLoaderPresenter<FiltersContract.View>
@@ -31,6 +35,12 @@ public class FiltersPresenter
         return fragment;
     }
 
+    @Nullable
+    private MutableLiveData<FilterReader> mFilterLiveData;
+
+    @NonNull
+    private InvalidationTracker.Observer mDbObserver;
+
     @NonNull
     private String mCurrentSearch = SearchUtil.DEFAULT_SEARCH;
 
@@ -45,11 +55,38 @@ public class FiltersPresenter
         if (arguments != null) {
             mCurrentSearch = arguments.getString(ARG_SEARCH, SearchUtil.DEFAULT_SEARCH);
         }
+
+        mFilterLiveData = new MutableLiveData<>();
+
+        // TODO Make a const of tables
+        mDbObserver = new InvalidationTracker.Observer(
+                "partner", "partner_metadata", "category", "category_metadata", "partner_side_category"
+        ) {
+            @Override
+            public void onInvalidated(@NonNull Set<String> tables) {
+                updateFilterLiveData();
+            }
+        };
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mFilterLiveData.observe(
+                mView.getLifecycleOwner(),
+                new Observer<FilterReader>() {
+                    @Override
+                    public void onChanged(@Nullable FilterReader filterReader) {
+                        mView.displayFilters(filterReader);
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void onDestroy() {
+        DB.get(mView.getContext()).getInvalidationTracker().removeObserver(mDbObserver);
     }
 
     @Override
@@ -86,19 +123,23 @@ public class FiltersPresenter
         }
     }
 
-    @Override
-    public void loadFilters() {
-        LaGonetteDatabase database = DB.get(mView.getContext());
-        Cursor cursor = database.mainDao().getFilters("%");
-        FilterReader reader = FilterReader.create(cursor);
-        mView.displayFilters(reader);
+    private void updateFilterLiveData() {
+        mFilterLiveData.postValue(
+                FilterReader.create(
+                        DB.get(mView.getContext()).mainDao().getFilters(SearchUtil.formatSearch(null))
+                )
+        );
     }
 
-    private void loadFilters(@NonNull String search) {
-        LaGonetteDatabase database = DB.get(mView.getContext());
-        Cursor cursor = database.mainDao().getFilters("%" + search + "%");
-        FilterReader reader = FilterReader.create(cursor);
-        mView.displayFilters(reader);
+    @Override
+    public void loadFilters() {
+        loadFilters(null);
+    }
+
+    private void loadFilters(@Nullable final String search) {
+        final LaGonetteDatabase database = DB.get(mView.getContext());
+        database.getInvalidationTracker().addObserver(mDbObserver);
+        updateFilterLiveData();
     }
 
 }

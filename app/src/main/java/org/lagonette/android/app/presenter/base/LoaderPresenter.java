@@ -7,7 +7,7 @@ import android.support.v4.app.LoaderManager;
 import org.lagonette.android.app.contract.base.BaseContract;
 import org.lagonette.android.content.loader.callbacks.base.BaseLoaderCallbacks;
 
-public class LoaderPresenter<V extends BaseContract.BaseView>
+public abstract class LoaderPresenter<V extends BaseContract.BaseView>
         extends BasePresenter<V>
         implements BaseLoaderCallbacks.Callbacks {
 

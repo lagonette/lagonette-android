@@ -1,6 +1,5 @@
 package org.lagonette.android.app.contract;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.app.contract.base.BaseContract;
@@ -16,7 +15,7 @@ public abstract class FiltersContract {
 
         void setCategoryCollapsed(long categoryId, boolean isCollapsed);
 
-        void filterPartners(@NonNull String search);
+        void filterPartners(@Nullable String search);
 
         void loadFilters();
     }
