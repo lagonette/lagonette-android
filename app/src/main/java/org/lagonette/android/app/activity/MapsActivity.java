@@ -21,7 +21,6 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.fragment.MapsFragment;
 import org.lagonette.android.app.fragment.PartnerDetailFragment;
-import org.lagonette.android.app.presenter.FiltersPresenter;
 import org.lagonette.android.app.presenter.PartnerDetailPresenter;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.app.widget.coordinator.MainCoordinator;
@@ -349,7 +348,7 @@ public class MapsActivity
 
     @Override
     public void replaceBottomSheetByFilters() {
-        mBottomSheetFragment = FiltersPresenter.newInstance(mSearchText.getText().toString());
+        mBottomSheetFragment = FiltersFragment.newInstance(mSearchText.getText().toString());
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(

@@ -1,7 +1,8 @@
 package org.lagonette.android.app.fragment;
 
 import android.arch.lifecycle.LifecycleFragment;
-import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,15 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.lagonette.android.R;
-import org.lagonette.android.app.contract.FiltersContract;
-import org.lagonette.android.app.presenter.FiltersPresenter;
+import org.lagonette.android.app.viewmodel.FiltersViewModel;
 import org.lagonette.android.app.widget.adapter.FilterAdapter;
 import org.lagonette.android.room.reader.FilterReader;
 
 public class FiltersFragment
         extends LifecycleFragment
-        implements FiltersContract.View,
-        FilterAdapter.OnFilterClickListener {
+        implements FilterAdapter.OnFilterClickListener {
+
+    private static final String ARG_SEARCH = "arg:search";
+
+    public static FiltersFragment newInstance(@NonNull String search) {
+        Bundle args = new Bundle(1);
+        args.putString(ARG_SEARCH, search); // TODO
+        FiltersFragment fragment = new FiltersFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private FiltersViewModel mFiltersViewModel;
 
     public interface Callback {
 
@@ -29,8 +40,6 @@ public class FiltersFragment
     }
 
     public static final String TAG = "FiltersFragment";
-
-    protected FiltersContract.Presenter mPresenter;
 
     private Callback mCallback;
 
@@ -42,8 +51,25 @@ public class FiltersFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPresenter = new FiltersPresenter(FiltersFragment.this);
-        mPresenter.onCreate(savedInstanceState);
+        mFilterAdapter = new FilterAdapter(getContext(), getResources(), FiltersFragment.this);
+        mFilterAdapter.setHasStableIds(true);
+
+        mFiltersViewModel = ViewModelProviders
+                .of(
+                        FiltersFragment.this,
+                        new FiltersViewModel.Factory(getContext())
+                )
+                .get(FiltersViewModel.class);
+
+        mFiltersViewModel.getFilters().observe(
+                FiltersFragment.this,
+                new Observer<FilterReader>() {
+                    @Override
+                    public void onChanged(@Nullable FilterReader filterReader) {
+                        mFilterAdapter.setFilterReader(filterReader);
+                    }
+                }
+        );
     }
 
     @Nullable
@@ -61,9 +87,6 @@ public class FiltersFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mFilterAdapter = new FilterAdapter(getContext(), getResources(), FiltersFragment.this);
-        mFilterAdapter.setHasStableIds(true);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getContext(),
                 LinearLayoutManager.VERTICAL,
@@ -79,14 +102,6 @@ public class FiltersFragment
         } catch (ClassCastException e) {
             throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
         }
-
-        mPresenter.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroy() {
-        mPresenter.onDestroy();
-        super.onDestroy();
     }
 
     @Override
@@ -96,36 +111,26 @@ public class FiltersFragment
 
     @Override
     public void onCategoryVisibilityClick(@NonNull FilterAdapter.CategoryViewHolder holder) {
-        mPresenter.setCategoryVisibility(holder.categoryId, !holder.isVisible);
+        mFiltersViewModel.setCategoryVisibility(holder.categoryId, !holder.isVisible);
     }
 
     @Override
     public void onCategoryCollapsedClick(@NonNull FilterAdapter.CategoryViewHolder holder) {
-        mPresenter.setCategoryCollapsed(holder.categoryId, !holder.isCollapsed);
+        mFiltersViewModel.setCategoryCollapsed(holder.categoryId, !holder.isCollapsed);
     }
 
     @Override
     public void onPartnerVisibilityClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
-        mPresenter.setPartnerVisibility(holder.partnerId, !holder.isVisible);
+        mFiltersViewModel.setPartnerVisibility(holder.partnerId, !holder.isVisible);
     }
 
     public void LoadFilters() {
-        mPresenter.loadFilters();
+        // TODO
+//        mPresenter.loadFilters();
     }
 
     public void filterPartner(@NonNull String search) {
-        mPresenter.filterPartners(search);
-    }
-
-    @Override
-    public void displayFilters(@Nullable FilterReader filterReader) {
-        mFilterAdapter.setFilterReader(filterReader);
-    }
-
-    @NonNull
-    @Override
-    public LifecycleOwner getLifecycleOwner() {
-        return FiltersFragment.this;
+        mFiltersViewModel.filterPartners(search);
     }
 
 }
