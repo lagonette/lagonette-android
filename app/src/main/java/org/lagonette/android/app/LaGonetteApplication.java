@@ -2,6 +2,7 @@ package org.lagonette.android.app;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 
@@ -24,13 +25,17 @@ public class LaGonetteApplication
             StrictModeUtil.enableStrictMode();
         }
 
-        database = Room
-                .databaseBuilder(
+        RoomDatabase.Builder<LaGonetteDatabase> builder = Room.
+                databaseBuilder(
                         LaGonetteApplication.this,
                         LaGonetteDatabase.class,
                         DatabaseUtil.DATABASE_NAME
-                )
-                .allowMainThreadQueries() // TODO /!\ Testing purpose
-                .build();
+                );
+
+        if (BuildConfig.DEBUG) { // TODO /!\ Testing purpose
+            builder.allowMainThreadQueries();
+        }
+
+        database = builder.build();
     }
 }
