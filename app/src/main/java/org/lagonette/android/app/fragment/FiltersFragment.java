@@ -14,12 +14,15 @@ import android.view.ViewGroup;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.viewmodel.FiltersViewModel;
+import org.lagonette.android.app.viewmodel.factory.ViewModelFactory;
 import org.lagonette.android.app.widget.adapter.FilterAdapter;
 import org.lagonette.android.room.reader.FilterReader;
 
 public class FiltersFragment
         extends LifecycleFragment
         implements FilterAdapter.OnFilterClickListener {
+
+    public static final String TAG = "FiltersFragment";
 
     private static final String ARG_SEARCH = "arg:search";
 
@@ -31,15 +34,14 @@ public class FiltersFragment
         return fragment;
     }
 
-    private FiltersViewModel mFiltersViewModel;
-
+    // TODO unused?
     public interface Callback {
 
         void showPartner(long partnerId, boolean zoom);
 
     }
 
-    public static final String TAG = "FiltersFragment";
+    private FiltersViewModel mFiltersViewModel;
 
     private Callback mCallback;
 
@@ -57,7 +59,7 @@ public class FiltersFragment
         mFiltersViewModel = ViewModelProviders
                 .of(
                         FiltersFragment.this,
-                        new FiltersViewModel.Factory(getContext())
+                        new ViewModelFactory(getContext())
                 )
                 .get(FiltersViewModel.class);
 
