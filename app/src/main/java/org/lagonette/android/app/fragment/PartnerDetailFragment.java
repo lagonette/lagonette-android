@@ -1,10 +1,10 @@
 package org.lagonette.android.app.fragment;
 
 import android.arch.lifecycle.LifecycleFragment;
-import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
@@ -18,19 +18,30 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.lagonette.android.R;
-import org.lagonette.android.app.contract.PartnerDetailContract;
-import org.lagonette.android.app.presenter.PartnerDetailPresenter;
+import org.lagonette.android.app.viewmodel.PartnerDetailViewModel;
+import org.lagonette.android.app.viewmodel.factory.ViewModelFactory;
 import org.lagonette.android.room.reader.PartnerDetailReader;
+import org.lagonette.android.room.statement.Statement;
+import org.lagonette.android.util.IntentUtil;
 import org.lagonette.android.util.SnackbarUtil;
 
 public class PartnerDetailFragment
         extends LifecycleFragment
-        implements PartnerDetailContract.View, View.OnClickListener {
+        implements View.OnClickListener {
 
     public static final String TAG = "PartnerDetailContract";
 
-    @NonNull
-    private PartnerDetailPresenter mPresenter;
+    private static final String ARG_PARTNER_ID = "arg:partner_id";
+
+    public static PartnerDetailFragment newInstance(long partnerId) {
+        Bundle args = new Bundle(1);
+        args.putLong(ARG_PARTNER_ID, partnerId);
+        PartnerDetailFragment partnerDetailFragment = new PartnerDetailFragment();
+        partnerDetailFragment.setArguments(args);
+        return partnerDetailFragment;
+    }
+
+    private PartnerDetailViewModel mViewModel;
 
     private TextView mNameTextView;
 
@@ -76,8 +87,28 @@ public class PartnerDetailFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPresenter = new PartnerDetailPresenter(PartnerDetailFragment.this);
-        mPresenter.onCreate(savedInstanceState);
+        mViewModel = ViewModelProviders
+                .of(
+                        PartnerDetailFragment.this,
+                        new ViewModelFactory(getContext())
+                )
+                .get(PartnerDetailViewModel.class);
+
+        // TODO Check
+        if (savedInstanceState == null) {
+            long partnerId = getArguments().getLong(ARG_PARTNER_ID, Statement.NO_ID);
+            mViewModel.setPartnerId(partnerId);
+        }
+
+        mViewModel.getPartnerDetailReaderLiveData().observe(
+                PartnerDetailFragment.this,
+                new Observer<PartnerDetailReader>() {
+                    @Override
+                    public void onChanged(@Nullable PartnerDetailReader partnerDetailReader) {
+                        displayPartner(partnerDetailReader);
+                    }
+                }
+        );
     }
 
     @Nullable
@@ -91,32 +122,32 @@ public class PartnerDetailFragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mBackImageButton = (ImageButton) view.findViewById(R.id.back);
+        mBackImageButton = view.findViewById(R.id.back);
 
-        mPartnerTypeTextView = (TextView) view.findViewById(R.id.type_partner);
+        mPartnerTypeTextView = view.findViewById(R.id.type_partner);
 
-        mNameTextView = (TextView) view.findViewById(R.id.name);
-        mShortDescriptionTextView = (TextView) view.findViewById(R.id.short_description);
-        mDescriptionTextView = (TextView) view.findViewById(R.id.description);
+        mNameTextView = view.findViewById(R.id.name);
+        mShortDescriptionTextView = view.findViewById(R.id.short_description);
+        mDescriptionTextView = view.findViewById(R.id.description);
 
-        mAddressTextView = (TextView) view.findViewById(R.id.address);
+        mAddressTextView = view.findViewById(R.id.address);
         mAddressLayout = view.findViewById(R.id.container_address);
 
-        mPhoneTextView = (TextView) view.findViewById(R.id.phone);
+        mPhoneTextView = view.findViewById(R.id.phone);
         mPhoneLayout = view.findViewById(R.id.container_phone);
 
-        mWebsiteTextView = (TextView) view.findViewById(R.id.website);
+        mWebsiteTextView = view.findViewById(R.id.website);
         mWebsiteLayout = view.findViewById(R.id.container_website);
 
-        mEmailTextView = (TextView) view.findViewById(R.id.email);
+        mEmailTextView = view.findViewById(R.id.email);
         mEmailLayout = view.findViewById(R.id.container_email);
 
-        mOpeningHoursTextView = (TextView) view.findViewById(R.id.opening_hours);
+        mOpeningHoursTextView = view.findViewById(R.id.opening_hours);
         mOpeningHoursLayout = view.findViewById(R.id.container_opening_hours);
 
-        mMainCategoryLabelTextView = (TextView) view.findViewById(R.id.main_category_label);
-        mLogoImageView = (ImageView) view.findViewById(R.id.logo);
-        mMainCategoryLogoImageView = (ImageView) view.findViewById(R.id.main_category_logo);
+        mMainCategoryLabelTextView = view.findViewById(R.id.main_category_label);
+        mLogoImageView = view.findViewById(R.id.logo);
+        mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
 
         mBackImageButton.setOnClickListener(PartnerDetailFragment.this);
         mAddressLayout.setOnClickListener(PartnerDetailFragment.this);
@@ -125,13 +156,6 @@ public class PartnerDetailFragment
         mEmailLayout.setOnClickListener(PartnerDetailFragment.this);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mPresenter.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void displayPartner(@Nullable PartnerDetailReader reader) {
         if (reader != null && reader.moveToFirst()) {
             Resources resources = getResources();
@@ -141,8 +165,8 @@ public class PartnerDetailFragment
 
             mPartnerTypeTextView.setText(
                     reader.isExchangeOffice()
-                            ? getString(R.string.partner_type_exchange_office)
-                            : getString(R.string.partner_type_partner)
+                            ? resources.getString(R.string.partner_type_exchange_office)
+                            : resources.getString(R.string.partner_type_partner)
             );
 
             mNameTextView.setText(reader.getName());
@@ -211,7 +235,6 @@ public class PartnerDetailFragment
 
     // TODO factorize with MapsFragment
     // Maybe it is to the activity to manage that
-    @Override
     public void errorNoDirectionAppFound() {
         Snackbar
                 .make(
@@ -222,7 +245,6 @@ public class PartnerDetailFragment
                 .show();
     }
 
-    @Override
     public void errorNoCallAppFound() {
         Snackbar
                 .make(
@@ -233,7 +255,6 @@ public class PartnerDetailFragment
                 .show();
     }
 
-    @Override
     public void errorNoBrowserAppFound() {
         Snackbar
                 .make(
@@ -244,7 +265,6 @@ public class PartnerDetailFragment
                 .show();
     }
 
-    @Override
     public void errorNoEmailAppFound() {
         Snackbar
                 .make(
@@ -276,25 +296,45 @@ public class PartnerDetailFragment
         }
     }
 
-    private void onAddressClick() {
-        mPresenter.startDirection(mLatitude, mLongitude);
+    public void onAddressClick() {
+        boolean success = IntentUtil.startDirection(
+                getContext(),
+                mLatitude,
+                mLongitude
+        );
+        if (!success) {
+            errorNoDirectionAppFound();
+        }
     }
 
-    private void onPhoneClick() {
-        mPresenter.makeCall((String) mPhoneTextView.getText());
+    public void onPhoneClick() {
+        boolean success = IntentUtil.makeCall(
+                getContext(),
+                mPhoneTextView.getText().toString()
+        );
+        if (!success) {
+            errorNoCallAppFound();
+        }
     }
 
-    private void onWebsiteClick() {
-        mPresenter.goToWebsite((String) mWebsiteTextView.getText());
+    public void onWebsiteClick() {
+        boolean success = IntentUtil.goToWebsite(
+                getContext(),
+                mWebsiteTextView.getText().toString()
+        );
+        if (!success) {
+            errorNoBrowserAppFound();
+        }
     }
 
-    private void onEmailClick() {
-        mPresenter.writeEmail((String) mEmailTextView.getText());
+    public void onEmailClick() {
+        boolean success = IntentUtil.writeEmail(
+                getContext(),
+                mEmailTextView.getText().toString()
+        );
+        if (!success) {
+            errorNoEmailAppFound();
+        }
     }
 
-    @NonNull
-    @Override
-    public LifecycleOwner getLifecycleOwner() {
-        return PartnerDetailFragment.this;
-    }
 }

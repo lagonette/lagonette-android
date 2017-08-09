@@ -21,7 +21,6 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.fragment.MapsFragment;
 import org.lagonette.android.app.fragment.PartnerDetailFragment;
-import org.lagonette.android.app.presenter.PartnerDetailPresenter;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.app.widget.coordinator.MainCoordinator;
 import org.lagonette.android.util.SearchUtil;
@@ -328,7 +327,7 @@ public class MapsActivity
 
     @Override
     public void replaceBottomSheetByPartnerDetails(long partnerId, boolean animate) {
-        mBottomSheetFragment = PartnerDetailPresenter.newInstance(partnerId);
+        mBottomSheetFragment = PartnerDetailFragment.newInstance(partnerId);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (animate) {
             transaction

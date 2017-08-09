@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.lagonette.android.app.viewmodel.FiltersViewModel;
+import org.lagonette.android.app.viewmodel.PartnerDetailViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
@@ -22,6 +23,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.equals(FiltersViewModel.class)) {
             //noinspection unchecked
             return (T) new FiltersViewModel(mContext);
+        } else if (modelClass.equals(PartnerDetailViewModel.class)) {
+            //noinspection unchecked
+            return (T) new PartnerDetailViewModel(mContext);
         } else {
             throw new IllegalArgumentException("Can not instantiate: " + modelClass.getName());
         }
