@@ -1,8 +1,8 @@
 package org.lagonette.android.app.viewmodel.base;
 
-import android.arch.lifecycle.ViewModel;
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.arch.persistence.room.InvalidationTracker;
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.lagonette.android.room.database.LaGonetteDatabase;
@@ -10,14 +10,15 @@ import org.lagonette.android.util.DB;
 
 import java.util.Set;
 
-public abstract class DatabaseObserverViewModel extends ViewModel {
+public abstract class DatabaseObserverViewModel extends AndroidViewModel {
 
     @NonNull
     protected final LaGonetteDatabase mDatabase;
     @NonNull
     private final InvalidationTracker.Observer mDbObserver;
 
-    public DatabaseObserverViewModel(@NonNull Context context) {
+    public DatabaseObserverViewModel(@NonNull Application application) {
+        super(application);
 
         mDbObserver = new InvalidationTracker.Observer( // TODO
                 "partner", "partner_metadata", "category", "category_metadata", "partner_side_category"
@@ -28,7 +29,7 @@ public abstract class DatabaseObserverViewModel extends ViewModel {
             }
         };
 
-        mDatabase = DB.get(context);
+        mDatabase = DB.get(application);
 
         mDatabase.getInvalidationTracker().addObserver(mDbObserver);
     }

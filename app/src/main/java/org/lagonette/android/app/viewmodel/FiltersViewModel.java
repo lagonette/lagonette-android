@@ -1,8 +1,8 @@
 package org.lagonette.android.app.viewmodel;
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -17,8 +17,8 @@ public class FiltersViewModel extends DatabaseObserverViewModel {
     @Nullable
     private String mSearch;
 
-    public FiltersViewModel(@NonNull Context context) {
-        super(context);
+    public FiltersViewModel(@NonNull Application application) {
+        super(application);
 
         mFiltersLiveData = new MutableLiveData<>();
 

@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.viewmodel.FiltersViewModel;
-import org.lagonette.android.app.viewmodel.factory.ViewModelFactory;
 import org.lagonette.android.app.widget.adapter.FilterAdapter;
 import org.lagonette.android.room.reader.FilterReader;
 
@@ -57,10 +56,7 @@ public class FiltersFragment
         mFilterAdapter.setHasStableIds(true);
 
         mFiltersViewModel = ViewModelProviders
-                .of(
-                        FiltersFragment.this,
-                        new ViewModelFactory(getContext())
-                )
+                .of(FiltersFragment.this)
                 .get(FiltersViewModel.class);
 
         mFiltersViewModel.getFilters().observe(
@@ -82,7 +78,7 @@ public class FiltersFragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mFilterList = (RecyclerView) view.findViewById(R.id.filter_list);
+        mFilterList = view.findViewById(R.id.filter_list);
     }
 
     @Override

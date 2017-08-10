@@ -1,9 +1,9 @@
 package org.lagonette.android.app.viewmodel;
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.lagonette.android.app.viewmodel.base.DatabaseObserverViewModel;
@@ -16,8 +16,8 @@ public class PartnerDetailViewModel extends DatabaseObserverViewModel {
 
     private MutableLiveData<PartnerDetailReader> mPartnerDetailReaderLiveData;
 
-    public PartnerDetailViewModel(@NonNull Context context) {
-        super(context);
+    public PartnerDetailViewModel(@NonNull Application application) {
+        super(application);
 
         mPartnerDetailReaderLiveData = new MediatorLiveData<>();
     }

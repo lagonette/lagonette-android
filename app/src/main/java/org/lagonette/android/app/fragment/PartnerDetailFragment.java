@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.viewmodel.PartnerDetailViewModel;
-import org.lagonette.android.app.viewmodel.factory.ViewModelFactory;
 import org.lagonette.android.room.reader.PartnerDetailReader;
 import org.lagonette.android.room.statement.Statement;
 import org.lagonette.android.util.IntentUtil;
@@ -88,10 +87,7 @@ public class PartnerDetailFragment
         super.onCreate(savedInstanceState);
 
         mViewModel = ViewModelProviders
-                .of(
-                        PartnerDetailFragment.this,
-                        new ViewModelFactory(getContext())
-                )
+                .of(PartnerDetailFragment.this)
                 .get(PartnerDetailViewModel.class);
 
         // TODO Check
