@@ -2,6 +2,8 @@ package org.lagonette.android.app.fragment;
 
 import android.Manifest;
 import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -21,6 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -35,8 +38,7 @@ import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 
 import org.json.JSONException;
 import org.lagonette.android.R;
-import org.lagonette.android.app.contract.MapsContract;
-import org.lagonette.android.app.presenter.MapsPresenter;
+import org.lagonette.android.app.viewmodel.MapsViewModel;
 import org.lagonette.android.app.widget.maps.PartnerItem;
 import org.lagonette.android.app.widget.maps.PartnerRenderer;
 import org.lagonette.android.room.reader.MapPartnerReader;
@@ -49,43 +51,70 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.lagonette.android.app.presenter.MapsPresenter.PERMISSIONS_REQUEST_LOCATION;
-
 public class MapsFragment
         extends LifecycleFragment
-        implements MapsContract.View,
-        ClusterManager.OnClusterClickListener<PartnerItem>,
+        implements ClusterManager.OnClusterClickListener<PartnerItem>,
         ClusterManager.OnClusterItemClickListener<PartnerItem>,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMapClickListener {
+        GoogleMap.OnMapClickListener,
+        OnMapReadyCallback {
+
 
     public static final String TAG = "MapsFragment";
+
     public static final int ANIMATION_LENGTH_LONG = 600;
+
     public static final int ANIMATION_LENGTH_SHORT = 300;
+
     public static final int ZOOM_LEVEL_STREET = 15;
+
     public static final int CLUSTER_CLICK_ZOOM_IN = 1;
+
     private static final String STATE_ASK_FOR_MY_LOCATION_PERMISSION = "state:ask_for_my_location_permission";
+
     private static final String STATE_SELECTED_MARKER_POSITION = "state:selected_marker_position";
+
     private static final String STATE_SELECTED_MARKER_ID = "state:selected_marker_id";
-    private MapsPresenter mPresenter;
+
+    public static final int PERMISSIONS_REQUEST_LOCATION = 666;
+
+    private MapsViewModel mViewModel;
+
     private boolean mLocationPermissionGranted = false;
+
     private GoogleMap mMap;
+
     private ClusterManager<PartnerItem> mClusterManager;
+
     private int mStatusBarHeight;
+
     private Callback mCallback;
+
     private Map<Long, PartnerItem> mPartnerItems;
+
     private boolean mConfChanged = false;
+
     private double mStartLatitude;
+
     private double mStartLongitude;
+
     private float mStartZoom;
+
     private Marker mSelectedMarker;
+
     private LatLng mSelectedMarkerPosition = null;
+
     private long mSelectedMarkerId = Statement.NO_ID;
+
     private int mTopPadding;
+
     private int mBottomPadding;
+
     private GoogleApiClient mGoogleApiClient;
+
     private Location mLastLocation;
+
     private boolean mAskFormMyPositionPermission = true;
 
     public static MapsFragment newInstance() {
@@ -129,9 +158,23 @@ public class MapsFragment
         // TODO use LongSparseArray
         mPartnerItems = new HashMap<>();
 
-        mPresenter = new MapsPresenter(MapsFragment.this);
-        mPresenter.onCreate(savedInstanceState);
+        mViewModel = ViewModelProviders
+                .of(MapsFragment.this)
+                .get(MapsViewModel.class);
+
+        mViewModel.getMapPartners().observe(
+                MapsFragment.this,
+                new Observer<MapPartnerReader>() {
+                    // TODO use lambda
+                    @Override
+                    public void onChanged(@Nullable MapPartnerReader mapPartnerReader) {
+                        showPartners(mapPartnerReader);
+                    }
+                }
+        );
     }
+
+    // TODO Use firebase to find broken data
 
     @Nullable
     @Override
@@ -148,20 +191,17 @@ public class MapsFragment
         // Obtain the SupportMapFragment and create notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(mPresenter);
+        mapFragment.getMapAsync(MapsFragment.this);
 
         try {
             mCallback = (Callback) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
         }
-
-        mPresenter.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        mPresenter.onSaveInstanceState(outState);
         outState.putBoolean(STATE_ASK_FOR_MY_LOCATION_PERMISSION, mAskFormMyPositionPermission);
         if (mSelectedMarker != null) {
             outState.putParcelable(STATE_SELECTED_MARKER_POSITION, mSelectedMarker.getPosition());
@@ -285,7 +325,7 @@ public class MapsFragment
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
+            public boolean onMarkerClick(Marker marker) { // TODO Factorize ?
                 // If cluster manager do not manage marker then the user has probably clicked on the selected marker.
                 // If so, we simulate a click on the marker behind.
                 if (!mClusterManager.onMarkerClick(marker)) {
@@ -484,7 +524,7 @@ public class MapsFragment
     }
 
     public void filterPartner(@NonNull String search) {
-        mPresenter.loadPartners(search);
+        mViewModel.loadPartners(search);
     }
 
     private void onLocationPermissionResult(@NonNull int[] grantResults) {
@@ -496,7 +536,6 @@ public class MapsFragment
         }
     }
 
-    @Override
     public void showPartners(@Nullable MapPartnerReader partnerReader) {
         if (mMap != null) {
             mPartnerItems.clear();
@@ -514,7 +553,7 @@ public class MapsFragment
         }
     }
 
-    @Override
+    // TODO manage error
     public void errorGettingPartners() {
         Snackbar
                 .make(
@@ -523,12 +562,6 @@ public class MapsFragment
                         Snackbar.LENGTH_LONG
                 )
                 .show();
-    }
-
-    @NonNull
-    @Override
-    public LifecycleFragment getLifecycleOwner() {
-        return MapsFragment.this;
     }
 
     public interface Callback {
