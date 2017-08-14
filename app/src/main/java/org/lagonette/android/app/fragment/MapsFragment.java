@@ -1,7 +1,9 @@
 package org.lagonette.android.app.fragment;
 
+import android.Manifest;
 import android.arch.lifecycle.LifecycleFragment;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -44,70 +49,44 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.lagonette.android.app.presenter.MapsPresenter.PERMISSIONS_REQUEST_LOCATION;
+
 public class MapsFragment
         extends LifecycleFragment
         implements MapsContract.View,
         ClusterManager.OnClusterClickListener<PartnerItem>,
         ClusterManager.OnClusterItemClickListener<PartnerItem>,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener {
 
-    public interface Callback {
-
-        void hideMyLocationButton();
-
-        void showMyLocationButton();
-
-        void showPartner(long partnerId, boolean zoom);
-
-        void showFullMap();
-
-        void onMapReady();
-
-    }
-
-    private MapsPresenter mPresenter;
-
     public static final String TAG = "MapsFragment";
-
     public static final int ANIMATION_LENGTH_LONG = 600;
-
     public static final int ANIMATION_LENGTH_SHORT = 300;
-
     public static final int ZOOM_LEVEL_STREET = 15;
-
     public static final int CLUSTER_CLICK_ZOOM_IN = 1;
-
+    private static final String STATE_ASK_FOR_MY_LOCATION_PERMISSION = "state:ask_for_my_location_permission";
     private static final String STATE_SELECTED_MARKER_POSITION = "state:selected_marker_position";
-
     private static final String STATE_SELECTED_MARKER_ID = "state:selected_marker_id";
-
+    private MapsPresenter mPresenter;
+    private boolean mLocationPermissionGranted = false;
     private GoogleMap mMap;
-
     private ClusterManager<PartnerItem> mClusterManager;
-
     private int mStatusBarHeight;
-
     private Callback mCallback;
-
     private Map<Long, PartnerItem> mPartnerItems;
-
     private boolean mConfChanged = false;
-
     private double mStartLatitude;
-
     private double mStartLongitude;
-
     private float mStartZoom;
-
     private Marker mSelectedMarker;
-
     private LatLng mSelectedMarkerPosition = null;
-
     private long mSelectedMarkerId = Statement.NO_ID;
-
     private int mTopPadding;
-
     private int mBottomPadding;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private boolean mAskFormMyPositionPermission = true;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -124,12 +103,25 @@ public class MapsFragment
             mSelectedMarkerId = savedInstanceState.getLong(
                     STATE_SELECTED_MARKER_ID
             );
+            mAskFormMyPositionPermission = savedInstanceState.getBoolean(
+                    STATE_ASK_FOR_MY_LOCATION_PERMISSION
+            );
         } else {
             mConfChanged = false;
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
             mStartLatitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LATITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LATITUDE);
             mStartLongitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LONGITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LONGITUDE);
             mStartZoom = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_ZOOM, SharedPreferencesUtil.DEFAULT_VALUE_START_ZOOM);
+        }
+        if (savedInstanceState != null) {
+        }
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addConnectionCallbacks(MapsFragment.this)
+                    .addOnConnectionFailedListener(MapsFragment.this)
+                    .addApi(LocationServices.API)
+                    .build();
         }
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
@@ -170,6 +162,7 @@ public class MapsFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         mPresenter.onSaveInstanceState(outState);
+        outState.putBoolean(STATE_ASK_FOR_MY_LOCATION_PERMISSION, mAskFormMyPositionPermission);
         if (mSelectedMarker != null) {
             outState.putParcelable(STATE_SELECTED_MARKER_POSITION, mSelectedMarker.getPosition());
             outState.putLong(STATE_SELECTED_MARKER_ID, mSelectedMarkerId);
@@ -179,7 +172,7 @@ public class MapsFragment
     @Override
     public void onStart() {
         super.onStart();
-        mPresenter.onStart();
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -199,7 +192,7 @@ public class MapsFragment
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -208,6 +201,55 @@ public class MapsFragment
         setupMap();
         setupFootprint();
         mCallback.onMapReady();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        // TODO Use LiveData
+        // Called when location service is connected and my position available.
+        // Do nothing here.
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // Called when location service is suspended and my position is not available anymore.
+        // Do nothing here.
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        // Called when the connection to the location service fail.
+        Log.e(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
+        FirebaseCrash.report(
+                new IllegalStateException(
+                        "Connection to google location service failed: ("
+                                + connectionResult.getErrorCode()
+                                + ") "
+                                + connectionResult.getErrorMessage()
+                )
+        );
+    }
+
+    public boolean checkLocationPermission() {
+        if (!mLocationPermissionGranted) {
+            if (ContextCompat.checkSelfPermission(
+                    getContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            )
+                    == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
+            } else if (mAskFormMyPositionPermission) {
+                mAskFormMyPositionPermission = false;
+                requestPermissions(
+                        new String[]{
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                        },
+                        PERMISSIONS_REQUEST_LOCATION
+                );
+            }
+        }
+
+        return mLocationPermissionGranted;
     }
 
     private void setupMap() {
@@ -345,7 +387,7 @@ public class MapsFragment
     }
 
     public void moveOnMyLocation() {
-        Location lastLocation = mPresenter.getLastLocation();
+        Location lastLocation = getLastLocation();
         if (lastLocation != null) {
             mMap.animateCamera(
                     CameraUpdateFactory.newLatLngZoom(
@@ -405,7 +447,7 @@ public class MapsFragment
             return;
         }
 
-        if (mPresenter.checkLocationPermission()) {
+        if (checkLocationPermission()) {
             mMap.setMyLocationEnabled(true);
             mCallback.showMyLocationButton();
         } else {
@@ -414,16 +456,44 @@ public class MapsFragment
         }
     }
 
+    public Location getLastLocation() {
+        if (mLocationPermissionGranted) {
+            //noinspection MissingPermission
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (mLastLocation == null) {
+                Log.w(TAG, "getLastLocation: Last location is NULL");
+            }
+            return mLastLocation;
+        }
+        return null;
+    }
+
     @Override
     public void onRequestPermissionsResult(
             int requestCode,
             @NonNull String permissions[],
             @NonNull int[] grantResults) {
-        mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_LOCATION:
+                onLocationPermissionResult(grantResults);
+                updateLocationUI();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown request code: " + requestCode);
+        }
     }
 
     public void filterPartner(@NonNull String search) {
         mPresenter.loadPartners(search);
+    }
+
+    private void onLocationPermissionResult(@NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        }
     }
 
     @Override
@@ -459,6 +529,20 @@ public class MapsFragment
     @Override
     public LifecycleFragment getLifecycleOwner() {
         return MapsFragment.this;
+    }
+
+    public interface Callback {
+
+        void hideMyLocationButton();
+
+        void showMyLocationButton();
+
+        void showPartner(long partnerId, boolean zoom);
+
+        void showFullMap();
+
+        void onMapReady();
+
     }
 
 }
