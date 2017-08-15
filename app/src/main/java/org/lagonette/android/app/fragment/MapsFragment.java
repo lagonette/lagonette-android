@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,8 +49,6 @@ import org.lagonette.android.util.SnackbarUtil;
 import org.lagonette.android.util.UiUtil;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MapsFragment
         extends LifecycleFragment
@@ -91,7 +90,7 @@ public class MapsFragment
 
     private Callback mCallback;
 
-    private Map<Long, PartnerItem> mPartnerItems;
+    private LongSparseArray<PartnerItem> mPartnerItems;
 
     private boolean mConfChanged = false;
 
@@ -155,8 +154,7 @@ public class MapsFragment
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
 
-        // TODO use LongSparseArray
-        mPartnerItems = new HashMap<>();
+        mPartnerItems = new LongSparseArray<>();
 
         mViewModel = ViewModelProviders
                 .of(MapsFragment.this)
