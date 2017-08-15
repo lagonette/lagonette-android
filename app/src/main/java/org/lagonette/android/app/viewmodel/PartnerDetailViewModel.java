@@ -28,12 +28,17 @@ public class PartnerDetailViewModel extends DatabaseObserverViewModel {
     }
 
     private void updatePartnerDetailReader() {
-        PartnerDetailReader reader = mPartnerId > Statement.NO_ID
-                ? PartnerDetailReader.create(
-                        mDatabase.mainDao().getPartnerDetail(mPartnerId)
-                )
-                : null;
-        mPartnerDetailReaderLiveData.postValue(reader);
+        // TODO use AsyncTask and ensure thread is start only one times
+        new Thread(
+                () -> {
+                    PartnerDetailReader reader = mPartnerId > Statement.NO_ID
+                            ? PartnerDetailReader.create(
+                            mDatabase.mainDao().getPartnerDetail(mPartnerId)
+                    )
+                            : null;
+                    mPartnerDetailReaderLiveData.postValue(reader);
+                }
+        ).start();
     }
 
     public void setPartnerId(long partnerId) {

@@ -43,11 +43,14 @@ public class MapsViewModel extends DatabaseObserverViewModel {
     }
 
     public void updateMapPartners() {
-        mMapPartnersLiveData.postValue(
-                MapPartnerReader.create(
-                        mDatabase.mainDao().getMapPartner(SearchUtil.formatSearch(mSearch))
+        // TODO use AsyncTask and ensure thread is start only one times
+        new Thread(
+                () -> mMapPartnersLiveData.postValue(
+                        MapPartnerReader.create(
+                                mDatabase.mainDao().getMapPartner(SearchUtil.formatSearch(mSearch))
+                        )
                 )
-        );
+        ).start();
     }
 
 

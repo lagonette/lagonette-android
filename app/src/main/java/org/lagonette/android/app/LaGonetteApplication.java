@@ -32,10 +32,6 @@ public class LaGonetteApplication
                         DatabaseUtil.DATABASE_NAME
                 );
 
-        if (BuildConfig.DEBUG) { // TODO /!\ Testing purpose
-            builder.allowMainThreadQueries();
-        }
-
         database = builder.build();
     }
 }

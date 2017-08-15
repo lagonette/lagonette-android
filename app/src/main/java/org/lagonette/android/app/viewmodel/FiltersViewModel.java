@@ -48,11 +48,14 @@ public class FiltersViewModel extends DatabaseObserverViewModel {
     }
 
     private void updateFilters() {
-        mFiltersLiveData.postValue(
-                FilterReader.create(
-                        mDatabase.mainDao().getFilters(SearchUtil.formatSearch(mSearch))
+        // TODO use AsyncTask and ensure thread is start only one times
+        new Thread(
+                () -> mFiltersLiveData.postValue(
+                        FilterReader.create(
+                                mDatabase.mainDao().getFilters(SearchUtil.formatSearch(mSearch))
+                        )
                 )
-        );
+        ).start();
     }
 
     public void filterPartners(@Nullable String search) {
