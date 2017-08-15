@@ -42,16 +42,15 @@ public class GetPartnersLoader extends BundleLoader {
 
     @Override
     public Bundle loadInBackground() {
+        LaGonetteDatabase database = DB.get(mContext);
         try {
             LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
-            LaGonetteDatabase database = DB.get(mContext);
             List<Category> categories = new ArrayList<>();
             List<CategoryMetadata> categoryMetadataList = new ArrayList<>();
             List<Partner> partners = new ArrayList<>();
             List<PartnerMetadata> partnerMetadataList = new ArrayList<>();
             List<PartnerSideCategory> partnerSideCategories = new ArrayList<>();
 
-            // TODO Exception ? Finally ?
             database.beginTransaction();
 
             if (getCategories(service, categories, categoryMetadataList)) {
@@ -69,8 +68,6 @@ public class GetPartnersLoader extends BundleLoader {
                 }
             }
 
-            database.endTransaction();
-
             return mBundle;
 
         } catch (IOException | RemoteException | OperationApplicationException e) {
@@ -78,6 +75,8 @@ public class GetPartnersLoader extends BundleLoader {
             FirebaseCrash.report(e);
             mBundle.putInt(ARG_STATUS, STATUS_ERROR);
             return mBundle;
+        } finally {
+            database.endTransaction();
         }
     }
 
