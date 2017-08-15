@@ -244,20 +244,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         if (mOnFilterClickListener != null) {
             holder.itemView.setTag(holder);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnFilterClickListener.onPartnerClick((PartnerViewHolder) v.getTag());
-                }
-            });
+            holder.itemView.setOnClickListener(
+                    v -> mOnFilterClickListener.onPartnerClick((PartnerViewHolder) v.getTag())
+            );
 
             holder.visibilityButton.setTag(holder);
-            holder.visibilityButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnFilterClickListener.onPartnerVisibilityClick((PartnerViewHolder) v.getTag());
-                }
-            });
+            holder.visibilityButton.setOnClickListener(
+                    v -> mOnFilterClickListener.onPartnerVisibilityClick((PartnerViewHolder) v.getTag())
+            );
         }
 
         return holder;
@@ -276,20 +270,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         if (mOnFilterClickListener != null) {
             holder.visibilityButton.setTag(holder);
-            holder.visibilityButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnFilterClickListener.onCategoryVisibilityClick((CategoryViewHolder) v.getTag());
-                }
-            });
+            holder.visibilityButton.setOnClickListener(
+                    v -> mOnFilterClickListener.onCategoryVisibilityClick((CategoryViewHolder) v.getTag())
+            );
 
             holder.collapsedButton.setTag(holder);
-            holder.collapsedButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnFilterClickListener.onCategoryCollapsedClick((CategoryViewHolder) v.getTag());
-                }
-            });
+            holder.collapsedButton.setOnClickListener(
+                    v -> mOnFilterClickListener.onCategoryCollapsedClick((CategoryViewHolder) v.getTag())
+            );
         }
 
         return holder;
@@ -427,10 +415,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public PartnerViewHolder(View itemView) {
             super(itemView);
-            nameTextView = (TextView) itemView.findViewById(R.id.partner_name);
-            addressTextView = (TextView) itemView.findViewById(R.id.partner_address);
-            exchangeOfficeIndicatorImage = (ImageView) itemView.findViewById(R.id.partner_exchange_office_indicator);
-            visibilityButton = (ImageButton) itemView.findViewById(R.id.partner_visibility);
+            nameTextView = itemView.findViewById(R.id.partner_name);
+            addressTextView = itemView.findViewById(R.id.partner_address);
+            exchangeOfficeIndicatorImage = itemView.findViewById(R.id.partner_exchange_office_indicator);
+            visibilityButton = itemView.findViewById(R.id.partner_visibility);
         }
     }
 
@@ -458,10 +446,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
-            iconImageView = (ImageView) itemView.findViewById(R.id.category_icon);
-            visibilityButton = (ImageButton) itemView.findViewById(R.id.category_visibility);
-            collapsedButton = (ImageButton) itemView.findViewById(R.id.category_collapsed);
-            categoryTextView = (TextView) itemView.findViewById(R.id.category_label);
+            iconImageView = itemView.findViewById(R.id.category_icon);
+            visibilityButton = itemView.findViewById(R.id.category_visibility);
+            collapsedButton = itemView.findViewById(R.id.category_collapsed);
+            categoryTextView = itemView.findViewById(R.id.category_label);
         }
     }
 

@@ -162,13 +162,7 @@ public class MapsFragment
 
         mViewModel.getMapPartners().observe(
                 MapsFragment.this,
-                new Observer<MapPartnerReader>() {
-                    // TODO use lambda
-                    @Override
-                    public void onChanged(@Nullable MapPartnerReader mapPartnerReader) {
-                        showPartners(mapPartnerReader);
-                    }
-                }
+                this::showPartners
         );
     }
 

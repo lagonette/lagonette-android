@@ -61,12 +61,7 @@ public class FiltersFragment
 
         mFiltersViewModel.getFilters().observe(
                 FiltersFragment.this,
-                new Observer<FilterReader>() {
-                    @Override
-                    public void onChanged(@Nullable FilterReader filterReader) {
-                        mFilterAdapter.setFilterReader(filterReader);
-                    }
-                }
+                filterReader -> mFilterAdapter.setFilterReader(filterReader)
         );
     }
 

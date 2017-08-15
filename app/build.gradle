@@ -15,6 +15,14 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/build/schemas".toString()]
             }
         }
+
+        jackOptions {
+            enabled true
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         debug {

@@ -98,12 +98,7 @@ public class PartnerDetailFragment
 
         mViewModel.getPartnerDetailReaderLiveData().observe(
                 PartnerDetailFragment.this,
-                new Observer<PartnerDetailReader>() {
-                    @Override
-                    public void onChanged(@Nullable PartnerDetailReader partnerDetailReader) {
-                        displayPartner(partnerDetailReader);
-                    }
-                }
+                this::displayPartner
         );
     }
 
