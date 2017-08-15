@@ -60,13 +60,8 @@ public class FilterReader
     }
 
     @Override
-    public int getMainPartnerVisibilitySum() {
-        return mCursor.getInt(FilterStatement.MAIN_PARTNER_VISIBILITY_SUM);
-    }
-
-    @Override
-    public int getSidePartnerVisibilitySum() {
-        return mCursor.getInt(FilterStatement.SIDE_PARTNER_VISIBILITY_SUM);
+    public boolean isCategoryPartnersVisible() {
+        return 0 != mCursor.getInt(FilterStatement.CATEGORY_IS_PARTNERS_VISIBLE);
     }
 
     @Override

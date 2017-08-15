@@ -16,8 +16,7 @@ public abstract class FilterStatement
                     "category.icon, " +
                     "category_metadata.is_visible, " +
                     "category_metadata.is_collapsed, " +
-                    "SUM (main_partner_metadata.is_visible) AS main_partner_visibility_sum, " +
-                    "SUM (side_partner_metadata.is_visible) AS side_partner_visibility_sum, " +
+                    "SUM (main_partner_metadata.is_visible) + SUM (side_partner_metadata.is_visible) AS category_is_partners_visible, " +
                     "NULL AS id, " +
                     "NULL AS name, " +
                     "NULL AS street, " +
@@ -51,8 +50,7 @@ public abstract class FilterStatement
                     "NULL AS icon, " +
                     "NULL AS is_visible, " +
                     "NULL AS is_collapsed, " +
-                    "NULL AS main_partner_visibility_sum, " +
-                    "NULL AS side_partner_visibility_sum, " +
+                    "NULL AS category_is_partners_visible, " +
                     "NULL AS id, " +
                     "NULL AS name, " +
                     "NULL AS street, " +
@@ -81,8 +79,7 @@ public abstract class FilterStatement
                     "NULL AS icon, " +
                     "category_metadata.is_visible, " +
                     "NULL AS is_collapsed, " +
-                    "NULL AS main_partner_visibility_sum, " +
-                    "NULL AS side_partner_visibility_sum, " +
+                    "NULL AS category_is_partners_visible, " +
                     "partner.id, " +
                     "partner.name, " +
                     "partner.street, " +
@@ -107,8 +104,7 @@ public abstract class FilterStatement
                     "NULL AS icon, " +
                     "category_metadata.is_visible, " +
                     "NULL AS is_collapsed, " +
-                    "NULL AS main_partner_visibility_sum, " +
-                    "NULL AS side_partner_visibility_sum, " +
+                    "NULL AS category_is_partners_visible, " +
                     "partner.id, " +
                     "partner.name, " +
                     "partner.street, " +
@@ -143,9 +139,7 @@ public abstract class FilterStatement
 
     public static final int CATEGORY_METADATA_IS_COLLAPSED;
 
-    public static final int MAIN_PARTNER_VISIBILITY_SUM;
-
-    public static final int SIDE_PARTNER_VISIBILITY_SUM;
+    public static final int CATEGORY_IS_PARTNERS_VISIBLE;
 
     public static final int PARTNER_ID;
 
@@ -189,8 +183,7 @@ public abstract class FilterStatement
         CATEGORY_ICON = i++;
         CATEGORY_METADATA_IS_VISIBLE = i++;
         CATEGORY_METADATA_IS_COLLAPSED = i++;
-        MAIN_PARTNER_VISIBILITY_SUM = i++;
-        SIDE_PARTNER_VISIBILITY_SUM = i++;
+        CATEGORY_IS_PARTNERS_VISIBLE = i++;
         PARTNER_ID = i++;
         PARTNER_NAME = i++;
         PARTNER_STREET = i++;
@@ -214,11 +207,7 @@ public abstract class FilterStatement
 
         boolean isCategoryCollapsed();
 
-        // TODO
-        int getMainPartnerVisibilitySum();
-
-        // TODO
-        int getSidePartnerVisibilitySum();
+        boolean isCategoryPartnersVisible();
 
         long getPartnerId();
 

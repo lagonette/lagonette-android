@@ -311,7 +311,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
             holder.categoryId = mFilterReader.getCategoryId();
-            holder.isPartnersVisible = (mFilterReader.getMainPartnerVisibilitySum() + mFilterReader.getSidePartnerVisibilitySum()) > 0;
+            holder.isPartnersVisible = mFilterReader.isCategoryPartnersVisible();
             holder.isVisible = mFilterReader.isCategoryVisible();
             holder.isCollapsed = mFilterReader.isCategoryCollapsed();
 

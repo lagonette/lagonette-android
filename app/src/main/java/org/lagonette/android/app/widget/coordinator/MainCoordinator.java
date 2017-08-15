@@ -177,12 +177,7 @@ public class MainCoordinator
             }
         } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
             // Workaround to prevent undefined fab state on configuration change.
-            bottomSheet.post(new Runnable() {
-                @Override
-                public void run() {
-                    onSlide(bottomSheet, 0);
-                }
-            });
+            bottomSheet.post(() -> onSlide(bottomSheet, 0));
         }
     }
 
