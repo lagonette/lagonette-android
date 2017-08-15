@@ -2,7 +2,6 @@ package org.lagonette.android.app.fragment;
 
 import android.Manifest;
 import android.arch.lifecycle.LifecycleFragment;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -42,6 +41,7 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.viewmodel.MapsViewModel;
 import org.lagonette.android.app.widget.maps.PartnerItem;
 import org.lagonette.android.app.widget.maps.PartnerRenderer;
+import org.lagonette.android.content.loader.callbacks.GetPartnersCallbacks;
 import org.lagonette.android.room.reader.MapPartnerReader;
 import org.lagonette.android.room.statement.Statement;
 import org.lagonette.android.util.SharedPreferencesUtil;
@@ -57,7 +57,8 @@ public class MapsFragment
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback,
+        GetPartnersCallbacks.Callbacks {
 
 
     public static final String TAG = "MapsFragment";
@@ -79,6 +80,8 @@ public class MapsFragment
     public static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
     private MapsViewModel mViewModel;
+
+    private GetPartnersCallbacks mGetPartnersCallbacks;
 
     private boolean mLocationPermissionGranted = false;
 
@@ -141,8 +144,6 @@ public class MapsFragment
             mStartLongitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LONGITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LONGITUDE);
             mStartZoom = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_ZOOM, SharedPreferencesUtil.DEFAULT_VALUE_START_ZOOM);
         }
-        if (savedInstanceState != null) {
-        }
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
@@ -160,10 +161,7 @@ public class MapsFragment
                 .of(MapsFragment.this)
                 .get(MapsViewModel.class);
 
-        mViewModel.getMapPartners().observe(
-                MapsFragment.this,
-                this::showPartners
-        );
+        mGetPartnersCallbacks = new GetPartnersCallbacks(MapsFragment.this);
     }
 
     // TODO Use firebase to find broken data
@@ -189,6 +187,13 @@ public class MapsFragment
             mCallback = (Callback) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
+        }
+
+        if (savedInstanceState == null) {
+            mGetPartnersCallbacks.getParners();
+        }
+        else {
+            mGetPartnersCallbacks.reattachLoader();
         }
     }
 
@@ -233,6 +238,11 @@ public class MapsFragment
         setupMap();
         setupFootprint();
         mCallback.onMapReady();
+
+        mViewModel.getMapPartners().observe(
+                MapsFragment.this,
+                this::showPartners
+        );
     }
 
     @Override
@@ -315,21 +325,18 @@ public class MapsFragment
         );
         mMap.setOnMapClickListener(MapsFragment.this);
         mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) { // TODO Factorize ?
-                // If cluster manager do not manage marker then the user has probably clicked on the selected marker.
-                // If so, we simulate a click on the marker behind.
-                if (!mClusterManager.onMarkerClick(marker)) {
-                    if (marker.getId().equals(mSelectedMarker.getId())) {
-                        mCallback.showPartner(mSelectedMarkerId, false);
-                        return true;
-                    } else {
-                        return false;
-                    }
+        mMap.setOnMarkerClickListener(marker -> { // TODO Factorize ?
+            // If cluster manager do not manage marker then the user has probably clicked on the selected marker.
+            // If so, we simulate a click on the marker behind.
+            if (!mClusterManager.onMarkerClick(marker)) {
+                if (marker.getId().equals(mSelectedMarker.getId())) {
+                    mCallback.showPartner(mSelectedMarkerId, false);
+                    return true;
+                } else {
+                    return false;
                 }
-                return true;
             }
+            return true;
         });
         mClusterManager.setOnClusterClickListener(MapsFragment.this);
         mClusterManager.setOnClusterItemClickListener(MapsFragment.this);
@@ -545,7 +552,7 @@ public class MapsFragment
         }
     }
 
-    // TODO manage error
+    @Override
     public void errorGettingPartners() {
         Snackbar
                 .make(

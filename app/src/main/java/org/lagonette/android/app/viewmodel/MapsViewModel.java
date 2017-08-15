@@ -17,7 +17,6 @@ public class MapsViewModel extends DatabaseObserverViewModel {
     @Nullable
     private String mSearch;
 
-
     public MapsViewModel(@NonNull Application application) {
         super(application);
         mMapPartnersLiveData = new MutableLiveData<>();
