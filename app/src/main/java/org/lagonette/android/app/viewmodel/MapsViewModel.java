@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 
 import org.lagonette.android.app.viewmodel.base.DatabaseObserverViewModel;
 import org.lagonette.android.room.reader.MapPartnerReader;
+import org.lagonette.android.util.SearchUtil;
 
 public class MapsViewModel extends DatabaseObserverViewModel {
 
@@ -44,7 +45,7 @@ public class MapsViewModel extends DatabaseObserverViewModel {
     public void updateMapPartners() {
         mMapPartnersLiveData.postValue(
                 MapPartnerReader.create(
-                        mDatabase.mainDao().getMapPartner(/*SearchUtil.formatSearch(mSearch)*/)
+                        mDatabase.mainDao().getMapPartner(SearchUtil.formatSearch(mSearch))
                 )
         );
     }

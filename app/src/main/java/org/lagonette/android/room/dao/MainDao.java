@@ -3,7 +3,6 @@ package org.lagonette.android.room.dao;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 
 import org.lagonette.android.room.statement.FilterStatement;
 import org.lagonette.android.room.statement.MapPartnerStatement;
@@ -18,8 +17,8 @@ public interface MainDao {
 
     // TODO Return reader (TypeAdapter) ?
     @Query(MapPartnerStatement.sql)
-    Cursor getMapPartner();
+    Cursor getMapPartner(String search);
 
     @Query(FilterStatement.sql)
-    Cursor getFilters(@NonNull String search);
+    Cursor getFilters(String search);
 }

@@ -25,6 +25,7 @@ public abstract class MapPartnerStatement
                 "ON partner_side_category.category_id = side_category.id " +
             "LEFT JOIN category_metadata AS side_category_metadata " +
                 "ON side_category.id = side_category_metadata.category_id " +
+            "WHERE partner.name LIKE :search " +
             "GROUP BY partner.id " +
             "HAVING partner_metadata.is_visible > 0 " +
                 "AND SUM (side_category_metadata.is_visible) > 0";
