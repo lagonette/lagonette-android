@@ -191,8 +191,7 @@ public class MapsFragment
 
         if (savedInstanceState == null) {
             mGetPartnersCallbacks.getParners();
-        }
-        else {
+        } else {
             mGetPartnersCallbacks.reattachLoader();
         }
     }
@@ -523,7 +522,7 @@ public class MapsFragment
     }
 
     public void filterPartner(@NonNull String search) {
-        mViewModel.loadPartners(search);
+        mViewModel.filterPartners(search);
     }
 
     private void onLocationPermissionResult(@NonNull int[] grantResults) {

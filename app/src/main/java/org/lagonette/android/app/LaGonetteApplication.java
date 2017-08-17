@@ -2,19 +2,21 @@ package org.lagonette.android.app;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 
 import org.lagonette.android.BuildConfig;
+import org.lagonette.android.app.locator.DB;
+import org.lagonette.android.app.locator.Repo;
+import org.lagonette.android.repo.MainRepo;
 import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.util.DatabaseUtil;
 import org.lagonette.android.util.StrictModeUtil;
 
+import java.util.concurrent.Executors;
+
 public class LaGonetteApplication
         extends Application {
-
-    public LaGonetteDatabase database;
 
     @Override
     public void onCreate() {
@@ -25,13 +27,20 @@ public class LaGonetteApplication
             StrictModeUtil.enableStrictMode();
         }
 
-        RoomDatabase.Builder<LaGonetteDatabase> builder = Room.
-                databaseBuilder(
-                        LaGonetteApplication.this,
-                        LaGonetteDatabase.class,
-                        DatabaseUtil.DATABASE_NAME
-                );
+        DB.set(
+                Room
+                        .databaseBuilder(
+                                LaGonetteApplication.this,
+                                LaGonetteDatabase.class,
+                                DatabaseUtil.DATABASE_NAME
+                        )
+                        .build()
+        );
 
-        database = builder.build();
+        Repo.set(
+                new MainRepo(
+                        Executors.newCachedThreadPool()
+                )
+        );
     }
 }

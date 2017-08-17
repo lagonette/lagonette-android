@@ -1,65 +1,52 @@
 package org.lagonette.android.app.viewmodel;
 
-import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.android.app.viewmodel.base.DatabaseObserverViewModel;
+import org.lagonette.android.app.locator.Repo;
 import org.lagonette.android.room.reader.FilterReader;
-import org.lagonette.android.util.SearchUtil;
 
-public class FiltersViewModel extends DatabaseObserverViewModel {
+public class FiltersViewModel extends ViewModel {
 
-    private MutableLiveData<FilterReader> mFiltersLiveData;
+    @NonNull
+    private MutableLiveData<String> mSearchLiveData;
 
-    @Nullable
-    private String mSearch;
+    @NonNull
+    private LiveData<FilterReader> mFiltersLiveData;
 
-    public FiltersViewModel(@NonNull Application application) {
-        super(application);
-
-        mFiltersLiveData = new MutableLiveData<>();
-
-        updateFilters();
+    public FiltersViewModel() {
+        mSearchLiveData = new MutableLiveData<>();
+        mFiltersLiveData = Repo.get().getFilters(mSearchLiveData);
+        filterPartners(null);
     }
 
-    @Override
-    protected void onDatabaseInvalidated() {
-        updateFilters();
-    }
-
+    @NonNull
     public LiveData<FilterReader> getFilters() {
         return mFiltersLiveData;
     }
 
+    public void filterPartners(@Nullable String search) {
+        mSearchLiveData.postValue(search);
+    }
 
     public void setPartnerVisibility(long partnerId, boolean isVisible) {
-        mDatabase.partnerDao().updatePartnerVisibility(partnerId, isVisible);
+        Repo
+                .get()
+                .setPartnerVisibility(partnerId, isVisible);
     }
 
     public void setCategoryVisibility(long categoryId, boolean isVisible) {
-        mDatabase.categoryDao().updateCategoryVisibility(categoryId, isVisible);
+        Repo
+                .get()
+                .setCategoryVisibility(categoryId, isVisible);
     }
 
     public void setCategoryCollapsed(long categoryId, boolean isCollapsed) {
-        mDatabase.categoryDao().updateCategoryCollapsed(categoryId, isCollapsed);
-    }
-
-    private void updateFilters() {
-        // TODO use AsyncTask and ensure thread is start only one times
-        new Thread(
-                () -> mFiltersLiveData.postValue(
-                        FilterReader.create(
-                                mDatabase.mainDao().getFilters(SearchUtil.formatSearch(mSearch))
-                        )
-                )
-        ).start();
-    }
-
-    public void filterPartners(@Nullable String search) {
-        mSearch = search;
-        updateFilters();
+        Repo
+                .get()
+                .setCategoryCollapsed(categoryId, isCollapsed);
     }
 }

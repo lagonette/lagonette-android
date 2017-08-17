@@ -14,6 +14,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import org.lagonette.android.api.response.CategoriesResponse;
 import org.lagonette.android.api.response.PartnersResponse;
 import org.lagonette.android.api.service.LaGonetteService;
+import org.lagonette.android.app.locator.DB;
 import org.lagonette.android.content.loader.base.BundleLoader;
 import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.room.entity.Category;
@@ -21,7 +22,6 @@ import org.lagonette.android.room.entity.CategoryMetadata;
 import org.lagonette.android.room.entity.Partner;
 import org.lagonette.android.room.entity.PartnerMetadata;
 import org.lagonette.android.room.entity.PartnerSideCategory;
-import org.lagonette.android.util.DB;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class GetPartnersLoader extends BundleLoader {
 
     @Override
     public Bundle loadInBackground() {
-        LaGonetteDatabase database = DB.get(mContext);
+        LaGonetteDatabase database = DB.get();
         try {
             LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
             List<Category> categories = new ArrayList<>();

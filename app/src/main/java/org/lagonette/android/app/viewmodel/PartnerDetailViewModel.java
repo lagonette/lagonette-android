@@ -1,51 +1,31 @@
 package org.lagonette.android.app.viewmodel;
 
-import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
-import org.lagonette.android.app.viewmodel.base.DatabaseObserverViewModel;
+import org.lagonette.android.app.locator.Repo;
 import org.lagonette.android.room.reader.PartnerDetailReader;
-import org.lagonette.android.room.statement.Statement;
 
-public class PartnerDetailViewModel extends DatabaseObserverViewModel {
+public class PartnerDetailViewModel extends ViewModel {
 
-    private long mPartnerId = Statement.NO_ID;
+    @NonNull
+    private LiveData<PartnerDetailReader> mPartnerDetailReaderLiveData;
 
-    private MutableLiveData<PartnerDetailReader> mPartnerDetailReaderLiveData;
+    @NonNull
+    private MutableLiveData<Long> mPartnerIdLiveData;
 
-    public PartnerDetailViewModel(@NonNull Application application) {
-        super(application);
-
-        mPartnerDetailReaderLiveData = new MediatorLiveData<>();
-    }
-
-    @Override
-    protected void onDatabaseInvalidated() {
-        updatePartnerDetailReader();
-    }
-
-    private void updatePartnerDetailReader() {
-        // TODO use AsyncTask and ensure thread is start only one times
-        new Thread(
-                () -> {
-                    PartnerDetailReader reader = mPartnerId > Statement.NO_ID
-                            ? PartnerDetailReader.create(
-                            mDatabase.mainDao().getPartnerDetail(mPartnerId)
-                    )
-                            : null;
-                    mPartnerDetailReaderLiveData.postValue(reader);
-                }
-        ).start();
+    public PartnerDetailViewModel() {
+        mPartnerIdLiveData = new MutableLiveData<>();
+        mPartnerDetailReaderLiveData = Repo.get().getPartnerDetail(mPartnerIdLiveData);
     }
 
     public void setPartnerId(long partnerId) {
-        mPartnerId = partnerId;
-        updatePartnerDetailReader();
+        mPartnerIdLiveData.postValue(partnerId);
     }
 
+    @NonNull
     public LiveData<PartnerDetailReader> getPartnerDetailReaderLiveData() {
         return mPartnerDetailReaderLiveData;
     }
