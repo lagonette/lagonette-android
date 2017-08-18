@@ -5,12 +5,13 @@ import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
 import org.lagonette.android.app.DbLiveData;
-import org.lagonette.android.app.locator.DB;
+import org.lagonette.android.locator.DB;
 import org.lagonette.android.room.reader.FilterReader;
 import org.lagonette.android.room.reader.MapPartnerReader;
 import org.lagonette.android.room.reader.PartnerDetailReader;
 import org.lagonette.android.room.statement.Statement;
 import org.lagonette.android.util.SearchUtil;
+import org.lagonette.android.worker.DataRefreshWorker;
 
 import java.util.concurrent.Executor;
 
@@ -24,6 +25,7 @@ public class MainRepo {
     }
 
     public LiveData<MapPartnerReader> getMapPartners(@NonNull LiveData<String> searchLiveData) {
+        refreshData();
         return Transformations.switchMap(
                 searchLiveData,
                 search -> new DbLiveData<>(
@@ -89,6 +91,10 @@ public class MainRepo {
                         .categoryDao()
                         .updateCategoryCollapsed(categoryId, isCollapsed)
         );
+    }
+
+    private void refreshData() {
+        mExecutor.execute(new DataRefreshWorker());
     }
 
 }

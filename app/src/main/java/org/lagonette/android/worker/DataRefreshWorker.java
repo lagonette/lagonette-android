@@ -1,12 +1,8 @@
-package org.lagonette.android.content.loader;
+package org.lagonette.android.worker;
 
-
-import android.content.Context;
 import android.content.OperationApplicationException;
-import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -14,8 +10,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import org.lagonette.android.api.response.CategoriesResponse;
 import org.lagonette.android.api.response.PartnersResponse;
 import org.lagonette.android.api.service.LaGonetteService;
-import org.lagonette.android.app.locator.DB;
-import org.lagonette.android.content.loader.base.BundleLoader;
+import org.lagonette.android.locator.DB;
 import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.room.entity.Category;
 import org.lagonette.android.room.entity.CategoryMetadata;
@@ -30,18 +25,13 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class GetPartnersLoader extends BundleLoader {
+public class DataRefreshWorker
+        implements Runnable {
 
-    private static final String TAG = "GetPartnersLoader";
-
-    private static final String ARG_ERROR_CODE = "arg:error_code";
-
-    public GetPartnersLoader(@NonNull Context context, @Nullable Bundle bundle) {
-        super(context, bundle);
-    }
+    private static final String TAG = "DataRefreshWorker";
 
     @Override
-    public Bundle loadInBackground() {
+    public void run() {
         LaGonetteDatabase database = DB.get();
         try {
             LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
@@ -64,17 +54,12 @@ public class GetPartnersLoader extends BundleLoader {
                     database.partnerDao().deletePartnerSideCategories();
                     database.partnerDao().insertPartnersSideCategories(partnerSideCategories);
                     database.setTransactionSuccessful();
-                    mBundle.putInt(ARG_STATUS, STATUS_OK);
                 }
             }
-
-            return mBundle;
 
         } catch (IOException | RemoteException | OperationApplicationException e) {
             Log.e(TAG, "loadInBackground: ", e);
             FirebaseCrash.report(e);
-            mBundle.putInt(ARG_STATUS, STATUS_ERROR);
-            return mBundle;
         } finally {
             database.endTransaction();
         }
@@ -94,8 +79,6 @@ public class GetPartnersLoader extends BundleLoader {
             result.prepareInsert(categories, categoryMetadataList);
             return true;
         } else {
-            mBundle.putInt(ARG_STATUS, STATUS_ERROR);
-            mBundle.putInt(ARG_ERROR_CODE, response.code());
             FirebaseCrash.logcat(Log.ERROR, TAG, response.code() + ": " + response.message());
             return false;
         }
@@ -116,11 +99,8 @@ public class GetPartnersLoader extends BundleLoader {
             result.prepareInsert(partners, partnerMetadataList, partnerSideCategories);
             return true;
         } else {
-            mBundle.putInt(ARG_STATUS, STATUS_ERROR);
-            mBundle.putInt(ARG_ERROR_CODE, response.code());
             FirebaseCrash.logcat(Log.ERROR, TAG, response.code() + ": " + response.message());
             return false;
         }
     }
-
 }

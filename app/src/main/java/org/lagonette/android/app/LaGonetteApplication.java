@@ -6,8 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 
 import org.lagonette.android.BuildConfig;
-import org.lagonette.android.app.locator.DB;
-import org.lagonette.android.app.locator.Repo;
+import org.lagonette.android.api.service.LaGonetteService;
+import org.lagonette.android.locator.API;
+import org.lagonette.android.locator.DB;
+import org.lagonette.android.locator.Repo;
 import org.lagonette.android.repo.MainRepo;
 import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.util.DatabaseUtil;
@@ -21,6 +23,7 @@ public class LaGonetteApplication
     @Override
     public void onCreate() {
         super.onCreate();
+
         if (BuildConfig.DEBUG) {
             FragmentManager.enableDebugLogging(true);
             LoaderManager.enableDebugLogging(true);
@@ -35,6 +38,10 @@ public class LaGonetteApplication
                                 DatabaseUtil.DATABASE_NAME
                         )
                         .build()
+        );
+
+        API.set(
+                LaGonetteService.retrofit.create(LaGonetteService.class)
         );
 
         Repo.set(

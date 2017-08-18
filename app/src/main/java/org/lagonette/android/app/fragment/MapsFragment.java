@@ -41,7 +41,6 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.viewmodel.MapsViewModel;
 import org.lagonette.android.app.widget.maps.PartnerItem;
 import org.lagonette.android.app.widget.maps.PartnerRenderer;
-import org.lagonette.android.content.loader.callbacks.GetPartnersCallbacks;
 import org.lagonette.android.room.reader.MapPartnerReader;
 import org.lagonette.android.room.statement.Statement;
 import org.lagonette.android.util.SharedPreferencesUtil;
@@ -57,8 +56,7 @@ public class MapsFragment
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener,
-        OnMapReadyCallback,
-        GetPartnersCallbacks.Callbacks {
+        OnMapReadyCallback {
 
 
     public static final String TAG = "MapsFragment";
@@ -80,8 +78,6 @@ public class MapsFragment
     public static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
     private MapsViewModel mViewModel;
-
-    private GetPartnersCallbacks mGetPartnersCallbacks;
 
     private boolean mLocationPermissionGranted = false;
 
@@ -160,8 +156,6 @@ public class MapsFragment
         mViewModel = ViewModelProviders
                 .of(MapsFragment.this)
                 .get(MapsViewModel.class);
-
-        mGetPartnersCallbacks = new GetPartnersCallbacks(MapsFragment.this);
     }
 
     // TODO Use firebase to find broken data
@@ -187,12 +181,6 @@ public class MapsFragment
             mCallback = (Callback) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
-        }
-
-        if (savedInstanceState == null) {
-            mGetPartnersCallbacks.getParners();
-        } else {
-            mGetPartnersCallbacks.reattachLoader();
         }
     }
 
@@ -551,7 +539,7 @@ public class MapsFragment
         }
     }
 
-    @Override
+    // TODO
     public void errorGettingPartners() {
         Snackbar
                 .make(

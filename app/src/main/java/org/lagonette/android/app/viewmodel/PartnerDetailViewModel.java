@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
-import org.lagonette.android.app.locator.Repo;
+import org.lagonette.android.locator.Repo;
 import org.lagonette.android.room.reader.PartnerDetailReader;
 
 public class PartnerDetailViewModel extends ViewModel {

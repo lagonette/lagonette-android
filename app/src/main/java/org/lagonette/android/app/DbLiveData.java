@@ -3,9 +3,8 @@ package org.lagonette.android.app;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.InvalidationTracker;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import org.lagonette.android.app.locator.DB;
+import org.lagonette.android.locator.DB;
 import org.lagonette.android.room.sql.Tables;
 
 import java.util.Set;
