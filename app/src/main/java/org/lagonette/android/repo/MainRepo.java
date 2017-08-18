@@ -9,6 +9,7 @@ import org.lagonette.android.locator.DB;
 import org.lagonette.android.room.reader.FilterReader;
 import org.lagonette.android.room.reader.MapPartnerReader;
 import org.lagonette.android.room.reader.PartnerDetailReader;
+import org.lagonette.android.room.sql.Tables;
 import org.lagonette.android.room.statement.Statement;
 import org.lagonette.android.util.SearchUtil;
 import org.lagonette.android.worker.DataRefreshWorker;
@@ -29,6 +30,7 @@ public class MainRepo {
         return Transformations.switchMap(
                 searchLiveData,
                 search -> new DbLiveData<>(
+                        Tables.TABLES,
                         mExecutor,
                         () -> MapPartnerReader.create(
                                 DB
@@ -44,6 +46,7 @@ public class MainRepo {
         return Transformations.switchMap(
                 partnerIdLiveData,
                 partnerId -> new DbLiveData<>(
+                        Tables.TABLES,
                         mExecutor,
                         () -> PartnerDetailReader.create(
                                 partnerId > Statement.NO_ID
@@ -58,6 +61,7 @@ public class MainRepo {
         return Transformations.switchMap(
                 searchLiveData,
                 search -> new DbLiveData<>(
+                        Tables.TABLES,
                         mExecutor,
                         () -> FilterReader.create(
                                 DB

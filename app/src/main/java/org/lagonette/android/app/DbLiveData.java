@@ -28,10 +28,10 @@ public class DbLiveData<T>
     @NonNull
     private final Executor mExecutor;
 
-    public DbLiveData(@NonNull Executor executor, @NonNull DataLoader<T> dataLoader) {
+    public DbLiveData(@NonNull String[] tables, @NonNull Executor executor, @NonNull DataLoader<T> dataLoader) {
         mExecutor = executor;
         mDataLoader = dataLoader;
-        mDatabaseObserver = new InvalidationTracker.Observer(Tables.TABLES) {
+        mDatabaseObserver = new InvalidationTracker.Observer(tables) {
             @Override
             public void onInvalidated(@NonNull Set<String> tables) {
                 loadData();
