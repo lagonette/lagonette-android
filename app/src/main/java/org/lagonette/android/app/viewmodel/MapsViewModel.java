@@ -7,11 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.locator.Repo;
+import org.lagonette.android.repo.Resource;
 import org.lagonette.android.room.reader.MapPartnerReader;
 
 public class MapsViewModel extends ViewModel {
 
-    private LiveData<MapPartnerReader> mMapPartnersLiveData;
+    private LiveData<Resource<MapPartnerReader>> mMapPartnersLiveData;
 
     private MutableLiveData<String> mSearchLiveData;
 
@@ -22,7 +23,7 @@ public class MapsViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<MapPartnerReader> getMapPartners() {
+    public LiveData<Resource<MapPartnerReader>> getMapPartners() {
         return mMapPartnersLiveData;
     }
 

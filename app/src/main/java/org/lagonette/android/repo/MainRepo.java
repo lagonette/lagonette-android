@@ -25,18 +25,20 @@ public class MainRepo {
         mExecutor = executor;
     }
 
-    public LiveData<MapPartnerReader> getMapPartners(@NonNull LiveData<String> searchLiveData) {
+    public LiveData<Resource<MapPartnerReader>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
         refreshData();
         return Transformations.switchMap(
                 searchLiveData,
                 search -> new DbLiveData<>(
                         Tables.TABLES,
                         mExecutor,
-                        () -> MapPartnerReader.create(
-                                DB
-                                        .get()
-                                        .mainDao()
-                                        .getMapPartner(SearchUtil.formatSearch(search))
+                        () -> Resource.success(
+                                MapPartnerReader.create(
+                                        DB
+                                                .get()
+                                                .mainDao()
+                                                .getMapPartner(SearchUtil.formatSearch(search))
+                                )
                         )
                 )
         );

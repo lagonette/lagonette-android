@@ -41,6 +41,7 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.viewmodel.MapsViewModel;
 import org.lagonette.android.app.widget.maps.PartnerItem;
 import org.lagonette.android.app.widget.maps.PartnerRenderer;
+import org.lagonette.android.repo.Resource;
 import org.lagonette.android.room.reader.MapPartnerReader;
 import org.lagonette.android.room.statement.Statement;
 import org.lagonette.android.util.SharedPreferencesUtil;
@@ -522,10 +523,11 @@ public class MapsFragment
         }
     }
 
-    public void showPartners(@Nullable MapPartnerReader partnerReader) {
+    public void showPartners(@NonNull Resource<MapPartnerReader> partnerResource) {
         if (mMap != null) {
             mPartnerItems.clear();
             mClusterManager.clearItems();
+            MapPartnerReader partnerReader = partnerResource.data;
             if (partnerReader != null) {
                 if (partnerReader.moveToFirst()) {
                     do {
