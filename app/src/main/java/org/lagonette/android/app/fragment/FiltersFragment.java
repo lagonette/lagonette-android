@@ -61,7 +61,7 @@ public class FiltersFragment
 
         mFiltersViewModel.getFilters().observe(
                 FiltersFragment.this,
-                filterReader -> mFilterAdapter.setFilterReader(filterReader)
+                filtersResource -> mFilterAdapter.setFilterReader(filtersResource.data) // TODO manage loading & error
         );
     }
 

@@ -26,12 +26,13 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class DataRefreshWorker
-        implements Runnable {
+        extends BackgroundWorker {
 
     private static final String TAG = "DataRefreshWorker";
 
     @Override
     public void run() {
+        WorkerResponse response = new WorkerResponse();
         LaGonetteDatabase database = DB.get();
         try {
             LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
@@ -54,14 +55,15 @@ public class DataRefreshWorker
                     database.partnerDao().deletePartnerSideCategories();
                     database.partnerDao().insertPartnersSideCategories(partnerSideCategories);
                     database.setTransactionSuccessful();
+                    response.setIsSuccessful(true);
                 }
             }
-
         } catch (IOException | RemoteException | OperationApplicationException e) {
             Log.e(TAG, "loadInBackground: ", e);
             FirebaseCrash.report(e);
         } finally {
             database.endTransaction();
+            mWorkerResponseLiveData.postValue(response);
         }
     }
 

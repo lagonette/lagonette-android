@@ -229,7 +229,7 @@ public class MapsFragment
 
         mViewModel.getMapPartners().observe(
                 MapsFragment.this,
-                this::showPartners
+                this::dispatchPartnersResource
         );
     }
 
@@ -523,11 +523,30 @@ public class MapsFragment
         }
     }
 
-    public void showPartners(@NonNull Resource<MapPartnerReader> partnerResource) {
+    public void dispatchPartnersResource(@NonNull Resource<MapPartnerReader> partnerResource) {
+        switch (partnerResource.status) {
+
+            case Resource.ERROR:
+                // TODO
+                errorGettingPartners();
+                showPartners(partnerResource.data);
+                break;
+
+            case Resource.LOADING:
+                // TODO
+                showPartners(partnerResource.data);
+                break;
+
+            case Resource.SUCCESS:
+                showPartners(partnerResource.data);
+                break;
+        }
+    }
+
+    public void showPartners(@Nullable MapPartnerReader partnerReader) {
         if (mMap != null) {
             mPartnerItems.clear();
             mClusterManager.clearItems();
-            MapPartnerReader partnerReader = partnerResource.data;
             if (partnerReader != null) {
                 if (partnerReader.moveToFirst()) {
                     do {

@@ -20,59 +20,80 @@ public class MainRepo {
 
     @NonNull
     private final Executor mExecutor;
+    private boolean mShouldFetch;
 
     public MainRepo(@NonNull Executor executor) {
         mExecutor = executor;
+        mShouldFetch = true;
     }
 
     public LiveData<Resource<MapPartnerReader>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
-        refreshData();
-        return Transformations.switchMap(
-                searchLiveData,
-                search -> new DbLiveData<>(
-                        Tables.TABLES,
-                        mExecutor,
-                        () -> Resource.success(
-                                MapPartnerReader.create(
+        return new LambdaNetworkBoundResource<>(
+                mExecutor,
+                this::shouldFetch,
+                () -> Transformations.switchMap(
+                        searchLiveData,
+                        search -> new DbLiveData<>(
+                                Tables.TABLES,
+                                mExecutor,
+                                () -> MapPartnerReader.create(
                                         DB
                                                 .get()
                                                 .mainDao()
                                                 .getMapPartner(SearchUtil.formatSearch(search))
                                 )
+
                         )
-                )
-        );
+                ),
+                DataRefreshWorker::new
+        )
+                .start()
+                .getAsLiveData();
     }
 
-    public LiveData<PartnerDetailReader> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
-        return Transformations.switchMap(
-                partnerIdLiveData,
-                partnerId -> new DbLiveData<>(
-                        Tables.TABLES,
-                        mExecutor,
-                        () -> PartnerDetailReader.create(
-                                partnerId > Statement.NO_ID
-                                        ? DB.get().mainDao().getPartnerDetail(partnerId)
-                                        : null
+    public LiveData<Resource<PartnerDetailReader>> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
+        return new LambdaNetworkBoundResource<>(
+                mExecutor,
+                this::shouldFetch,
+                () -> Transformations.switchMap(
+                        partnerIdLiveData,
+                        partnerId -> new DbLiveData<>(
+                                Tables.TABLES,
+                                mExecutor,
+                                () -> PartnerDetailReader.create(
+                                        partnerId > Statement.NO_ID
+                                                ? DB.get().mainDao().getPartnerDetail(partnerId)
+                                                : null
+                                )
                         )
-                )
-        );
+                ),
+                DataRefreshWorker::new
+        )
+                .start()
+                .getAsLiveData();
     }
 
-    public LiveData<FilterReader> getFilters(@NonNull LiveData<String> searchLiveData) {
-        return Transformations.switchMap(
-                searchLiveData,
-                search -> new DbLiveData<>(
-                        Tables.TABLES,
-                        mExecutor,
-                        () -> FilterReader.create(
-                                DB
-                                        .get()
-                                        .mainDao()
-                                        .getFilters(SearchUtil.formatSearch(search))
+    public LiveData<Resource<FilterReader>> getFilters(@NonNull LiveData<String> searchLiveData) {
+        return new LambdaNetworkBoundResource<>(
+                mExecutor,
+                this::shouldFetch,
+                () -> Transformations.switchMap(
+                        searchLiveData,
+                        search -> new DbLiveData<>(
+                                Tables.TABLES,
+                                mExecutor,
+                                () -> FilterReader.create(
+                                        DB
+                                                .get()
+                                                .mainDao()
+                                                .getFilters(SearchUtil.formatSearch(search))
+                                )
                         )
-                )
-        );
+                ),
+                DataRefreshWorker::new
+        )
+                .start()
+                .getAsLiveData();
     }
 
     public void setPartnerVisibility(long partnerId, boolean isVisible) {
@@ -99,8 +120,13 @@ public class MainRepo {
         );
     }
 
-    private void refreshData() {
-        mExecutor.execute(new DataRefreshWorker());
+    private boolean shouldFetch() {
+        if (mShouldFetch) {
+            mShouldFetch = false;
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

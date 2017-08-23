@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.android.locator.Repo;
+import org.lagonette.android.repo.Resource;
 import org.lagonette.android.room.reader.FilterReader;
 
 public class FiltersViewModel extends ViewModel {
@@ -15,17 +16,17 @@ public class FiltersViewModel extends ViewModel {
     private MutableLiveData<String> mSearchLiveData;
 
     @NonNull
-    private LiveData<FilterReader> mFiltersLiveData;
+    private LiveData<Resource<FilterReader>> mFiltersResourceLiveData;
 
     public FiltersViewModel() {
         mSearchLiveData = new MutableLiveData<>();
-        mFiltersLiveData = Repo.get().getFilters(mSearchLiveData);
+        mFiltersResourceLiveData = Repo.get().getFilters(mSearchLiveData);
         filterPartners(null);
     }
 
     @NonNull
-    public LiveData<FilterReader> getFilters() {
-        return mFiltersLiveData;
+    public LiveData<Resource<FilterReader>> getFilters() {
+        return mFiltersResourceLiveData;
     }
 
     public void filterPartners(@Nullable String search) {

@@ -65,13 +65,13 @@ public class MapsActivity
 
     @Override
     protected void onViewCreated() {
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        mCoordinatorLayout = findViewById(R.id.coordinator_layout);
         mSearchBar = findViewById(R.id.search_bar);
-        mSearchText = (EditText) findViewById(R.id.search_text);
-        mSearchClear = (ImageButton) findViewById(R.id.search_clear);
+        mSearchText = findViewById(R.id.search_text);
+        mSearchClear = findViewById(R.id.search_clear);
         mBottomSheet = findViewById(R.id.bottom_sheet);
-        mMyLocationFab = (FloatingActionButton) findViewById(R.id.my_location_fab);
-        mFiltersFab = (FloatingActionButton) findViewById(R.id.filters_fab);
+        mMyLocationFab = findViewById(R.id.my_location_fab);
+        mFiltersFab = findViewById(R.id.filters_fab);
     }
 
     @Override
@@ -95,27 +95,22 @@ public class MapsActivity
         //TODO Activity leaks ?
         // Add TextWatcher later to avoid callback called on configuration changed.
         mSearchText.post(
-                new Runnable() {
+                () -> mSearchText.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void run() {
-                        mSearchText.addTextChangedListener(new TextWatcher() {
-                            @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                            }
-
-                            @Override
-                            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                            }
-
-                            @Override
-                            public void afterTextChanged(Editable s) {
-                                MapsActivity.this.onSearchTextChanged(s.toString());
-                            }
-                        });
                     }
-                }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        MapsActivity.this.onSearchTextChanged(s.toString());
+                    }
+                })
         );
 
         mSearchClear.setOnClickListener(MapsActivity.this);

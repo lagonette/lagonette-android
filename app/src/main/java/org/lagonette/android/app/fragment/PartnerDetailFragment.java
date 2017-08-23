@@ -4,6 +4,7 @@ import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.viewmodel.PartnerDetailViewModel;
+import org.lagonette.android.repo.Resource;
 import org.lagonette.android.room.reader.PartnerDetailReader;
 import org.lagonette.android.room.statement.Statement;
 import org.lagonette.android.util.IntentUtil;
@@ -97,7 +99,7 @@ public class PartnerDetailFragment
 
         mViewModel.getPartnerDetailReaderLiveData().observe(
                 PartnerDetailFragment.this,
-                this::displayPartner
+                this::dispatchPartnerDetailResource
         );
     }
 
@@ -146,7 +148,26 @@ public class PartnerDetailFragment
         mEmailLayout.setOnClickListener(PartnerDetailFragment.this);
     }
 
-    public void displayPartner(@Nullable PartnerDetailReader reader) {
+    private void dispatchPartnerDetailResource(@NonNull Resource<PartnerDetailReader> resource) {
+        switch (resource.status) {
+
+            case Resource.LOADING:
+                displayPartner(resource.data);
+                // TODO
+                break;
+
+            case Resource.SUCCESS:
+                displayPartner(resource.data);
+                break;
+
+            case Resource.ERROR:
+                displayPartner(resource.data);
+                // TODO
+                break;
+        }
+    }
+
+    private void displayPartner(@Nullable PartnerDetailReader reader) {
         if (reader != null && reader.moveToFirst()) {
             Resources resources = getResources();
 
