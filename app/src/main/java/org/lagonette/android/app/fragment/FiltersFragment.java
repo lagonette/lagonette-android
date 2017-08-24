@@ -1,7 +1,6 @@
 package org.lagonette.android.app.fragment;
 
 import android.arch.lifecycle.LifecycleFragment;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,8 +13,8 @@ import android.view.ViewGroup;
 
 import org.lagonette.android.R;
 import org.lagonette.android.app.viewmodel.FiltersViewModel;
+import org.lagonette.android.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.android.app.widget.adapter.FilterAdapter;
-import org.lagonette.android.room.reader.FilterReader;
 
 public class FiltersFragment
         extends LifecycleFragment
@@ -33,16 +32,9 @@ public class FiltersFragment
         return fragment;
     }
 
-    // TODO unused?
-    public interface Callback {
-
-        void showPartner(long partnerId, boolean zoom);
-
-    }
-
     private FiltersViewModel mFiltersViewModel;
 
-    private Callback mCallback;
+    private SharedMapsActivityViewModel mActivityViewModel;
 
     private RecyclerView mFilterList;
 
@@ -63,6 +55,11 @@ public class FiltersFragment
                 FiltersFragment.this,
                 filtersResource -> mFilterAdapter.setFilterReader(filtersResource.data) // TODO manage loading & error
         );
+
+
+        mActivityViewModel = ViewModelProviders
+                .of(getActivity())
+                .get(SharedMapsActivityViewModel.class);
     }
 
     @Nullable
@@ -89,17 +86,11 @@ public class FiltersFragment
         mFilterList.setLayoutManager(layoutManager);
         mFilterList.setAdapter(mFilterAdapter);
         mFilterList.setItemAnimator(null); // TODO Remove
-
-        try {
-            mCallback = (Callback) getActivity();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(mCallback.toString() + " must implement " + Callback.class);
-        }
     }
 
     @Override
     public void onPartnerClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
-        mCallback.showPartner(holder.partnerId, true);
+        mActivityViewModel.showPartner(holder.partnerId, true);
     }
 
     @Override

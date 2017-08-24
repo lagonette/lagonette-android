@@ -38,6 +38,7 @@ import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 
 import org.json.JSONException;
 import org.lagonette.android.R;
+import org.lagonette.android.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.android.app.viewmodel.MapsViewModel;
 import org.lagonette.android.app.widget.maps.PartnerItem;
 import org.lagonette.android.app.widget.maps.PartnerRenderer;
@@ -59,24 +60,6 @@ public class MapsFragment
         GoogleMap.OnMapClickListener,
         OnMapReadyCallback {
 
-    public interface ActivityCallback {
-
-        void hideMyLocationButton();
-
-        void showMyLocationButton();
-
-        void showPartner(long partnerId, boolean zoom);
-
-        void showFullMap();
-
-        void onMapReady();
-
-        void showProgressBar();
-
-        void hideProgressBar();
-
-    }
-
     public static final String TAG = "MapsFragment";
 
     public static final int ANIMATION_LENGTH_LONG = 600;
@@ -97,6 +80,8 @@ public class MapsFragment
 
     private MapsViewModel mViewModel;
 
+    private SharedMapsActivityViewModel mActivityViewModel;
+
     private boolean mLocationPermissionGranted = false;
 
     private GoogleMap mMap;
@@ -104,8 +89,6 @@ public class MapsFragment
     private ClusterManager<PartnerItem> mClusterManager;
 
     private int mStatusBarHeight;
-
-    private ActivityCallback mActivityCallback;
 
     private LongSparseArray<PartnerItem> mPartnerItems;
 
@@ -174,6 +157,10 @@ public class MapsFragment
         mViewModel = ViewModelProviders
                 .of(MapsFragment.this)
                 .get(MapsViewModel.class);
+
+        mActivityViewModel = ViewModelProviders
+                .of(getActivity())
+                .get(SharedMapsActivityViewModel.class);
     }
 
     // TODO Use firebase to find broken data
@@ -194,12 +181,6 @@ public class MapsFragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapsFragment.this);
-
-        try {
-            mActivityCallback = (ActivityCallback) getActivity();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(mActivityCallback.toString() + " must implement " + ActivityCallback.class);
-        }
     }
 
     @Override
@@ -242,7 +223,7 @@ public class MapsFragment
         mMap = googleMap;
         setupMap();
         setupFootprint();
-        mActivityCallback.onMapReady();
+        mActivityViewModel.notifyMapIsReady();
 
         mViewModel.getMapPartners().observe(
                 MapsFragment.this,
@@ -277,6 +258,7 @@ public class MapsFragment
         );
     }
 
+    // TODO Move this in Activity
     public boolean checkLocationPermission() {
         if (!mLocationPermissionGranted) {
             if (ContextCompat.checkSelfPermission(
@@ -335,7 +317,7 @@ public class MapsFragment
             // If so, we simulate a click on the marker behind.
             if (!mClusterManager.onMarkerClick(marker)) {
                 if (marker.getId().equals(mSelectedMarker.getId())) {
-                    mActivityCallback.showPartner(mSelectedMarkerId, false);
+                    mActivityViewModel.showPartner(mSelectedMarkerId, false);
                     return true;
                 } else {
                     return false;
@@ -378,7 +360,7 @@ public class MapsFragment
 
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
-        mActivityCallback.showPartner(partnerItem.getId(), false);
+        mActivityViewModel.showPartner(partnerItem.getId(), false);
         return true;
     }
 
@@ -389,7 +371,7 @@ public class MapsFragment
 
     private void showFullMap() {
         removeSelectedMarker();
-        mActivityCallback.showFullMap();
+        mActivityViewModel.showFullMap();
     }
 
     private void addSelectedMarker(long partnerId, @NonNull LatLng position) {
@@ -491,13 +473,9 @@ public class MapsFragment
             return;
         }
 
-        if (checkLocationPermission()) {
-            mMap.setMyLocationEnabled(true);
-            mActivityCallback.showMyLocationButton();
-        } else {
-            mMap.setMyLocationEnabled(false);
-            mActivityCallback.hideMyLocationButton();
-        }
+        boolean permission = checkLocationPermission();
+        mMap.setMyLocationEnabled(permission);
+        mActivityViewModel.setEnableMyPositionFAB(permission);
     }
 
     public Location getLastLocation() {
@@ -545,19 +523,19 @@ public class MapsFragment
 
             case Resource.ERROR:
                 // TODO
-                mActivityCallback.hideProgressBar();
+                mActivityViewModel.setWorkInProgress(false);
                 errorGettingPartners();
                 showPartners(partnerResource.data);
                 break;
 
             case Resource.LOADING:
                 // TODO
-                mActivityCallback.showProgressBar();
+                mActivityViewModel.setWorkInProgress(true);
                 showPartners(partnerResource.data);
                 break;
 
             case Resource.SUCCESS:
-                mActivityCallback.hideProgressBar();
+                mActivityViewModel.setWorkInProgress(false);
                 showPartners(partnerResource.data);
                 break;
         }

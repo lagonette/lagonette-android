@@ -1,6 +1,7 @@
 package org.lagonette.android.app.activity;
 
 import android.animation.Animator;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import org.lagonette.android.R;
 import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.fragment.MapsFragment;
 import org.lagonette.android.app.fragment.PartnerDetailFragment;
+import org.lagonette.android.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.app.widget.coordinator.MainCoordinator;
 import org.lagonette.android.util.SearchUtil;
@@ -29,9 +31,7 @@ import org.lagonette.android.util.SoftKeyboardUtil;
 
 public class MapsActivity
         extends BaseActivity
-        implements MapsFragment.ActivityCallback,
-        FiltersFragment.Callback,
-        MainCoordinator.Callbacks,
+        implements MainCoordinator.Callbacks,
         View.OnClickListener,
         View.OnLongClickListener {
 
@@ -124,6 +124,58 @@ public class MapsActivity
 
         mContentView = findViewById(R.id.content);
 
+        SharedMapsActivityViewModel viewModel = ViewModelProviders
+                .of(MapsActivity.this)
+                .get(SharedMapsActivityViewModel.class);
+
+        viewModel
+                .getWorkInProgressLiveData()
+                .observe(
+                        MapsActivity.this,
+                        workInProgress -> {
+                            if (workInProgress != null && workInProgress) {
+                                showProgressBar();
+                            } else {
+                                hideProgressBar();
+                            }
+                        }
+                );
+
+        viewModel
+                .getMapIsReadyLiveData()
+                .observe(
+                        MapsActivity.this,
+                        aVoid -> onMapReady()
+                );
+
+        viewModel
+                .getEnableMyPositionFABLiveData()
+                .observe(
+                        MapsActivity.this,
+                        enable -> {
+                            if (enable != null && enable) {
+                                showMyLocationButton();
+                            } else {
+                                hideMyLocationButton();
+                            }
+                        }
+                );
+
+        viewModel
+                .getShowPartnerRequestLiveData()
+                .observe(
+                        MapsActivity.this,
+                        request -> {
+                            if (request != null) {
+                                showPartner(
+                                        request.partnerId,
+                                        request.zoom
+                                );
+                            } else {
+                                showFullMap();
+                            }
+                        }
+                );
     }
 
     @Override
@@ -139,7 +191,6 @@ public class MapsActivity
         }
     }
 
-    @Override
     public void hideMyLocationButton() {
         mMyLocationFab.animate()
                 .scaleX(0f)
@@ -170,7 +221,6 @@ public class MapsActivity
                 .start();
     }
 
-    @Override
     public void showMyLocationButton() {
         mMyLocationFab.setVisibility(View.VISIBLE);
         mMyLocationFab.animate()
@@ -180,24 +230,20 @@ public class MapsActivity
                 .start();
     }
 
-    @Override
     public void showFullMap() {
         focusOnMap();
         mCoordinator.closeBottomSheet();
     }
 
-    @Override
     public void onMapReady() {
         ParallaxBehavior<View> parallaxBehavior = ParallaxBehavior.from(mContentView);
         parallaxBehavior.setOnParallaxTranslationListener(mCoordinator);
     }
 
-    @Override
     public void showProgressBar() {
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
-    @Override
     public void hideProgressBar() {
         mProgressBar.setVisibility(View.GONE);
     }
@@ -253,7 +299,6 @@ public class MapsActivity
         }
     }
 
-    @Override
     public void showPartner(long partnerId, boolean zoom) {
         focusOnMap();
         mCoordinator.showPartner(partnerId, zoom);

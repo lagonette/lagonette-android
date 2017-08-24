@@ -1,10 +1,10 @@
 package org.lagonette.android.app.activity;
 
+import android.arch.lifecycle.LifecycleActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 public abstract class BaseActivity
-        extends AppCompatActivity {
+        extends LifecycleActivity {
 
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
