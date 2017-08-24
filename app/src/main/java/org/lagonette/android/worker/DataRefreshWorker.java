@@ -1,7 +1,9 @@
 package org.lagonette.android.worker;
 
+import android.content.Context;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -30,8 +32,13 @@ public class DataRefreshWorker
 
     private static final String TAG = "DataRefreshWorker";
 
+    public DataRefreshWorker(@NonNull Context context) {
+        super(context);
+    }
+
     @Override
     protected void doWork(@NonNull WorkerResponse response) {
+
         LaGonetteDatabase database = DB.get();
         try {
             LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
@@ -43,20 +50,25 @@ public class DataRefreshWorker
 
             database.beginTransaction();
 
-            if (getCategories(service, categories, categoryMetadataList)) {
+            if (getCategories(getContext(), service, categories, categoryMetadataList)) {
                 database.categoryDao().deleteCategories();
                 database.categoryDao().insertCategories(categories);
                 database.categoryDao().insertCategoriesMetadatas(categoryMetadataList);
-                if (getPartners(service, partners, partnerMetadataList, partnerSideCategories)) {
-                    database.partnerDao().deletePartners();
-                    database.partnerDao().insertPartners(partners);
-                    database.partnerDao().insertPartnersMetadatas(partnerMetadataList);
-                    database.partnerDao().deletePartnerSideCategories();
-                    database.partnerDao().insertPartnersSideCategories(partnerSideCategories);
-                    database.setTransactionSuccessful();
-                    response.setIsSuccessful(true);
-                }
             }
+
+            if (getPartners(getContext(), service, partners, partnerMetadataList, partnerSideCategories)) {
+                database.partnerDao().deletePartners();
+                database.partnerDao().insertPartners(partners);
+                database.partnerDao().insertPartnersMetadatas(partnerMetadataList);
+                database.partnerDao().deletePartnerSideCategories();
+                database.partnerDao().insertPartnersSideCategories(partnerSideCategories);
+            }
+
+            database.setTransactionSuccessful();
+            response.setIsSuccessful(true);
+
+            // TODO Maybe find a way to avoid request data again if they not change
+
         } catch (IOException | RemoteException | OperationApplicationException e) {
             Log.e(TAG, "loadInBackground: ", e);
             FirebaseCrash.report(e);
@@ -68,6 +80,7 @@ public class DataRefreshWorker
     }
 
     private boolean getCategories(
+            @NonNull Context context,
             @NonNull LaGonetteService service,
             @NonNull List<Category> categories,
             @NonNull List<CategoryMetadata> categoryMetadataList)
@@ -78,15 +91,15 @@ public class DataRefreshWorker
 
         if (response.isSuccessful()) {
             CategoriesResponse result = response.body();
-            result.prepareInsert(categories, categoryMetadataList);
-            return true;
+            return result.prepareInsert(context, categories, categoryMetadataList);
         } else {
             FirebaseCrash.logcat(Log.ERROR, TAG, response.code() + ": " + response.message());
-            return false;
+            throw new IllegalStateException("response is not successful!"); // TODO Use custom exception
         }
     }
 
     private boolean getPartners(
+            @NonNull Context context,
             @NonNull LaGonetteService service,
             @NonNull List<Partner> partners,
             @NonNull List<PartnerMetadata> partnerMetadataList,
@@ -98,11 +111,10 @@ public class DataRefreshWorker
 
         if (response.isSuccessful()) {
             PartnersResponse result = response.body();
-            result.prepareInsert(partners, partnerMetadataList, partnerSideCategories);
-            return true;
+            return result.prepareInsert(context, partners, partnerMetadataList, partnerSideCategories);
         } else {
             FirebaseCrash.logcat(Log.ERROR, TAG, response.code() + ": " + response.message());
-            return false;
+            throw new IllegalStateException("response is not successful!"); // TODO Use custom exception
         }
     }
 }

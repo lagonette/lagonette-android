@@ -47,6 +47,7 @@ public class LaGonetteApplication
 
         Repo.set(
                 new MainRepo(
+                        LaGonetteApplication.this,
                         Executors.newCachedThreadPool()
                 )
         );

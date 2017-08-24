@@ -2,6 +2,7 @@ package org.lagonette.android.repo;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.lagonette.android.app.DbLiveData;
@@ -18,11 +19,15 @@ import java.util.concurrent.Executor;
 
 public class MainRepo {
 
+    @NonNull Context mContext;
+
     @NonNull
     private final Executor mExecutor;
+
     private boolean mShouldFetch;
 
-    public MainRepo(@NonNull Executor executor) {
+    public MainRepo(@NonNull Context context, @NonNull Executor executor) {
+        mContext = context;
         mExecutor = executor;
         mShouldFetch = true;
     }
@@ -45,7 +50,7 @@ public class MainRepo {
 
                         )
                 ),
-                DataRefreshWorker::new
+                () -> new DataRefreshWorker(mContext)
         )
                 .start()
                 .getAsLiveData();
@@ -67,7 +72,7 @@ public class MainRepo {
                                 )
                         )
                 ),
-                DataRefreshWorker::new
+                () -> new DataRefreshWorker(mContext)
         )
                 .start()
                 .getAsLiveData();
@@ -90,7 +95,7 @@ public class MainRepo {
                                 )
                         )
                 ),
-                DataRefreshWorker::new
+                () -> new DataRefreshWorker(mContext)
         )
                 .start()
                 .getAsLiveData();
