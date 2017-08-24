@@ -31,8 +31,7 @@ public class DataRefreshWorker
     private static final String TAG = "DataRefreshWorker";
 
     @Override
-    public void run() {
-        WorkerResponse response = new WorkerResponse();
+    protected void doWork(@NonNull WorkerResponse response) {
         LaGonetteDatabase database = DB.get();
         try {
             LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
@@ -61,9 +60,10 @@ public class DataRefreshWorker
         } catch (IOException | RemoteException | OperationApplicationException e) {
             Log.e(TAG, "loadInBackground: ", e);
             FirebaseCrash.report(e);
+            response.setIsSuccessful(false);
+            // TODO set message
         } finally {
             database.endTransaction();
-            mWorkerResponseLiveData.postValue(response);
         }
     }
 

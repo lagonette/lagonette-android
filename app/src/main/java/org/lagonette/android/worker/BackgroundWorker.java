@@ -7,14 +7,23 @@ import android.support.annotation.NonNull;
 public abstract class BackgroundWorker
         implements Runnable {
 
-    // TODO Make worker instantiate WorkerResponse and pass it to abstract method (so implement run() here)
-
     @NonNull
-    protected MutableLiveData<WorkerResponse> mWorkerResponseLiveData;
+    private MutableLiveData<WorkerResponse> mWorkerResponseLiveData;
 
     public BackgroundWorker() {
         mWorkerResponseLiveData = new MutableLiveData<>();
     }
+
+    @Override
+    public void run() {
+        WorkerResponse response = new WorkerResponse();
+
+        doWork(response);
+
+        mWorkerResponseLiveData.postValue(response);
+    }
+
+    protected abstract void doWork(@NonNull WorkerResponse response);
 
     @NonNull
     public LiveData<WorkerResponse> getWorkerResponseLiveData() {
