@@ -11,28 +11,28 @@ import org.lagonette.android.worker.WorkerResponse;
 
 
 // ResultType: Type for the Resource data
-public abstract class NetworkBoundResource<ResultType, Worker extends BackgroundWorker> {
+public abstract class ResourceAlgorithm<ResultType, Worker extends BackgroundWorker> {
 
     private final MediatorLiveData<Resource<ResultType>> result = new MediatorLiveData<>();
 
     @MainThread
-    NetworkBoundResource() {
+    ResourceAlgorithm() {
     }
 
     @MainThread
-    public NetworkBoundResource<ResultType, Worker> start() {
+    public ResourceAlgorithm<ResultType, Worker> start() {
         result.setValue(Resource.loading(null));
         LiveData<ResultType> dbSource = loadFromDb();
         result.addSource(
                 dbSource,
                 data -> {
                     result.removeSource(dbSource);
-                    if (shouldFetch(data)) {
+                    if (shouldUpdate(data)) {
                         result.addSource(
                                 dbSource,
                                 newData -> result.setValue(Resource.loading(newData))
                         );
-                        fetchFromNetwork(dbSource);
+                        updateData(dbSource);
                     } else {
                         result.addSource(
                                 dbSource,
@@ -41,10 +41,10 @@ public abstract class NetworkBoundResource<ResultType, Worker extends Background
                     }
                 }
         );
-        return NetworkBoundResource.this;
+        return ResourceAlgorithm.this;
     }
 
-    private void fetchFromNetwork(final LiveData<ResultType> dbSource) {
+    private void updateData(final LiveData<ResultType> dbSource) {
         Worker worker = createWorker();
         LiveData<WorkerResponse> workerSource = worker.getWorkerResponseLiveData();
         // we re-attach dbSource as a new source,
@@ -78,7 +78,7 @@ public abstract class NetworkBoundResource<ResultType, Worker extends Background
     // Called with the data in the database to decide whether it should be
     // fetched from the network.
     @MainThread
-    protected abstract boolean shouldFetch(@Nullable ResultType data);
+    protected abstract boolean shouldUpdate(@Nullable ResultType data);
 
     @MainThread
     @NonNull

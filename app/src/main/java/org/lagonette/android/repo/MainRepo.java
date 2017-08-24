@@ -28,7 +28,7 @@ public class MainRepo {
     }
 
     public LiveData<Resource<MapPartnerReader>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
-        return new LambdaNetworkBoundResource<>(
+        return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldFetch,
                 () -> Transformations.switchMap(
@@ -52,7 +52,7 @@ public class MainRepo {
     }
 
     public LiveData<Resource<PartnerDetailReader>> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
-        return new LambdaNetworkBoundResource<>(
+        return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldFetch,
                 () -> Transformations.switchMap(
@@ -74,7 +74,7 @@ public class MainRepo {
     }
 
     public LiveData<Resource<FilterReader>> getFilters(@NonNull LiveData<String> searchLiveData) {
-        return new LambdaNetworkBoundResource<>(
+        return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldFetch,
                 () -> Transformations.switchMap(

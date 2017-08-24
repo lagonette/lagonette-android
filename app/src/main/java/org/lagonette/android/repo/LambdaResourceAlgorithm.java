@@ -9,12 +9,12 @@ import org.lagonette.android.worker.BackgroundWorker;
 
 import java.util.concurrent.Executor;
 
-public class LambdaNetworkBoundResource<ResultType, Worker extends BackgroundWorker>
-        extends NetworkBoundResource<ResultType, Worker> {
+public class LambdaResourceAlgorithm<ResultType, Worker extends BackgroundWorker>
+        extends ResourceAlgorithm<ResultType, Worker> {
 
-    public interface FetchChooser {
+    public interface UpdateDecisionMaker {
 
-        boolean shouldFetch();
+        boolean shouldUpdate();
     }
 
     public interface DbLoader<ResultType> {
@@ -26,7 +26,7 @@ public class LambdaNetworkBoundResource<ResultType, Worker extends BackgroundWor
     private Executor mExecutor;
 
     @NonNull
-    private FetchChooser mFetchChooser;
+    private UpdateDecisionMaker mUpdateDecisionMaker;
 
     @NonNull
     private DbLoader<ResultType> mDbLoader;
@@ -34,21 +34,21 @@ public class LambdaNetworkBoundResource<ResultType, Worker extends BackgroundWor
     @NonNull
     private BackgroundWorker.Factory<Worker> mWorkerFactory;
 
-    public LambdaNetworkBoundResource(
+    public LambdaResourceAlgorithm(
             @NonNull Executor executor,
-            @NonNull FetchChooser fetchChooser,
+            @NonNull UpdateDecisionMaker updateDecisionMaker,
             @NonNull DbLoader<ResultType> dbLoader,
             @NonNull BackgroundWorker.Factory<Worker> workerFactory) {
         super();
         mExecutor = executor;
-        mFetchChooser = fetchChooser;
+        mUpdateDecisionMaker = updateDecisionMaker;
         mDbLoader = dbLoader;
         mWorkerFactory = workerFactory;
     }
 
     @Override
-    protected boolean shouldFetch(@Nullable ResultType data) {
-        return mFetchChooser.shouldFetch();
+    protected boolean shouldUpdate(@Nullable ResultType data) {
+        return mUpdateDecisionMaker.shouldUpdate();
     }
 
     @NonNull
