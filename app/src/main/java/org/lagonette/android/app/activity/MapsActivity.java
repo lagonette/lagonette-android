@@ -1,21 +1,10 @@
 package org.lagonette.android.app.activity;
 
-import android.animation.Animator;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 
@@ -24,40 +13,18 @@ import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.fragment.MapsFragment;
 import org.lagonette.android.app.fragment.PartnerDetailFragment;
 import org.lagonette.android.app.viewmodel.SharedMapsActivityViewModel;
-import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.app.widget.coordinator.MainCoordinator;
-import org.lagonette.android.util.SearchUtil;
 import org.lagonette.android.util.SoftKeyboardUtil;
 
 public class MapsActivity
         extends BaseActivity
-        implements MainCoordinator.Callbacks,
-        View.OnClickListener,
-        View.OnLongClickListener {
+        implements MainCoordinator.Callbacks {
 
     private static final String TAG = "MapsActivity";
 
     private MapsFragment mMapsFragment;
 
     private Fragment mBottomSheetFragment;
-
-    private View mSearchBar;
-
-    private EditText mSearchText;
-
-    private ImageButton mSearchClear;
-
-    private ProgressBar mProgressBar;
-
-    private View mBottomSheet;
-
-    private View mContentView;
-
-    private FloatingActionButton mMyLocationFab;
-
-    private FloatingActionButton mFiltersFab;
-
-    private CoordinatorLayout mCoordinatorLayout;
 
     private MainCoordinator mCoordinator;
 
@@ -68,21 +35,19 @@ public class MapsActivity
 
     @Override
     protected void onViewCreated() {
-        mCoordinatorLayout = findViewById(R.id.coordinator_layout);
-        mSearchBar = findViewById(R.id.search_bar);
-        mSearchText = findViewById(R.id.search_text);
-        mSearchClear = findViewById(R.id.search_clear);
-        mProgressBar = findViewById(R.id.progress_bar);
-        mBottomSheet = findViewById(R.id.bottom_sheet);
-        mMyLocationFab = findViewById(R.id.my_location_fab);
-        mFiltersFab = findViewById(R.id.filters_fab);
+        // TODO Change activity lifecycle dans BaseActivity
     }
 
     @Override
     protected void onActivityCreated(Bundle savedInstanceState) {
-        mCoordinator = new MainCoordinator(MapsActivity.this);
-        mCoordinator.onCreate(savedInstanceState);
-        mCoordinator.onActivityCreated(savedInstanceState);
+        // TODO Maybe use LiveData to exchange info between Coordinator & Activity?
+        mCoordinator = new MainCoordinator(
+                MapsActivity.this,
+                MapsActivity.this,
+                savedInstanceState
+        )
+                .injectView(findViewById(android.R.id.content))
+                .start();
 
         if (savedInstanceState == null) {
             mMapsFragment = MapsFragment.newInstance();
@@ -94,36 +59,6 @@ public class MapsActivity
                     .findFragmentByTag(MapsFragment.TAG);
         }
 
-        mSearchText.setCursorVisible(false);
-        mSearchText.setOnClickListener(MapsActivity.this);
-        //TODO Activity leaks ?
-        // Add TextWatcher later to avoid callback called on configuration changed.
-        mSearchText.post(
-                () -> mSearchText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        MapsActivity.this.onSearchTextChanged(s.toString());
-                    }
-                })
-        );
-
-        mSearchClear.setOnClickListener(MapsActivity.this);
-
-        mMyLocationFab.setOnClickListener(MapsActivity.this);
-        mMyLocationFab.setOnLongClickListener(MapsActivity.this);
-
-        mContentView = findViewById(R.id.content);
-
         SharedMapsActivityViewModel viewModel = ViewModelProviders
                 .of(MapsActivity.this)
                 .get(SharedMapsActivityViewModel.class);
@@ -134,9 +69,9 @@ public class MapsActivity
                         MapsActivity.this,
                         workInProgress -> {
                             if (workInProgress != null && workInProgress) {
-                                showProgressBar();
+                                mCoordinator.showProgressBar();
                             } else {
-                                hideProgressBar();
+                                mCoordinator.hideProgressBar();
                             }
                         }
                 );
@@ -145,7 +80,7 @@ public class MapsActivity
                 .getMapIsReadyLiveData()
                 .observe(
                         MapsActivity.this,
-                        aVoid -> onMapReady()
+                        aVoid -> mCoordinator.onMapReady()
                 );
 
         viewModel
@@ -154,9 +89,9 @@ public class MapsActivity
                         MapsActivity.this,
                         enable -> {
                             if (enable != null && enable) {
-                                showMyLocationButton();
+                                mCoordinator.showMyLocationButton();
                             } else {
-                                hideMyLocationButton();
+                                mCoordinator.hideMyLocationButton();
                             }
                         }
                 );
@@ -191,116 +126,13 @@ public class MapsActivity
         }
     }
 
-    public void hideMyLocationButton() {
-        mMyLocationFab.animate()
-                .scaleX(0f)
-                .scaleY(0f)
-                .setDuration(300)
-                .setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        mMyLocationFab.setVisibility(View.GONE);
-                        mMyLocationFab.animate().setListener(null);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                })
-                .start();
-    }
-
-    public void showMyLocationButton() {
-        mMyLocationFab.setVisibility(View.VISIBLE);
-        mMyLocationFab.animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .setDuration(300)
-                .start();
-    }
-
     public void showFullMap() {
-        focusOnMap();
+        mCoordinator.focusOnMap();
         mCoordinator.closeBottomSheet();
     }
 
-    public void onMapReady() {
-        ParallaxBehavior<View> parallaxBehavior = ParallaxBehavior.from(mContentView);
-        parallaxBehavior.setOnParallaxTranslationListener(mCoordinator);
-    }
-
-    public void showProgressBar() {
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    public void hideProgressBar() {
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.search_text:
-                onSearchTextClick();
-                break;
-            case R.id.my_location_fab:
-                onMyLocationFabClick();
-                break;
-            case R.id.search_clear:
-                onSearchClearClick();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown view id: " + id);
-        }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.my_location_fab:
-                return onMyLocationFabLongClick();
-            default:
-                throw new IllegalArgumentException("Unknown view id: " + id);
-        }
-    }
-
-    private void onMyLocationFabClick() {
-        mMapsFragment.moveOnMyLocation();
-    }
-
-    private boolean onMyLocationFabLongClick() {
-        mMapsFragment.moveOnFootprint();
-        return true;
-    }
-
-    private boolean onSearchTextClick() {
-        mSearchText.setCursorVisible(true);
-        return true;
-    }
-
-    private void onSearchClearClick() {
-        focusOnMap();
-        String currentText = mSearchText.getText().toString();
-        if (!SearchUtil.DEFAULT_SEARCH.equals(currentText)) {
-            mSearchText.setText(SearchUtil.DEFAULT_SEARCH);
-        }
-    }
-
     public void showPartner(long partnerId, boolean zoom) {
-        focusOnMap();
+        mCoordinator.focusOnMap();
         mCoordinator.showPartner(partnerId, zoom);
     }
 
@@ -310,9 +142,10 @@ public class MapsActivity
         mCoordinator.onSaveInstanceState(outState);
     }
 
-    private void onSearchTextChanged(String search) {
+    @Override
+    public void doSearch(String search) {
         mMapsFragment.filterPartner(search);
-        FiltersFragment filtersFragment = mCoordinator.geFiltersFragment();
+        FiltersFragment filtersFragment = geFiltersFragment();
         if (filtersFragment != null) {
             //noinspection ConstantConditions
             filtersFragment.filterPartner(search);
@@ -320,43 +153,11 @@ public class MapsActivity
     }
 
     @Override
-    public Context getContext() {
-        return MapsActivity.this;
-    }
-
-    @Override
-    public Fragment getBottomSheetFragment() {
-        return mBottomSheetFragment;
-    }
-
-    @Override
-    public CoordinatorLayout getCoordinatorLayout() {
-        return mCoordinatorLayout;
-    }
-
-    @Override
-    public FloatingActionButton getMyLocationFab() {
-        return mMyLocationFab;
-    }
-
-    @Override
-    public FloatingActionButton getFiltersFab() {
-        return mFiltersFab;
-    }
-
-    @Override
-    public View getSearchBar() {
-        return mSearchBar;
-    }
-
-    @Override
-    public TextView getSearchText() {
-        return mSearchText;
-    }
-
-    @Override
-    public View getBottomSheet() {
-        return mBottomSheet;
+    public void loadFilter() {
+        FiltersFragment fragment = geFiltersFragment();
+        if (fragment != null) {
+            fragment.LoadFilters();
+        }
     }
 
     @Override
@@ -367,11 +168,6 @@ public class MapsActivity
     @Override
     public void updateMapPaddingBottom(int paddingBottom) {
         mMapsFragment.updateMapPaddingBottom(paddingBottom);
-    }
-
-    private void focusOnMap() {
-        mSearchText.setCursorVisible(false);
-        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
     }
 
     @Override
@@ -401,7 +197,7 @@ public class MapsActivity
 
     @Override
     public void replaceBottomSheetByFilters() {
-        mBottomSheetFragment = FiltersFragment.newInstance(mSearchText.getText().toString());
+        mBottomSheetFragment = FiltersFragment.newInstance(mCoordinator.getSearchText());
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(
@@ -421,5 +217,32 @@ public class MapsActivity
             mBottomSheetFragment = null;
         }
     }
+
+    @Override
+    public void moveOnFootprint() {
+        mMapsFragment.moveOnFootprint();
+    }
+
+    @Override
+    public void moveOnMyLocation() {
+        mMapsFragment.moveOnMyLocation();
+
+    }
+
+    @Override
+    public void hideSoftKeyboard() {
+        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
+    }
+
+    @Nullable
+    public FiltersFragment geFiltersFragment() {
+        if (mCoordinator.isFiltersBottomSheetOpened()) {
+            return (FiltersFragment) mBottomSheetFragment;
+        } else {
+            return null;
+        }
+    }
+
+
 
 }

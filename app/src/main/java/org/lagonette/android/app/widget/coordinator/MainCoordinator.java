@@ -1,7 +1,7 @@
 package org.lagonette.android.app.widget.coordinator;
 
+import android.animation.Animator;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
@@ -10,20 +10,23 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.animation.Interpolator;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.maps.GoogleMap;
 
 import org.lagonette.android.R;
-import org.lagonette.android.app.fragment.FiltersFragment;
 import org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.room.statement.Statement;
+import org.lagonette.android.util.SearchUtil;
 import org.lagonette.android.util.UiUtil;
 
 import java.lang.annotation.Retention;
@@ -31,29 +34,12 @@ import java.lang.annotation.RetentionPolicy;
 
 public class MainCoordinator
         extends BottomSheetBehavior.BottomSheetCallback
-        implements BaseCoordinator,
-        ParallaxBehavior.OnParallaxTranslationListener,
-        LaGonetteDisappearBehavior.OnMoveListener, View.OnClickListener {
+        implements ParallaxBehavior.OnParallaxTranslationListener,
+        LaGonetteDisappearBehavior.OnMoveListener,
+        View.OnClickListener,
+        View.OnLongClickListener {
 
     public interface Callbacks {
-
-        Context getContext();
-
-        Resources getResources();
-
-        Fragment getBottomSheetFragment();
-
-        CoordinatorLayout getCoordinatorLayout();
-
-        FloatingActionButton getMyLocationFab();
-
-        FloatingActionButton getFiltersFab();
-
-        View getSearchBar();
-
-        TextView getSearchText();
-
-        View getBottomSheet();
 
         void updateMapPaddingTop(int paddingTop);
 
@@ -66,6 +52,16 @@ public class MainCoordinator
         void replaceBottomSheetByFilters();
 
         void removeBottomSheetFragment();
+
+        void moveOnFootprint();
+
+        void moveOnMyLocation();
+
+        void hideSoftKeyboard();
+
+        void doSearch(String search);
+
+        void loadFilter();
 
     }
 
@@ -93,6 +89,24 @@ public class MainCoordinator
             // Nothing to do here.
         }
     };
+
+    private View mSearchBar;
+
+    private EditText mSearchText;
+
+    private ImageButton mSearchClear;
+
+    private ProgressBar mProgressBar;
+
+    private View mBottomSheet;
+
+    private View mContentView;
+
+    private FloatingActionButton mMyLocationFab;
+
+    private FloatingActionButton mFiltersFab;
+
+    private CoordinatorLayout mCoordinatorLayout;
 
     @BottomSheetType
     private int mBottomSheetType = BOTTOM_SHEET_NONE;
@@ -125,33 +139,72 @@ public class MainCoordinator
 
     private BottomSheetBehavior<View> mBottomSheetBehavior;
 
+    @NonNull
     private Callbacks mCallbacks;
 
-    public MainCoordinator(Callbacks callbacks) {
+    public MainCoordinator(@NonNull Context context, @NonNull Callbacks callbacks, @Nullable Bundle savedInstanceState) {
         mCallbacks = callbacks;
-    }
 
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Context context = mCallbacks.getContext();
-        View searchBar = mCallbacks.getSearchBar();
-
+        mStatusBarHeight = UiUtil.getStatusBarHeight(context.getResources());
         mFiltersBottomSheetBackgroundColor = ContextCompat.getColor(context, R.color.colorPrimary);
         mBottomSheetBackgroundColor = ContextCompat.getColor(context, android.R.color.background_light);
-        mSearchBarBehavior = LaGonetteDisappearBehavior.from(searchBar);
-        mSearchBarBehavior.setOnMoveListener(MainCoordinator.this);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        mStatusBarHeight = UiUtil.getStatusBarHeight(mCallbacks.getResources());
+    public MainCoordinator injectView(@NonNull View view) {
+        mContentView = view.findViewById(R.id.content);
+        mCoordinatorLayout = view.findViewById(R.id.coordinator_layout);
+        mSearchBar = view.findViewById(R.id.search_bar);
+        mSearchText = view.findViewById(R.id.search_text);
+        mSearchClear = view.findViewById(R.id.search_clear);
+        mProgressBar = view.findViewById(R.id.progress_bar);
+        mBottomSheet = view.findViewById(R.id.bottom_sheet);
+        mMyLocationFab = view.findViewById(R.id.my_location_fab);
+        mFiltersFab = view.findViewById(R.id.filters_fab);
+        return MainCoordinator.this;
+    }
+
+    public MainCoordinator start() {
         mSearchBarVerticalMargin = setupSearchBarMargin();
 
-        mBottomSheetBehavior = BottomSheetBehavior.from(mCallbacks.getBottomSheet());
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         mBottomSheetBehavior.setBottomSheetCallback(MainCoordinator.this);
 
-        mCallbacks.getFiltersFab().setOnClickListener(MainCoordinator.this);
+        mSearchBarBehavior = LaGonetteDisappearBehavior.from(mSearchBar);
+        mSearchBarBehavior.setOnMoveListener(MainCoordinator.this);
+
+        mFiltersFab.setOnClickListener(MainCoordinator.this);
+
+        mSearchText.setCursorVisible(false);
+        mSearchText.setOnClickListener(MainCoordinator.this);
+        //TODO Activity leaks ?
+        // Add TextWatcher later to avoid callback called on configuration changed.
+        mSearchText.post(
+                () -> mSearchText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        mCallbacks.doSearch(s.toString());
+                    }
+                })
+        );
+
+        mSearchClear.setOnClickListener(MainCoordinator.this);
+
+        mMyLocationFab.setOnClickListener(MainCoordinator.this);
+        mMyLocationFab.setOnLongClickListener(MainCoordinator.this);
+
+        return MainCoordinator.this;
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -160,24 +213,21 @@ public class MainCoordinator
 
     // TODO put this in onCreate ?
     public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        View searchBar = mCallbacks.getSearchBar();
-        final View bottomSheet = mCallbacks.getBottomSheet();
-
         //noinspection WrongConstant
         mBottomSheetType = savedInstanceState.getInt(STATE_BOTTOM_SHEET_TYPE, BOTTOM_SHEET_NONE);
 
         // TODO put in xml
         if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
-            bottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
+            mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
         }
 
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                updateBottomSheetPadding(bottomSheet, mSearchBarVerticalMargin + searchBar.getHeight());
+                updateBottomSheetPadding(mBottomSheet, mSearchBarVerticalMargin + mSearchBar.getHeight());
             }
         } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
             // Workaround to prevent undefined fab state on configuration change.
-            bottomSheet.post(() -> onSlide(bottomSheet, 0));
+            mBottomSheet.post(() -> onSlide(mBottomSheet, 0));
         }
     }
 
@@ -201,10 +251,7 @@ public class MainCoordinator
 
             if (mLoadFiltersAfterBottomSheetCollapsed) {
                 mLoadFiltersAfterBottomSheetCollapsed = false;
-                FiltersFragment fragment = geFiltersFragment();
-                if (fragment != null) {
-                    fragment.LoadFilters();
-                }
+                mCallbacks.loadFilter();
             }
         }
     }
@@ -220,7 +267,6 @@ public class MainCoordinator
 
     private void manageBottomSheetFabOnPartnerSlide(float slideOffset) {
         //TODO Optimize !
-        FloatingActionButton filtersFab = mCallbacks.getFiltersFab();
         float scale = slideOffset * 4 - 1;
         scale = scale > 1
                 ? 1
@@ -229,13 +275,13 @@ public class MainCoordinator
                 : scale;
         scale = 1 - scale;
         scale = mInterpolator.getInterpolation(scale);
-        filtersFab.setScaleX(scale);
-        filtersFab.setScaleY(scale);
+        mFiltersFab.setScaleX(scale);
+        mFiltersFab.setScaleY(scale);
     }
 
     private void manageStatusBarPaddingOnBottomSheetSlide(@NonNull View bottomSheet) {
         //TODO Optimize !
-        int height = mCallbacks.getSearchBar().getHeight();
+        int height = mSearchBar.getHeight();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             height += mSearchBarVerticalMargin;
         }
@@ -265,7 +311,7 @@ public class MainCoordinator
             mZoomForPartnerId = zoom;
             closeBottomSheet();
         } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
-            switchPartner(mCallbacks.getBottomSheet());
+            switchPartner(mBottomSheet);
         } else {
             moveMapAndOpenPartner(zoom);
         }
@@ -278,12 +324,9 @@ public class MainCoordinator
     public void openPartner() {
         mCallbacks.replaceBottomSheetByPartnerDetails(mSelectedPartnerId, false);
 
-        View coordinatorLayout = mCallbacks.getCoordinatorLayout();
-        View bottomSheet = mCallbacks.getBottomSheet();
-
-        bottomSheet.setTag(mSelectedPartnerId);
+        mBottomSheet.setTag(mSelectedPartnerId);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheet.getLayoutParams().height = coordinatorLayout.getHeight() * 3 / 4;
+        mBottomSheet.getLayoutParams().height = mCoordinatorLayout.getHeight() * 3 / 4;
         mSearchBarBehavior.enable();
         mBottomSheetType = BOTTOM_SHEET_PARTNER;
     }
@@ -318,7 +361,7 @@ public class MainCoordinator
     private void openFilters() {
         mCallbacks.replaceBottomSheetByFilters();
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        mCallbacks.getBottomSheet().setBackgroundColor(mFiltersBottomSheetBackgroundColor);
+        mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
         mSearchBarBehavior.disable();
         mLoadFiltersAfterBottomSheetCollapsed = true;
         mBottomSheetType = BOTTOM_SHEET_FILTERS;
@@ -344,18 +387,9 @@ public class MainCoordinator
         return mBottomSheetType == BOTTOM_SHEET_FILTERS;
     }
 
-    @Nullable
-    public FiltersFragment geFiltersFragment() {
-        if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
-            return (FiltersFragment) mCallbacks.getBottomSheetFragment();
-        } else {
-            return null;
-        }
-    }
-
     private int setupSearchBarMargin() {
         // Why is not CoordinatorLayout.LayoutParams ?
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mCallbacks.getSearchBar().getLayoutParams();
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mSearchBar.getLayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             params.setMargins(
                     params.leftMargin,
@@ -406,6 +440,27 @@ public class MainCoordinator
             case R.id.filters_fab:
                 onBottomSheetFabClick();
                 break;
+            case R.id.search_text:
+                onSearchTextClick();
+                break;
+            case R.id.my_location_fab:
+                mCallbacks.moveOnMyLocation();
+                break;
+            case R.id.search_clear:
+                clearSearch();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown view id: " + id);
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.my_location_fab:
+                mCallbacks.moveOnFootprint();
+                return true;
             default:
                 throw new IllegalArgumentException("Unknown view id: " + id);
         }
@@ -413,6 +468,80 @@ public class MainCoordinator
 
     private void onBottomSheetFabClick() {
         showFilters();
+    }
+
+    public void hideMyLocationButton() {
+        mMyLocationFab.animate()
+                .scaleX(0f)
+                .scaleY(0f)
+                .setDuration(300)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mMyLocationFab.setVisibility(View.GONE);
+                        mMyLocationFab.animate().setListener(null);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .start();
+    }
+
+    public void showMyLocationButton() {
+        mMyLocationFab.setVisibility(View.VISIBLE);
+        mMyLocationFab.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(300)
+                .start();
+    }
+
+    public void showProgressBar() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    public boolean onSearchTextClick() {
+        mSearchText.setCursorVisible(true);
+        return true;
+    }
+
+    public void clearSearch() {
+        focusOnMap();
+        String currentText = mSearchText.getText().toString();
+        if (!SearchUtil.DEFAULT_SEARCH.equals(currentText)) {
+            mSearchText.setText(SearchUtil.DEFAULT_SEARCH);
+        }
+    }
+
+    public String getSearchText() {
+        return mSearchText.getText().toString();
+    }
+
+    public void focusOnMap() {
+        mSearchText.setCursorVisible(false);
+        mCallbacks.hideSoftKeyboard();
+    }
+
+    public void onMapReady() {
+        ParallaxBehavior<View> parallaxBehavior = ParallaxBehavior.from(mContentView);
+        parallaxBehavior.setOnParallaxTranslationListener(MainCoordinator.this);
     }
 
 }
