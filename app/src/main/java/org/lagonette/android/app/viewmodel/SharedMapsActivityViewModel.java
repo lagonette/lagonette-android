@@ -6,31 +6,34 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import org.lagonette.android.app.LiveEvent;
+import org.lagonette.android.app.MutableLiveEvent;
+
 public class SharedMapsActivityViewModel extends AndroidViewModel {
 
     @NonNull
     private MutableLiveData<Boolean> mWorkInProgressLiveData;
 
     @NonNull
-    private MutableLiveData<Void> mMapIsReadyLiveData;
+    private MutableLiveEvent<Void> mMapIsReadyLiveEvent;
 
     @NonNull
     private MutableLiveData<Boolean> mEnableMyPositionFABLiveData;
 
     @NonNull
-    private MutableLiveData<ShowPartnerRequest> mShowPartnerRequestLiveData;
+    private MutableLiveEvent<ShowPartnerEvent> mShowPartnerRequestLiveEvent;
 
     @NonNull
-    private ShowPartnerRequest mShowPartnerRequest;
+    private ShowPartnerEvent mShowPartnerEvent;
 
     public SharedMapsActivityViewModel(Application application) {
         super(application);
         mWorkInProgressLiveData = new MutableLiveData<>();
-        mMapIsReadyLiveData = new MutableLiveData<>();
+        mMapIsReadyLiveEvent = new MutableLiveEvent<>();
         mEnableMyPositionFABLiveData = new MutableLiveData<>();
-        mShowPartnerRequestLiveData = new MutableLiveData<>();
+        mShowPartnerRequestLiveEvent = new MutableLiveEvent<>();
 
-        mShowPartnerRequest = new ShowPartnerRequest();
+        mShowPartnerEvent = new ShowPartnerEvent();
     }
 
     @NonNull
@@ -39,8 +42,8 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public LiveData<Void> getMapIsReadyLiveData() {
-        return mMapIsReadyLiveData;
+    public LiveEvent<Void> getMapIsReadyLiveEvent() {
+        return mMapIsReadyLiveEvent;
     }
 
     @NonNull
@@ -49,8 +52,8 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public LiveData<ShowPartnerRequest> getShowPartnerRequestLiveData() {
-        return mShowPartnerRequestLiveData;
+    public LiveEvent<ShowPartnerEvent> getShowPartnerRequestLiveEvent() {
+        return mShowPartnerRequestLiveEvent;
     }
 
     public void setWorkInProgress(boolean workInProgress) {
@@ -58,7 +61,7 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     }
 
     public void notifyMapIsReady() {
-        mMapIsReadyLiveData.postValue(null);
+        mMapIsReadyLiveEvent.call();
     }
 
     public void setEnableMyPositionFAB(boolean enable) {
@@ -66,16 +69,16 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     }
 
     public void showPartner(long partnerId, boolean zoom) {
-        mShowPartnerRequest.partnerId = partnerId;
-        mShowPartnerRequest.zoom = zoom;
-        mShowPartnerRequestLiveData.postValue(mShowPartnerRequest);
+        mShowPartnerEvent.partnerId = partnerId;
+        mShowPartnerEvent.zoom = zoom;
+        mShowPartnerRequestLiveEvent.postEvent(mShowPartnerEvent);
     }
 
     public void showFullMap() {
-        mShowPartnerRequestLiveData.postValue(null);
+        mShowPartnerRequestLiveEvent.call();
     }
 
-    public static class ShowPartnerRequest {
+    public static class ShowPartnerEvent {
 
         public long partnerId;
 

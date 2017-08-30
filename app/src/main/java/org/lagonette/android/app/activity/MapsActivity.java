@@ -77,7 +77,7 @@ public class MapsActivity
                 );
 
         viewModel
-                .getMapIsReadyLiveData()
+                .getMapIsReadyLiveEvent()
                 .observe(
                         MapsActivity.this,
                         aVoid -> mCoordinator.onMapReady()
@@ -97,7 +97,7 @@ public class MapsActivity
                 );
 
         viewModel
-                .getShowPartnerRequestLiveData()
+                .getShowPartnerRequestLiveEvent()
                 .observe(
                         MapsActivity.this,
                         request -> {

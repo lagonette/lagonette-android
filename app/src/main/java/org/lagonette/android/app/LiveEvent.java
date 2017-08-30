@@ -8,7 +8,7 @@ import android.support.v4.util.ArrayMap;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SingleLiveEvent<T> extends LiveData<T> {
+public class LiveEvent<T> extends LiveData<T> {
 
     private AtomicBoolean mPending = new AtomicBoolean(false);
 
@@ -34,10 +34,6 @@ public class SingleLiveEvent<T> extends LiveData<T> {
     protected void setValue(T value) {
         mPending.set(true);
         super.setValue(value);
-    }
-
-    public void call() {
-        setValue(null);
     }
 
 }
