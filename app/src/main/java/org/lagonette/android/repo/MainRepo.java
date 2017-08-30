@@ -5,7 +5,7 @@ import android.arch.lifecycle.Transformations;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.lagonette.android.app.DbLiveData;
+import org.lagonette.android.app.arch.DbLiveData;
 import org.lagonette.android.locator.DB;
 import org.lagonette.android.room.reader.FilterReader;
 import org.lagonette.android.room.reader.MapPartnerReader;

@@ -1,4 +1,4 @@
-package org.lagonette.android.app;
+package org.lagonette.android.app.arch;
 
 
 import android.arch.lifecycle.LifecycleOwner;

@@ -6,8 +6,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import org.lagonette.android.app.LiveEvent;
-import org.lagonette.android.app.MutableLiveEvent;
+import org.lagonette.android.app.arch.LiveEvent;
+import org.lagonette.android.app.arch.MutableLiveEvent;
 
 public class SharedMapsActivityViewModel extends AndroidViewModel {
 
