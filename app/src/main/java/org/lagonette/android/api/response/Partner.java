@@ -85,7 +85,7 @@ public class Partner {
         partner.address.zipCode = mZipCode;
         partner.latitude = mLatitude;
         partner.longitude = mLongitude;
-        partner.phone = mPhone;
+        partner.phone = mPhone; // TODO Format
         partner.website = mWebsite;
         partner.email = mEmail;
         partner.description = mDescription;

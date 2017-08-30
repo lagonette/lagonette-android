@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.lagonette.android.room.entity.CategoryMetadata;
+import org.lagonette.android.room.entity.special.OfficeCategory;
+import org.lagonette.android.room.entity.special.OfficeCategoryMetadata;
 import org.lagonette.android.util.PreferenceUtil;
 
 import java.util.List;
@@ -27,7 +30,7 @@ public class CategoriesResponse extends ApiResponse {
                 PreferenceUtil.KEY_CATEGORY_MD5_SUM,
                 PreferenceUtil.DEFAULT_VALUE_CATEGORY_MD5_SUM
         );
-
+        addOfficeCategory(categories, categoryMetadataList);
 
         if (!mMd5Sum.equals(md5Sum)) {
 
@@ -44,5 +47,10 @@ public class CategoriesResponse extends ApiResponse {
         }
 
         return false;
+    }
+
+    private void addOfficeCategory(@NonNull List<org.lagonette.android.room.entity.Category> categories, @NonNull List<CategoryMetadata> categoryMetadataList) {
+        categories.add(new OfficeCategory());
+        categoryMetadataList.add(new OfficeCategoryMetadata());
     }
 }

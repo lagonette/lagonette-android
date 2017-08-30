@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.lagonette.android.room.entity.PartnerMetadata;
+import org.lagonette.android.room.entity.special.OfficePartner;
+import org.lagonette.android.room.entity.special.OfficePartnerMetadata;
 import org.lagonette.android.util.PreferenceUtil;
 
 import java.util.List;
@@ -35,6 +38,7 @@ public class PartnersResponse extends ApiResponse {
             for (Partner partner : mPartners) {
                 partner.prepareInsert(partners, partnerMetadataList, partnerSideCategories);
             }
+            addOfficePartner(partners, partnerMetadataList);
 
             // TODO Ensure data are saved before saving md5 sum, maybe put this in a runnable an execute it after closing transaction
             preferences.edit()
@@ -44,5 +48,10 @@ public class PartnersResponse extends ApiResponse {
         }
 
         return false;
+    }
+
+    private void addOfficePartner(@NonNull List<org.lagonette.android.room.entity.Partner> partners, @NonNull List<PartnerMetadata> partnerMetadataList) {
+        partners.add(new OfficePartner());
+        partnerMetadataList.add(new OfficePartnerMetadata());
     }
 }
