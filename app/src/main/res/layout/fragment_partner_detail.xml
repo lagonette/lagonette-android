@@ -375,11 +375,11 @@
 
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/main_category_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"/>
+            <!--<ImageView-->
+                <!--android:id="@+id/main_category_logo"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:minHeight="48dp"/>-->
 
 
         </LinearLayout>

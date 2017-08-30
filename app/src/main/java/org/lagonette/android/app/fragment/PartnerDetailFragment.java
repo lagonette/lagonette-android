@@ -76,7 +76,7 @@ public class PartnerDetailFragment
 
 //    private ImageView mLogoImageView;
 
-    private ImageView mMainCategoryLogoImageView;
+//    private ImageView mMainCategoryLogoImageView;
 
     private double mLatitude;
 
@@ -138,7 +138,7 @@ public class PartnerDetailFragment
 
         mMainCategoryLabelTextView = view.findViewById(R.id.main_category_label);
 //        mLogoImageView = view.findViewById(R.id.logo);
-        mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
+//        mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
 
 //        mBackImageButton.setOnClickListener(PartnerDetailFragment.this);
         mAddressLayout.setOnClickListener(PartnerDetailFragment.this);
@@ -236,10 +236,10 @@ public class PartnerDetailFragment
 //                    .asBitmap()
 //                    .into(mLogoImageView);
 
-            Glide.with(getContext())
-                    .load(reader.getCategoryIcon())
-                    .asBitmap()
-                    .into(mMainCategoryLogoImageView);
+//            Glide.with(getContext())
+//                    .load(reader.getCategoryIcon())
+//                    .asBitmap()
+//                    .into(mMainCategoryLogoImageView);
         }
     }
 
