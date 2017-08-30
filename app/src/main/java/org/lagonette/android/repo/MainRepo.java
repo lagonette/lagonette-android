@@ -42,7 +42,7 @@ public class MainRepo {
                         search -> new DbLiveData<>(
                                 Tables.TABLES,
                                 mExecutor,
-                                () -> MapPartnerReader.create(
+                                () -> MapPartnerReader.create( // TODO Fix "Application did not close the cursor or database object that was opened here" issue
                                         DB
                                                 .get()
                                                 .mainDao()
