@@ -27,7 +27,7 @@ public final class IntentUtil {
     }
 
     public static boolean makeCall(@NonNull Context context, @NonNull String phoneNumber) {
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber)); // TODO Improve || crash with genymotion
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)); // TODO Improve || crash with genymotion
         PackageManager packageManager = context.getPackageManager();
         if (intent.resolveActivity(packageManager) != null) {
             context.startActivity(intent);
