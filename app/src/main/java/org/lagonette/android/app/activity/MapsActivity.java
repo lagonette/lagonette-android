@@ -43,11 +43,10 @@ public class MapsActivity
         // TODO Maybe use LiveData to exchange info between Coordinator & Activity?
         mCoordinator = new MainCoordinator(
                 MapsActivity.this,
-                MapsActivity.this,
-                savedInstanceState
+                MapsActivity.this
         )
                 .injectView(findViewById(android.R.id.content))
-                .start();
+                .start(savedInstanceState);
 
         if (savedInstanceState == null) {
             mMapsFragment = MapsFragment.newInstance();

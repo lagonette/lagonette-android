@@ -33,7 +33,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class MainCoordinator
-        extends BottomSheetBehavior.BottomSheetCallback
+        extends ViewCoordinator
         implements ParallaxBehavior.OnParallaxTranslationListener,
         LaGonetteDisappearBehavior.OnMoveListener,
         View.OnClickListener,
@@ -142,7 +142,8 @@ public class MainCoordinator
     @NonNull
     private Callbacks mCallbacks;
 
-    public MainCoordinator(@NonNull Context context, @NonNull Callbacks callbacks, @Nullable Bundle savedInstanceState) {
+    public MainCoordinator(@NonNull Context context, @NonNull Callbacks callbacks) {
+        super(context);
         mCallbacks = callbacks;
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(context.getResources());
@@ -163,13 +164,23 @@ public class MainCoordinator
         return MainCoordinator.this;
     }
 
-    public MainCoordinator start() {
+    public MainCoordinator start(@Nullable Bundle savedInstanceState) {
         mSearchBarVerticalMargin = setupSearchBarMargin();
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        mBottomSheetBehavior.setBottomSheetCallback(MainCoordinator.this);
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                MainCoordinator.this.onStateChanged(bottomSheet, newState);
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                MainCoordinator.this.onSlide(bottomSheet, slideOffset);
+            }
+        });
 
         mSearchBarBehavior = LaGonetteDisappearBehavior.from(mSearchBar);
         mSearchBarBehavior.setOnMoveListener(MainCoordinator.this);
@@ -231,7 +242,6 @@ public class MainCoordinator
         }
     }
 
-    @Override
     public void onStateChanged(@NonNull View bottomSheet, int newState) {
         if (BottomSheetBehavior.STATE_HIDDEN == newState) {
             mCallbacks.removeBottomSheetFragment();
@@ -256,7 +266,6 @@ public class MainCoordinator
         }
     }
 
-    @Override
     public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         manageStatusBarPaddingOnBottomSheetSlide(bottomSheet);
         if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
