@@ -34,4 +34,10 @@ public interface PartnerDao {
     @Query("UPDATE partner_metadata SET is_visible = :isVisible WHERE partner_id = :id")
     int updatePartnerVisibility(long id, boolean isVisible);
 
+    @Query("UPDATE partner_metadata SET is_visible = :isVisible")
+    int updatePartnerVisibilities(boolean isVisible);
+
+    @Query("UPDATE partner_metadata SET is_visible = :isVisible WHERE partner_id IN (SELECT id FROM partner WHERE is_exchange_office <> 0)")
+    int updateExchangeOfficeVisibilities(boolean isVisible);
+
 }

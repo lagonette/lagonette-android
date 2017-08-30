@@ -18,6 +18,7 @@
     tools:layout_marginTop="32dp">
 
     <LinearLayout
+        android:id="@+id/shortcut_partner"
         android:layout_width="84dp"
         android:layout_height="84dp"
         android:layout_weight="1"
@@ -44,6 +45,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/shortcut_exchange_office"
         android:layout_width="84dp"
         android:layout_height="84dp"
         android:layout_weight="1"
@@ -70,6 +72,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/shortcut_office"
         android:layout_width="84dp"
         android:layout_height="84dp"
         android:layout_weight="1"

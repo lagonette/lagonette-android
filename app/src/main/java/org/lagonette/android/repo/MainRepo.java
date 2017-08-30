@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.android.app.arch.DbLiveData;
 import org.lagonette.android.locator.DB;
+import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.room.reader.FilterReader;
 import org.lagonette.android.room.reader.MapPartnerReader;
 import org.lagonette.android.room.reader.PartnerDetailReader;
@@ -125,6 +126,38 @@ public class MainRepo {
         );
     }
 
+    public void showAllPartners() {
+        mExecutor.execute(
+                () -> {
+                    LaGonetteDatabase database = DB.get();
+                    database.beginTransaction();
+                    database.categoryDao()
+                            .updateCategoryVisibilities(true);
+                    database.partnerDao()
+                            .updatePartnerVisibilities(true);
+                    database.setTransactionSuccessful();
+                    database.endTransaction();
+                }
+        );
+    }
+
+    public void showAllExchangeOffice() {
+        mExecutor.execute(
+                () -> {
+                    LaGonetteDatabase database = DB.get();
+                    database.beginTransaction();
+                    database.categoryDao()
+                            .updateCategoryVisibilities(true);
+                    database.partnerDao()
+                            .updatePartnerVisibilities(false);
+                    database.partnerDao()
+                            .updateExchangeOfficeVisibilities(true);
+                    database.setTransactionSuccessful();
+                    database.endTransaction();
+                }
+        );
+    }
+
     private boolean shouldFetch() {
         if (mShouldFetch) {
             mShouldFetch = false;
@@ -133,5 +166,4 @@ public class MainRepo {
             return false;
         }
     }
-
 }

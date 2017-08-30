@@ -36,6 +36,11 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         void onPartnerVisibilityClick(@NonNull PartnerViewHolder holder);
 
+        void onPartnerShortcutClick(@NonNull ShortcutViewHolder holder);
+
+        void onExchangeOfficeShortcutClick(@NonNull ShortcutViewHolder holder);
+
+        void onLaGonetteShortcutClick(@NonNull ShortcutViewHolder holder);
     }
 
     private static final String TAG = "FilterAdapter";
@@ -196,7 +201,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private ShortcutViewHolder onCreateShortcutViewHolder(@NonNull ViewGroup parent) {
-        return new ShortcutViewHolder(
+        ShortcutViewHolder holder = new ShortcutViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
                         .inflate(
@@ -205,6 +210,25 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 false
                         )
         );
+
+        if (mOnFilterClickListener != null) {
+            holder.partnerView.setTag(holder);
+            holder.partnerView.setOnClickListener(
+                    v -> mOnFilterClickListener.onPartnerShortcutClick((ShortcutViewHolder) v.getTag())
+            );
+
+            holder.exchangeOfficeView.setTag(holder);
+            holder.exchangeOfficeView.setOnClickListener(
+                    v -> mOnFilterClickListener.onExchangeOfficeShortcutClick((ShortcutViewHolder) v.getTag())
+            );
+
+            holder.officeView.setTag(holder);
+            holder.officeView.setOnClickListener(
+                    v -> mOnFilterClickListener.onLaGonetteShortcutClick((ShortcutViewHolder) v.getTag())
+            );
+        }
+
+        return holder;
     }
 
     private LoadingViewHolder onCreateLoadingViewHolder(@NonNull ViewGroup parent) {
@@ -455,8 +479,20 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public class ShortcutViewHolder extends RecyclerView.ViewHolder {
 
+        @NonNull
+        public final View partnerView;
+
+        @NonNull
+        public final View exchangeOfficeView;
+
+        @NonNull
+        public final View officeView;
+
         public ShortcutViewHolder(View itemView) {
             super(itemView);
+            partnerView = itemView.findViewById(R.id.shortcut_partner);
+            exchangeOfficeView = itemView.findViewById(R.id.shortcut_exchange_office);
+            officeView = itemView.findViewById(R.id.shortcut_office);
         }
     }
 

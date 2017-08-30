@@ -108,6 +108,21 @@ public class FiltersFragment
         mFiltersViewModel.setPartnerVisibility(holder.partnerId, !holder.isVisible);
     }
 
+    @Override
+    public void onPartnerShortcutClick(@NonNull FilterAdapter.ShortcutViewHolder holder) {
+        mFiltersViewModel.showAllPartners();
+    }
+
+    @Override
+    public void onExchangeOfficeShortcutClick(@NonNull FilterAdapter.ShortcutViewHolder holder) {
+        mFiltersViewModel.showAllExchangeOffices();
+    }
+
+    @Override
+    public void onLaGonetteShortcutClick(@NonNull FilterAdapter.ShortcutViewHolder holder) {
+        // Yolo
+    }
+
     public void LoadFilters() {
         // TODO
 //        mPresenter.loadFilters();

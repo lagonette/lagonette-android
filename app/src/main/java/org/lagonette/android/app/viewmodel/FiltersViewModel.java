@@ -50,4 +50,16 @@ public class FiltersViewModel extends ViewModel {
                 .get()
                 .setCategoryCollapsed(categoryId, isCollapsed);
     }
+
+    public void showAllPartners() {
+        Repo
+                .get()
+                .showAllPartners();
+    }
+
+    public void showAllExchangeOffices() {
+        Repo
+                .get()
+                .showAllExchangeOffice();
+    }
 }
