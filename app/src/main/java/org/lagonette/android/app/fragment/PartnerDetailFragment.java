@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,7 +44,7 @@ public class PartnerDetailFragment
 
     private TextView mNameTextView;
 
-    private ImageButton mBackImageButton;
+//    private ImageButton mBackImageButton;
 
     private TextView mPartnerTypeTextView;
 
@@ -75,7 +74,7 @@ public class PartnerDetailFragment
 
     private TextView mMainCategoryLabelTextView;
 
-    private ImageView mLogoImageView;
+//    private ImageView mLogoImageView;
 
     private ImageView mMainCategoryLogoImageView;
 
@@ -114,7 +113,7 @@ public class PartnerDetailFragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mBackImageButton = view.findViewById(R.id.back);
+//        mBackImageButton = view.findViewById(R.id.back);
 
         mPartnerTypeTextView = view.findViewById(R.id.type_partner);
 
@@ -138,10 +137,10 @@ public class PartnerDetailFragment
         mOpeningHoursLayout = view.findViewById(R.id.container_opening_hours);
 
         mMainCategoryLabelTextView = view.findViewById(R.id.main_category_label);
-        mLogoImageView = view.findViewById(R.id.logo);
+//        mLogoImageView = view.findViewById(R.id.logo);
         mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
 
-        mBackImageButton.setOnClickListener(PartnerDetailFragment.this);
+//        mBackImageButton.setOnClickListener(PartnerDetailFragment.this);
         mAddressLayout.setOnClickListener(PartnerDetailFragment.this);
         mPhoneLayout.setOnClickListener(PartnerDetailFragment.this);
         mWebsiteLayout.setOnClickListener(PartnerDetailFragment.this);
@@ -232,10 +231,10 @@ public class PartnerDetailFragment
 
             mMainCategoryLabelTextView.setText(reader.getCategoryLabel());
 
-            Glide.with(getContext())
-                    .load(reader.getLogo())
-                    .asBitmap()
-                    .into(mLogoImageView);
+//            Glide.with(getContext())
+//                    .load(reader.getLogo())
+//                    .asBitmap()
+//                    .into(mLogoImageView);
 
             Glide.with(getContext())
                     .load(reader.getCategoryIcon())
@@ -301,9 +300,9 @@ public class PartnerDetailFragment
             case R.id.container_email:
                 onEmailClick();
                 break;
-            case R.id.back:
-                getActivity().onBackPressed();
-                break;
+//            case R.id.back:
+//                getActivity().onBackPressed();
+//                break;
         }
     }
 
