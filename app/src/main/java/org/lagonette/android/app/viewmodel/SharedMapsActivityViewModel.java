@@ -71,7 +71,7 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     public void showPartner(long partnerId, boolean zoom) {
         mShowPartnerEvent.partnerId = partnerId;
         mShowPartnerEvent.zoom = zoom;
-        mShowPartnerRequestLiveEvent.postEvent(mShowPartnerEvent);
+        mShowPartnerRequestLiveEvent.setEvent(mShowPartnerEvent);
     }
 
     public void showFullMap() {
