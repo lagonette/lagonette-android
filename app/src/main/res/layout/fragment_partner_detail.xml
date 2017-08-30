@@ -345,7 +345,6 @@
                 android:id="@+id/container_categories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:minHeight="48dp">
 
