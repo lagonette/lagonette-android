@@ -1,16 +1,24 @@
 package org.lagonette.android.app.arch;
 
-public class MutableLiveEvent<T> extends LiveEvent<T> {
+import android.support.annotation.NonNull;
 
-    public void postEvent(T value) {
-        super.postValue(value);
-    }
-
-    public void setEvent(T value) {
-        super.setValue(value);
-    }
+public class MutableLiveEvent<E>
+        extends LiveEvent<E>
+        implements EventShipper.Notifier,
+        EventShipper.Poster<E>,
+        EventShipper.Sender<E> {
 
     public void call() {
         setValue(null);
+    }
+
+    @Override
+    public void send(@NonNull E event) {
+        super.setValue(event);
+    }
+
+    @Override
+    public void post(@NonNull E event) {
+        super.postValue(event);
     }
 }
