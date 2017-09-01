@@ -27,7 +27,7 @@ public class PartnerDetailViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<Resource<PartnerDetailReader>> getPartnerDetailReaderLiveData() {
+    public LiveData<Resource<PartnerDetailReader>> getPartnerDetail() {
         return mPartnerDetailResourceLiveData;
     }
 }

@@ -63,7 +63,7 @@ public class MapsActivity
                 .get(SharedMapsActivityViewModel.class);
 
         viewModel
-                .getWorkInProgressLiveData()
+                .getWorkInProgress()
                 .observe(
                         MapsActivity.this,
                         workInProgress -> {
@@ -76,14 +76,14 @@ public class MapsActivity
                 );
 
         viewModel
-                .getMapIsReadyLiveEvent()
+                .getMapIsReady()
                 .observe(
                         MapsActivity.this,
                         aVoid -> mCoordinator.onMapReady()
                 );
 
         viewModel
-                .getEnableMyPositionFABLiveData()
+                .getEnableMyPositionFAB()
                 .observe(
                         MapsActivity.this,
                         enable -> {
@@ -96,7 +96,7 @@ public class MapsActivity
                 );
 
         viewModel
-                .getShowPartnerRequestLiveEvent()
+                .getShowPartnerRequest()
                 .observe(
                         MapsActivity.this,
                         request -> {

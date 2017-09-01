@@ -37,22 +37,22 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public LiveData<Boolean> getWorkInProgressLiveData() {
+    public LiveData<Boolean> getWorkInProgress() {
         return mWorkInProgressLiveData;
     }
 
     @NonNull
-    public LiveEvent<Void> getMapIsReadyLiveEvent() {
+    public LiveEvent<Void> getMapIsReady() {
         return mMapIsReadyLiveEvent;
     }
 
     @NonNull
-    public LiveData<Boolean> getEnableMyPositionFABLiveData() {
+    public LiveData<Boolean> getEnableMyPositionFAB() {
         return mEnableMyPositionFABLiveData;
     }
 
     @NonNull
-    public LiveEvent<ShowPartnerEvent> getShowPartnerRequestLiveEvent() {
+    public LiveEvent<ShowPartnerEvent> getShowPartnerRequest() {
         return mShowPartnerRequestLiveEvent;
     }
 
@@ -60,7 +60,7 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         mWorkInProgressLiveData.postValue(workInProgress);
     }
 
-    public void notifyMapIsReady() {
+    public void callMapIsReady() {
         mMapIsReadyLiveEvent.call();
     }
 

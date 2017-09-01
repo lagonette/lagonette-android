@@ -223,7 +223,7 @@ public class MapsFragment
         mMap = googleMap;
         setupMap();
         setupFootprint();
-        mActivityViewModel.notifyMapIsReady();
+        mActivityViewModel.callMapIsReady();
 
         mViewModel.getMapPartners().observe(
                 MapsFragment.this,
