@@ -12,19 +12,22 @@ import org.lagonette.android.app.arch.MutableLiveEvent;
 public class SharedMapsActivityViewModel extends AndroidViewModel {
 
     @NonNull
-    private MutableLiveData<Boolean> mWorkInProgressLiveData;
+    private final MutableLiveData<String> mSearch;
 
     @NonNull
-    private MutableLiveEvent<Void> mMapIsReadyLiveEvent;
+    private final MutableLiveData<Boolean> mWorkInProgressLiveData;
 
     @NonNull
-    private MutableLiveData<Boolean> mEnableMyPositionFABLiveData;
+    private final MutableLiveEvent<Void> mMapIsReadyLiveEvent;
 
     @NonNull
-    private MutableLiveEvent<ShowPartnerEvent> mShowPartnerRequestLiveEvent;
+    private final MutableLiveData<Boolean> mEnableMyPositionFABLiveData;
 
     @NonNull
-    private ShowPartnerEvent mShowPartnerEvent;
+    private final MutableLiveEvent<ShowPartnerEvent> mShowPartnerRequestLiveEvent;
+
+    @NonNull
+    private final ShowPartnerEvent mShowPartnerEvent;
 
     public SharedMapsActivityViewModel(Application application) {
         super(application);
@@ -34,6 +37,13 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         mShowPartnerRequestLiveEvent = new MutableLiveEvent<>();
 
         mShowPartnerEvent = new ShowPartnerEvent();
+        mSearch = new MutableLiveData<>();
+        mSearch.setValue(null);
+    }
+
+    @NonNull
+    public LiveData<String> getSearch() {
+        return mSearch;
     }
 
     @NonNull
@@ -54,6 +64,10 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     @NonNull
     public LiveEvent<ShowPartnerEvent> getShowPartnerRequest() {
         return mShowPartnerRequestLiveEvent;
+    }
+
+    public void search(@NonNull String search) {
+        mSearch.setValue(search);
     }
 
     public void setWorkInProgress(boolean workInProgress) {

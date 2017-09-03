@@ -56,11 +56,19 @@ public class FiltersFragment
                 filtersResource -> mFilterAdapter.setFilterReader(filtersResource.data) // TODO manage loading & error
         );
 
-
         mActivityViewModel = ViewModelProviders
                 .of(getActivity())
                 .get(SharedMapsActivityViewModel.class);
+
+        mActivityViewModel
+                .getSearch()
+                .observe(
+                        FiltersFragment.this,
+                        search -> mFiltersViewModel.getSearchLiveEvent().send(search)
+                );
     }
+
+    // TODO Fix category visibility
 
     @Nullable
     @Override
@@ -126,10 +134,6 @@ public class FiltersFragment
     public void LoadFilters() {
         // TODO
 //        mPresenter.loadFilters();
-    }
-
-    public void filterPartner(@NonNull String search) {
-        mFiltersViewModel.filterPartners(search);
     }
 
 }

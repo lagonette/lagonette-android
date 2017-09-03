@@ -38,8 +38,8 @@ import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 
 import org.json.JSONException;
 import org.lagonette.android.R;
-import org.lagonette.android.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.android.app.viewmodel.MapsViewModel;
+import org.lagonette.android.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.android.app.widget.maps.PartnerItem;
 import org.lagonette.android.app.widget.maps.PartnerRenderer;
 import org.lagonette.android.repo.Resource;
@@ -161,6 +161,15 @@ public class MapsFragment
         mActivityViewModel = ViewModelProviders
                 .of(getActivity())
                 .get(SharedMapsActivityViewModel.class);
+
+        mActivityViewModel
+                .getSearch()
+                .observe(
+                        MapsFragment.this,
+                        search -> mViewModel
+                                .getSearchSender()
+                                .send(search)
+                );
     }
 
     // TODO Use firebase to find broken data
@@ -503,10 +512,6 @@ public class MapsFragment
             default:
                 throw new IllegalArgumentException("Unknown request code: " + requestCode);
         }
-    }
-
-    public void filterPartner(@NonNull String search) {
-        mViewModel.filterPartners(search);
     }
 
     private void onLocationPermissionResult(@NonNull int[] grantResults) {

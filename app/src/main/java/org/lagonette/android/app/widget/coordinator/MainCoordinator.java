@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import com.google.android.gms.maps.GoogleMap;
 
 import org.lagonette.android.R;
+import org.lagonette.android.app.arch.EventShipper;
 import org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.room.statement.Statement;
@@ -58,8 +59,6 @@ public class MainCoordinator
         void moveOnMyLocation();
 
         void hideSoftKeyboard();
-
-        void doSearch(String search);
 
         void loadFilter();
 
@@ -140,10 +139,17 @@ public class MainCoordinator
     private BottomSheetBehavior<View> mBottomSheetBehavior;
 
     @NonNull
+    private final EventShipper.Sender<String> mSearchSender;
+
+    @NonNull
     private Callbacks mCallbacks;
 
-    public MainCoordinator(@NonNull Context context, @NonNull Callbacks callbacks) {
+    public MainCoordinator(
+            @NonNull Context context,
+            @NonNull EventShipper.Sender<String> searchSender,
+            @NonNull Callbacks callbacks) {
         super(context);
+        mSearchSender = searchSender;
         mCallbacks = callbacks;
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(context.getResources());
@@ -205,7 +211,7 @@ public class MainCoordinator
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        mCallbacks.doSearch(s.toString());
+                        mSearchSender.send(s.toString());
                     }
                 })
         );

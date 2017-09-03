@@ -28,6 +28,8 @@ public class MapsActivity
 
     private MainCoordinator mCoordinator;
 
+    private SharedMapsActivityViewModel mViewModel;
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.activity_maps);
@@ -40,13 +42,6 @@ public class MapsActivity
 
     @Override
     protected void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Maybe use LiveData to exchange info between Coordinator & Activity?
-        mCoordinator = new MainCoordinator(
-                MapsActivity.this,
-                MapsActivity.this
-        )
-                .injectView(findViewById(android.R.id.content))
-                .start(savedInstanceState);
 
         if (savedInstanceState == null) {
             mMapsFragment = MapsFragment.newInstance();
@@ -58,11 +53,11 @@ public class MapsActivity
                     .findFragmentByTag(MapsFragment.TAG);
         }
 
-        SharedMapsActivityViewModel viewModel = ViewModelProviders
+        mViewModel = ViewModelProviders
                 .of(MapsActivity.this)
                 .get(SharedMapsActivityViewModel.class);
 
-        viewModel
+        mViewModel
                 .getWorkInProgress()
                 .observe(
                         MapsActivity.this,
@@ -75,14 +70,14 @@ public class MapsActivity
                         }
                 );
 
-        viewModel
+        mViewModel
                 .getMapIsReady()
                 .observe(
                         MapsActivity.this,
                         aVoid -> mCoordinator.onMapReady()
                 );
 
-        viewModel
+        mViewModel
                 .getEnableMyPositionFAB()
                 .observe(
                         MapsActivity.this,
@@ -95,7 +90,7 @@ public class MapsActivity
                         }
                 );
 
-        viewModel
+        mViewModel
                 .getShowPartnerRequest()
                 .observe(
                         MapsActivity.this,
@@ -110,6 +105,15 @@ public class MapsActivity
                             }
                         }
                 );
+
+        // TODO Maybe use LiveData to exchange info between Coordinator & Activity?
+        mCoordinator = new MainCoordinator(
+                MapsActivity.this,
+                search -> mViewModel.search(search),
+                MapsActivity.this
+        )
+                .injectView(findViewById(android.R.id.content))
+                .start(savedInstanceState);
     }
 
     @Override
@@ -141,15 +145,7 @@ public class MapsActivity
         mCoordinator.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void doSearch(String search) {
-        mMapsFragment.filterPartner(search);
-        FiltersFragment filtersFragment = geFiltersFragment();
-        if (filtersFragment != null) {
-            //noinspection ConstantConditions
-            filtersFragment.filterPartner(search);
-        }
-    }
+    // TODO Fix progress bar
 
     @Override
     public void loadFilter() {

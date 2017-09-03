@@ -1,11 +1,10 @@
 package org.lagonette.android.app.viewmodel;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
+import org.lagonette.android.app.arch.MutableLiveEvent;
 import org.lagonette.android.locator.Repo;
 import org.lagonette.android.repo.Resource;
 import org.lagonette.android.room.reader.FilterReader;
@@ -13,24 +12,24 @@ import org.lagonette.android.room.reader.FilterReader;
 public class FiltersViewModel extends ViewModel {
 
     @NonNull
-    private MutableLiveData<String> mSearchLiveData;
+    private final MutableLiveEvent<String> mSearchLiveEvent;
 
     @NonNull
-    private LiveData<Resource<FilterReader>> mFiltersResourceLiveData;
+    private final LiveData<Resource<FilterReader>> mFiltersResourceLiveData;
 
     public FiltersViewModel() {
-        mSearchLiveData = new MutableLiveData<>();
-        mFiltersResourceLiveData = Repo.get().getFilters(mSearchLiveData);
-        filterPartners(null);
+        mSearchLiveEvent = new MutableLiveEvent<>();
+        mFiltersResourceLiveData = Repo.get().getFilters(mSearchLiveEvent);
+    }
+
+    @NonNull
+    public MutableLiveEvent<String> getSearchLiveEvent() {
+        return mSearchLiveEvent;
     }
 
     @NonNull
     public LiveData<Resource<FilterReader>> getFilters() {
         return mFiltersResourceLiveData;
-    }
-
-    public void filterPartners(@Nullable String search) {
-        mSearchLiveData.postValue(search);
     }
 
     public void setPartnerVisibility(long partnerId, boolean isVisible) {
