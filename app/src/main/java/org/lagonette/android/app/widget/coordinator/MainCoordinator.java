@@ -157,7 +157,8 @@ public class MainCoordinator
         mBottomSheetBackgroundColor = ContextCompat.getColor(context, android.R.color.background_light);
     }
 
-    public MainCoordinator injectView(@NonNull View view) {
+    @Override
+    public void inject(@NonNull View view) {
         mContentView = view.findViewById(R.id.content);
         mCoordinatorLayout = view.findViewById(R.id.coordinator_layout);
         mSearchBar = view.findViewById(R.id.search_bar);
@@ -167,10 +168,10 @@ public class MainCoordinator
         mBottomSheet = view.findViewById(R.id.bottom_sheet);
         mMyLocationFab = view.findViewById(R.id.my_location_fab);
         mFiltersFab = view.findViewById(R.id.filters_fab);
-        return MainCoordinator.this;
     }
 
-    public MainCoordinator start(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void start(@Nullable Bundle savedInstanceState) {
         mSearchBarVerticalMargin = setupSearchBarMargin();
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
@@ -220,8 +221,6 @@ public class MainCoordinator
 
         mMyLocationFab.setOnClickListener(MainCoordinator.this);
         mMyLocationFab.setOnLongClickListener(MainCoordinator.this);
-
-        return MainCoordinator.this;
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {

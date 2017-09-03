@@ -111,9 +111,9 @@ public class MapsActivity
                 MapsActivity.this,
                 search -> mViewModel.search(search),
                 MapsActivity.this
-        )
-                .injectView(findViewById(android.R.id.content))
-                .start(savedInstanceState);
+        );
+        mCoordinator.inject(findViewById(android.R.id.content));
+        mCoordinator.start(savedInstanceState);
     }
 
     @Override
