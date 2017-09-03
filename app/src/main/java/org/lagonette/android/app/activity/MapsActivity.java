@@ -110,6 +110,7 @@ public class MapsActivity
         mCoordinator = new MainCoordinator(
                 MapsActivity.this,
                 search -> mViewModel.search(search),
+                () -> SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this),
                 MapsActivity.this
         );
         mCoordinator.inject(findViewById(android.R.id.content));
@@ -222,11 +223,6 @@ public class MapsActivity
     public void moveOnMyLocation() {
         mMapsFragment.moveOnMyLocation();
 
-    }
-
-    @Override
-    public void hideSoftKeyboard() {
-        SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this);
     }
 
     @Nullable

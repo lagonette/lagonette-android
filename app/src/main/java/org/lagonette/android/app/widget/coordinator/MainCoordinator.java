@@ -58,8 +58,6 @@ public class MainCoordinator
 
         void moveOnMyLocation();
 
-        void hideSoftKeyboard();
-
         void loadFilter();
 
     }
@@ -142,14 +140,19 @@ public class MainCoordinator
     private final EventShipper.Sender<String> mSearchSender;
 
     @NonNull
+    private final EventShipper.Notifier mHideKeyboardNotifier;
+
+    @NonNull
     private Callbacks mCallbacks;
 
     public MainCoordinator(
             @NonNull Context context,
             @NonNull EventShipper.Sender<String> searchSender,
+            @NonNull EventShipper.Notifier hideKeyboardNotifier,
             @NonNull Callbacks callbacks) {
         super(context);
         mSearchSender = searchSender;
+        mHideKeyboardNotifier = hideKeyboardNotifier;
         mCallbacks = callbacks;
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(context.getResources());
@@ -550,7 +553,7 @@ public class MainCoordinator
 
     public void focusOnMap() {
         mSearchText.setCursorVisible(false);
-        mCallbacks.hideSoftKeyboard();
+        mHideKeyboardNotifier.call();
     }
 
     public void onMapReady() {
