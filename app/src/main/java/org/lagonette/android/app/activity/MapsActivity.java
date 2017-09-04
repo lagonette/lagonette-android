@@ -150,14 +150,6 @@ public class MapsActivity
     // TODO Fix progress bar
 
     @Override
-    public void loadFilter() {
-        FiltersFragment fragment = geFiltersFragment();
-        if (fragment != null) {
-            fragment.LoadFilters();
-        }
-    }
-
-    @Override
     public void updateMapPaddingTop(int paddingTop) {
         mMapsFragment.updateMapPaddingTop(paddingTop);
     }

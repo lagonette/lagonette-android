@@ -131,9 +131,4 @@ public class FiltersFragment
         // Yolo
     }
 
-    public void LoadFilters() {
-        // TODO
-//        mPresenter.loadFilters();
-    }
-
 }

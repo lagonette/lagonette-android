@@ -54,8 +54,6 @@ public class MainCoordinator
 
         void removeBottomSheetFragment();
 
-        void loadFilter();
-
     }
 
     @Retention(RetentionPolicy.SOURCE)
@@ -275,12 +273,13 @@ public class MainCoordinator
                 switchPartner(bottomSheet);
             }
 
-            if (mLoadFiltersAfterBottomSheetCollapsed) {
+            if (mLoadFiltersAfterBottomSheetCollapsed) { // TODO Maybe useless
                 mLoadFiltersAfterBottomSheetCollapsed = false;
-                mCallbacks.loadFilter();
             }
         }
     }
+
+    // TODO Show/hide Exchange office in filters ?
 
     public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         manageStatusBarPaddingOnBottomSheetSlide(bottomSheet);
