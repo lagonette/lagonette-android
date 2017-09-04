@@ -27,6 +27,7 @@ import org.lagonette.android.app.arch.EventShipper;
 import org.lagonette.android.app.widget.behavior.LaGonetteDisappearBehavior;
 import org.lagonette.android.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.android.room.statement.Statement;
+import org.lagonette.android.util.MapMovement;
 import org.lagonette.android.util.SearchUtil;
 import org.lagonette.android.util.UiUtil;
 
@@ -37,8 +38,7 @@ public class MainCoordinator
         extends ViewCoordinator
         implements ParallaxBehavior.OnParallaxTranslationListener,
         LaGonetteDisappearBehavior.OnMoveListener,
-        View.OnClickListener,
-        View.OnLongClickListener {
+        View.OnClickListener {
 
     public interface Callbacks {
 
@@ -53,10 +53,6 @@ public class MainCoordinator
         void replaceBottomSheetByFilters();
 
         void removeBottomSheetFragment();
-
-        void moveOnFootprint();
-
-        void moveOnMyLocation();
 
         void loadFilter();
 
@@ -140,6 +136,9 @@ public class MainCoordinator
     private final EventShipper.Sender<String> mSearchSender;
 
     @NonNull
+    private final EventShipper.Sender<Integer> mMapMovementSender;
+
+    @NonNull
     private final EventShipper.Notifier mHideKeyboardNotifier;
 
     @NonNull
@@ -148,10 +147,12 @@ public class MainCoordinator
     public MainCoordinator(
             @NonNull Context context,
             @NonNull EventShipper.Sender<String> searchSender,
+            @NonNull EventShipper.Sender<Integer> mapMovementSender,
             @NonNull EventShipper.Notifier hideKeyboardNotifier,
             @NonNull Callbacks callbacks) {
         super(context);
         mSearchSender = searchSender;
+        mMapMovementSender = mapMovementSender;
         mHideKeyboardNotifier = hideKeyboardNotifier;
         mCallbacks = callbacks;
 
@@ -222,8 +223,15 @@ public class MainCoordinator
 
         mSearchClear.setOnClickListener(MainCoordinator.this);
 
-        mMyLocationFab.setOnClickListener(MainCoordinator.this);
-        mMyLocationFab.setOnLongClickListener(MainCoordinator.this);
+        mMyLocationFab.setOnClickListener(
+                view -> mMapMovementSender.send(MapMovement.MY_LOCATION)
+        );
+        mMyLocationFab.setOnLongClickListener(
+                view -> {
+                    mMapMovementSender.send(MapMovement.FOOTPRINT);
+                    return true;
+                }
+        );
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -460,24 +468,9 @@ public class MainCoordinator
             case R.id.search_text:
                 onSearchTextClick();
                 break;
-            case R.id.my_location_fab:
-                mCallbacks.moveOnMyLocation();
-                break;
             case R.id.search_clear:
                 clearSearch();
                 break;
-            default:
-                throw new IllegalArgumentException("Unknown view id: " + id);
-        }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.my_location_fab:
-                mCallbacks.moveOnFootprint();
-                return true;
             default:
                 throw new IllegalArgumentException("Unknown view id: " + id);
         }

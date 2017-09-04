@@ -110,6 +110,7 @@ public class MapsActivity
         mCoordinator = new MainCoordinator(
                 MapsActivity.this,
                 search -> mViewModel.search(search),
+                mapMovement -> mViewModel.getMapMovementSender(),
                 () -> SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this),
                 MapsActivity.this
         );
@@ -212,17 +213,6 @@ public class MapsActivity
                     .commit();
             mBottomSheetFragment = null;
         }
-    }
-
-    @Override
-    public void moveOnFootprint() {
-        mMapsFragment.moveOnFootprint();
-    }
-
-    @Override
-    public void moveOnMyLocation() {
-        mMapsFragment.moveOnMyLocation();
-
     }
 
     @Nullable

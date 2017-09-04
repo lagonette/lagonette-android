@@ -45,6 +45,7 @@ import org.lagonette.android.app.widget.maps.PartnerRenderer;
 import org.lagonette.android.repo.Resource;
 import org.lagonette.android.room.reader.MapPartnerReader;
 import org.lagonette.android.room.statement.Statement;
+import org.lagonette.android.util.MapMovement;
 import org.lagonette.android.util.SharedPreferencesUtil;
 import org.lagonette.android.util.SnackbarUtil;
 import org.lagonette.android.util.UiUtil;
@@ -169,6 +170,26 @@ public class MapsFragment
                         search -> mViewModel
                                 .getSearchSender()
                                 .send(search)
+                );
+
+        mActivityViewModel
+                .getMapMovementEvent()
+                .observe(
+                        MapsFragment.this,
+                        integer -> {
+                            if (integer != null) {
+                                @MapMovement.Movement int mapMovement = integer;
+                                switch (mapMovement) {
+                                    case MapMovement.FOOTPRINT:
+                                        moveOnFootprint();
+                                        break;
+                                    case MapMovement.MY_LOCATION:
+                                    default:
+                                        moveOnMyLocation();
+                                        break;
+                                }
+                            }
+                        }
                 );
     }
 
@@ -421,7 +442,7 @@ public class MapsFragment
         }
     }
 
-    public void moveOnMyLocation() {
+    private void moveOnMyLocation() {
         Location lastLocation = getLastLocation();
         if (lastLocation != null) {
             mMap.animateCamera(
@@ -438,7 +459,7 @@ public class MapsFragment
         }
     }
 
-    public void moveOnFootprint() {
+    private void moveOnFootprint() {
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         new LatLng(
