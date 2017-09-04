@@ -36,7 +36,7 @@ public abstract class BackgroundWorker
     }
 
     @NonNull
-    public LiveData<WorkerResponse> getWorkerResponseLiveData() {
+    public LiveData<WorkerResponse> getWorkerResponse() {
         return mWorkerResponseLiveData;
     }
 

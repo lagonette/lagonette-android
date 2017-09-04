@@ -46,7 +46,7 @@ public abstract class ResourceAlgorithm<ResultType, Worker extends BackgroundWor
 
     private void updateData(final LiveData<ResultType> dbSource) {
         Worker worker = createWorker();
-        LiveData<WorkerResponse> workerSource = worker.getWorkerResponseLiveData();
+        LiveData<WorkerResponse> workerSource = worker.getWorkerResponse();
         // we re-attach dbSource as a new source,
         // it will dispatch its latest value quickly
         result.addSource(
@@ -56,12 +56,12 @@ public abstract class ResourceAlgorithm<ResultType, Worker extends BackgroundWor
                     result.removeSource(dbSource);
                     //noinspection ConstantConditions
                     if (response.isSuccessful()) {
-                        result.addSource(
+                        result.addSource( // TODO setValue is never called
                                 loadFromDb(), // Re init loader
                                 newData -> result.setValue(Resource.success(newData))
                         );
                     } else {
-                        onFetchFailed();
+                        onUpdateFailed();
                         result.addSource( // TODO is onChanged() really called ?
                                 dbSource,
                                 newData -> result.setValue(
@@ -94,7 +94,7 @@ public abstract class ResourceAlgorithm<ResultType, Worker extends BackgroundWor
     // Called when the fetch fails. The child class may want to reset components
     // like rate limiter.
     @MainThread
-    protected void onFetchFailed() {
+    protected void onUpdateFailed() {
     }
 
     // returns a LiveData that represents the resource
