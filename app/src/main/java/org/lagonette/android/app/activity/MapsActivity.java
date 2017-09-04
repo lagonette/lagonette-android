@@ -110,7 +110,7 @@ public class MapsActivity
         mCoordinator = new MainCoordinator(
                 MapsActivity.this,
                 search -> mViewModel.search(search),
-                mapMovement -> mViewModel.getMapMovementSender(),
+                mViewModel.getMapMovementSender(),
                 () -> SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this),
                 MapsActivity.this
         );
