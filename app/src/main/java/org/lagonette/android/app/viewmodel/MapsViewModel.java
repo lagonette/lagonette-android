@@ -12,19 +12,19 @@ import org.lagonette.android.room.reader.MapPartnerReader;
 
 public class MapsViewModel extends ViewModel {
 
-    private LiveData<Resource<MapPartnerReader>> mMapPartnersResourceLiveData;
+    private LiveData<Resource<MapPartnerReader>> mMapPartnersResource;
 
     private EventShipper.Sender<String> mSearchSender;
 
     public MapsViewModel() {
         MutableLiveEvent<String> searchLiveEvent = new MutableLiveEvent<>();
         mSearchSender = searchLiveEvent;
-        mMapPartnersResourceLiveData = Repo.get().getMapPartners(searchLiveEvent);
+        mMapPartnersResource = Repo.get().getMapPartners(searchLiveEvent);
     }
 
     @NonNull
     public LiveData<Resource<MapPartnerReader>> getMapPartners() {
-        return mMapPartnersResourceLiveData;
+        return mMapPartnersResource;
     }
 
     public EventShipper.Sender<String> getSearchSender() {

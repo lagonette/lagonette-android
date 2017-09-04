@@ -12,24 +12,24 @@ import org.lagonette.android.room.reader.FilterReader;
 public class FiltersViewModel extends ViewModel {
 
     @NonNull
-    private final MutableLiveEvent<String> mSearchLiveEvent;
+    private final MutableLiveEvent<String> mSearch;
 
     @NonNull
-    private final LiveData<Resource<FilterReader>> mFiltersResourceLiveData;
+    private final LiveData<Resource<FilterReader>> mFiltersResource;
 
     public FiltersViewModel() {
-        mSearchLiveEvent = new MutableLiveEvent<>();
-        mFiltersResourceLiveData = Repo.get().getFilters(mSearchLiveEvent);
+        mSearch = new MutableLiveEvent<>();
+        mFiltersResource = Repo.get().getFilters(mSearch);
     }
 
     @NonNull
-    public MutableLiveEvent<String> getSearchLiveEvent() {
-        return mSearchLiveEvent;
+    public MutableLiveEvent<String> getSearch() {
+        return mSearch;
     }
 
     @NonNull
     public LiveData<Resource<FilterReader>> getFilters() {
-        return mFiltersResourceLiveData;
+        return mFiltersResource;
     }
 
     public void setPartnerVisibility(long partnerId, boolean isVisible) {

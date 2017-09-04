@@ -12,22 +12,22 @@ import org.lagonette.android.room.reader.PartnerDetailReader;
 public class PartnerDetailViewModel extends ViewModel {
 
     @NonNull
-    private LiveData<Resource<PartnerDetailReader>> mPartnerDetailResourceLiveData;
+    private LiveData<Resource<PartnerDetailReader>> mPartnerDetailResource;
 
     @NonNull
-    private MutableLiveData<Long> mPartnerIdLiveData;
+    private MutableLiveData<Long> mPartnerId;
 
     public PartnerDetailViewModel() {
-        mPartnerIdLiveData = new MutableLiveData<>();
-        mPartnerDetailResourceLiveData = Repo.get().getPartnerDetail(mPartnerIdLiveData);
+        mPartnerId = new MutableLiveData<>();
+        mPartnerDetailResource = Repo.get().getPartnerDetail(mPartnerId);
     }
 
     public void setPartnerId(long partnerId) {
-        mPartnerIdLiveData.postValue(partnerId);
+        mPartnerId.postValue(partnerId);
     }
 
     @NonNull
     public LiveData<Resource<PartnerDetailReader>> getPartnerDetail() {
-        return mPartnerDetailResourceLiveData;
+        return mPartnerDetailResource;
     }
 }

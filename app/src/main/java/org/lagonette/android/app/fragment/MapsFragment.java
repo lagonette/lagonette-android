@@ -173,7 +173,7 @@ public class MapsFragment
                 );
 
         mActivityViewModel
-                .getMapMovementEvent()
+                .getMapMovement()
                 .observe(
                         MapsFragment.this,
                         integer -> {

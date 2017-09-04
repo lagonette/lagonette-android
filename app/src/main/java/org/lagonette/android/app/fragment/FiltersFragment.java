@@ -64,7 +64,7 @@ public class FiltersFragment
                 .getSearch()
                 .observe(
                         FiltersFragment.this,
-                        search -> mFiltersViewModel.getSearchLiveEvent().send(search)
+                        search -> mFiltersViewModel.getSearch().send(search)
                 );
     }
 
