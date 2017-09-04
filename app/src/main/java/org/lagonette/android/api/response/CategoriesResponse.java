@@ -50,7 +50,7 @@ public class CategoriesResponse extends ApiResponse {
     }
 
     private void addOfficeCategory(@NonNull List<org.lagonette.android.room.entity.Category> categories, @NonNull List<CategoryMetadata> categoryMetadataList) {
-        categories.add(new OfficeCategory());
-        categoryMetadataList.add(new OfficeCategoryMetadata());
+//        categories.add(new OfficeCategory());
+//        categoryMetadataList.add(new OfficeCategoryMetadata());
     }
 }

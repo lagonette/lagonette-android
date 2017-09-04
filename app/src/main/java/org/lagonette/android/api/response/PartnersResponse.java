@@ -92,7 +92,7 @@ public class PartnersResponse extends ApiResponse {
     }
 
     private void addOfficePartner(@NonNull List<org.lagonette.android.room.entity.Partner> partners, @NonNull List<PartnerMetadata> partnerMetadataList) {
-        partners.add(new OfficePartner());
-        partnerMetadataList.add(new OfficePartnerMetadata());
+//        partners.add(new OfficePartner());
+//        partnerMetadataList.add(new OfficePartnerMetadata());
     }
 }
