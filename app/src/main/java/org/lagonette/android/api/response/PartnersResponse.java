@@ -75,6 +75,13 @@ public class PartnersResponse extends ApiResponse {
                 send = true;
                 FirebaseCrash.logcat(Log.WARN, TAG, "Empty short description " + partner.name + " (" + partner.id + ")" );
             }
+
+            if (TextUtils.isEmpty(partner.address.street)
+                    || TextUtils.isEmpty(partner.address.city)
+                    || TextUtils.isEmpty(partner.address.zipCode)) {
+                send = true;
+                FirebaseCrash.logcat(Log.WARN, TAG, "Empty address " + partner.name + " (" + partner.id + ")" );
+            }
         }
 
         if (send) {
