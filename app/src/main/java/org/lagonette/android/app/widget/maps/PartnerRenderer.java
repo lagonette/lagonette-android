@@ -1,6 +1,7 @@
 package org.lagonette.android.app.widget.maps;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -42,6 +43,8 @@ public class PartnerRenderer
 
     private final int mItemSize;
 
+    private final int mItemPadding;
+
     @NonNull
     private final IconGenerator mIconGenerator;
 
@@ -71,7 +74,10 @@ public class PartnerRenderer
         mPartnerBitmapDescriptors = new SparseArray<>();
         mExchangeOfficeBitmapDescriptors = new SparseArray<>();
 
-        mItemSize = context.getResources().getDimensionPixelSize(R.dimen.map_item_size);
+        Resources resources = context.getResources();
+        mItemSize = resources.getDimensionPixelSize(R.dimen.map_item_size);
+        mItemPadding = resources.getDimensionPixelSize(R.dimen.map_item_padding);
+
         Context appContext = context.getApplicationContext();
 
         mIconGenerator = new IconGenerator(appContext);
@@ -82,6 +88,7 @@ public class PartnerRenderer
         mClusterIconGenerator.setBackground(null);
 
         mPartnerView = (ImageView) layoutInflater.inflate(R.layout.item_partner, null);
+        mPartnerView.setPadding(mItemPadding, mItemPadding, mItemPadding, mItemPadding);
 
         mPartnerBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_partner);
         mPartnerView.setBackground(mPartnerBackgroundDrawable);
@@ -97,6 +104,8 @@ public class PartnerRenderer
 
         setMinClusterSize(MIN_CLUSTER_SIZE);
     }
+
+    // TODO Display just a point instead of logo when zoom is huge
 
     @Override
     protected void onBeforeClusterItemRendered(
@@ -151,6 +160,8 @@ public class PartnerRenderer
                 .flat(true);
     }
 
+    // TODO Check, remake, improve and so on
+
     @Override
     public void onItemBitmapReady(
             @NonNull PartnerItem partnerItem,
@@ -166,6 +177,7 @@ public class PartnerRenderer
 
         if (bitmapDescriptor == null) { // TODO Not tested yet.
             mPartnerView.setImageBitmap(bitmap);
+            mPartnerView.setPadding(mItemPadding, mItemPadding, mItemPadding, mItemPadding);
             mPartnerView.setBackground(
                     partnerItem.isExchangeOffice()
                             ? mExchangeOfficeBackgroundDrawable

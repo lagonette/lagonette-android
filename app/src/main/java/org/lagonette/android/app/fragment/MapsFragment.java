@@ -595,6 +595,8 @@ public class MapsFragment
                 .show();
     }
 
+
+    // TODO Useless
     public interface Callback {
 
         void hideMyLocationButton();
