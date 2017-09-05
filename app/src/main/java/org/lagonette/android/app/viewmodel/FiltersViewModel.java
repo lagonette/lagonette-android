@@ -1,10 +1,11 @@
 package org.lagonette.android.app.viewmodel;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
-import org.lagonette.android.app.arch.MutableLiveEvent;
+import org.lagonette.android.app.arch.EventShipper;
 import org.lagonette.android.locator.Repo;
 import org.lagonette.android.repo.Resource;
 import org.lagonette.android.room.reader.FilterReader;
@@ -12,19 +13,19 @@ import org.lagonette.android.room.reader.FilterReader;
 public class FiltersViewModel extends ViewModel {
 
     @NonNull
-    private final MutableLiveEvent<String> mSearch;
+    private final MutableLiveData<String> mSearch;
 
     @NonNull
     private final LiveData<Resource<FilterReader>> mFiltersResource;
 
     public FiltersViewModel() {
-        mSearch = new MutableLiveEvent<>();
+        mSearch = new MutableLiveData<>();
         mFiltersResource = Repo.get().getFilters(mSearch);
     }
 
     @NonNull
-    public MutableLiveEvent<String> getSearch() {
-        return mSearch;
+    public EventShipper.Sender<String> getSearch() {
+        return search -> mSearch.postValue(search);
     }
 
     @NonNull

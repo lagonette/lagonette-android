@@ -42,7 +42,7 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         mMapMovement = new MutableLiveEvent<>();
 
         mSearch = new MutableLiveData<>();
-        mSearch.setValue(null);
+        mSearch.postValue(""); // TODO Not sure if usefull
 
         mShowPartnerEvent = new ShowPartnerEvent();
     }

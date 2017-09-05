@@ -51,10 +51,12 @@ public class FiltersFragment
                 .of(FiltersFragment.this)
                 .get(FiltersViewModel.class);
 
-        mFiltersViewModel.getFilters().observe(
-                FiltersFragment.this,
-                filtersResource -> mFilterAdapter.setFilterReader(filtersResource.data) // TODO manage loading & error
-        );
+        mFiltersViewModel
+                .getFilters()
+                .observe(
+                        FiltersFragment.this,
+                        filtersResource -> mFilterAdapter.setFilterReader(filtersResource.data) // TODO manage loading & error
+                );
 
         mActivityViewModel = ViewModelProviders
                 .of(getActivity())

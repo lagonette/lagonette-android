@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.lagonette.android.app.arch.DbLiveData;
-import org.lagonette.android.app.arch.LiveEvent;
 import org.lagonette.android.locator.DB;
 import org.lagonette.android.room.database.LaGonetteDatabase;
 import org.lagonette.android.room.reader.FilterReader;
@@ -34,7 +33,7 @@ public class MainRepo {
         mShouldFetch = true;
     }
 
-    public LiveData<Resource<MapPartnerReader>> getMapPartners(@NonNull LiveEvent<String> searchLiveEvent) {
+    public LiveData<Resource<MapPartnerReader>> getMapPartners(@NonNull LiveData<String> searchLiveEvent) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldFetch,

@@ -168,7 +168,7 @@ public class MapsFragment
                 .observe(
                         MapsFragment.this,
                         search -> mViewModel
-                                .getSearchSender()
+                                .getSearch()
                                 .send(search)
                 );
 
