@@ -63,24 +63,32 @@ public class PartnersResponse extends ApiResponse {
         for (org.lagonette.android.room.entity.Partner partner : partners) {
             if (partner.latitude == 0 || partner.longitude == 0) {
                 send = true;
-                FirebaseCrash.logcat(Log.WARN, TAG, "Wrong coordinates " + partner.name + " (" + partner.id + "): (" + partner.latitude + ", " + partner.longitude + ")" );
+                FirebaseCrash.logcat(Log.WARN, TAG, "Wrong coordinates: [ id: " + partner.id + ", name: " + partner.name + "]");
             }
 
             if (TextUtils.isEmpty(partner.description)) {
                 send = true;
-                FirebaseCrash.logcat(Log.WARN, TAG, "Empty description " + partner.name + " (" + partner.id + ")" );
+                FirebaseCrash.logcat(Log.WARN, TAG, "Empty description: [id: " + partner.id + ", name: " + partner.name + "]" );
+            }
+            else {
+                String trimmedDescription = partner.description.trim();
+                if (trimmedDescription.length() != partner.description.length()) {
+                    send = true;
+                    partner.description = trimmedDescription;
+                    FirebaseCrash.logcat(Log.WARN, TAG, "Description with extra spaces: [id: " + partner.id + ", name: " + partner.name + "]");
+                }
             }
 
             if (TextUtils.isEmpty(partner.shortDescription)) {
                 send = true;
-                FirebaseCrash.logcat(Log.WARN, TAG, "Empty short description " + partner.name + " (" + partner.id + ")" );
+                FirebaseCrash.logcat(Log.WARN, TAG, "Empty short description: [id: " + partner.id + ", name: " + partner.name + "]" );
             }
 
             if (TextUtils.isEmpty(partner.address.street)
                     || TextUtils.isEmpty(partner.address.city)
                     || TextUtils.isEmpty(partner.address.zipCode)) {
                 send = true;
-                FirebaseCrash.logcat(Log.WARN, TAG, "Empty address " + partner.name + " (" + partner.id + ")" );
+                FirebaseCrash.logcat(Log.WARN, TAG, "Empty address: [id: " + partner.id + ", name: " + partner.name + "]" );
             }
         }
 
