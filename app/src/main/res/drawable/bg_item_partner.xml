@@ -9,6 +9,9 @@
                 android:width="2dp"
                 android:color="#E6411C"/>
 
+            <solid
+                android:color="#00000000"/>
+
             <size
                 android:width="16dp"
                 android:height="16dp"/>
