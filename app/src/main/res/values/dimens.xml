@@ -10,7 +10,6 @@
     <dimen name="search_bar_margin_bottom">0dp</dimen>
 
     <dimen name="map_item_size">16dp</dimen>
-    <dimen name="map_item_padding">2dp</dimen>
 
     <dimen name="filters_category_icon_size">24dp</dimen>
     <dimen name="filters_category_size">28dp</dimen>

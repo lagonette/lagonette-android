@@ -43,13 +43,14 @@ public class PartnerRenderer
 
     private final int mItemSize;
 
-    private final int mItemPadding;
-
     @NonNull
     private final IconGenerator mIconGenerator;
 
     @NonNull
-    private final ImageView mPartnerView;
+    private final View mPartnerView;
+
+    @NonNull
+    private final ImageView mPartnerIconView;
 
     @NonNull
     private final Drawable mPartnerBackgroundDrawable;
@@ -76,7 +77,6 @@ public class PartnerRenderer
 
         Resources resources = context.getResources();
         mItemSize = resources.getDimensionPixelSize(R.dimen.map_item_size);
-        mItemPadding = resources.getDimensionPixelSize(R.dimen.map_item_padding);
 
         Context appContext = context.getApplicationContext();
 
@@ -87,8 +87,8 @@ public class PartnerRenderer
         mClusterIconGenerator.setContentView(clusterView);
         mClusterIconGenerator.setBackground(null);
 
-        mPartnerView = (ImageView) layoutInflater.inflate(R.layout.item_partner, null);
-        mPartnerView.setPadding(mItemPadding, mItemPadding, mItemPadding, mItemPadding);
+        mPartnerView = layoutInflater.inflate(R.layout.item_partner, null);
+        mPartnerIconView = mPartnerView.findViewById(R.id.item_partner_icon);
 
         mPartnerBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_partner);
         mPartnerView.setBackground(mPartnerBackgroundDrawable);
@@ -176,8 +176,7 @@ public class PartnerRenderer
         BitmapDescriptor bitmapDescriptor = bitmapDescriptors.get(categoryId);
 
         if (bitmapDescriptor == null) { // TODO Not tested yet.
-            mPartnerView.setImageBitmap(bitmap);
-            mPartnerView.setPadding(mItemPadding, mItemPadding, mItemPadding, mItemPadding);
+            mPartnerIconView.setImageBitmap(bitmap);
             mPartnerView.setBackground(
                     partnerItem.isExchangeOffice()
                             ? mExchangeOfficeBackgroundDrawable

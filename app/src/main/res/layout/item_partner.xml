@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView
+<FrameLayout
+    android:id="@+id/item_partner_background"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="16dp"
     android:layout_height="16dp"
-    android:background="@drawable/bg_item_partner"
-    android:maxHeight="16dp"
-    android:maxWidth="16dp"
-    android:src="@drawable/img_item_default"
-    tools:padding="2dp"/>
+    android:background="@drawable/bg_item_partner">
+
+    <ImageView
+        android:id="@+id/item_partner_icon"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_margin="2dp"
+        android:src="@drawable/img_item_default"/>
+
+</FrameLayout>

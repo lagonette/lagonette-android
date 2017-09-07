@@ -369,7 +369,7 @@ public class MapsFragment
             }
             footprintLayer.addLayerToMap();
         } catch (IOException | JSONException e) {
-            Log.e(TAG, "onMapReady: " + e.getMessage(), e);
+            Log.e(TAG, "setupFootprint: " + e.getMessage(), e);
             FirebaseCrash.report(e);
         }
     }
