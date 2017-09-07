@@ -61,11 +61,6 @@ public class PartnersResponse extends ApiResponse {
     private void doSomeCheck(@NonNull List<org.lagonette.android.room.entity.Partner> partners) {
         boolean send = false;
         for (org.lagonette.android.room.entity.Partner partner : partners) {
-
-
-            Log.d(TAG, "doSomeCheck: [id: " + partner.id + ", name: " + partner.name + ", coord: (" + partner.latitude + ", " + partner.longitude + ")]");
-
-
             if (partner.latitude == 0 || partner.longitude == 0) {
                 send = true;
                 FirebaseCrash.logcat(Log.WARN, TAG, "Wrong coordinates: [ id: " + partner.id + ", name: " + partner.name + "]");
