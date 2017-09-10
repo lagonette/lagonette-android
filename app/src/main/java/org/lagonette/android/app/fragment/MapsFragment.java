@@ -107,10 +107,6 @@ public class MapsFragment
 
     private long mSelectedMarkerId = Statement.NO_ID;
 
-    private int mTopPadding;
-
-    private int mBottomPadding;
-
     private GoogleApiClient mGoogleApiClient;
 
     private Location mLastLocation;
@@ -259,6 +255,18 @@ public class MapsFragment
                 MapsFragment.this,
                 this::dispatchPartnersResource
         );
+
+        mActivityViewModel
+                .getMapPadding()
+                .observe(
+                        MapsFragment.this,
+                        paddings -> mMap.setPadding(
+                                paddings[0],
+                                paddings[1],
+                                paddings[2],
+                                paddings[3]
+                        )
+                );
     }
 
     @Override
@@ -418,27 +426,6 @@ public class MapsFragment
             mSelectedMarker.remove();
             mSelectedMarker = null;
             mSelectedMarkerId = Statement.NO_ID;
-        }
-    }
-
-    public void updateMapPaddingTop(int paddingTop) {
-        mTopPadding = paddingTop;
-        updateMapPadding();
-    }
-
-    public void updateMapPaddingBottom(int bottomPadding) {
-        mBottomPadding = bottomPadding;
-        updateMapPadding();
-    }
-
-    private void updateMapPadding() {
-        if (mMap != null) {
-            mMap.setPadding(
-                    0,
-                    mTopPadding,
-                    0,
-                    mBottomPadding
-            );
         }
     }
 

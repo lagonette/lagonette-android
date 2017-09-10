@@ -106,12 +106,15 @@ public class MapsActivity
                         }
                 );
 
+        // TODO Maybe make interface to send data xor just observe data, like LiveEvent but for LiveData
         // TODO Maybe use LiveData to exchange info between Coordinator & Activity?
         mCoordinator = new MainCoordinator(
                 MapsActivity.this,
                 search -> mViewModel.search(search),
                 mViewModel.getMapMovementSender(),
                 () -> SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this),
+                topPadding ->  mViewModel.getMapTopPadding().setValue(topPadding),
+                bottomPadding ->  mViewModel.getMapBottomPadding().setValue(bottomPadding),
                 MapsActivity.this
         );
         mCoordinator.inject(findViewById(android.R.id.content));
@@ -145,18 +148,6 @@ public class MapsActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mCoordinator.onSaveInstanceState(outState);
-    }
-
-    // TODO Fix progress bar
-
-    @Override
-    public void updateMapPaddingTop(int paddingTop) {
-        mMapsFragment.updateMapPaddingTop(paddingTop);
-    }
-
-    @Override
-    public void updateMapPaddingBottom(int paddingBottom) {
-        mMapsFragment.updateMapPaddingBottom(paddingBottom);
     }
 
     @Override

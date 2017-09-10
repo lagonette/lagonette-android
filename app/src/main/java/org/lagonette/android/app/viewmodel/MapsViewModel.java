@@ -1,6 +1,7 @@
 package org.lagonette.android.app.viewmodel;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
@@ -12,9 +13,9 @@ import org.lagonette.android.room.reader.MapPartnerReader;
 
 public class MapsViewModel extends ViewModel {
 
-    private LiveData<Resource<MapPartnerReader>> mMapPartnersResource;
+    private final LiveData<Resource<MapPartnerReader>> mMapPartnersResource;
 
-    private MutableLiveData<String> mSearch;
+    private final MutableLiveData<String> mSearch;
 
     public MapsViewModel() {
         mSearch = new MutableLiveData<>();
@@ -26,6 +27,7 @@ public class MapsViewModel extends ViewModel {
         return mMapPartnersResource;
     }
 
+    @NonNull
     public EventShipper.Sender<String> getSearch() {
         return search -> mSearch.setValue(search);
     }

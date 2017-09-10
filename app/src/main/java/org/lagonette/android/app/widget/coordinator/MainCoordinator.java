@@ -42,10 +42,6 @@ public class MainCoordinator
 
     public interface Callbacks {
 
-        void updateMapPaddingTop(int paddingTop);
-
-        void updateMapPaddingBottom(int paddingBottom);
-
         void showPartner(long partnerId, boolean zoom, @Nullable GoogleMap.CancelableCallback callback);
 
         void replaceBottomSheetByPartnerDetails(long partnerId, boolean b);
@@ -140,6 +136,12 @@ public class MainCoordinator
     private final EventShipper.Notifier mHideKeyboardNotifier;
 
     @NonNull
+    private final EventShipper.Sender<Integer> mMapBottomPaddingSender;
+
+    @NonNull
+    private final EventShipper.Sender<Integer> mMapTopPaddingSender;
+
+    @NonNull
     private Callbacks mCallbacks;
 
     public MainCoordinator(
@@ -147,11 +149,15 @@ public class MainCoordinator
             @NonNull EventShipper.Sender<String> searchSender,
             @NonNull EventShipper.Sender<Integer> mapMovementSender,
             @NonNull EventShipper.Notifier hideKeyboardNotifier,
+            @NonNull EventShipper.Sender<Integer> mapTopPaddingSender,
+            @NonNull EventShipper.Sender<Integer> mapBottomPaddingSender,
             @NonNull Callbacks callbacks) {
         super(context);
         mSearchSender = searchSender;
         mMapMovementSender = mapMovementSender;
         mHideKeyboardNotifier = hideKeyboardNotifier;
+        mMapTopPaddingSender = mapTopPaddingSender;
+        mMapBottomPaddingSender = mapBottomPaddingSender;
         mCallbacks = callbacks;
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(context.getResources());
@@ -440,12 +446,12 @@ public class MainCoordinator
     }
 
     public void updateMapPaddingTop() {
-        mCallbacks.updateMapPaddingTop(mParallaxMapsPaddingTop + mSearchBarMapsPaddingTop);
+        mMapTopPaddingSender.send(mParallaxMapsPaddingTop + mSearchBarMapsPaddingTop);
     }
 
-    // TODO useless ?
+    // TODO useless ? Make the google logo move agqin!
     public void updateMapPaddingBottom() {
-        mCallbacks.updateMapPaddingBottom(mParallaxMapsPaddingTop);
+        mMapBottomPaddingSender.send(mParallaxMapsPaddingTop);
     }
 
     public boolean onBackPressed() {
