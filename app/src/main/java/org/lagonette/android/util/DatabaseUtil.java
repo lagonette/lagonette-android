@@ -9,7 +9,7 @@ public final class DatabaseUtil {
 
     public static final String DATABASE_NAME = "la_gonette.db";
 
-    public static final int DATABASE_NUMBER = 2;
+    public static final int DATABASE_NUMBER = 3;
 
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override

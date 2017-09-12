@@ -40,3 +40,7 @@ proguard-project.txt
 
 #Other
 .DS_Store
+
+#Keystore
+keystore.jks
+keystore.properties
