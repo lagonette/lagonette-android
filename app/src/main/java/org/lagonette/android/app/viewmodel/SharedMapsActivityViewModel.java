@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import org.lagonette.android.app.arch.EventShipper;
 import org.lagonette.android.app.arch.LiveEvent;
 import org.lagonette.android.app.arch.MutableLiveEvent;
+import org.lagonette.android.util.IntegerUtil;
 
 public class SharedMapsActivityViewModel extends AndroidViewModel {
 
@@ -41,7 +42,7 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> mMapBottomPadding;
 
     @NonNull
-    private final MediatorLiveData<Integer[]> mMapPadding;
+    private final MediatorLiveData<int[]> mMapPadding;
 
     public SharedMapsActivityViewModel(Application application) {
         super(application);
@@ -59,27 +60,22 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
 
         mSearch.postValue(""); // TODO Not sure if usefull
 
+        mMapPadding.setValue(new int[] {0,0,0,0});
         mMapPadding.addSource(
                 mMapTopPadding,
-                topPadding -> mMapPadding.setValue(
-                        new Integer[] {
-                                0,
-                                topPadding,
-                                0,
-                                mMapBottomPadding.getValue()
-                        }
-                )
+                topPadding -> {
+                    int[] paddings = mMapPadding.getValue();
+                    paddings[1] = IntegerUtil.intValue(topPadding);
+                    mMapPadding.setValue(paddings);
+                }
         );
         mMapPadding.addSource(
                 mMapBottomPadding,
-                bottomPadding -> mMapPadding.setValue(
-                        new Integer[] {
-                                0,
-                                mMapTopPadding.getValue(),
-                                0,
-                                bottomPadding
-                        }
-                )
+                bottomPadding -> {
+                    int[] paddings = mMapPadding.getValue();
+                    paddings[3] = IntegerUtil.intValue(bottomPadding);
+                    mMapPadding.setValue(paddings);
+                }
         );
     }
 
@@ -129,7 +125,7 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public LiveData<Integer[]> getMapPadding() {
+    public LiveData<int[]> getMapPadding() {
         return mMapPadding;
     }
 
