@@ -1,0 +1,152 @@
+{
+  "project_info": {
+    "project_number": "345639139818",
+    "firebase_url": "https://la-gonette-f0838.firebaseio.com",
+    "project_id": "la-gonette-f0838",
+    "storage_bucket": "la-gonette-f0838.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345639139818:android:5de57e631ab867a8",
+        "android_client_info": {
+          "package_name": "org.lagonette.android.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345639139818-t0gb4hms6f4m2maq0dhk3ufcd3arb6a5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.lagonette.android.debug",
+            "certificate_hash": "cbf8ba27136bea9293fe9be3bf6c6f6ac788cee5"
+          }
+        },
+        {
+          "client_id": "345639139818-0ikl9b44ek494jgjnhs9oc497raet61e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCBftefAedvYFPcD1DdYKYAm24dnGAGKo"
+        },
+        {
+          "current_key": "AIzaSyCPk1LLNvoBaUu7yKeKB1tWPGhDta3QvOw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345639139818-0ikl9b44ek494jgjnhs9oc497raet61e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345639139818:android:4415bcad8a37b32d",
+        "android_client_info": {
+          "package_name": "org.lagonette.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345639139818-1rq9hqn85a3uilaoddubferv31nhe04b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.lagonette.android",
+            "certificate_hash": "6d87d3bb364de04890d1c32528faa95baf647f80"
+          }
+        },
+        {
+          "client_id": "345639139818-0ikl9b44ek494jgjnhs9oc497raet61e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCBftefAedvYFPcD1DdYKYAm24dnGAGKo"
+        },
+        {
+          "current_key": "AIzaSyCPk1LLNvoBaUu7yKeKB1tWPGhDta3QvOw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345639139818-0ikl9b44ek494jgjnhs9oc497raet61e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345639139818:android:94dc64dc7a4ddcb2",
+        "android_client_info": {
+          "package_name": "org.lagonette.android.prod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345639139818-nbgp3a5jbja3u88mt60c05itg9fskdi0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.lagonette.android.prod",
+            "certificate_hash": "6d87d3bb364de04890d1c32528faa95baf647f80"
+          }
+        },
+        {
+          "client_id": "345639139818-0ikl9b44ek494jgjnhs9oc497raet61e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCBftefAedvYFPcD1DdYKYAm24dnGAGKo"
+        },
+        {
+          "current_key": "AIzaSyCPk1LLNvoBaUu7yKeKB1tWPGhDta3QvOw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345639139818-0ikl9b44ek494jgjnhs9oc497raet61e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

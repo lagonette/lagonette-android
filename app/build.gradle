@@ -51,7 +51,16 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
 
-            buildConfigField "String", "CONTENT_AUTHORITY", "\"${defaultConfig.applicationId}${applicationIdSuffix}.content\"" // TODO Remove?
+            buildConfigField "boolean", "LOG_SQL", "true"
+        }
+        prod.initWith(buildTypes.release)
+        prod {
+            applicationIdSuffix ".prod"
+            versionNameSuffix "-prod"
+
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release // TODO really usefull ?
 
             buildConfigField "boolean", "LOG_SQL", "true"
         }
@@ -59,9 +68,8 @@ android {
             minifyEnabled true
             shrinkResources false //TODO
             signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField "String", "CONTENT_AUTHORITY", "\"${defaultConfig.applicationId}.content\""
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             buildConfigField "boolean", "LOG_SQL", "false"
         }

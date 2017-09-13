@@ -37,7 +37,6 @@ public class LaGonetteApplication
                                 LaGonetteDatabase.class,
                                 DatabaseUtil.DATABASE_NAME
                         )
-                        .addMigrations(DatabaseUtil.MIGRATION_1_2)
                         .build()
         );
 
