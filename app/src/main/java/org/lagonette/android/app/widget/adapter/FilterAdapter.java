@@ -13,35 +13,20 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import org.lagonette.android.R;
+import org.lagonette.android.app.widget.viewholder.CategoryViewHolder;
+import org.lagonette.android.app.widget.viewholder.FooterViewHolder;
+import org.lagonette.android.app.widget.viewholder.LoadingViewHolder;
+import org.lagonette.android.app.widget.viewholder.PartnerViewHolder;
+import org.lagonette.android.app.widget.viewholder.ShortcutViewHolder;
 import org.lagonette.android.room.reader.FilterReader;
 import org.lagonette.android.room.statement.FilterStatement;
 import org.lagonette.android.util.AdapterUtil;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    public interface OnFilterClickListener {
-
-        void onPartnerClick(@NonNull PartnerViewHolder holder);
-
-        void onCategoryVisibilityClick(@NonNull CategoryViewHolder holder);
-
-        void onCategoryCollapsedClick(@NonNull CategoryViewHolder holder);
-
-        void onPartnerVisibilityClick(@NonNull PartnerViewHolder holder);
-
-        void onPartnerShortcutClick(@NonNull ShortcutViewHolder holder);
-
-        void onExchangeOfficeShortcutClick(@NonNull ShortcutViewHolder holder);
-
-        void onLaGonetteShortcutClick(@NonNull ShortcutViewHolder holder);
-    }
 
     private static final String TAG = "FilterAdapter";
 
@@ -54,9 +39,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int ROW_TYPE_SHORTCUT = ROW_TYPE_LOADING + 1;
 
     public static final int ROW_TYPE_COUNT = FilterStatement.ROW_TYPE_COUNT + 2;
-
-    @NonNull
-    private final StringBuilder mStringBuilder;
 
     @NonNull
     private final Drawable mPartnerIndicatorImage;
@@ -76,12 +58,27 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private FilterReader mFilterReader;
 
     @Nullable
-    private OnFilterClickListener mOnFilterClickListener;
+    private PartnerViewHolder.OnClickListener mOnPartnerClickListener;
 
-    public FilterAdapter(@NonNull Context context, @NonNull Resources resources, @Nullable OnFilterClickListener onFilterClickListener) {
-        mStringBuilder = new StringBuilder();
-        mOnFilterClickListener = onFilterClickListener;
+    @Nullable
+    private PartnerViewHolder.OnVisibilityClickListener mOnPartnerVisibilityClickListener;
 
+    @Nullable
+    private CategoryViewHolder.OnCollapsedClickListener mOnCategoryCollapsedClickListener;
+
+    @Nullable
+    private CategoryViewHolder.OnVisibilityClickListener mOnCategoryVisibilityClickListener;
+
+    @Nullable
+    private ShortcutViewHolder.OnPartnerClickListener mOnPartnerShortcutClickListener;
+
+    @Nullable
+    private ShortcutViewHolder.OnExchangeOfficeClickListener mOnExchangeOfficeShortcutClickListener;
+
+    @Nullable
+    private ShortcutViewHolder.OnOfficeClickListener mOfficeShortcutClickListener;
+
+    public FilterAdapter(@NonNull Context context, @NonNull Resources resources) {
         mCategoryIconSize = resources.getDimensionPixelSize(R.dimen.filters_category_icon_size);
 
         mPartnerMainBackgroundColor = ContextCompat.getColor(context, R.color.row_partner_main_background);
@@ -201,7 +198,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private ShortcutViewHolder onCreateShortcutViewHolder(@NonNull ViewGroup parent) {
-        ShortcutViewHolder holder = new ShortcutViewHolder(
+        return new ShortcutViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
                         .inflate(
@@ -209,26 +206,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 parent,
                                 false
                         )
-        );
-
-        if (mOnFilterClickListener != null) {
-            holder.partnerView.setTag(holder);
-            holder.partnerView.setOnClickListener(
-                    v -> mOnFilterClickListener.onPartnerShortcutClick((ShortcutViewHolder) v.getTag())
-            );
-
-            holder.exchangeOfficeView.setTag(holder);
-            holder.exchangeOfficeView.setOnClickListener(
-                    v -> mOnFilterClickListener.onExchangeOfficeShortcutClick((ShortcutViewHolder) v.getTag())
-            );
-
-            holder.officeView.setTag(holder);
-            holder.officeView.setOnClickListener(
-                    v -> mOnFilterClickListener.onLaGonetteShortcutClick((ShortcutViewHolder) v.getTag())
-            );
-        }
-
-        return holder;
+        )
+                .setOnPartnerClick(mOnPartnerShortcutClickListener)
+                .setOnExchangeOfficeClick(mOnExchangeOfficeShortcutClickListener)
+                .setOnOfficeClick(mOfficeShortcutClickListener);
     }
 
     private LoadingViewHolder onCreateLoadingViewHolder(@NonNull ViewGroup parent) {
@@ -256,7 +237,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private PartnerViewHolder onCreatePartnerViewHolder(@NonNull ViewGroup parent) {
-        PartnerViewHolder holder = new PartnerViewHolder(
+        return new PartnerViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
                         .inflate(
@@ -264,25 +245,14 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 parent,
                                 false
                         )
-        );
-
-        if (mOnFilterClickListener != null) {
-            holder.itemView.setTag(holder);
-            holder.itemView.setOnClickListener(
-                    v -> mOnFilterClickListener.onPartnerClick((PartnerViewHolder) v.getTag())
-            );
-
-            holder.visibilityButton.setTag(holder);
-            holder.visibilityButton.setOnClickListener(
-                    v -> mOnFilterClickListener.onPartnerVisibilityClick((PartnerViewHolder) v.getTag())
-            );
-        }
-
-        return holder;
+        )
+                .setOnPartnerClick(mOnPartnerClickListener)
+                .setOnVisibilityClick(mOnPartnerVisibilityClickListener);
     }
 
+    // TODO Move onCreate into ViewHolder
     private CategoryViewHolder onCreateCategoryViewHolder(@NonNull ViewGroup parent) {
-        CategoryViewHolder holder = new CategoryViewHolder(
+        return new CategoryViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
                         .inflate(
@@ -290,21 +260,9 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 parent,
                                 false
                         )
-        );
-
-        if (mOnFilterClickListener != null) {
-            holder.visibilityButton.setTag(holder);
-            holder.visibilityButton.setOnClickListener(
-                    v -> mOnFilterClickListener.onCategoryVisibilityClick((CategoryViewHolder) v.getTag())
-            );
-
-            holder.collapsedButton.setTag(holder);
-            holder.collapsedButton.setOnClickListener(
-                    v -> mOnFilterClickListener.onCategoryCollapsedClick((CategoryViewHolder) v.getTag())
-            );
-        }
-
-        return holder;
+        )
+                .setOnCollapsedClick(mOnCategoryCollapsedClickListener)
+                .setOnVisibilityClick(mOnCategoryVisibilityClickListener);
     }
 
     @Override
@@ -413,101 +371,32 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
-    public class PartnerViewHolder extends RecyclerView.ViewHolder {
-
-        public long partnerId;
-
-        public boolean isVisible;
-
-        public boolean isCategoryVisible;
-
-        public boolean isMainPartner;
-
-        public boolean isExchangeOffice;
-
-        @NonNull
-        public final TextView nameTextView;
-
-        @NonNull
-        public final TextView addressTextView;
-
-        @NonNull
-        public final ImageView exchangeOfficeIndicatorImage;
-
-        @NonNull
-        public final ImageButton visibilityButton;
-
-        public PartnerViewHolder(View itemView) {
-            super(itemView);
-            nameTextView = itemView.findViewById(R.id.partner_name);
-            addressTextView = itemView.findViewById(R.id.partner_address);
-            exchangeOfficeIndicatorImage = itemView.findViewById(R.id.partner_exchange_office_indicator);
-            visibilityButton = itemView.findViewById(R.id.partner_visibility);
-        }
+    public void setOnPartnerClickListener(@Nullable PartnerViewHolder.OnClickListener onPartnerClickListener) {
+        mOnPartnerClickListener = onPartnerClickListener;
     }
 
-    public class CategoryViewHolder extends RecyclerView.ViewHolder {
-
-        public long categoryId;
-
-        public boolean isVisible;
-
-        public boolean isPartnersVisible;
-
-        public boolean isCollapsed;
-
-        @NonNull
-        public final ImageView iconImageView;
-
-        @NonNull
-        public final ImageButton visibilityButton;
-
-        @NonNull
-        public final ImageButton collapsedButton;
-
-        @NonNull
-        public final TextView categoryTextView;
-
-        public CategoryViewHolder(View itemView) {
-            super(itemView);
-            iconImageView = itemView.findViewById(R.id.category_icon);
-            visibilityButton = itemView.findViewById(R.id.category_visibility);
-            collapsedButton = itemView.findViewById(R.id.category_collapsed);
-            categoryTextView = itemView.findViewById(R.id.category_label);
-        }
+    public void setOnPartnerVisibilityClickListener(@Nullable PartnerViewHolder.OnVisibilityClickListener onPartnerVisibilityClickListener) {
+        this.mOnPartnerVisibilityClickListener = onPartnerVisibilityClickListener;
     }
 
-    public class ShortcutViewHolder extends RecyclerView.ViewHolder {
-
-        @NonNull
-        public final View partnerView;
-
-        @NonNull
-        public final View exchangeOfficeView;
-
-        @NonNull
-        public final View officeView;
-
-        public ShortcutViewHolder(View itemView) {
-            super(itemView);
-            partnerView = itemView.findViewById(R.id.shortcut_partner);
-            exchangeOfficeView = itemView.findViewById(R.id.shortcut_exchange_office);
-            officeView = itemView.findViewById(R.id.shortcut_office);
-        }
+    public void setOnCategoryCollapsedClickListener(@Nullable CategoryViewHolder.OnCollapsedClickListener onCategoryCollapsedClickListener) {
+        this.mOnCategoryCollapsedClickListener = onCategoryCollapsedClickListener;
     }
 
-    public class FooterViewHolder extends RecyclerView.ViewHolder {
-        public FooterViewHolder(View itemView) {
-            super(itemView);
-        }
-
+    public void setOnCategoryVisibilityClickListener(@Nullable CategoryViewHolder.OnVisibilityClickListener onCategoryVisibilityClickListener) {
+        this.mOnCategoryVisibilityClickListener = onCategoryVisibilityClickListener;
     }
 
-    public class LoadingViewHolder extends RecyclerView.ViewHolder {
+    public void setOnPartnerShortcutClickListener(@Nullable ShortcutViewHolder.OnPartnerClickListener partnerShortcutClickListener) {
+        mOnPartnerShortcutClickListener = partnerShortcutClickListener;
+    }
 
-        public LoadingViewHolder(View itemView) {
-            super(itemView);
-        }
+    public void setOnExchangeOfficeShortcutClickListener(@Nullable ShortcutViewHolder.OnExchangeOfficeClickListener exchangeOfficeShortcutClickListener) {
+        mOnExchangeOfficeShortcutClickListener = exchangeOfficeShortcutClickListener;
+    }
+
+    public void setOnOfficeShortcutClickListener(@Nullable ShortcutViewHolder.OnOfficeClickListener officeShortcutClickListener) {
+        mOfficeShortcutClickListener = officeShortcutClickListener;
     }
 
 }

@@ -16,9 +16,9 @@ import org.lagonette.android.app.viewmodel.FiltersViewModel;
 import org.lagonette.android.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.android.app.widget.adapter.FilterAdapter;
 
+// TODO Do not show empty fragment when there is no partner.
 public class FiltersFragment
-        extends LifecycleFragment
-        implements FilterAdapter.OnFilterClickListener {
+        extends LifecycleFragment {
 
     public static final String TAG = "FiltersFragment";
 
@@ -44,9 +44,6 @@ public class FiltersFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFilterAdapter = new FilterAdapter(getContext(), getResources(), FiltersFragment.this);
-        mFilterAdapter.setHasStableIds(true);
-
         mFiltersViewModel = ViewModelProviders
                 .of(FiltersFragment.this)
                 .get(FiltersViewModel.class);
@@ -68,6 +65,30 @@ public class FiltersFragment
                         FiltersFragment.this,
                         search -> mFiltersViewModel.getSearch().send(search)
                 );
+
+        mFilterAdapter = new FilterAdapter(getContext(), getResources());
+        mFilterAdapter.setHasStableIds(true);
+        mFilterAdapter.setOnPartnerClickListener(
+                partnerId -> mActivityViewModel.showPartner(partnerId, true)
+        );
+        mFilterAdapter.setOnPartnerVisibilityClickListener(
+                (partnerId, visibility) -> mFiltersViewModel.setPartnerVisibility(partnerId, visibility)
+        );
+        mFilterAdapter.setOnCategoryVisibilityClickListener(
+                (categoryId, visibility) -> mFiltersViewModel.setCategoryVisibility(categoryId, visibility)
+        );
+        mFilterAdapter.setOnCategoryCollapsedClickListener(
+                (categoryId, isCollapsed) -> mFiltersViewModel.setCategoryCollapsed(categoryId, isCollapsed)
+        );
+        mFilterAdapter.setOnPartnerShortcutClickListener(
+                () -> mFiltersViewModel.showAllPartners()
+        );
+        mFilterAdapter.setOnExchangeOfficeShortcutClickListener(
+                () -> mFiltersViewModel.showAllExchangeOffices()
+        );
+        mFilterAdapter.setOnOfficeShortcutClickListener(
+                () -> {/* YOLO */}
+        );
     }
 
     // TODO Fix category visibility
@@ -96,41 +117,6 @@ public class FiltersFragment
         mFilterList.setLayoutManager(layoutManager);
         mFilterList.setAdapter(mFilterAdapter);
         mFilterList.setItemAnimator(null); // TODO Remove
-    }
-
-    @Override
-    public void onPartnerClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
-        mActivityViewModel.showPartner(holder.partnerId, true);
-    }
-
-    @Override
-    public void onCategoryVisibilityClick(@NonNull FilterAdapter.CategoryViewHolder holder) {
-        mFiltersViewModel.setCategoryVisibility(holder.categoryId, !holder.isVisible);
-    }
-
-    @Override
-    public void onCategoryCollapsedClick(@NonNull FilterAdapter.CategoryViewHolder holder) {
-        mFiltersViewModel.setCategoryCollapsed(holder.categoryId, !holder.isCollapsed);
-    }
-
-    @Override
-    public void onPartnerVisibilityClick(@NonNull FilterAdapter.PartnerViewHolder holder) {
-        mFiltersViewModel.setPartnerVisibility(holder.partnerId, !holder.isVisible);
-    }
-
-    @Override
-    public void onPartnerShortcutClick(@NonNull FilterAdapter.ShortcutViewHolder holder) {
-        mFiltersViewModel.showAllPartners();
-    }
-
-    @Override
-    public void onExchangeOfficeShortcutClick(@NonNull FilterAdapter.ShortcutViewHolder holder) {
-        mFiltersViewModel.showAllExchangeOffices();
-    }
-
-    @Override
-    public void onLaGonetteShortcutClick(@NonNull FilterAdapter.ShortcutViewHolder holder) {
-        // Yolo
     }
 
 }
