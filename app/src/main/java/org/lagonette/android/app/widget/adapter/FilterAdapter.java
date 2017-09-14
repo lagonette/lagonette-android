@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -182,87 +181,32 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
+
             case R.id.view_type_shortcut:
-                return onCreateShortcutViewHolder(parent);
+                return new ShortcutViewHolder(parent)
+                        .setOnPartnerClick(mOnPartnerShortcutClickListener)
+                        .setOnExchangeOfficeClick(mOnExchangeOfficeShortcutClickListener)
+                        .setOnOfficeClick(mOfficeShortcutClickListener);
+
             case R.id.view_type_category:
-                return onCreateCategoryViewHolder(parent);
+                return new CategoryViewHolder(parent)
+                        .setOnCollapsedClick(mOnCategoryCollapsedClickListener)
+                        .setOnVisibilityClick(mOnCategoryVisibilityClickListener);
+
             case R.id.view_type_partner:
-                return onCreatePartnerViewHolder(parent);
+                return new PartnerViewHolder(parent)
+                        .setOnPartnerClick(mOnPartnerClickListener)
+                        .setOnVisibilityClick(mOnPartnerVisibilityClickListener);
+
             case R.id.view_type_footer:
-                return onCreateFooterViewHolder(parent);
+                return new FooterViewHolder(parent);
+
             case R.id.view_type_loading:
-                return onCreateLoadingViewHolder(parent);
+                return new LoadingViewHolder(parent);
+
             default:
                 throw new IllegalArgumentException("Unknown view type:" + viewType);
         }
-    }
-
-    private ShortcutViewHolder onCreateShortcutViewHolder(@NonNull ViewGroup parent) {
-        return new ShortcutViewHolder(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_shortcut,
-                                parent,
-                                false
-                        )
-        )
-                .setOnPartnerClick(mOnPartnerShortcutClickListener)
-                .setOnExchangeOfficeClick(mOnExchangeOfficeShortcutClickListener)
-                .setOnOfficeClick(mOfficeShortcutClickListener);
-    }
-
-    private LoadingViewHolder onCreateLoadingViewHolder(@NonNull ViewGroup parent) {
-        return new LoadingViewHolder(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_loading,
-                                parent,
-                                false
-                        )
-        );
-    }
-
-    private FooterViewHolder onCreateFooterViewHolder(@NonNull ViewGroup parent) {
-        return new FooterViewHolder(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_footer,
-                                parent,
-                                false
-                        )
-        );
-    }
-
-    private PartnerViewHolder onCreatePartnerViewHolder(@NonNull ViewGroup parent) {
-        return new PartnerViewHolder(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_partner,
-                                parent,
-                                false
-                        )
-        )
-                .setOnPartnerClick(mOnPartnerClickListener)
-                .setOnVisibilityClick(mOnPartnerVisibilityClickListener);
-    }
-
-    // TODO Move onCreate into ViewHolder
-    private CategoryViewHolder onCreateCategoryViewHolder(@NonNull ViewGroup parent) {
-        return new CategoryViewHolder(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_category,
-                                parent,
-                                false
-                        )
-        )
-                .setOnCollapsedClick(mOnCategoryCollapsedClickListener)
-                .setOnVisibilityClick(mOnCategoryVisibilityClickListener);
     }
 
     @Override

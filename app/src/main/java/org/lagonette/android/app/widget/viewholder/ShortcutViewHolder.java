@@ -3,7 +3,9 @@ package org.lagonette.android.app.widget.viewholder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.lagonette.android.R;
 
@@ -33,8 +35,16 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     public final View officeView;
 
-    public ShortcutViewHolder(View itemView) {
-        super(itemView);
+    public ShortcutViewHolder(@NonNull ViewGroup parent) {
+        super(
+                LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(
+                                R.layout.row_shortcut,
+                                parent,
+                                false
+                        )
+        );
         partnerView = itemView.findViewById(R.id.shortcut_partner);
         exchangeOfficeView = itemView.findViewById(R.id.shortcut_exchange_office);
         officeView = itemView.findViewById(R.id.shortcut_office);

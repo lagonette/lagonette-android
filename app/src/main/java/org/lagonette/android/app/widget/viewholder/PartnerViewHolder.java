@@ -3,7 +3,8 @@ package org.lagonette.android.app.widget.viewholder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,8 +45,16 @@ public class PartnerViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     public final ImageButton visibilityButton;
 
-    public PartnerViewHolder(View itemView) {
-        super(itemView);
+    public PartnerViewHolder(@NonNull ViewGroup parent) {
+        super(
+                LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(
+                                R.layout.row_partner,
+                                parent,
+                                false
+                        )
+        );
         nameTextView = itemView.findViewById(R.id.partner_name);
         addressTextView = itemView.findViewById(R.id.partner_address);
         exchangeOfficeIndicatorImage = itemView.findViewById(R.id.partner_exchange_office_indicator);
