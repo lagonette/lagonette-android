@@ -37,6 +37,7 @@ public class LaGonetteApplication
                                 LaGonetteDatabase.class,
                                 DatabaseUtil.DATABASE_NAME
                         )
+                        .fallbackToDestructiveMigration()
                         .build()
         );
 

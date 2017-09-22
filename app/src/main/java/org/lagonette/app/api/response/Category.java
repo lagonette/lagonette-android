@@ -29,7 +29,7 @@ public class Category {
         org.lagonette.app.room.entity.CategoryMetadata categoryMetadata = new org.lagonette.app.room.entity.CategoryMetadata();
         categoryMetadata.categoryId = category.id;
         categoryMetadata.isVisible = true;
-        categoryMetadata.isCollapsed = false;
+        categoryMetadata.isCollapsed = true;
         categoryMetadataList.add(categoryMetadata);
     }
 }
