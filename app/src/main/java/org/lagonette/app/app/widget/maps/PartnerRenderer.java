@@ -24,6 +24,7 @@ import com.google.maps.android.ui.IconGenerator;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.glide.PartnerMarkerTarget;
+import org.lagonette.app.room.entity.statement.PartnerItem;
 
 public class PartnerRenderer
         extends DefaultClusterRenderer<PartnerItem> implements PartnerMarkerTarget.Callback {

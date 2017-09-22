@@ -5,8 +5,6 @@ public abstract class MapPartnerStatement
 
     public static final String sql =
             "SELECT partner.id, " +
-                "partner.name, " +
-                "partner.description, " +
                 "partner.latitude, " +
                 "partner.longitude, " +
                 "partner.is_exchange_office, " +

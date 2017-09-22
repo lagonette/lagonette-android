@@ -7,7 +7,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.lagonette.app.app.widget.maps.PartnerItem;
+import org.lagonette.app.room.entity.statement.PartnerItem;
 
 public class PartnerMarkerTarget extends SimpleTarget<Bitmap> {
 

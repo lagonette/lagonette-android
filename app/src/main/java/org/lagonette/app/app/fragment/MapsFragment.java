@@ -1,7 +1,6 @@
 package org.lagonette.app.app.fragment;
 
 import android.Manifest;
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,10 +39,9 @@ import org.json.JSONException;
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.MapsViewModel;
 import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
-import org.lagonette.app.app.widget.maps.PartnerItem;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.repo.Resource;
-import org.lagonette.app.room.reader.MapPartnerReader;
+import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.MapMovement;
 import org.lagonette.app.util.SharedPreferencesUtil;
@@ -52,6 +49,7 @@ import org.lagonette.app.util.SnackbarUtil;
 import org.lagonette.app.util.UiUtil;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MapsFragment
         extends Fragment
@@ -91,8 +89,6 @@ public class MapsFragment
     private ClusterManager<PartnerItem> mClusterManager;
 
     private int mStatusBarHeight;
-
-    private LongSparseArray<PartnerItem> mPartnerItems;
 
     private boolean mConfChanged = false;
 
@@ -149,8 +145,6 @@ public class MapsFragment
         }
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
-
-        mPartnerItems = new LongSparseArray<>();
 
         mViewModel = ViewModelProviders
                 .of(MapsFragment.this)
@@ -463,7 +457,7 @@ public class MapsFragment
 
     public void showPartner(long id, boolean zoom, @Nullable GoogleMap.CancelableCallback callback) {
         removeSelectedMarker();
-        PartnerItem partnerItem = mPartnerItems.get(id);
+        PartnerItem partnerItem = null; //mPartnerItems.get(id);
         if (partnerItem != null) {
             LatLng latLng = new LatLng(
                     partnerItem.getPosition().latitude,
@@ -532,7 +526,7 @@ public class MapsFragment
         }
     }
 
-    public void dispatchPartnersResource(@NonNull Resource<MapPartnerReader> partnerResource) {
+    public void dispatchPartnersResource(@NonNull Resource<List<PartnerItem>> partnerResource) {
         switch (partnerResource.status) {
 
             case Resource.ERROR:
@@ -555,19 +549,11 @@ public class MapsFragment
         }
     }
 
-    public void showPartners(@Nullable MapPartnerReader partnerReader) {
+    public void showPartners(@Nullable List<PartnerItem> partnerItems) {
         if (mMap != null) {
-            mPartnerItems.clear();
             mClusterManager.clearItems();
-            if (partnerReader != null) {
-                if (partnerReader.moveToFirst()) {
-                    do {
-                        PartnerItem item = new PartnerItem(partnerReader);
-                        mPartnerItems.put(item.getId(), item);
-                        mClusterManager.addItem(item);
-                    } while (partnerReader.moveToNext());
-                }
-                mClusterManager.cluster();
+            if (partnerItems != null) {
+                mClusterManager.addItems(partnerItems);
             }
         }
     }

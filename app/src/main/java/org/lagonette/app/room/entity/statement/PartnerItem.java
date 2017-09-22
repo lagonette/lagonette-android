@@ -1,53 +1,47 @@
-package org.lagonette.app.app.widget.maps;
+package org.lagonette.app.room.entity.statement;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Ignore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import org.lagonette.app.room.reader.MapPartnerReader;
-
 public class PartnerItem
         implements ClusterItem {
 
+    @Ignore // TODO Try to use type converter
     @NonNull
     private final LatLng mPosition;
 
+    @ColumnInfo(name = "latitude")
+    private double mLatitude;
+
+    @ColumnInfo(name = "longitude")
+    private double mLongitude;
+
+    @ColumnInfo(name = "icon")
     @NonNull
     private final String mIconUrl;
 
-    @Nullable
-    private String mTitle;
-
-    @Nullable
-    private String mSnippet;
-
+    @ColumnInfo(name = "id")
     private long mId;
 
+    @ColumnInfo(name = "is_exchange_office")
     private boolean mIsExchangeOffice;
 
+    @ColumnInfo(name = "main_category_id")
     private long mCategoryId;
 
-    public PartnerItem(@NonNull MapPartnerReader partnerReader) {
-        this(
-                partnerReader.getId(),
-                partnerReader.getLatitude(),
-                partnerReader.getLongitude(),
-                partnerReader.isExchangeOffice(),
-                partnerReader.getMainCategory(),
-                partnerReader.getIcon()
-        );
-    }
-
-    public PartnerItem(long id, double lat, double lng, boolean isExchangeOffice, long categoryId, @NonNull String iconUrl) {
+    public PartnerItem(long id, double latitude, double longitude, boolean isExchangeOffice, long categoryId, @NonNull String iconUrl) {
         mId = id;
         mIsExchangeOffice = isExchangeOffice;
-        mPosition = new LatLng(lat, lng);
+        mPosition = new LatLng(latitude, longitude);
+        mLatitude = latitude;
+        mLongitude = longitude;
         mCategoryId = categoryId;
         mIconUrl = iconUrl;
-        mTitle = null;
-        mSnippet = null;
     }
 
     public long getId() {
@@ -63,13 +57,13 @@ public class PartnerItem
     @Nullable
     @Override
     public String getTitle() {
-        return mTitle;
+        return null;
     }
 
     @Nullable
     @Override
     public String getSnippet() {
-        return mSnippet;
+        return null;
     }
 
     public boolean isExchangeOffice() {
@@ -84,5 +78,13 @@ public class PartnerItem
     @NonNull
     public long getCategoryId() {
         return mCategoryId;
+    }
+
+    public double getLatitude() {
+        return mLatitude;
+    }
+
+    public double getLongitude() {
+        return mLongitude;
     }
 }

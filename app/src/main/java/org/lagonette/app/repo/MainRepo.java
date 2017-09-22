@@ -8,14 +8,15 @@ import android.support.annotation.NonNull;
 import org.lagonette.app.app.arch.CursorLiveData;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
+import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.reader.FilterReader;
-import org.lagonette.app.room.reader.MapPartnerReader;
 import org.lagonette.app.room.reader.PartnerDetailReader;
 import org.lagonette.app.room.sql.Tables;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.SearchUtil;
 import org.lagonette.app.worker.DataRefreshWorker;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 
 public class MainRepo {
@@ -34,23 +35,16 @@ public class MainRepo {
         mShouldFetch = true;
     }
 
-    public LiveData<Resource<MapPartnerReader>> getMapPartners(@NonNull LiveData<String> searchLiveEvent) {
+    public LiveData<Resource<List<PartnerItem>>> getMapPartners(@NonNull LiveData<String> searchLiveEvent) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldFetch,
-                () -> Transformations.map(
-                        Transformations.switchMap(
-                                searchLiveEvent,
-                                search -> new CursorLiveData(
-                                        Tables.TABLES,
-                                        mExecutor,
-                                        () -> DB
-                                                .get()
-                                                .mainDao()
-                                                .getMapPartner(SearchUtil.formatSearch(search))
-                                )
-                        ),
-                        MapPartnerReader::create
+                () -> Transformations.switchMap(
+                        searchLiveEvent,
+                        search -> DB
+                                .get()
+                                .mainDao()
+                                .getMapPartner(SearchUtil.formatSearch(search))
                 ),
                 () -> new DataRefreshWorker(mContext)
         )
