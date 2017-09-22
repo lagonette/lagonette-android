@@ -104,9 +104,6 @@ dependencies {
     implementation 'android.arch.persistence.room:runtime:1.0.0-alpha9-1'
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha9-1"
 
-    //For Paging
-    implementation 'android.arch.paging:runtime:1.0.0-alpha1'
-
     implementation 'com.squareup.retrofit2:retrofit:2.2.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
 
