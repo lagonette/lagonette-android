@@ -8,9 +8,9 @@
 
     <ImageView
         android:id="@+id/item_partner_icon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_margin="2dp"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_margin="1dp"
         android:src="@drawable/img_item_default"/>
 
 </FrameLayout>
