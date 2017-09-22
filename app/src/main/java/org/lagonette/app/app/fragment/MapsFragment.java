@@ -459,7 +459,7 @@ public class MapsFragment
         removeSelectedMarker();
         PartnerItem partnerItem = null; //mPartnerItems.get(id);
         if (partnerItem != null) {
-            LatLng latLng = new LatLng(
+            LatLng latLng = new LatLng( // TODO Why not just getPosition ?
                     partnerItem.getPosition().latitude,
                     partnerItem.getPosition().longitude
             );
