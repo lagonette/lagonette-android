@@ -35,12 +35,12 @@ public class MainRepo {
         mShouldFetch = true;
     }
 
-    public LiveData<Resource<List<PartnerItem>>> getMapPartners(@NonNull LiveData<String> searchLiveEvent) {
+    public LiveData<Resource<List<PartnerItem>>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldFetch,
                 () -> Transformations.switchMap(
-                        searchLiveEvent,
+                        searchLiveData,
                         search -> DB
                                 .get()
                                 .mainDao()

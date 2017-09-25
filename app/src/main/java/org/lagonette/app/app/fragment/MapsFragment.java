@@ -563,6 +563,7 @@ public class MapsFragment
             }
             mClusterManager.addItems(partnerItems);
         }
+        mClusterManager.cluster();
     }
 
     // TODO
