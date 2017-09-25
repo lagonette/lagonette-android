@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,6 +111,8 @@ public class MapsFragment
 
     private boolean mAskFormMyPositionPermission = true;
 
+    private LongSparseArray<PartnerItem> mPartnerItems;
+
     public static MapsFragment newInstance() {
         return new MapsFragment();
     }
@@ -143,6 +146,8 @@ public class MapsFragment
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        mPartnerItems = new LongSparseArray<>();
 
         mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
 
@@ -457,7 +462,7 @@ public class MapsFragment
 
     public void showPartner(long id, boolean zoom, @Nullable GoogleMap.CancelableCallback callback) {
         removeSelectedMarker();
-        PartnerItem partnerItem = null; //mPartnerItems.get(id);
+        PartnerItem partnerItem = mPartnerItems.get(id);
         if (partnerItem != null) {
             LatLng latLng = new LatLng( // TODO Why not just getPosition ?
                     partnerItem.getPosition().latitude,
@@ -550,11 +555,13 @@ public class MapsFragment
     }
 
     public void showPartners(@Nullable List<PartnerItem> partnerItems) {
-        if (mMap != null) {
-            mClusterManager.clearItems();
-            if (partnerItems != null) {
-                mClusterManager.addItems(partnerItems);
+        mPartnerItems.clear();
+        mClusterManager.clearItems();
+        if (partnerItems != null) {
+            for (PartnerItem item : partnerItems) { // TODO Improve -> Pass the item or keep in the ViewModel
+                mPartnerItems.put(item.getId(), item);
             }
+            mClusterManager.addItems(partnerItems);
         }
     }
 
