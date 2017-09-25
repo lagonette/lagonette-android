@@ -16,7 +16,7 @@ public abstract class FilterStatement
                     "category.icon, " +
                     "category_metadata.is_visible, " +
                     "category_metadata.is_collapsed, " +
-                    "SUM (main_partner_metadata.is_visible) + SUM (side_partner_metadata.is_visible) AS category_is_partners_visible, " +
+                    "TOTAL(main_partner_metadata.is_visible) + TOTAL(side_partner_metadata.is_visible) AS category_is_partners_visible, " +
                     "NULL AS id, " +
                     "NULL AS name, " +
                     "NULL AS street, " +
