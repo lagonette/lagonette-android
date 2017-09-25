@@ -12,6 +12,7 @@ import org.lagonette.app.locator.DB;
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.repo.MainRepo;
 import org.lagonette.app.room.database.LaGonetteDatabase;
+import org.lagonette.app.room.migration.VoidMigration;
 import org.lagonette.app.util.DatabaseUtil;
 import org.lagonette.app.util.StrictModeUtil;
 
@@ -37,7 +38,8 @@ public class LaGonetteApplication
                                 LaGonetteDatabase.class,
                                 DatabaseUtil.DATABASE_NAME
                         )
-                        .fallbackToDestructiveMigration()
+                        .addMigrations(new VoidMigration(1, 2))
+                        //.fallbackToDestructiveMigration() // TODO Remove migration
                         .build()
         );
 
