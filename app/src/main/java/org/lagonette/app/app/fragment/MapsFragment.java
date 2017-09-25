@@ -537,7 +537,7 @@ public class MapsFragment
             case Resource.ERROR:
                 // TODO
                 mActivityViewModel.setWorkInProgress(false);
-                errorGettingPartners();
+                errorGettingPartners(partnerResource.data.size() > 0);
                 showPartners(partnerResource.data);
                 break;
 
@@ -566,11 +566,13 @@ public class MapsFragment
     }
 
     // TODO
-    public void errorGettingPartners() {
+    public void errorGettingPartners(boolean noPartnerAtAll) {
         Snackbar
                 .make(
                         SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
-                        R.string.error_getting_partners,
+                        noPartnerAtAll
+                                ? R.string.error_getting_partners_first
+                                : R.string.error_getting_partners,
                         Snackbar.LENGTH_LONG
                 )
                 .show();
