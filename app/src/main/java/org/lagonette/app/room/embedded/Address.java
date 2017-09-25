@@ -1,6 +1,10 @@
 package org.lagonette.app.room.embedded;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.content.res.Resources;
+import android.support.annotation.NonNull;
+
+import org.lagonette.app.R;
 
 public class Address {
 
@@ -13,4 +17,7 @@ public class Address {
     @ColumnInfo(name = "city")
     public String city;
 
+    public String format(@NonNull Resources resources) {
+        return resources.getString(R.string.format_address_full, street, zipCode, city);
+    }
 }

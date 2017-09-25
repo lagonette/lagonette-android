@@ -17,7 +17,7 @@ import android.widget.TextView;
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.PartnerDetailViewModel;
 import org.lagonette.app.repo.Resource;
-import org.lagonette.app.room.reader.PartnerDetailReader;
+import org.lagonette.app.room.entity.statement.PartnerDetail;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.IntentUtil;
 import org.lagonette.app.util.SnackbarUtil;
@@ -145,7 +145,7 @@ public class PartnerDetailFragment
         mEmailLayout.setOnClickListener(PartnerDetailFragment.this);
     }
 
-    private void dispatchPartnerDetailResource(@NonNull Resource<PartnerDetailReader> resource) {
+    private void dispatchPartnerDetailResource(@NonNull Resource<PartnerDetail> resource) {
         switch (resource.status) {
 
             case Resource.LOADING:
@@ -164,25 +164,25 @@ public class PartnerDetailFragment
         }
     }
 
-    private void displayPartner(@Nullable PartnerDetailReader reader) {
-        if (reader != null && reader.moveToFirst()) {
+    private void displayPartner(@Nullable PartnerDetail partnerDetail) {
+        if (partnerDetail != null) {
             Resources resources = getResources();
 
-            mLatitude = reader.getLatitude();
-            mLongitude = reader.getLongitude();
+            mLatitude = partnerDetail.latitude;
+            mLongitude = partnerDetail.longitude;
 
             mPartnerTypeTextView.setText(
-                    reader.isExchangeOffice()
+                    partnerDetail.isExchangeOffice
                             ? resources.getString(R.string.partner_type_exchange_office)
                             : resources.getString(R.string.partner_type_partner)
             );
 
-            mNameTextView.setText(reader.getName());
-            mShortDescriptionTextView.setText(reader.getShortDescription());
-            mDescriptionTextView.setText(reader.getDescription());
+            mNameTextView.setText(partnerDetail.name);
+            mShortDescriptionTextView.setText(partnerDetail.shortDescription);
+            mDescriptionTextView.setText(partnerDetail.description);
 
             // OPENING HOURS
-            String openingHours = reader.getOpeningHours();
+            String openingHours = partnerDetail.openingHours;
             if (!TextUtils.isEmpty(openingHours)) {
                 mOpeningHoursLayout.setVisibility(View.VISIBLE);
                 mOpeningHoursTextView.setText(openingHours);
@@ -191,8 +191,7 @@ public class PartnerDetailFragment
             }
 
             // ADDRESS
-            // TODO use DisplayUtil.formatAddress
-            String address = reader.getAddress();
+            String address = partnerDetail.address.format(resources);
             if (!TextUtils.isEmpty(address)) {
                 mAddressLayout.setVisibility(View.VISIBLE);
                 mAddressTextView.setText(address);
@@ -201,7 +200,7 @@ public class PartnerDetailFragment
             }
 
             // PHONE
-            String phone = reader.getPhone();
+            String phone = partnerDetail.phone;
             if (!TextUtils.isEmpty(phone)) {
                 mPhoneLayout.setVisibility(View.VISIBLE);
                 mPhoneTextView.setText(phone);
@@ -210,7 +209,7 @@ public class PartnerDetailFragment
             }
 
             // WEBSITE
-            String website = reader.getWebsite();
+            String website = partnerDetail.website;
             if (!TextUtils.isEmpty(website)) {
                 mWebsiteLayout.setVisibility(View.VISIBLE);
                 mWebsiteTextView.setText(website);
@@ -219,7 +218,7 @@ public class PartnerDetailFragment
             }
 
             // WEBSITE
-            String email = reader.getEmail();
+            String email = partnerDetail.email;
             if (!TextUtils.isEmpty(email)) {
                 mEmailLayout.setVisibility(View.VISIBLE);
                 mEmailTextView.setText(email);
@@ -227,7 +226,7 @@ public class PartnerDetailFragment
                 mEmailLayout.setVisibility(View.GONE);
             }
 
-            mMainCategoryLabelTextView.setText(reader.getCategoryLabel());
+            mMainCategoryLabelTextView.setText(partnerDetail.label);
 
 //            Glide.with(getContext())
 //                    .load(reader.getLogo())

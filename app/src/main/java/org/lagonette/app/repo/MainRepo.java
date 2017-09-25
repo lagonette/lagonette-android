@@ -8,9 +8,9 @@ import android.support.annotation.NonNull;
 import org.lagonette.app.app.arch.CursorLiveData;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
+import org.lagonette.app.room.entity.statement.PartnerDetail;
 import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.reader.FilterReader;
-import org.lagonette.app.room.reader.PartnerDetailReader;
 import org.lagonette.app.room.sql.Tables;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.SearchUtil;
@@ -52,22 +52,15 @@ public class MainRepo {
                 .getAsLiveData();
     } // TODO Fix "Application did not close the cursor or database object that was opened here" issue
 
-    public LiveData<Resource<PartnerDetailReader>> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
+    public LiveData<Resource<PartnerDetail>> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldFetch,
-                () -> Transformations.map(
-                        Transformations.switchMap(
-                                partnerIdLiveData,
-                                partnerId -> new CursorLiveData(
-                                        Tables.TABLES,
-                                        mExecutor,
-                                        () -> partnerId > Statement.NO_ID
-                                                ? DB.get().mainDao().getPartnerDetail(partnerId)
-                                                : null
-                                )
-                        ),
-                        PartnerDetailReader::create
+                () -> Transformations.switchMap(
+                        partnerIdLiveData,
+                        partnerId -> partnerId > Statement.NO_ID
+                                ? DB.get().mainDao().getPartnerDetail(partnerId)
+                                : null
                 ),
                 () -> new DataRefreshWorker(mContext)
         )

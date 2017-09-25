@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import android.database.Cursor;
 
+import org.lagonette.app.room.entity.statement.PartnerDetail;
 import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.room.statement.MapPartnerStatement;
@@ -15,11 +16,9 @@ import java.util.List;
 @Dao
 public interface MainDao {
 
-    // TODO Return Partner ?
-    @Query(PartnerDetailStatement.sql)
-    Cursor getPartnerDetail(long id);
+    @Query(PartnerDetailStatement.sql) // TODO Use LiveData to update fragment ?
+    LiveData<PartnerDetail> getPartnerDetail(long id);
 
-    // TODO Return reader (TypeAdapter) ?
     @Query(MapPartnerStatement.sql)
     LiveData<List<PartnerItem>> getMapPartner(String search);
 
