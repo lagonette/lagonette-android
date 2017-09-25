@@ -1,5 +1,7 @@
 // FIXME DB migration
-// FIXME category visibility
+// FIXME Last footer missing
+
+// TODO Footer -> Use Item decoration ?
 // TODO Collapsed/Hide all category in one click
 // TODO Display category on map in one click
 // TODO Obfusquation
