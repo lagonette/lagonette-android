@@ -3,7 +3,7 @@ package org.lagonette.app.room.statement;
 public abstract class PartnerDetailStatement
         extends Statement {
 
-    public static final String sql =
+    public static final String SQL =
             "SELECT " +
                     "partner.id, " +
                     "partner.name, " +

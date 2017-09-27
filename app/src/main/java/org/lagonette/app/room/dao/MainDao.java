@@ -16,12 +16,12 @@ import java.util.List;
 @Dao
 public interface MainDao {
 
-    @Query(PartnerDetailStatement.sql) // TODO Use LiveData to update fragment ?
-    LiveData<PartnerDetail> getPartnerDetail(long id);
+    @Query(PartnerDetailStatement.SQL)
+    LiveData<PartnerDetail> getPartnerDetail(long id); // TODO Use LiveData to update fragment ?
 
-    @Query(MapPartnerStatement.sql)
+    @Query(MapPartnerStatement.SQL)
     LiveData<List<PartnerItem>> getMapPartner(String search);
 
-    @Query(FilterStatement.sql)
+    @Query(FilterStatement.SQL)
     Cursor getFilters(String search);
 }

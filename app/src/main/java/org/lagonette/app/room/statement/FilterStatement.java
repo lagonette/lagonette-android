@@ -9,7 +9,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 public abstract class FilterStatement
         extends Statement {
 
-    public static final String sql =
+    private static final String SQL_CATEGORIES =
             "SELECT 0 AS row_type, " +
                     "category.id, " +
                     "category.label, " +
@@ -39,11 +39,10 @@ public abstract class FilterStatement
                     "ON side_partner.id = side_partner_metadata.partner_id " +
                     "WHERE main_partner.name LIKE :search " +
                     "OR side_partner.name LIKE :search " +
-                    "GROUP BY category.id " +
+                    "GROUP BY category.id ";
 
-                    "UNION " +
-
-                    "SELECT " +
+    private static final String SQL_FOOTERS =
+            "SELECT " +
                     "3 AS row_type, " +
                     "category.id, " +
                     "NULL AS label, " +
@@ -69,11 +68,11 @@ public abstract class FilterStatement
                     "AND main_partner.name LIKE :search " +
                     "OR category.id IS NOT NULL " +
                     "AND side_partner.name LIKE :search " +
-                    "GROUP BY category.id " +
+                    "GROUP BY category.id ";
 
-                    "UNION " +
 
-                    "SELECT 1 AS row_type, " +
+    private static final String SQL_MAIN_CATEGORIES =
+            "SELECT 1 AS row_type, " +
                     "category.id, " +
                     "NULL AS label, " +
                     "NULL AS icon, " +
@@ -94,11 +93,10 @@ public abstract class FilterStatement
                     "ON category.id = partner.main_category_id " +
                     "JOIN partner_metadata " +
                     "ON partner.id = partner_metadata.partner_id " +
-                    "WHERE partner.name LIKE :search AND category_metadata.is_collapsed = 0 " +
+                    "WHERE partner.name LIKE :search AND category_metadata.is_collapsed = 0 ";
 
-                    "UNION " +
-
-                    "SELECT 2 AS row_type, " +
+    private static final String SQL_SIDE_CATEGORIES =
+            "SELECT 2 AS row_type, " +
                     "category.id, " +
                     "NULL AS label, " +
                     "NULL AS icon, " +
@@ -122,8 +120,16 @@ public abstract class FilterStatement
                     "JOIN partner_metadata " +
                     "ON partner.id = partner_metadata.partner_id " +
                     "WHERE partner.name LIKE :search " +
-                    "AND category_metadata.is_collapsed = 0 " +
+                    "AND category_metadata.is_collapsed = 0 ";
 
+    public static final String SQL =
+            SQL_CATEGORIES +
+                    "UNION " +
+                    SQL_FOOTERS +
+                    "UNION " +
+                    SQL_MAIN_CATEGORIES +
+                    "UNION " +
+                    SQL_SIDE_CATEGORIES +
                     "ORDER BY category.id ASC, row_type ASC";
 
 
