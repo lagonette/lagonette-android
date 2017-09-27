@@ -8,3 +8,4 @@
 // TODO Save info when ViewModel is cleared (onSaveStateInstance ?)
 // TODO Google Play Store - privacy policy ?
 // TODO Primary Keys must be annotated with @NonNull unless they are auto generated => https://issuetracker.google.com/issues/64292391
+// TODO Remove partner with no address and no coordinate
