@@ -40,4 +40,7 @@ public interface PartnerDao {
     @Query("UPDATE partner_metadata SET is_visible = :isVisible WHERE partner_id IN (SELECT id FROM partner WHERE is_exchange_office <> 0)")
     int updateExchangeOfficeVisibilities(boolean isVisible);
 
+    @Query("DELETE FROM partner WHERE (street IS NULL OR street = '') AND latitude = 0 AND longitude = 0")
+    void cleanPartner();
+
 }

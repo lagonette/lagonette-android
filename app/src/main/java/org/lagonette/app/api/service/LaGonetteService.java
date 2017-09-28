@@ -21,7 +21,6 @@ public interface LaGonetteService {
             .create();
 
     Retrofit retrofit = new Retrofit.Builder()
-//            .baseUrl("http://82.225.211.150:18001/dolibarr/htdocs/")
             .baseUrl("https://dolibarr.lagonette.org/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();

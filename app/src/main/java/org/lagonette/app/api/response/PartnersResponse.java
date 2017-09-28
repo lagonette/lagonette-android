@@ -61,7 +61,7 @@ public class PartnersResponse extends ApiResponse {
         for (org.lagonette.app.room.entity.Partner partner : partners) {
             if (partner.latitude == 0 || partner.longitude == 0) {
                 send = true;
-                FirebaseCrash.logcat(Log.WARN, TAG, "Wrong coordinates: [ id: " + partner.id + ", name: " + partner.name + "]");
+                FirebaseCrash.logcat(Log.WARN, TAG, "Wrong coordinates: [id: " + partner.id + ", name: " + partner.name + "]");
             }
 
             if (TextUtils.isEmpty(partner.description)) {

@@ -63,6 +63,8 @@ public class DataRefreshWorker
                 database.partnerDao().insertPartnersSideCategories(partnerSideCategories);
             }
 
+            cleanUpDatabase(database);
+
             database.setTransactionSuccessful();
             response.setIsSuccessful(true);
 
@@ -116,4 +118,10 @@ public class DataRefreshWorker
             throw new IllegalStateException("response is not successful!"); // TODO Use custom exception
         }
     }
+
+    private void cleanUpDatabase(@NonNull LaGonetteDatabase db) {
+        db.partnerDao().cleanPartner();
+//        db.partnerDao().cleanPartnerMetadata(); // TODO clean partner metadata
+    }
+
 }
