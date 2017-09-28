@@ -1,11 +1,24 @@
+
+
+# Fix
 // FIXME DB migration
 // FIXME Last footer missing
 
+# To do
 // TODO Footer -> Use Item decoration ?
+// TODO Save info when ViewModel is cleared (onSaveStateInstance ?)
+// TODO Primary Keys must be annotated with @NonNull unless they are auto generated => https://issuetracker.google.com/issues/64292391
+
+# Feature
 // TODO Collapsed/Hide all category in one click
 // TODO Display category on map in one click
+// TODO Manage sub category
+// TODO Market
+// TODO Tutorial
+
+# Mise en prod
 // TODO Obfusquation
-// TODO Save info when ViewModel is cleared (onSaveStateInstance ?)
 // TODO Google Play Store - privacy policy ?
-// TODO Primary Keys must be annotated with @NonNull unless they are auto generated => https://issuetracker.google.com/issues/64292391
+
+# Feedback Gonette
 // TODO Remove partner with no address and no coordinate
