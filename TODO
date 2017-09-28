@@ -8,6 +8,8 @@
 // TODO Footer -> Use Item decoration ?
 // TODO Save info when ViewModel is cleared (onSaveStateInstance ?)
 // TODO Primary Keys must be annotated with @NonNull unless they are auto generated => https://issuetracker.google.com/issues/64292391
+// TODO Clean DB correctly
+// TODO Do API check with retrofit TypeAdapter
 
 # Feature
 // TODO Collapsed/Hide all category in one click
@@ -21,4 +23,4 @@
 // TODO Google Play Store - privacy policy ?
 
 # Feedback Gonette
-// TODO Remove partner with no address and no coordinate
+// TODO Check that removed partner are correct ones (partners with no address and no coordinate)
