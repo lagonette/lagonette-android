@@ -12,62 +12,62 @@ import java.util.List;
 public class Partner {
 
     @SerializedName("id")
-    private long mId;
+    public long id;
 
     @SerializedName("clientCode")
-    private String mClientCode;
+    public String clientCode;
 
     @SerializedName("name")
-    private String mName;
+    public String name;
 
     @SerializedName("address")
-    private String mAddress;
+    public String address;
 
     @SerializedName("city")
-    private String mCity;
+    public String city;
 
     @SerializedName("logo")
-    private String mLogo;
+    public String logo;
 
     @SerializedName("zipCode")
-    private String mZipCode;
+    public String zipCode;
 
     @SerializedName("latitude")
-    private double mLatitude;
+    public double latitude;
 
     @SerializedName("longitude")
-    private double mLongitude;
+    public double longitude;
 
     @SerializedName("phone")
-    private String mPhone;
+    public String phone;
 
     @SerializedName("website")
-    private String mWebsite;
+    public String website;
 
     @SerializedName("email")
-    private String mEmail;
+    public String email;
 
     @SerializedName("description")
-    private String mDescription;
+    public String description;
 
     @SerializedName("openingHours")
-    private String mOpeningHours;
+    public String openingHours;
 
     @SerializedName("isExchangeOffice")
-    private Boolean mIsExchangeOffice; // TODO Use custom adapter to handle boolean correctly.
+    public Boolean isExchangeOffice; // TODO Use custom adapter to handle boolean correctly.
 
     @SerializedName("shortDescription")
-    private String mShortDescription;
+    public String shortDescription;
 
     @SerializedName("mainCategory")
-    private long mMainCategoryId;
+    public long mainCategoryId;
 
     @SerializedName("sideCategories")
-    private List<Long> mSideCategoryIds;
+    public List<Long> sideCategoryIds;
 
     @Override
     public String toString() {
-        return mId + " [" + mClientCode + " - " + mName + "]";
+        return id + " [" + clientCode + " - " + name + "]";
     }
 
     public void prepareInsert(
@@ -75,24 +75,24 @@ public class Partner {
             @NonNull List<org.lagonette.app.room.entity.PartnerMetadata> partnerMetadataList,
             @NonNull List<org.lagonette.app.room.entity.PartnerSideCategory> partnerSideCategories) {
         org.lagonette.app.room.entity.Partner partner = new org.lagonette.app.room.entity.Partner();
-        partner.id = mId;
-        partner.clientCode = mClientCode;
-        partner.name = mName;
-        partner.logo = mLogo;
+        partner.id = id;
+        partner.clientCode = clientCode;
+        partner.name = name;
+        partner.logo = logo;
         partner.address = new Address();
-        partner.address.street = mAddress;
-        partner.address.city = mCity;
-        partner.address.zipCode = mZipCode;
-        partner.latitude = mLatitude;
-        partner.longitude = mLongitude;
-        partner.phone = mPhone; // TODO Format
-        partner.website = mWebsite;
-        partner.email = mEmail;
-        partner.description = mDescription;
-        partner.openingHours = mOpeningHours;
-        partner.isExchangeOffice = mIsExchangeOffice;
-        partner.shortDescription = mShortDescription;
-        partner.mainCategoryId = mMainCategoryId;
+        partner.address.street = address;
+        partner.address.city = city;
+        partner.address.zipCode = zipCode;
+        partner.latitude = latitude;
+        partner.longitude = longitude;
+        partner.phone = phone; // TODO Format
+        partner.website = website;
+        partner.email = email;
+        partner.description = description;
+        partner.openingHours = openingHours;
+        partner.isExchangeOffice = isExchangeOffice;
+        partner.shortDescription = shortDescription;
+        partner.mainCategoryId = mainCategoryId;
         partners.add(partner);
 
         org.lagonette.app.room.entity.PartnerMetadata partnerMetadata = new org.lagonette.app.room.entity.PartnerMetadata();
@@ -100,11 +100,11 @@ public class Partner {
         partnerMetadata.isVisible = true;
         partnerMetadataList.add(partnerMetadata);
 
-        for (Long sideCategoryId : mSideCategoryIds) {
+        for (Long sideCategoryId : sideCategoryIds) {
             if (sideCategoryId != null) {
                 org.lagonette.app.room.entity.PartnerSideCategory sideCategory = new org.lagonette.app.room.entity.PartnerSideCategory();
                 sideCategory.categoryId = sideCategoryId;
-                sideCategory.partnerId = mId;
+                sideCategory.partnerId = id;
                 partnerSideCategories.add(sideCategory);
             }
         }
