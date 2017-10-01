@@ -27,7 +27,6 @@ public abstract class MapPartnerStatement
             "WHERE partner.name LIKE :search " +
                 "AND partner.is_localizable <> 0 " +
             "GROUP BY partner.id " +
-            "HAVING partner_metadata.is_visible > 0 " +
-                "AND SUM (side_category_metadata.is_visible) > 0";
+            "HAVING partner_metadata.is_visible + TOTAL (side_category_metadata.is_visible) > 0";
 
 }
