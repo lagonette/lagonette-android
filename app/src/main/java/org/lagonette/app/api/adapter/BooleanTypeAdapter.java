@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class BooleanTypeAdapter extends TypeAdapter<Boolean> {
 
-    private final String TRUE_STRING = "1";
+    private static final String FALSE_STRING = "0";
 
     @Override
     public Boolean read(JsonReader reader) throws IOException {
@@ -19,7 +19,7 @@ public class BooleanTypeAdapter extends TypeAdapter<Boolean> {
         }
         String stringValue = reader.nextString();
         try {
-            return TRUE_STRING.equals(stringValue);
+            return !FALSE_STRING.equals(stringValue);
         } catch (NumberFormatException e) {
             return false;
         }

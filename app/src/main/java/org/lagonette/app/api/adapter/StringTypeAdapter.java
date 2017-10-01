@@ -7,32 +7,28 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 
-public class LongTypeAdapter extends TypeAdapter<Long> {
+public class StringTypeAdapter extends TypeAdapter<String> {
 
     @Override
-    public Long read(JsonReader reader) throws IOException {
+    public String read(JsonReader reader) throws IOException {
         if (reader.peek() == JsonToken.NULL) {
             reader.nextNull();
             return null;
         }
 
-        String stringValue = reader.nextString();
         try {
-            return Long.valueOf(stringValue);
-        } catch (NumberFormatException e) {
+            return reader.nextString();
+        } catch (IllegalStateException e) {
             return null;
         }
     }
 
     @Override
-    public void write(JsonWriter writer, Long value) throws IOException {
+    public void write(JsonWriter writer, String value) throws IOException {
         if (value == null) {
             writer.nullValue();
             return;
         }
         writer.value(value);
     }
-
 }
-
-
