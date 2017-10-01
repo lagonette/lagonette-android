@@ -11,6 +11,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import org.lagonette.app.api.response.CategoriesResponse;
 import org.lagonette.app.api.response.PartnersResponse;
 import org.lagonette.app.api.service.LaGonetteService;
+import org.lagonette.app.locator.Api;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
 import org.lagonette.app.room.entity.Category;
@@ -40,7 +41,9 @@ public class DataRefreshWorker
 
         LaGonetteDatabase database = DB.get();
         try {
-            LaGonetteService service = LaGonetteService.retrofit.create(LaGonetteService.class);
+            LaGonetteService.Category categoryService = Api.category();
+            LaGonetteService.Partner partnerService = Api.partner();
+
             List<Category> categories = new ArrayList<>();
             List<CategoryMetadata> categoryMetadataList = new ArrayList<>();
             List<Partner> partners = new ArrayList<>();
@@ -49,13 +52,13 @@ public class DataRefreshWorker
 
             database.beginTransaction();
 
-            if (getCategories(getContext(), service, categories, categoryMetadataList)) {
+            if (getCategories(getContext(), categoryService, categories, categoryMetadataList)) {
                 database.categoryDao().deleteCategories();
                 database.categoryDao().insertCategories(categories);
                 database.categoryDao().insertCategoriesMetadatas(categoryMetadataList);
             }
 
-            if (getPartners(getContext(), service, partners, partnerMetadataList, partnerSideCategories)) {
+            if (getPartners(getContext(), partnerService, partners, partnerMetadataList, partnerSideCategories)) {
                 database.partnerDao().deletePartners();
                 database.partnerDao().insertPartners(partners);
                 database.partnerDao().insertPartnersMetadatas(partnerMetadataList);
@@ -82,12 +85,13 @@ public class DataRefreshWorker
 
     private boolean getCategories(
             @NonNull Context context,
-            @NonNull LaGonetteService service,
+            @NonNull LaGonetteService.Category service,
             @NonNull List<Category> categories,
             @NonNull List<CategoryMetadata> categoryMetadataList)
             throws IOException, RemoteException, OperationApplicationException {
 
         Call<CategoriesResponse> categoryCall = service.getCategories();
+        Log.d(TAG, "Call " + LaGonetteService.HOST + LaGonetteService.ENDPOINT_CATEGORIES);
         Response<CategoriesResponse> response = categoryCall.execute();
 
         if (response.isSuccessful()) {
@@ -101,13 +105,14 @@ public class DataRefreshWorker
 
     private boolean getPartners(
             @NonNull Context context,
-            @NonNull LaGonetteService service,
+            @NonNull LaGonetteService.Partner service,
             @NonNull List<Partner> partners,
             @NonNull List<PartnerMetadata> partnerMetadataList,
             @NonNull List<PartnerSideCategory> partnerSideCategories)
             throws IOException, RemoteException, OperationApplicationException {
 
         Call<PartnersResponse> partnersCall = service.getPartners();
+        Log.d(TAG, "Call " + LaGonetteService.HOST + LaGonetteService.ENDPOINT_PARTNERS);
         Response<PartnersResponse> response = partnersCall.execute();
 
         if (response.isSuccessful()) {
