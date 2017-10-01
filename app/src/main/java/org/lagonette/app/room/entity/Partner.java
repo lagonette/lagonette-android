@@ -17,8 +17,17 @@ public class Partner {
     @ColumnInfo(name = "id")
     public long id;
 
+    @ColumnInfo(name = "client_code")
+    public String clientCode;
+
     @ColumnInfo(name = "name")
     public String name;
+
+    @ColumnInfo(name = "logo")
+    public String logo;
+
+    @ColumnInfo(name = "short_description")
+    public String shortDescription;
 
     @ColumnInfo(name = "description")
     public String description;
@@ -28,12 +37,6 @@ public class Partner {
 
     @ColumnInfo(name = "longitude")
     public double longitude;
-
-    @ColumnInfo(name = "client_code")
-    public String clientCode;
-
-    @ColumnInfo(name = "logo")
-    public String logo;
 
     @ColumnInfo(name = "phone")
     public String phone;
@@ -50,8 +53,8 @@ public class Partner {
     @ColumnInfo(name = "is_exchange_office")
     public boolean isExchangeOffice;
 
-    @ColumnInfo(name = "short_description")
-    public String shortDescription;
+    @ColumnInfo(name = "is_localizable")
+    public boolean isLocalizable;
 
     @ColumnInfo(name = "main_category_id")
     public long mainCategoryId;

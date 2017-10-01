@@ -1,6 +1,7 @@
 package org.lagonette.app.api.response;
 
 
+import android.arch.persistence.room.Ignore;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -65,6 +66,9 @@ public class Partner {
     @SerializedName("sideCategories")
     public List<Long> sideCategoryIds;
 
+    @Ignore()
+    public boolean isLocalizable;
+
     @Override
     public String toString() {
         return id + " [" + clientCode + " - " + name + "]";
@@ -93,6 +97,7 @@ public class Partner {
         partner.isExchangeOffice = isExchangeOffice;
         partner.shortDescription = shortDescription;
         partner.mainCategoryId = mainCategoryId;
+        partner.isLocalizable = isLocalizable;
         partners.add(partner);
 
         org.lagonette.app.room.entity.PartnerMetadata partnerMetadata = new org.lagonette.app.room.entity.PartnerMetadata();

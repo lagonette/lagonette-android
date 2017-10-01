@@ -47,70 +47,76 @@ public class PartnerTypeAdapter extends TypeAdapter<Partner> {
     public Partner read(JsonReader in) throws IOException {
         Partner partner = mGson.fromJson(in, Partner.class);
 
-        if (TextUtils.isEmpty(partner.address)
-                && partner.latitude == 0
-                && partner.longitude == 0) {
-            prependPartner(mStringBuilder, partner);
-            mStringBuilder.insert(0, "Skip partner: ");
-            FirebaseCrash.logcat(Log.WARN, TAG, mStringBuilder.toString());
-            mStringBuilder.setLength(0);
-            partner = null;
-        }
-        else {
-            boolean send = false;
+        setIsLocalizable(partner);
 
-            if (partner.latitude == 0 || partner.longitude == 0) {
-                send = true;
-                mStringBuilder.append("wrong coordinates, ");
-            }
-
-            if (TextUtils.isEmpty(partner.description)) {
-                send = true;
-                mStringBuilder.append("empty description, ");
-            }
-            else {
-                String trimmedDescription = partner.description.trim();
-                if (trimmedDescription.length() != partner.description.length()) {
-                    send = true;
-                    partner.description = trimmedDescription;
-                    mStringBuilder.append("description has extra space, ");
-                }
-            }
-
-            // TODO extract check method
-            if (TextUtils.isEmpty(partner.shortDescription)) {
-                send = true;
-                mStringBuilder.append("empty short description, ");
-            }
-
-            if (TextUtils.isEmpty(partner.address)
-                    || TextUtils.isEmpty(partner.city)
-                    || TextUtils.isEmpty(partner.zipCode)) {
-                send = true;
-                mStringBuilder.append("empty address, ");
-            }
-
-            if (send) {
-                mStringBuilder.insert(0, ": ");
-                prependPartner(mStringBuilder, partner);
-                mStringBuilder
-                        .insert(0, "Wrong data detected for ")
-                        .delete(mStringBuilder.length() - 2, mStringBuilder.length());
-                FirebaseCrash.logcat(Log.WARN, TAG, mStringBuilder.toString());
-                mStringBuilder.setLength(0);
-                mWrongDataSender.acknowledgeWrongData();
-            }
-        }
+        check(partner);
 
         return partner;
     }
 
-    public void prependPartner(@NonNull StringBuilder stringBuilder, @NonNull Partner partner) {
+    private void prependPartner(@NonNull StringBuilder stringBuilder, @NonNull Partner partner) {
         stringBuilder
                 .insert(0, "]")
                 .insert(0, partner.name)
                 .insert(0, ", name: ")
                 .insert(0, partner.id)
                 .insert(0, "[id:");
+    }
+
+    private void setIsLocalizable(@NonNull Partner partner) {
+        if (TextUtils.isEmpty(partner.address)
+                && partner.latitude == 0
+                && partner.longitude == 0) {
+            partner.isLocalizable = false;
+        }
+        else {
+            partner.isLocalizable = true;
+        }
+    }
+
+    private void check(@NonNull Partner partner) {
+        boolean send = false;
+
+        if (partner.isLocalizable && (partner.latitude == 0 || partner.longitude == 0)) {
+            send = true;
+            mStringBuilder.append("wrong coordinates, ");
+        }
+
+        if (partner.isLocalizable
+                && (TextUtils.isEmpty(partner.address)
+                || TextUtils.isEmpty(partner.city)
+                || TextUtils.isEmpty(partner.zipCode))) {
+            send = true;
+            mStringBuilder.append("empty address, ");
+        }
+
+        if (TextUtils.isEmpty(partner.description)) {
+            send = true;
+            mStringBuilder.append("empty description, ");
+        } else {
+            String trimmedDescription = partner.description.trim();
+            if (trimmedDescription.length() != partner.description.length()) {
+                send = true;
+                partner.description = trimmedDescription;
+                mStringBuilder.append("description has extra space, ");
+            }
+        }
+
+        // TODO extract check method
+        if (TextUtils.isEmpty(partner.shortDescription)) {
+            send = true;
+            mStringBuilder.append("empty short description, ");
+        }
+
+        if (send) {
+            mStringBuilder.insert(0, ": ");
+            prependPartner(mStringBuilder, partner);
+            mStringBuilder
+                    .insert(0, "Wrong data detected for ")
+                    .delete(mStringBuilder.length() - 2, mStringBuilder.length());
+            FirebaseCrash.logcat(Log.WARN, TAG, mStringBuilder.toString());
+            mStringBuilder.setLength(0);
+            mWrongDataSender.acknowledgeWrongData();
+        }
     }
 }
