@@ -2,12 +2,16 @@ package org.lagonette.app.worker;
 
 import android.content.Context;
 import android.content.OperationApplicationException;
+import android.content.SharedPreferences;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 
+import org.lagonette.app.api.client.LambdaApiClient;
+import org.lagonette.app.api.client.exception.ApiClientException;
 import org.lagonette.app.api.response.CategoriesResponse;
 import org.lagonette.app.api.response.PartnersResponse;
 import org.lagonette.app.api.service.LaGonetteService;
@@ -19,6 +23,7 @@ import org.lagonette.app.room.entity.CategoryMetadata;
 import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.PartnerMetadata;
 import org.lagonette.app.room.entity.PartnerSideCategory;
+import org.lagonette.app.util.PreferenceUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +39,108 @@ public class DataRefreshWorker
 
     public DataRefreshWorker(@NonNull Context context) {
         super(context);
+    }
+
+    private void logCall(@NonNull String enpoint) {
+        Log.d(TAG, "Call " + LaGonetteService.HOST + enpoint);
+    }
+
+    protected void doWork2(@NonNull WorkerResponse response) {
+
+        LaGonetteDatabase database = DB.get();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        LaGonetteService.Category categoryService = Api.category();
+        LaGonetteService.Partner partnerService = Api.partner();
+
+        List<Category> categories = new ArrayList<>();
+        List<CategoryMetadata> categoryMetadataList = new ArrayList<>();
+        List<Partner> partners = new ArrayList<>();
+        List<PartnerMetadata> partnerMetadataList = new ArrayList<>();
+        List<PartnerSideCategory> partnerSideCategories = new ArrayList<>();
+
+        LambdaApiClient<CategoriesResponse> categoryClient = getCategoriesClient(
+                categories,
+                categoryMetadataList,
+                preferences,
+                database,
+                categoryService
+        );
+
+        LambdaApiClient<String> categoryMd5Client = getCategoriesMd5SumClient(
+                preferences,
+                categoryClient,
+                categoryService
+        );
+
+        try {
+            database.beginTransaction();
+
+            categoryMd5Client.call();
+
+            cleanUpDatabase(database);
+
+            database.setTransactionSuccessful();
+            response.setIsSuccessful(true);
+        } catch (ApiClientException e) {
+            Log.e(TAG, "loadInBackground: ", e);
+            FirebaseCrash.report(e);
+            response.setIsSuccessful(false);
+            // TODO set message
+        } finally {
+            database.endTransaction();
+        }
+    }
+
+    private LambdaApiClient<CategoriesResponse> getCategoriesClient(
+            @NonNull List<Category> categories,
+            @NonNull List<CategoryMetadata> categoryMetadataList,
+            @NonNull SharedPreferences preferences,
+            @NonNull LaGonetteDatabase database,
+            @NonNull LaGonetteService.Category service) {
+        return new LambdaApiClient<>(
+                () -> logCall(LaGonetteService.ENDPOINT_CATEGORIES),
+                service::getCategories,
+                (code, body) -> {
+                    body.prepareInsert(getContext(), categories, categoryMetadataList);
+                    database.categoryDao().deleteCategories();
+                    database.categoryDao().insertCategories(categories);
+                    database.categoryDao().insertCategoriesMetadatas(categoryMetadataList); // TODO Make metadata insert only by SQL
+                    // TODO Ensure data are saved before saving md5 sum, maybe put this in a runnable an execute it after closing transaction
+                    preferences.edit()
+                            .putString(PreferenceUtil.KEY_CATEGORY_MD5_SUM, body.md5Sum)
+                            .apply();
+                },
+                (code, message, errorBody) -> {
+                    FirebaseCrash.logcat(Log.ERROR, TAG, code + ": " + message);
+                    throw new IllegalStateException("response is not successful!"); // TODO Use custom exception
+                }
+        );
+    }
+
+    private LambdaApiClient<String> getCategoriesMd5SumClient(
+            @NonNull SharedPreferences preferences,
+            @NonNull LambdaApiClient<CategoriesResponse> categoryClient,
+            @NonNull LaGonetteService.Category service) {
+        return new LambdaApiClient<>(
+                () -> logCall(LaGonetteService.ENDPOINT_CATEGORIES_MD5),
+                service::getCategoriesMd5,
+                (code, apiMd5Sum) -> {
+                    // Get local categories MD5 sum
+                    String localMd5Sum = preferences.getString(
+                            PreferenceUtil.KEY_CATEGORY_MD5_SUM,
+                            PreferenceUtil.DEFAULT_VALUE_CATEGORY_MD5_SUM
+                    );
+                    if (!localMd5Sum.equals(apiMd5Sum)) {
+                        categoryClient.call();
+                    }
+                },
+                (code, message, errorBody) -> {
+                    FirebaseCrash.logcat(Log.ERROR, TAG, code + ": " + message);
+                    throw new IllegalStateException("response is not successful!"); // TODO Use custom exception
+                }
+        );
     }
 
     @Override
@@ -81,6 +188,36 @@ public class DataRefreshWorker
         } finally {
             database.endTransaction();
         }
+    }
+
+    private void requestCategories(@NonNull Context context, @NonNull LaGonetteService.Category service) {
+        // Get local categories MD5 sum
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String localMd5Sum = preferences.getString(
+                PreferenceUtil.KEY_CATEGORY_MD5_SUM,
+                PreferenceUtil.DEFAULT_VALUE_CATEGORY_MD5_SUM
+        );
+
+        // Request API categories MD5 sum
+        Call<String> md5Call = service.getCategoriesMd5();
+        Log.d(TAG, "Call " + LaGonetteService.HOST + LaGonetteService.ENDPOINT_CATEGORIES_MD5);
+        Response<String> md5Response = md5Call.execute();
+
+        if (!mMd5Sum.equals(md5Sum)) {
+
+            for (org.lagonette.app.api.response.Category category : mCategories) {
+                category.prepareInsert(categories, categoryMetadataList);
+            }
+
+            // TODO Ensure data are saved before saving md5 sum, maybe put this in a runnable an execute it after closing transaction
+            preferences.edit()
+                    .putString(PreferenceUtil.KEY_CATEGORY_MD5_SUM, mMd5Sum)
+                    .apply();
+
+            return true;
+        }
+
+        return false;
     }
 
     private boolean getCategories(
