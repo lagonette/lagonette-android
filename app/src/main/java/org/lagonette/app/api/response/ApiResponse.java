@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName;
 public abstract class ApiResponse {
 
     @SerializedName("errors")
-    protected String mErrors;
+    public String errors;
 
     @SerializedName("md5_sum")
-    protected String mMd5Sum;
+    public String md5Sum;
 
 }
