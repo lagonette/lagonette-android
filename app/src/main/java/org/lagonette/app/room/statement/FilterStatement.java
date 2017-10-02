@@ -14,6 +14,7 @@ public abstract class FilterStatement
                     "category.id, " +
                     "category.label, " +
                     "category.icon, " +
+                    "category.display_order, " +
                     "category_metadata.is_visible, " +
                     "category_metadata.is_collapsed, " +
                     "TOTAL(main_partner_metadata.is_visible) + TOTAL(side_partner_metadata.is_visible) AS category_is_partners_visible, " +
@@ -47,6 +48,7 @@ public abstract class FilterStatement
                     "category.id, " +
                     "NULL AS label, " +
                     "NULL AS icon, " +
+                    "category.display_order, " +
                     "NULL AS is_visible, " +
                     "NULL AS is_collapsed, " +
                     "NULL AS category_is_partners_visible, " +
@@ -76,6 +78,7 @@ public abstract class FilterStatement
                     "category.id, " +
                     "NULL AS label, " +
                     "NULL AS icon, " +
+                    "category.display_order, " +
                     "category_metadata.is_visible, " +
                     "NULL AS is_collapsed, " +
                     "NULL AS category_is_partners_visible, " +
@@ -100,6 +103,7 @@ public abstract class FilterStatement
                     "category.id, " +
                     "NULL AS label, " +
                     "NULL AS icon, " +
+                    "category.display_order, " +
                     "category_metadata.is_visible, " +
                     "NULL AS is_collapsed, " +
                     "NULL AS category_is_partners_visible, " +
@@ -130,7 +134,7 @@ public abstract class FilterStatement
                     SQL_MAIN_CATEGORIES +
                     "UNION " +
                     SQL_SIDE_CATEGORIES +
-                    "ORDER BY category.id ASC, row_type ASC";
+                    "ORDER BY category.display_order ASC, category.id ASC, row_type ASC";
 
 
     public static final int ROW_TYPE;

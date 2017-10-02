@@ -19,4 +19,7 @@ public class Category {
     @ColumnInfo(name = "icon")
     public String icon;
 
+    @ColumnInfo(name = "display_order")
+    public int displayOrder;
+
 }

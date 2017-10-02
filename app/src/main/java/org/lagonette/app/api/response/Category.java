@@ -17,6 +17,9 @@ public class Category {
     @SerializedName("icon")
     private String mIcon;
 
+    @SerializedName("displayOrder")
+    private int mDisplayOrder;
+
     public void prepareInsert(
             @NonNull List<org.lagonette.app.room.entity.Category> categories,
             @NonNull List<org.lagonette.app.room.entity.CategoryMetadata> categoryMetadataList) {
@@ -24,6 +27,7 @@ public class Category {
         category.id = mId;
         category.label = mLabel;
         category.icon = mIcon;
+        category.displayOrder = mDisplayOrder;
         categories.add(category);
 
         org.lagonette.app.room.entity.CategoryMetadata categoryMetadata = new org.lagonette.app.room.entity.CategoryMetadata();
