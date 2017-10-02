@@ -13,12 +13,19 @@ public interface LaGonetteService {
 
     String ENDPOINT_CATEGORIES = "partnersinterface.php?format=app_categories";
 
+    String ENDPOINT_CATEGORIES_MD5 = "partnersinterface.php?format=app_categories&hashonly=1";
+
     String ENDPOINT_PARTNERS = "partnersinterface.php?format=app_partners";
+
+    String ENDPOINT_PARTNERS_MD5 = "partnersinterface.php?format=app_partners&hashonly=1";
 
     interface Category {
 
         @GET(ENDPOINT_CATEGORIES)
         Call<CategoriesResponse> getCategories();
+
+        @GET(ENDPOINT_CATEGORIES_MD5)
+        Call<String> getCategoriesMd5();
 
     }
 
@@ -26,6 +33,9 @@ public interface LaGonetteService {
 
         @GET(ENDPOINT_PARTNERS)
         Call<PartnersResponse> getPartners();
+
+        @GET(ENDPOINT_PARTNERS_MD5)
+        Call<String> getPartnersMd5();
 
     }
 
