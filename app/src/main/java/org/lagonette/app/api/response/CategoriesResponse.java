@@ -24,13 +24,13 @@ public class CategoriesResponse extends ApiResponse {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        String md5Sum = preferences.getString(
+        String localMd5Sum = preferences.getString(
                 PreferenceUtil.KEY_CATEGORY_MD5_SUM,
                 PreferenceUtil.DEFAULT_VALUE_CATEGORY_MD5_SUM
         );
         addOfficeCategory(categories, categoryMetadataList);
 
-        if (!mMd5Sum.equals(md5Sum)) {
+        if (!md5Sum.equals(localMd5Sum)) {
 
             for (Category category : mCategories) {
                 category.prepareInsert(categories, categoryMetadataList);
@@ -38,7 +38,7 @@ public class CategoriesResponse extends ApiResponse {
 
             // TODO Ensure data are saved before saving md5 sum, maybe put this in a runnable an execute it after closing transaction
             preferences.edit()
-                    .putString(PreferenceUtil.KEY_CATEGORY_MD5_SUM, mMd5Sum)
+                    .putString(PreferenceUtil.KEY_CATEGORY_MD5_SUM, md5Sum)
                     .apply();
 
             return true;

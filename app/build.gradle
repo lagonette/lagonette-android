@@ -49,7 +49,7 @@ android {
             versionNameSuffix "-debug"
 
             buildConfigField "boolean", "LOG_SQL", "true"
-            buildConfigField "boolean", "USE_DEV_API", "true"
+            buildConfigField "boolean", "USE_DEV_API", "false"
         }
         prod.initWith(buildTypes.release)
         prod {

@@ -4,10 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.util.Log;
 
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.annotations.SerializedName;
 
 import org.lagonette.app.room.entity.PartnerMetadata;
@@ -30,13 +27,13 @@ public class PartnersResponse extends ApiResponse {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        String md5Sum = preferences.getString(
+        String localMd5Sum = preferences.getString(
                 PreferenceUtil.KEY_PARTNER_MD5_SUM,
                 PreferenceUtil.DEFAULT_VALUE_PARTNER_MD5_SUM
         );
 
 
-        if (!mMd5Sum.equals(md5Sum)) {
+        if (!md5Sum.equals(localMd5Sum)) {
 
             for (Partner partner : mPartners) {
                 if (partner != null) {
@@ -47,7 +44,7 @@ public class PartnersResponse extends ApiResponse {
 
             // TODO Ensure data are saved before saving md5 sum, maybe put this in a runnable an execute it after closing transaction
             preferences.edit()
-                    .putString(PreferenceUtil.KEY_PARTNER_MD5_SUM, mMd5Sum)
+                    .putString(PreferenceUtil.KEY_PARTNER_MD5_SUM, md5Sum)
                     .apply();
             return true;
         }
@@ -55,6 +52,7 @@ public class PartnersResponse extends ApiResponse {
         return false;
     }
 
+    // TODO add office as partner in TypeAdapter
     private void addOfficePartner(@NonNull List<org.lagonette.app.room.entity.Partner> partners, @NonNull List<PartnerMetadata> partnerMetadataList) {
 //        partners.add(new OfficePartner());
 //        partnerMetadataList.add(new OfficePartnerMetadata());

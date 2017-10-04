@@ -29,6 +29,7 @@ public abstract class ApiClient<T> {
         }
     }
 
+    // TODO Make retrofit log in debug
     protected abstract void logCall();
 
     protected abstract Call<T> createCall();

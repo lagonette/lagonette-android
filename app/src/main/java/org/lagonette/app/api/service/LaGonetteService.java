@@ -2,6 +2,7 @@ package org.lagonette.app.api.service;
 
 import org.lagonette.app.BuildConfig;
 import org.lagonette.app.api.response.CategoriesResponse;
+import org.lagonette.app.api.response.Md5SumResponse;
 import org.lagonette.app.api.response.PartnersResponse;
 
 import retrofit2.Call;
@@ -25,7 +26,7 @@ public interface LaGonetteService {
         Call<CategoriesResponse> getCategories();
 
         @GET(ENDPOINT_CATEGORIES_MD5)
-        Call<String> getCategoriesMd5();
+        Call<Md5SumResponse> getCategoriesMd5();
 
     }
 
@@ -35,7 +36,7 @@ public interface LaGonetteService {
         Call<PartnersResponse> getPartners();
 
         @GET(ENDPOINT_PARTNERS_MD5)
-        Call<String> getPartnersMd5();
+        Call<Md5SumResponse> getPartnersMd5();
 
     }
 
