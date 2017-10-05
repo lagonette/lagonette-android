@@ -71,7 +71,7 @@ public class PartnerClient
     @Override
     protected void onErrorResponse(int code, @NonNull String message, @NonNull ResponseBody errorBody) throws ApiClientException {
         FirebaseCrash.logcat(Log.ERROR, TAG, code + ": " + message);
-        throw new IllegalStateException("response is not successful!"); // TODO Use custom exception
+        throw new ApiClientException("Response is not successful!");
     }
 
     @Nullable

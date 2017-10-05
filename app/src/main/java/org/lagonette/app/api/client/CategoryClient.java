@@ -61,14 +61,12 @@ public class CategoryClient extends ApiClient<CategoriesResponse> {
         mDatabase.categoryDao().deleteCategories();
         mDatabase.categoryDao().insertCategories(categories);
         mDatabase.categoryDao().insertCategoriesMetadatas(categoryMetadataList); // TODO Make metadata insert only by SQL
-//        // TODO Ensure data are saved before saving md5 sum, maybe put this in a runnable an execute it after closing transaction
-//
     }
 
     @Override
     protected void onErrorResponse(int code, @NonNull String message, @NonNull ResponseBody errorBody) throws ApiClientException {
         FirebaseCrash.logcat(Log.ERROR, TAG, code + ": " + message);
-        throw new IllegalStateException("response is not successful!"); // TODO Use custom exception
+        throw new ApiClientException("Response is not successful!");
     }
 
     @Nullable
