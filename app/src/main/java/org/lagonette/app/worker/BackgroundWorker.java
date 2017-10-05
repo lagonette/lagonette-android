@@ -28,7 +28,7 @@ public abstract class BackgroundWorker
         mWorkerResponseLiveData.postValue(response);
     }
 
-    protected abstract void doWork(@NonNull WorkerResponse response);
+    protected abstract void doWork(@NonNull WorkerResponse workerResponse);
 
     @NonNull
     protected Context getContext() {

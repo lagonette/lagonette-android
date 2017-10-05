@@ -26,7 +26,7 @@ public interface LaGonetteService {
         Call<CategoriesResponse> getCategories();
 
         @GET(ENDPOINT_CATEGORIES_MD5)
-        Call<Md5SumResponse> getCategoriesMd5();
+        Call<Md5SumResponse> getMd5Sum();
 
     }
 
@@ -36,7 +36,7 @@ public interface LaGonetteService {
         Call<PartnersResponse> getPartners();
 
         @GET(ENDPOINT_PARTNERS_MD5)
-        Call<Md5SumResponse> getPartnersMd5();
+        Call<Md5SumResponse> getMd5Sum();
 
     }
 

@@ -7,11 +7,8 @@ import org.lagonette.app.api.client.exception.ApiClientException;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class LambdaApiClient<T> extends ApiClient<T> {
-
-    public interface Logger {
-        void logCall();
-    }
+public class LambdaApiClient<T>
+        extends ApiClient<T> {
 
     public interface CallFactory<T> {
         Call<T> create();
@@ -25,7 +22,7 @@ public class LambdaApiClient<T> extends ApiClient<T> {
         void onErrorResponse(int code, @NonNull String message, @NonNull ResponseBody errorBody) throws ApiClientException;
     }
 
-    private final Logger mLogger;
+    private final String mEndpoint;
 
     private final CallFactory<T> mCallFactory;
 
@@ -34,19 +31,19 @@ public class LambdaApiClient<T> extends ApiClient<T> {
     private final OnErrorCallback mOnErrorCallback;
 
     public LambdaApiClient(
-            Logger logger,
-            CallFactory<T> callFactory,
-            OnSuccessfulCallback<T> onSuccessfulCallback,
-            OnErrorCallback onErrorCallback) {
-        mLogger = logger;
+            @NonNull String endpoint,
+            @NonNull CallFactory<T> callFactory,
+            @NonNull OnSuccessfulCallback<T> onSuccessfulCallback,
+            @NonNull OnErrorCallback onErrorCallback) {
+        mEndpoint = endpoint;
         mCallFactory = callFactory;
         mOnSuccessfulCallback = onSuccessfulCallback;
         mOnErrorCallback = onErrorCallback;
     }
 
     @Override
-    protected void logCall() {
-        mLogger.logCall();
+    protected String getEndpoint() {
+        return mEndpoint;
     }
 
     @Override
