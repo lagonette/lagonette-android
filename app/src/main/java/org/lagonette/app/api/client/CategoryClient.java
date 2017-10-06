@@ -3,11 +3,7 @@ package org.lagonette.app.api.client;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.google.firebase.crash.FirebaseCrash;
-
-import org.lagonette.app.api.client.exception.ApiClientException;
 import org.lagonette.app.api.response.CategoriesResponse;
 import org.lagonette.app.api.service.LaGonetteService;
 import org.lagonette.app.room.database.LaGonetteDatabase;
@@ -18,12 +14,9 @@ import org.lagonette.app.util.PreferenceUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class CategoryClient extends ApiClient<CategoriesResponse> {
-
-    private static final String TAG = "CategoryClient";
+public class CategoryClient extends EntityClient<CategoriesResponse> {
 
     @NonNull
     private final LaGonetteDatabase mDatabase;
@@ -48,7 +41,7 @@ public class CategoryClient extends ApiClient<CategoriesResponse> {
     }
 
     @Override
-    protected void onSuccessfulResponse(int code, @NonNull CategoriesResponse body) throws ApiClientException {
+    protected void onSuccessfulBody(@NonNull CategoriesResponse body) {
         List<Category> categories = new ArrayList<>();
         List<CategoryMetadata> categoryMetadataList = new ArrayList<>();
 
@@ -57,12 +50,6 @@ public class CategoryClient extends ApiClient<CategoriesResponse> {
         mDatabase.categoryDao().deleteCategories();
         mDatabase.categoryDao().insertCategories(categories);
         mDatabase.categoryDao().insertCategoriesMetadatas(categoryMetadataList); // TODO Make metadata insert only by SQL
-    }
-
-    @Override
-    protected void onErrorResponse(int code, @NonNull String message, @NonNull ResponseBody errorBody) throws ApiClientException {
-        FirebaseCrash.logcat(Log.ERROR, TAG, code + ": " + message);
-        throw new ApiClientException("Response is not successful!");
     }
 
     @Nullable

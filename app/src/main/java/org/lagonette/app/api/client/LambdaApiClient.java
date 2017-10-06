@@ -7,15 +7,15 @@ import org.lagonette.app.api.client.exception.ApiClientException;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class LambdaApiClient<T>
-        extends ApiClient<T> {
+public class LambdaApiClient<R>
+        extends RetrofitClient<R> {
 
-    public interface CallFactory<T> {
-        Call<T> create();
+    public interface CallFactory<R> {
+        Call<R> create();
     }
 
-    public interface OnSuccessfulCallback<T> {
-        void onSuccessfulResponse(int code, @NonNull T body) throws ApiClientException;
+    public interface OnSuccessfulCallback<R> {
+        void onSuccessfulResponse(int code, @NonNull R body) throws ApiClientException;
     }
 
     public interface OnErrorCallback {
@@ -23,17 +23,17 @@ public class LambdaApiClient<T>
     }
 
     @NonNull
-    private final CallFactory<T> mCallFactory;
+    private final CallFactory<R> mCallFactory;
 
     @NonNull
-    private final OnSuccessfulCallback<T> mOnSuccessfulCallback;
+    private final OnSuccessfulCallback<R> mOnSuccessfulCallback;
 
     @NonNull
     private final OnErrorCallback mOnErrorCallback;
 
     public LambdaApiClient(
-            @NonNull CallFactory<T> callFactory,
-            @NonNull OnSuccessfulCallback<T> onSuccessfulCallback,
+            @NonNull CallFactory<R> callFactory,
+            @NonNull OnSuccessfulCallback<R> onSuccessfulCallback,
             @NonNull OnErrorCallback onErrorCallback) {
         mCallFactory = callFactory;
         mOnSuccessfulCallback = onSuccessfulCallback;
@@ -42,12 +42,12 @@ public class LambdaApiClient<T>
 
     @Override
     @NonNull
-    protected Call<T> createCall() {
+    protected Call<R> createCall() {
         return mCallFactory.create();
     }
 
     @Override
-    protected void onSuccessfulResponse(int code, @NonNull T body) throws ApiClientException {
+    protected void onSuccessfulResponse(int code, @NonNull R body) throws ApiClientException {
         mOnSuccessfulCallback.onSuccessfulResponse(code, body);
     }
 

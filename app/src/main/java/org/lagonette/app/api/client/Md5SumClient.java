@@ -12,7 +12,7 @@ import org.lagonette.app.api.response.Md5SumResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class Md5SumClient extends ApiClient<Md5SumResponse> {
+public class Md5SumClient extends RetrofitClient<Md5SumResponse> {
 
     private static final String TAG = "Md5SumClient";
 

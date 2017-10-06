@@ -10,17 +10,15 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public abstract class ApiClient<T> {
-
-    private static final String TAG = "ApiClient";
+public abstract class RetrofitClient<R> {
 
     private boolean mIsSuccess = false;
 
     public void call() throws ApiClientException {
         try {
             mIsSuccess = false;
-            Call<T> call = createCall();
-            Response<T> response = call.execute();
+            Call<R> call = createCall();
+            Response<R> response = call.execute();
 
             if (response.isSuccessful()) {
                 onSuccessfulResponse(response.code(), response.body());
@@ -38,9 +36,9 @@ public abstract class ApiClient<T> {
     }
 
     @NonNull
-    protected abstract Call<T> createCall();
+    protected abstract Call<R> createCall();
 
-    protected abstract void onSuccessfulResponse(int code, @NonNull T body) throws ApiClientException;
+    protected abstract void onSuccessfulResponse(int code, @NonNull R body) throws ApiClientException;
 
     protected abstract void onErrorResponse(int code, @NonNull String message, @NonNull ResponseBody errorBody) throws ApiClientException;
 }
