@@ -20,18 +20,11 @@ public class PartnersResponse extends ApiResponse {
             @NonNull List<org.lagonette.app.room.entity.Location> locations,
             @NonNull List<org.lagonette.app.room.entity.PartnerMetadata> partnerMetadataList,
             @NonNull List<org.lagonette.app.room.entity.PartnerSideCategory> partnerSideCategories) {
-
         for (Partner partner : mPartners) {
             if (partner != null) {
                 partner.prepareInsert(partners, locations, partnerMetadataList, partnerSideCategories);
             }
         }
-        addOfficePartner(partners, partnerMetadataList);
     }
 
-    // TODO add office as partner in TypeAdapter
-    private void addOfficePartner(@NonNull List<org.lagonette.app.room.entity.Partner> partners, @NonNull List<PartnerMetadata> partnerMetadataList) {
-//        partners.add(new OfficePartner());
-//        partnerMetadataList.add(new OfficePartnerMetadata());
-    }
 }
