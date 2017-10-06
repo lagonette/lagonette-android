@@ -57,6 +57,9 @@ public class Partner {
     @SerializedName("isExchangeOffice")
     public boolean isExchangeOffice;
 
+    @SerializedName("isGonetteHeadquarter")
+    public boolean isGonetteHeadquarter;
+
     @SerializedName("shortDescription")
     public String shortDescription;
 
@@ -95,6 +98,7 @@ public class Partner {
         partner.description = description;
         partner.openingHours = openingHours;
         partner.isExchangeOffice = isExchangeOffice;
+        partner.isGonetteHeadquarter = isGonetteHeadquarter;
         partner.shortDescription = shortDescription;
         partner.mainCategoryId = mainCategoryId;
         partner.isLocalizable = isLocalizable;

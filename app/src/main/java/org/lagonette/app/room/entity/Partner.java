@@ -56,6 +56,9 @@ public class Partner {
     @ColumnInfo(name = "is_localizable")
     public boolean isLocalizable;
 
+    @ColumnInfo(name = "is_gonette_headquarter")
+    public boolean isGonetteHeadquarter;
+
     @ColumnInfo(name = "main_category_id")
     public long mainCategoryId;
 
