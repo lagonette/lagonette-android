@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import org.lagonette.app.api.response.PartnersResponse;
 import org.lagonette.app.api.service.LaGonetteService;
 import org.lagonette.app.room.database.LaGonetteDatabase;
+import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.PartnerMetadata;
 import org.lagonette.app.room.entity.PartnerSideCategory;
@@ -26,7 +27,7 @@ public class PartnerClient
     @NonNull
     private final LaGonetteService.Partner mService;
 
-    @NonNull
+    @Nullable
     private String mMd5Sum;
 
     public PartnerClient(
@@ -45,12 +46,14 @@ public class PartnerClient
     @Override
     protected void onSuccessfulBody(@NonNull PartnersResponse body) {
         List<Partner> partners = new ArrayList<>();
+        List<Location> locations = new ArrayList<>();
         List<PartnerMetadata> partnerMetadataList = new ArrayList<>();
         List<PartnerSideCategory> partnerSideCategories = new ArrayList<>();
 
         mMd5Sum = body.md5Sum;
-        body.prepareInsert(partners, partnerMetadataList, partnerSideCategories);
+        body.prepareInsert(partners, locations, partnerMetadataList, partnerSideCategories);
         mDatabase.partnerDao().deletePartners();
+        mDatabase.partnerDao().insertLocations(locations);
         mDatabase.partnerDao().insertPartners(partners);
         mDatabase.partnerDao().insertPartnersMetadatas(partnerMetadataList);
         mDatabase.partnerDao().deletePartnerSideCategories();

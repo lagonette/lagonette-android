@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.PartnerMetadata;
 import org.lagonette.app.room.entity.PartnerSideCategory;
@@ -16,6 +17,9 @@ public interface PartnerDao {
 
     @Insert
     long[] insertPartners(List<Partner> partners);
+
+    @Insert
+    long[] insertLocations(List<Location> locations);
 
     // TODO Use foreign key cascade
     @Query("DELETE FROM partner")
