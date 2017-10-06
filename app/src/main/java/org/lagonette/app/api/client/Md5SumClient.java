@@ -18,7 +18,7 @@ public class Md5SumClient extends ApiClient<Md5SumResponse> {
 
     public interface CallFactory {
 
-        @Nullable
+        @NonNull
         Call<Md5SumResponse> create();
     }
 
@@ -34,26 +34,17 @@ public class Md5SumClient extends ApiClient<Md5SumResponse> {
     @NonNull
     private final LocalMd5SumRetriever mRetriever;
 
-    @NonNull
-    private final String mEndpoint;
-
     private boolean mIsMd5SumChanged;
 
     public Md5SumClient(
-            @NonNull String endpoint,
             @NonNull CallFactory callFactory,
             @NonNull LocalMd5SumRetriever retriever) {
-        mEndpoint = endpoint;
         mCallFactory = callFactory;
         mRetriever = retriever;
     }
 
     @Override
-    protected String getEndpoint() {
-        return mEndpoint;
-    }
-
-    @Override
+    @NonNull
     protected Call<Md5SumResponse> createCall() {
         return mCallFactory.create();
     }

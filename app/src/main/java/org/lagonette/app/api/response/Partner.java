@@ -55,7 +55,7 @@ public class Partner {
     public String openingHours;
 
     @SerializedName("isExchangeOffice")
-    public Boolean isExchangeOffice; // TODO Use custom adapter to handle boolean correctly.
+    public boolean isExchangeOffice;
 
     @SerializedName("shortDescription")
     public String shortDescription;
@@ -89,7 +89,7 @@ public class Partner {
         partner.address.zipCode = zipCode;
         partner.latitude = latitude;
         partner.longitude = longitude;
-        partner.phone = phone; // TODO Format
+        partner.phone = phone; // TODO Format, use google lib phone
         partner.website = website;
         partner.email = email;
         partner.description = description;

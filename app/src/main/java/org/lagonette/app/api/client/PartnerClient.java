@@ -25,7 +25,7 @@ import retrofit2.Call;
 public class PartnerClient
         extends ApiClient<PartnersResponse> {
 
-    private static final String TAG = "CategoryClient";
+    private static final String TAG = "PartnerClient";
 
     @NonNull
     private final LaGonetteDatabase mDatabase;
@@ -43,11 +43,7 @@ public class PartnerClient
         mService = service;
     }
 
-    @Override
-    protected String getEndpoint() {
-        return LaGonetteService.ENDPOINT_PARTNERS;
-    }
-
+    @NonNull
     @Override
     protected Call<PartnersResponse> createCall() {
         return mService.getPartners();

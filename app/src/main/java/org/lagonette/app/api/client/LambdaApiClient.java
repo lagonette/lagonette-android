@@ -22,31 +22,26 @@ public class LambdaApiClient<T>
         void onErrorResponse(int code, @NonNull String message, @NonNull ResponseBody errorBody) throws ApiClientException;
     }
 
-    private final String mEndpoint;
-
+    @NonNull
     private final CallFactory<T> mCallFactory;
 
+    @NonNull
     private final OnSuccessfulCallback<T> mOnSuccessfulCallback;
 
+    @NonNull
     private final OnErrorCallback mOnErrorCallback;
 
     public LambdaApiClient(
-            @NonNull String endpoint,
             @NonNull CallFactory<T> callFactory,
             @NonNull OnSuccessfulCallback<T> onSuccessfulCallback,
             @NonNull OnErrorCallback onErrorCallback) {
-        mEndpoint = endpoint;
         mCallFactory = callFactory;
         mOnSuccessfulCallback = onSuccessfulCallback;
         mOnErrorCallback = onErrorCallback;
     }
 
     @Override
-    protected String getEndpoint() {
-        return mEndpoint;
-    }
-
-    @Override
+    @NonNull
     protected Call<T> createCall() {
         return mCallFactory.create();
     }

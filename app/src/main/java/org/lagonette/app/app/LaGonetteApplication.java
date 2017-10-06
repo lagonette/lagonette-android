@@ -28,6 +28,8 @@ import org.lagonette.app.util.StrictModeUtil;
 import java.util.List;
 import java.util.concurrent.Executors;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -64,6 +66,15 @@ public class LaGonetteApplication
     }
 
     private void setUpApi() {
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+            httpClient.addInterceptor(logging);
+        }
+
         Gson mainGson = new GsonBuilder()
                 .registerTypeAdapter(String.class, new StringTypeAdapter())
                 .registerTypeAdapter(Long.class, new LongTypeAdapter())
@@ -80,6 +91,7 @@ public class LaGonetteApplication
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(LaGonetteService.HOST)
+                .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -89,6 +101,7 @@ public class LaGonetteApplication
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(LaGonetteService.HOST)
+                .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create(mainGson))
                 .build();
 

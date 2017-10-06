@@ -40,7 +40,6 @@ public class DataRefreshWorker
         CategoryClient categoryClient = new CategoryClient(database, categoryService);
 
         Md5SumClient categoryMd5Client = new Md5SumClient(
-                LaGonetteService.ENDPOINT_CATEGORIES_MD5,
                 categoryService::getMd5Sum,
                 () -> categoryClient.getLocalMd5Sum(preferences)
         );
@@ -48,7 +47,6 @@ public class DataRefreshWorker
         PartnerClient partnerClient = new PartnerClient(database, partnerService);
 
         Md5SumClient partnerMd5SumClient = new Md5SumClient(
-                LaGonetteService.ENDPOINT_PARTNERS_MD5,
                 partnerService::getMd5Sum,
                 () -> partnerClient.getLocalMd5Sum(preferences)
         );
@@ -64,6 +62,7 @@ public class DataRefreshWorker
             }
 
             if (categoryMd5Client.isMd5SumChanged()) {
+                Log.d(TAG, "Category MD5 sum has changed -> update categories");
                 categoryClient.call();
             }
 
@@ -80,6 +79,7 @@ public class DataRefreshWorker
             }
 
             if (partnerMd5SumClient.isMd5SumChanged()) {
+                Log.d(TAG, "Partner MD5 sum has changed -> update partners");
                 partnerClient.call();
             }
 

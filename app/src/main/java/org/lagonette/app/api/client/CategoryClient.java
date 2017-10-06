@@ -41,11 +41,7 @@ public class CategoryClient extends ApiClient<CategoriesResponse> {
         mService = service;
     }
 
-    @Override
-    protected String getEndpoint() {
-        return LaGonetteService.ENDPOINT_CATEGORIES;
-    }
-
+    @NonNull
     @Override
     protected Call<CategoriesResponse> createCall() {
         return mService.getCategories();

@@ -1,11 +1,8 @@
 package org.lagonette.app.api.client;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import org.lagonette.app.BuildConfig;
 import org.lagonette.app.api.client.exception.ApiClientException;
-import org.lagonette.app.api.service.LaGonetteService;
 
 import java.io.IOException;
 
@@ -23,7 +20,6 @@ public abstract class ApiClient<T> {
         try {
             mIsSuccess = false;
             Call<T> call = createCall();
-            if (BuildConfig.DEBUG) logCall();
             Response<T> response = call.execute();
 
             if (response.isSuccessful()) {
@@ -41,13 +37,7 @@ public abstract class ApiClient<T> {
         return mIsSuccess;
     }
 
-    // TODO Make retrofit log in debug
-    private void logCall() {
-        Log.d(TAG, "Call " + LaGonetteService.HOST + getEndpoint());
-    }
-
-    protected abstract String getEndpoint();
-
+    @NonNull
     protected abstract Call<T> createCall();
 
     protected abstract void onSuccessfulResponse(int code, @NonNull T body) throws ApiClientException;
