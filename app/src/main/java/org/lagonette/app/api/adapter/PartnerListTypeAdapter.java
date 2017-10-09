@@ -8,6 +8,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
+import org.lagonette.app.api.adapter.contract.WrongDataPoster;
 import org.lagonette.app.api.response.Partner;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class PartnerListTypeAdapter
         extends TypeAdapter<List<Partner>>
-        implements PartnerTypeAdapter.WrongDataSender {
+        implements WrongDataPoster {
 
     @NonNull
     private Gson mGson;
@@ -43,7 +44,7 @@ public class PartnerListTypeAdapter
     }
 
     @Override
-    public void acknowledgeWrongData() {
+    public void postWrongData() {
         mSendWrongDataException = true;
     }
 }

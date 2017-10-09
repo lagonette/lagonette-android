@@ -8,6 +8,7 @@ import org.lagonette.app.room.dao.MainDao;
 import org.lagonette.app.room.dao.PartnerDao;
 import org.lagonette.app.room.entity.Category;
 import org.lagonette.app.room.entity.CategoryMetadata;
+import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.PartnerMetadata;
 import org.lagonette.app.room.entity.PartnerSideCategory;
@@ -17,6 +18,7 @@ import org.lagonette.app.util.DatabaseUtil;
         entities = {
                 Partner.class,
                 PartnerMetadata.class,
+                Location.class,
                 Category.class,
                 CategoryMetadata.class,
                 PartnerSideCategory.class,

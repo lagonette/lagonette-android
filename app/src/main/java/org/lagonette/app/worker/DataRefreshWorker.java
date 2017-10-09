@@ -114,6 +114,7 @@ public class DataRefreshWorker
     }
 
     private void cleanUpDatabase(@NonNull LaGonetteDatabase db) {
+        db.partnerDao().cleanLocation();
         db.partnerDao().cleanPartner();
 //        db.partnerDao().cleanPartnerMetadata(); // TODO clean partner metadata
     }

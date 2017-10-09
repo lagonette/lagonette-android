@@ -8,10 +8,10 @@ public abstract class MapPartnerStatement
 
     public static final String SQL =
             "SELECT partner.id, " +
-                "partner.latitude, " +
-                "partner.longitude, " +
-                "partner.is_exchange_office, " +
                 "partner.main_category_id, " +
+                "location.latitude, " +
+                "location.longitude, " +
+                "location.is_exchange_office, " +
                 "main_category.icon " +
             FROM_PARTNER_AND_METADATA +
             JOIN_LOCATION_ON_PARTNER +

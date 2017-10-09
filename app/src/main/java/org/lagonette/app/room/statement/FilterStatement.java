@@ -30,9 +30,9 @@ public abstract class FilterStatement
                     FROM_CATEGORY_AND_METADATA +
                     LEFT_JOIN_MAIN_PARTNER_AND_METADATA_ON_CATEGORY +
                     LEFT_JOIN_SIDE_PARTNER_AND_METADATA_ON_CATEGORY +
-                    "WHERE main_partner.name LIKE :search " +
-                    "OR side_partner.name LIKE :search " +
-                    "GROUP BY category.id ";
+                    " WHERE main_partner.name LIKE :search " +
+                    " OR side_partner.name LIKE :search " +
+                    " GROUP BY category.id ";
 
     private static final String SQL_FOOTERS =
             "SELECT " +
@@ -54,14 +54,14 @@ public abstract class FilterStatement
                     FROM_CATEGORY +
                     LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
                     LEFT_JOIN_SIDE_PARTNER_ON_CATEGORY +
-                    "WHERE main_partner.main_category_id IS NOT NULL " +
-                    "AND main_partner.name LIKE :search " +
-                    "OR category.id IS NOT NULL " +
-                    "AND side_partner.name LIKE :search " +
-                    "GROUP BY category.id ";
+                    " WHERE main_partner.main_category_id IS NOT NULL " +
+                    " AND main_partner.name LIKE :search " +
+                    " OR category.id IS NOT NULL " +
+                    " AND side_partner.name LIKE :search " +
+                    " GROUP BY category.id ";
 
 
-    private static final String SQL_MAIN_CATEGORIES =
+    private static final String SQL_MAIN_PARTNERS =
             "SELECT 1 AS row_type, " +
                     "category.id, " +
                     "NULL AS label, " +
@@ -72,16 +72,17 @@ public abstract class FilterStatement
                     "NULL AS category_is_partners_visible, " +
                     "partner.id, " +
                     "partner.name, " +
-                    "partner.street, " +
-                    "partner.zip_code, " +
-                    "partner.city, " +
-                    "partner.is_exchange_office, " +
+                    "location.street, " +
+                    "location.zip_code, " +
+                    "location.city, " +
+                    "location.is_exchange_office, " +
                     "partner_metadata.is_visible " +
                     FROM_CATEGORY_AND_METADATA +
                     JOIN_PARTNER_AND_METADATA_ON_CATEGORY +
-                    "WHERE partner.name LIKE :search AND category_metadata.is_collapsed = 0 ";
+                    JOIN_LOCATION_ON_PARTNER +
+                    " WHERE partner.name LIKE :search AND category_metadata.is_collapsed = 0 ";
 
-    private static final String SQL_SIDE_CATEGORIES =
+    private static final String SQL_SIDE_PARTNERS =
             "SELECT 2 AS row_type, " +
                     "category.id, " +
                     "NULL AS label, " +
@@ -90,32 +91,28 @@ public abstract class FilterStatement
                     "category_metadata.is_visible, " +
                     "NULL AS is_collapsed, " +
                     "NULL AS category_is_partners_visible, " +
-                    "partner.id, " +
-                    "partner.name, " +
-                    "partner.street, " +
-                    "partner.zip_code, " +
-                    "partner.city, " +
-                    "partner.is_exchange_office, " +
-                    "partner_metadata.is_visible " +
-                    FROM_CATEGORY_AND_METADATA + // TODO WARN there is no LEFT JOIN
-                    "JOIN partner_side_category " +
-                    "ON category.id = partner_side_category.category_id " +
-                    "JOIN partner " +
-                    "ON partner.id = partner_side_category.partner_id " +
-                    "JOIN partner_metadata " +
-                    "ON partner.id = partner_metadata.partner_id " +
-                    "WHERE partner.name LIKE :search " +
-                    "AND category_metadata.is_collapsed = 0 ";
+                    "side_partner.id, " +
+                    "side_partner.name, " +
+                    "side_location.street, " +
+                    "side_location.zip_code, " +
+                    "side_location.city, " +
+                    "side_location.is_exchange_office, " +
+                    "side_partner_metadata.is_visible " +
+                    FROM_CATEGORY_AND_METADATA +
+                    JOIN_SIDE_PARTNER_AND_METADATA_ON_CATEGORY +
+                    JOIN_LOCATION_ON_SIDE_PARTNER +
+                    " WHERE side_partner.name LIKE :search " +
+                    " AND category_metadata.is_collapsed = 0 ";
 
     public static final String SQL =
             SQL_CATEGORIES +
-                    "UNION " +
+                    " UNION " +
                     SQL_FOOTERS +
-                    "UNION " +
-                    SQL_MAIN_CATEGORIES +
-                    "UNION " +
-                    SQL_SIDE_CATEGORIES +
-                    "ORDER BY category.display_order ASC, category.id ASC, row_type ASC";
+                    " UNION " +
+                    SQL_MAIN_PARTNERS +
+                    " UNION " +
+                    SQL_SIDE_PARTNERS +
+                    " ORDER BY category.display_order ASC, category.id ASC, row_type ASC";
 
 
     public static final int ROW_TYPE;

@@ -53,6 +53,7 @@ public class PartnerClient
         mMd5Sum = body.md5Sum;
         body.prepareInsert(partners, locations, partnerMetadataList, partnerSideCategories);
         mDatabase.partnerDao().deletePartners();
+        mDatabase.partnerDao().deleteLocations();
         mDatabase.partnerDao().insertLocations(locations);
         mDatabase.partnerDao().insertPartners(partners);
         mDatabase.partnerDao().insertPartnersMetadatas(partnerMetadataList);

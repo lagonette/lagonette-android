@@ -10,31 +10,28 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
+import org.lagonette.app.api.adapter.contract.WrongDataPoster;
+import org.lagonette.app.api.response.Location;
 import org.lagonette.app.api.response.Partner;
 
 import java.io.IOException;
 
 public class PartnerTypeAdapter extends TypeAdapter<Partner> {
 
-    public interface WrongDataSender {
-
-        void acknowledgeWrongData();
-
-    }
     private static final String TAG = "PartnerTypeAdapter";
 
     @NonNull
     private Gson mGson;
 
     @NonNull
-    private WrongDataSender mWrongDataSender;
+    private WrongDataPoster mWrongDataPoster;
 
     @NonNull
     private final StringBuilder mStringBuilder;
 
-    public PartnerTypeAdapter(@NonNull Gson gson, @NonNull WrongDataSender wrongDataSender) {
+    public PartnerTypeAdapter(@NonNull Gson gson, @NonNull WrongDataPoster wrongDataPoster) {
         mGson = gson;
-        mWrongDataSender = wrongDataSender;
+        mWrongDataPoster = wrongDataPoster;
         mStringBuilder = new StringBuilder();
     }
 
@@ -47,7 +44,9 @@ public class PartnerTypeAdapter extends TypeAdapter<Partner> {
     public Partner read(JsonReader in) throws IOException {
         Partner partner = mGson.fromJson(in, Partner.class);
 
-        setIsLocalizable(partner);
+        for (Location location : partner.locations) {
+            location.partnerId = partner.id;
+        }
 
         check(partner);
 
@@ -63,32 +62,8 @@ public class PartnerTypeAdapter extends TypeAdapter<Partner> {
                 .insert(0, "[id:");
     }
 
-    private void setIsLocalizable(@NonNull Partner partner) {
-        if (TextUtils.isEmpty(partner.address)
-                && partner.latitude == 0
-                && partner.longitude == 0) {
-            partner.isLocalizable = false;
-        }
-        else {
-            partner.isLocalizable = true;
-        }
-    }
-
     private void check(@NonNull Partner partner) {
         boolean send = false;
-
-        if (partner.isLocalizable && (partner.latitude == 0 || partner.longitude == 0)) {
-            send = true;
-            mStringBuilder.append("wrong coordinates, ");
-        }
-
-        if (partner.isLocalizable
-                && (TextUtils.isEmpty(partner.address)
-                || TextUtils.isEmpty(partner.city)
-                || TextUtils.isEmpty(partner.zipCode))) {
-            send = true;
-            mStringBuilder.append("empty address, ");
-        }
 
         if (TextUtils.isEmpty(partner.description)) {
             send = true;
@@ -116,7 +91,8 @@ public class PartnerTypeAdapter extends TypeAdapter<Partner> {
                     .delete(mStringBuilder.length() - 2, mStringBuilder.length());
             FirebaseCrash.logcat(Log.WARN, TAG, mStringBuilder.toString());
             mStringBuilder.setLength(0);
-            mWrongDataSender.acknowledgeWrongData();
+            mWrongDataPoster.postWrongData();
         }
     }
+
 }

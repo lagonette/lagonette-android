@@ -26,6 +26,10 @@ public interface PartnerDao {
     void deletePartners();
 
     // TODO Use foreign key cascade
+    @Query("DELETE FROM location")
+    void deleteLocations();
+
+    // TODO Use foreign key cascade
     @Query("DELETE FROM partner_side_category")
     void deletePartnerSideCategories();
 
@@ -41,10 +45,12 @@ public interface PartnerDao {
     @Query("UPDATE partner_metadata SET is_visible = :isVisible")
     int updatePartnerVisibilities(boolean isVisible);
 
-    @Query("UPDATE partner_metadata SET is_visible = :isVisible WHERE partner_id IN (SELECT id FROM partner WHERE is_exchange_office <> 0)")
-    int updateExchangeOfficeVisibilities(boolean isVisible);
+//    @Query("UPDATE partner_metadata SET is_visible = :isVisible WHERE partner_id IN (SELECT id FROM partner WHERE is_exchange_office <> 0)")
+//    int updateExchangeOfficeVisibilities(boolean isVisible);
 
-    @Query("DELETE FROM partner WHERE (street IS NULL OR street = '') AND latitude = 0 AND longitude = 0")
+    @Query("DELETE FROM location WHERE (street IS NULL OR street = '') AND latitude = 0 AND longitude = 0")
+    void cleanLocation();
+
+    @Query("DELETE FROM partner WHERE id NOT IN (SELECT partner.id FROM partner JOIN location ON location.partner_id = partner.id)")
     void cleanPartner();
-
 }

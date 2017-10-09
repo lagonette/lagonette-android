@@ -1,5 +1,7 @@
 package org.lagonette.app.api.response;
 
+import android.arch.persistence.room.Ignore;
+
 import com.google.gson.annotations.SerializedName;
 
 import org.lagonette.app.room.embedded.Address;
@@ -12,7 +14,7 @@ public class Location {
     public String openingHours;
 
     @SerializedName("isExchangeOffice")
-    public String isExchangeOffice;
+    public boolean isExchangeOffice;
 
     @SerializedName("address")
     public String address;
@@ -24,18 +26,22 @@ public class Location {
     public String zipCode;
 
     @SerializedName("latitude")
-    public String latitude;
+    public double latitude;
 
     @SerializedName("longitude")
-    public String longitude;
+    public double longitude;
 
     @SerializedName("displayLocation")
-    public String displayLocation;
+    public boolean displayLocation;
+
+    @Ignore
+    public long partnerId;
 
 
     public void prepareInsert(List<org.lagonette.app.room.entity.Location> locationEntities) {
         org.lagonette.app.room.entity.Location location = new org.lagonette.app.room.entity.Location();
         location.address = new Address();
+//        location.id = id; //TODO
         location.address.street = address;
         location.address.city = city;
         location.address.zipCode = zipCode;
@@ -44,6 +50,7 @@ public class Location {
         location.openingHours = openingHours;
         location.isExchangeOffice = isExchangeOffice;
         location.displayLocation = displayLocation;
+        location.partnerId = partnerId;
         locationEntities.add(location);
     }
 }

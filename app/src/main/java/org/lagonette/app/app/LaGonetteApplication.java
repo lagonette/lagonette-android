@@ -10,10 +10,12 @@ import com.google.gson.GsonBuilder;
 
 import org.lagonette.app.BuildConfig;
 import org.lagonette.app.api.adapter.BooleanTypeAdapter;
+import org.lagonette.app.api.adapter.LocationTypeAdapter;
 import org.lagonette.app.api.adapter.LongTypeAdapter;
 import org.lagonette.app.api.adapter.PartnerListTypeAdapter;
 import org.lagonette.app.api.adapter.PartnerTypeAdapter;
 import org.lagonette.app.api.adapter.StringTypeAdapter;
+import org.lagonette.app.api.response.Location;
 import org.lagonette.app.api.response.Partner;
 import org.lagonette.app.api.service.LaGonetteService;
 import org.lagonette.app.locator.Api;
@@ -60,6 +62,7 @@ public class LaGonetteApplication
                                 DatabaseUtil.DATABASE_NAME
                         )
                         .addMigrations(new VoidMigration(1, 2))
+                        .addMigrations(new VoidMigration(2, 3))
                         //.fallbackToDestructiveMigration() // TODO Remove migration
                         .build()
         );
@@ -83,10 +86,12 @@ public class LaGonetteApplication
 
         PartnerListTypeAdapter partnerListTypeAdapter = new PartnerListTypeAdapter(mainGson);
         PartnerTypeAdapter partnerTypeAdapter = new PartnerTypeAdapter(mainGson, partnerListTypeAdapter);
+        LocationTypeAdapter locationTypeAdapter = new LocationTypeAdapter(mainGson);
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(List.class, partnerListTypeAdapter)
                 .registerTypeAdapter(Partner.class, partnerTypeAdapter)
+                .registerTypeAdapter(Location.class, locationTypeAdapter)
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()

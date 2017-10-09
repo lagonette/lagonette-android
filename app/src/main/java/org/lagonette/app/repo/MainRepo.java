@@ -140,8 +140,9 @@ public class MainRepo {
                             .updateCategoryVisibilities(true);
                     database.partnerDao()
                             .updatePartnerVisibilities(false);
-                    database.partnerDao()
-                            .updateExchangeOfficeVisibilities(true);
+                    // TODO metadata goes to location and not to partner now
+//                    database.partnerDao()
+//                            .updateExchangeOfficeVisibilities(true);
                     database.setTransactionSuccessful();
                     database.endTransaction();
                 }
