@@ -2,12 +2,14 @@ package org.lagonette.app.room.statement;
 
 import android.support.annotation.IntDef;
 
+import org.lagonette.app.room.statement.base.GonetteStatement;
+
 import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public abstract class FilterStatement
-        extends Statement {
+        implements GonetteStatement {
 
     private static final String SQL_CATEGORIES =
             "SELECT 0 AS row_type, " +
@@ -25,19 +27,9 @@ public abstract class FilterStatement
                     "NULL AS city, " +
                     "NULL AS is_exchange_office, " +
                     "NULL AS is_visible " +
-                    "FROM category " +
-                    "JOIN category_metadata " +
-                    "ON category.id = category_metadata.category_id " +
-                    "LEFT JOIN partner AS main_partner " +
-                    "ON category.id = main_partner.main_category_id " +
-                    "LEFT JOIN partner_metadata AS main_partner_metadata " +
-                    "ON main_partner.id = main_partner_metadata.partner_id " +
-                    "LEFT JOIN partner_side_category " +
-                    "ON category.id = partner_side_category.category_id " +
-                    "LEFT JOIN partner AS side_partner " +
-                    "ON partner_side_category.partner_id = side_partner.id " +
-                    "LEFT JOIN partner_metadata AS side_partner_metadata " +
-                    "ON side_partner.id = side_partner_metadata.partner_id " +
+                    FROM_CATEGORY_AND_METADATA +
+                    LEFT_JOIN_MAIN_PARTNER_AND_METADATA_ON_CATEGORY +
+                    LEFT_JOIN_SIDE_PARTNER_AND_METADATA_ON_CATEGORY +
                     "WHERE main_partner.name LIKE :search " +
                     "OR side_partner.name LIKE :search " +
                     "GROUP BY category.id ";
@@ -59,13 +51,9 @@ public abstract class FilterStatement
                     "NULL AS city, " +
                     "NULL AS is_exchange_office, " +
                     "NULL AS is_visible " +
-                    "FROM category " +
-                    "LEFT JOIN partner AS main_partner " +
-                    "ON category.id = main_partner.main_category_id " +
-                    "LEFT JOIN partner_side_category " +
-                    "ON category.id = partner_side_category.category_id " +
-                    "LEFT JOIN partner AS side_partner " +
-                    "ON partner_side_category.partner_id = side_partner.id " +
+                    FROM_CATEGORY +
+                    LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
+                    LEFT_JOIN_SIDE_PARTNER_ON_CATEGORY +
                     "WHERE main_partner.main_category_id IS NOT NULL " +
                     "AND main_partner.name LIKE :search " +
                     "OR category.id IS NOT NULL " +
@@ -89,13 +77,8 @@ public abstract class FilterStatement
                     "partner.city, " +
                     "partner.is_exchange_office, " +
                     "partner_metadata.is_visible " +
-                    "FROM category " +
-                    "JOIN category_metadata " +
-                    "ON category.id = category_metadata.category_id " +
-                    "JOIN partner " +
-                    "ON category.id = partner.main_category_id " +
-                    "JOIN partner_metadata " +
-                    "ON partner.id = partner_metadata.partner_id " +
+                    FROM_CATEGORY_AND_METADATA +
+                    JOIN_PARTNER_AND_METADATA_ON_CATEGORY +
                     "WHERE partner.name LIKE :search AND category_metadata.is_collapsed = 0 ";
 
     private static final String SQL_SIDE_CATEGORIES =
@@ -114,9 +97,7 @@ public abstract class FilterStatement
                     "partner.city, " +
                     "partner.is_exchange_office, " +
                     "partner_metadata.is_visible " +
-                    "FROM category " +
-                    "JOIN category_metadata " +
-                    "ON category.id = category_metadata.category_id " +
+                    FROM_CATEGORY_AND_METADATA + // TODO WARN there is no LEFT JOIN
                     "JOIN partner_side_category " +
                     "ON category.id = partner_side_category.category_id " +
                     "JOIN partner " +

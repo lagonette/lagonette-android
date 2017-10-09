@@ -1,9 +1,11 @@
 package org.lagonette.app.room.statement;
 
-public abstract class PartnerDetailStatement
-        extends Statement {
+import org.lagonette.app.room.statement.base.GonetteStatement;
 
-    public static final String SQL =
+public interface PartnerDetailStatement
+        extends GonetteStatement {
+
+    String SQL =
             "SELECT " +
                     "partner.id, " +
                     "partner.name, " +
@@ -24,9 +26,8 @@ public abstract class PartnerDetailStatement
                     "partner.city, " +
                     "category.label, " +
                     "category.icon " +
-            "FROM partner " +
-            "JOIN category " +
-                    "ON partner.main_category_id = category.id " +
+            FROM_PARTNER +
+            JOIN_MAIN_CATEGORY_ON_PARTNER +
             "WHERE partner.id = :id " +
             "LIMIT 1";
 }

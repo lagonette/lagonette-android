@@ -14,7 +14,7 @@ public class Location {
     @ColumnInfo(name = "opening_hours")
     public String openingHours;
 
-    @ColumnInfo(name = "is_exchangeOffice")
+    @ColumnInfo(name = "is_exchange_office")
     public String isExchangeOffice;
 
     @Embedded
@@ -28,4 +28,7 @@ public class Location {
 
     @ColumnInfo(name = "display_location")
     public String displayLocation;
+
+    @ColumnInfo(name = "partner_id")
+    public long partnerId;
 }
