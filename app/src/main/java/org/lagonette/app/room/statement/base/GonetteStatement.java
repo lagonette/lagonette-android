@@ -14,21 +14,13 @@ public interface GonetteStatement {
             " LEFT JOIN partner AS main_partner " +
                     " ON category.id = main_partner.main_category_id ";
 
+    String JOIN_MAIN_PARTNER_ON_CATEGORY =
+            " JOIN partner AS main_partner " +
+                    " ON category.id = main_partner.main_category_id ";
+
     String JOIN_PARTNER_ON_CATEGORY =
             " JOIN partner " +
                     " ON category.id = partner.main_category_id ";
-
-    String LEFT_JOIN_METADATA_ON_MAIN_PARTNER =
-            " LEFT JOIN partner_metadata AS main_partner_metadata " +
-                    " ON main_partner.id = main_partner_metadata.partner_id ";
-
-    String LEFT_JOIN_METADATA_ON_SIDE_PARTNER =
-            " LEFT JOIN partner_metadata AS side_partner_metadata " +
-                    " ON side_partner.id = side_partner_metadata.partner_id ";
-
-    String JOIN_METADATA_ON_SIDE_PARTNER =
-            " JOIN partner_metadata AS side_partner_metadata " +
-                    " ON side_partner.id = side_partner_metadata.partner_id ";
 
     String LEFT_JOIN_SIDE_PARTNER_ON_CATEGORY =
             " LEFT JOIN partner_side_category " +
@@ -42,15 +34,39 @@ public interface GonetteStatement {
                     " JOIN partner AS side_partner " +
                     " ON partner_side_category.partner_id = side_partner.id ";
 
-    String JOIN_METADATA_ON_PARTNER =
-            " JOIN partner_metadata " +
-                    " ON partner.id = partner_metadata.partner_id ";
+    String JOIN_METADATA_ON_LOCATION =
+            " JOIN location_metadata " +
+                    " ON location.id = location_metadata.location_id ";
+
+    String LEFT_JOIN_METADATA_ON_LOCATION =
+            " LEFT JOIN location_metadata " +
+                    " ON location.id = location_metadata.location_id ";
+
+    String LEFT_JOIN_METADATA_ON_MAIN_LOCATION =
+            " LEFT JOIN location_metadata AS main_location_metadata" +
+                    " ON main_location.id = main_location_metadata.location_id ";
+
+    String LEFT_JOIN_METADATA_ON_SIDE_LOCATION =
+            " LEFT JOIN location_metadata AS side_location_metadata" +
+                    " ON side_location.id = side_location_metadata.location_id ";
+
+    String JOIN_METADATA_ON_SIDE_LOCATION =
+            " JOIN location_metadata AS side_location_metadata" +
+                    " ON side_location.id = side_location_metadata.location_id ";
 
     String JOIN_LOCATION_ON_PARTNER =
             " JOIN location" +
                     " ON location.partner_id = partner.id";
 
-    String JOIN_LOCATION_ON_SIDE_PARTNER =
+    String LEFT_JOIN_MAIN_LOCATION_ON_MAIN_PARTNER =
+            " LEFT JOIN location AS main_location" +
+                    " ON main_location.partner_id = main_partner.id";
+
+    String LEFT_JOIN_SIDE_LOCATION_ON_SIDE_PARTNER =
+            " LEFT JOIN location AS side_location" +
+                    " ON side_location.partner_id = side_partner.id";
+
+    String JOIN_SIDE_LOCATION_ON_SIDE_PARTNER =
             " JOIN location AS side_location" +
                     " ON side_location.partner_id = side_partner.id";
 
@@ -74,15 +90,9 @@ public interface GonetteStatement {
 
     String FROM_CATEGORY_AND_METADATA = FROM_CATEGORY + JOIN_METADATA_ON_CATEGORY;
 
-    String FROM_PARTNER_AND_METADATA = FROM_PARTNER + JOIN_METADATA_ON_PARTNER;
-
-    String JOIN_PARTNER_AND_METADATA_ON_CATEGORY =
-            JOIN_PARTNER_ON_CATEGORY +
-                    JOIN_METADATA_ON_PARTNER;
-
-    String LEFT_JOIN_MAIN_PARTNER_AND_METADATA_ON_CATEGORY =
-            LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
-                    LEFT_JOIN_METADATA_ON_MAIN_PARTNER;
+    String JOIN_LOCATION_AND_METADATA_ON_PARTNER =
+            JOIN_LOCATION_ON_PARTNER
+                    + JOIN_METADATA_ON_LOCATION;
 
     String JOIN_MAIN_CATEGORY_AND_METADATA_ON_PARTNER =
             JOIN_MAIN_CATEGORY_ON_PARTNER +
@@ -92,11 +102,15 @@ public interface GonetteStatement {
             LEFT_JOIN_SIDE_CATEGORY_ON_PARTNER +
                     LEFT_JOIN_METADATA_ON_SIDE_CATEGORY;
 
-    String LEFT_JOIN_SIDE_PARTNER_AND_METADATA_ON_CATEGORY =
-            LEFT_JOIN_SIDE_PARTNER_ON_CATEGORY +
-                    LEFT_JOIN_METADATA_ON_SIDE_PARTNER;
+    String LEFT_JOIN_MAIN_LOCATION_AND_METADATA_ON_MAIN_PARTNER =
+            LEFT_JOIN_MAIN_LOCATION_ON_MAIN_PARTNER +
+                    LEFT_JOIN_METADATA_ON_MAIN_LOCATION;
 
-    String JOIN_SIDE_PARTNER_AND_METADATA_ON_CATEGORY =
-            JOIN_SIDE_PARTNER_ON_CATEGORY +
-                    JOIN_METADATA_ON_SIDE_PARTNER;
+    String LEFT_JOIN_SIDE_LOCATION_AND_METADATA_ON_SIDE_PARTNER =
+            LEFT_JOIN_SIDE_LOCATION_ON_SIDE_PARTNER +
+                    LEFT_JOIN_METADATA_ON_SIDE_LOCATION;
+
+    String JOIN_SIDE_LOCATION_AND_METADATA_ON_SIDE_PARTNER =
+            JOIN_SIDE_LOCATION_ON_SIDE_PARTNER +
+                    JOIN_METADATA_ON_SIDE_LOCATION;
 }

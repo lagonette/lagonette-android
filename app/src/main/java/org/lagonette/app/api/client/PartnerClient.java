@@ -9,7 +9,7 @@ import org.lagonette.app.api.service.LaGonetteService;
 import org.lagonette.app.room.database.LaGonetteDatabase;
 import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.Partner;
-import org.lagonette.app.room.entity.PartnerMetadata;
+import org.lagonette.app.room.entity.LocationMetadata;
 import org.lagonette.app.room.entity.PartnerSideCategory;
 import org.lagonette.app.util.PreferenceUtil;
 
@@ -47,18 +47,20 @@ public class PartnerClient
     protected void onSuccessfulBody(@NonNull PartnersResponse body) {
         List<Partner> partners = new ArrayList<>();
         List<Location> locations = new ArrayList<>();
-        List<PartnerMetadata> partnerMetadataList = new ArrayList<>();
+        List<LocationMetadata> locationMetadataList = new ArrayList<>();
         List<PartnerSideCategory> partnerSideCategories = new ArrayList<>();
 
         mMd5Sum = body.md5Sum;
-        body.prepareInsert(partners, locations, partnerMetadataList, partnerSideCategories);
+        body.prepareInsert(partners, locations, locationMetadataList, partnerSideCategories);
+
         mDatabase.partnerDao().deletePartners();
         mDatabase.partnerDao().deleteLocations();
-        mDatabase.partnerDao().insertLocations(locations);
-        mDatabase.partnerDao().insertPartners(partners);
-        mDatabase.partnerDao().insertPartnersMetadatas(partnerMetadataList);
         mDatabase.partnerDao().deletePartnerSideCategories();
-        mDatabase.partnerDao().insertPartnersSideCategories(partnerSideCategories); // TODO Make metadata insert only by SQL
+
+        mDatabase.partnerDao().insertLocations(locations);
+        mDatabase.partnerDao().insertLocationsMetadatas(locationMetadataList); // TODO Make metadata insert only by SQL
+        mDatabase.partnerDao().insertPartners(partners);
+        mDatabase.partnerDao().insertPartnersSideCategories(partnerSideCategories);
     }
 
     @Nullable

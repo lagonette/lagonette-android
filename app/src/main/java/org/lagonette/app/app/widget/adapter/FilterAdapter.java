@@ -269,15 +269,15 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void onBindPartnerViewHolder(@NonNull PartnerViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
             holder.partnerId = mFilterReader.getPartnerId();
-            holder.isVisible = mFilterReader.isPartnerVisible();
+            holder.isVisible = mFilterReader.isLocationVisible();
             holder.isCategoryVisible = mFilterReader.isCategoryVisible();
-            holder.isExchangeOffice = mFilterReader.isPartnerExchangeOffice();
+            holder.isExchangeOffice = mFilterReader.isLocationExchangeOffice();
             holder.isMainPartner = mFilterReader.getRowType() == FilterStatement.VALUE_ROW_MAIN_PARTNER;
 
             holder.nameTextView.setText(mFilterReader.getPartnerName());
             holder.itemView.setClickable(holder.isVisible);
 
-            String address = mFilterReader.getPartnerAddress();
+            String address = mFilterReader.getLocationAddress();
             if (!TextUtils.isEmpty(address)) {
                 holder.addressTextView.setText(address);
                 holder.addressTextView.setVisibility(View.VISIBLE);

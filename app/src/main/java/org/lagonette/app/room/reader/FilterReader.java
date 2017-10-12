@@ -64,7 +64,7 @@ public class FilterReader
         return 0 != mCursor.getInt(FilterStatement.CATEGORY_IS_PARTNERS_VISIBLE);
     }
 
-    @Override
+    @Override // TODO Get location ID ?
     public long getPartnerId() {
         return mCursor.getLong(FilterStatement.PARTNER_ID);
     }
@@ -75,11 +75,11 @@ public class FilterReader
     }
 
     @Override
-    public String getPartnerAddress() {
+    public String getLocationAddress() {
         // TODO use DisplayUtil.formatAddress
-        String street = mCursor.getString(FilterStatement.PARTNER_STREET);
-        String zipCode = mCursor.getString(FilterStatement.PARTNER_ZIP_CODE);
-        String city = mCursor.getString(FilterStatement.PARTNER_CITY);
+        String street = mCursor.getString(FilterStatement.LOCATION_STREET);
+        String zipCode = mCursor.getString(FilterStatement.LOCATION_ZIP_CODE);
+        String city = mCursor.getString(FilterStatement.LOCATION_CITY);
         builder.setLength(0);
         if (!TextUtils.isEmpty(street) && !TextUtils.isEmpty(zipCode) && !TextUtils.isEmpty(city)) {
             builder.append(street);
@@ -92,12 +92,12 @@ public class FilterReader
     }
 
     @Override
-    public boolean isPartnerExchangeOffice() {
-        return 0 != mCursor.getInt(FilterStatement.PARTNER_IS_EXCHANGE_OFFICE);
+    public boolean isLocationExchangeOffice() {
+        return 0 != mCursor.getInt(FilterStatement.LOCATION_IS_EXCHANGE_OFFICE);
     }
 
     @Override
-    public boolean isPartnerVisible() {
-        return 0 != mCursor.getInt(FilterStatement.PARTNER_METADATA_IS_VISIBLE);
+    public boolean isLocationVisible() {
+        return 0 != mCursor.getInt(FilterStatement.LOCATION_METADATA_IS_VISIBLE);
     }
 }

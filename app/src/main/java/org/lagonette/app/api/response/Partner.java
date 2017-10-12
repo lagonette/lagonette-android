@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.lagonette.app.room.entity.LocationMetadata;
+
 import java.util.List;
 
 public class Partner {
@@ -56,7 +58,7 @@ public class Partner {
     public void prepareInsert(
             @NonNull List<org.lagonette.app.room.entity.Partner> partnerEntities,
             @NonNull List<org.lagonette.app.room.entity.Location> locationEntities,
-            @NonNull List<org.lagonette.app.room.entity.PartnerMetadata> partnerMetadataEntityList,
+            @NonNull List<LocationMetadata> locationMetadataEntities,
             @NonNull List<org.lagonette.app.room.entity.PartnerSideCategory> partnerSideCategoryEntities) {
         org.lagonette.app.room.entity.Partner partner = new org.lagonette.app.room.entity.Partner();
         partner.id = id;
@@ -72,14 +74,9 @@ public class Partner {
         partner.mainCategoryId = mainCategoryId;
         partnerEntities.add(partner);
 
-        org.lagonette.app.room.entity.PartnerMetadata partnerMetadata = new org.lagonette.app.room.entity.PartnerMetadata();
-        partnerMetadata.partnerId = partner.id;
-        partnerMetadata.isVisible = true;
-        partnerMetadataEntityList.add(partnerMetadata);
-
         for (Location location : locations) {
             if (location != null) {
-                location.prepareInsert(locationEntities);
+                location.prepareInsert(locationEntities, locationMetadataEntities);
             }
         }
 

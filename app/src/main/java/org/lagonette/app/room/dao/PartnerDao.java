@@ -7,7 +7,7 @@ import android.arch.persistence.room.Query;
 
 import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.Partner;
-import org.lagonette.app.room.entity.PartnerMetadata;
+import org.lagonette.app.room.entity.LocationMetadata;
 import org.lagonette.app.room.entity.PartnerSideCategory;
 
 import java.util.List;
@@ -34,15 +34,15 @@ public interface PartnerDao {
     void deletePartnerSideCategories();
 
     @Insert
-    long[] insertPartnersMetadatas(List<PartnerMetadata> partnersMetadatas);
+    long[] insertLocationsMetadatas(List<LocationMetadata> locationsMetadatas);
 
     @Insert
     long[] insertPartnersSideCategories(List<PartnerSideCategory> partnersSideCategories);
 
-    @Query("UPDATE partner_metadata SET is_visible = :isVisible WHERE partner_id = :id")
+    @Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id = :id")
     int updatePartnerVisibility(long id, boolean isVisible);
 
-    @Query("UPDATE partner_metadata SET is_visible = :isVisible")
+    @Query("UPDATE location_metadata SET is_visible = :isVisible")
     int updatePartnerVisibilities(boolean isVisible);
 
 //    @Query("UPDATE partner_metadata SET is_visible = :isVisible WHERE partner_id IN (SELECT id FROM partner WHERE is_exchange_office <> 0)")

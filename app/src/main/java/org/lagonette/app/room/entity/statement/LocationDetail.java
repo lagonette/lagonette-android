@@ -5,7 +5,7 @@ import android.arch.persistence.room.Embedded;
 
 import org.lagonette.app.room.embedded.Address;
 
-public class PartnerDetail {
+public class LocationDetail {
 
     @ColumnInfo(name = "id")
     public long id;

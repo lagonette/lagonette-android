@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import org.lagonette.app.app.arch.CursorLiveData;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
-import org.lagonette.app.room.entity.statement.PartnerDetail;
+import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.sql.Tables;
@@ -44,7 +44,7 @@ public class MainRepo {
                         search -> DB
                                 .get()
                                 .mainDao()
-                                .getMapPartner(SearchUtil.formatSearch(search))
+                                .getMapLocations(SearchUtil.formatSearch(search))
                 ),
                 () -> new DataRefreshWorker(mContext)
         )
@@ -52,14 +52,14 @@ public class MainRepo {
                 .getAsLiveData();
     } // TODO Fix "Application did not close the cursor or database object that was opened here" issue
 
-    public LiveData<Resource<PartnerDetail>> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
+    public LiveData<Resource<LocationDetail>> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldFetch,
                 () -> Transformations.switchMap(
                         partnerIdLiveData,
                         partnerId -> partnerId > Statement.NO_ID
-                                ? DB.get().mainDao().getPartnerDetail(partnerId)
+                                ? DB.get().mainDao().getLocationsDetail(partnerId)
                                 : null
                 ),
                 () -> new DataRefreshWorker(mContext)

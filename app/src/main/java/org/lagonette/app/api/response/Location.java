@@ -1,14 +1,19 @@
 package org.lagonette.app.api.response;
 
 import android.arch.persistence.room.Ignore;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 import org.lagonette.app.room.embedded.Address;
+import org.lagonette.app.room.entity.LocationMetadata;
 
 import java.util.List;
 
 public class Location {
+
+    @SerializedName("id")
+    public long id;
 
     @SerializedName("openingHours")
     public String openingHours;
@@ -38,10 +43,12 @@ public class Location {
     public long partnerId;
 
 
-    public void prepareInsert(List<org.lagonette.app.room.entity.Location> locationEntities) {
+    public void prepareInsert(
+            @NonNull List<org.lagonette.app.room.entity.Location> locationEntities,
+            @NonNull List<LocationMetadata> locationMetadataEntities) {
         org.lagonette.app.room.entity.Location location = new org.lagonette.app.room.entity.Location();
         location.address = new Address();
-//        location.id = id; //TODO
+        location.id = id;
         location.address.street = address;
         location.address.city = city;
         location.address.zipCode = zipCode;
@@ -52,5 +59,10 @@ public class Location {
         location.displayLocation = displayLocation;
         location.partnerId = partnerId;
         locationEntities.add(location);
+
+        LocationMetadata locationMetadata = new LocationMetadata();
+        locationMetadata.locationId = location.id;
+        locationMetadata.isVisible = true;
+        locationMetadataEntities.add(locationMetadata);
     }
 }

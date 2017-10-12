@@ -9,15 +9,15 @@ import org.lagonette.app.room.dao.PartnerDao;
 import org.lagonette.app.room.entity.Category;
 import org.lagonette.app.room.entity.CategoryMetadata;
 import org.lagonette.app.room.entity.Location;
+import org.lagonette.app.room.entity.LocationMetadata;
 import org.lagonette.app.room.entity.Partner;
-import org.lagonette.app.room.entity.PartnerMetadata;
 import org.lagonette.app.room.entity.PartnerSideCategory;
 import org.lagonette.app.util.DatabaseUtil;
 
 @Database(
         entities = {
                 Partner.class,
-                PartnerMetadata.class,
+                LocationMetadata.class,
                 Location.class,
                 Category.class,
                 CategoryMetadata.class,

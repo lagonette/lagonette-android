@@ -1,6 +1,5 @@
 package org.lagonette.app.app.fragment;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.PartnerDetailViewModel;
 import org.lagonette.app.repo.Resource;
-import org.lagonette.app.room.entity.statement.PartnerDetail;
+import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.IntentUtil;
 import org.lagonette.app.util.SnackbarUtil;
@@ -96,7 +95,7 @@ public class PartnerDetailFragment
 
         mViewModel.getPartnerDetail().observe(
                 PartnerDetailFragment.this,
-                this::dispatchPartnerDetailResource
+                this::dispatchLocationDetailResource
         );
     }
 
@@ -145,44 +144,44 @@ public class PartnerDetailFragment
         mEmailLayout.setOnClickListener(PartnerDetailFragment.this);
     }
 
-    private void dispatchPartnerDetailResource(@NonNull Resource<PartnerDetail> resource) {
+    private void dispatchLocationDetailResource(@NonNull Resource<LocationDetail> resource) {
         switch (resource.status) {
 
             case Resource.LOADING:
-                displayPartner(resource.data);
+                displayLocation(resource.data);
                 // TODO
                 break;
 
             case Resource.SUCCESS:
-                displayPartner(resource.data);
+                displayLocation(resource.data);
                 break;
 
             case Resource.ERROR:
-                displayPartner(resource.data);
+                displayLocation(resource.data);
                 // TODO
                 break;
         }
     }
 
-    private void displayPartner(@Nullable PartnerDetail partnerDetail) {
-        if (partnerDetail != null) {
+    private void displayLocation(@Nullable LocationDetail locationDetail) {
+        if (locationDetail != null) {
             Resources resources = getResources();
 
-            mLatitude = partnerDetail.latitude;
-            mLongitude = partnerDetail.longitude;
+            mLatitude = locationDetail.latitude;
+            mLongitude = locationDetail.longitude;
 
             mPartnerTypeTextView.setText(
-                    partnerDetail.isExchangeOffice
+                    locationDetail.isExchangeOffice
                             ? resources.getString(R.string.partner_type_exchange_office)
                             : resources.getString(R.string.partner_type_partner)
             );
 
-            mNameTextView.setText(partnerDetail.name);
-            mShortDescriptionTextView.setText(partnerDetail.shortDescription);
-            mDescriptionTextView.setText(partnerDetail.description);
+            mNameTextView.setText(locationDetail.name);
+            mShortDescriptionTextView.setText(locationDetail.shortDescription);
+            mDescriptionTextView.setText(locationDetail.description);
 
             // OPENING HOURS
-            String openingHours = partnerDetail.openingHours;
+            String openingHours = locationDetail.openingHours;
             if (!TextUtils.isEmpty(openingHours)) {
                 mOpeningHoursLayout.setVisibility(View.VISIBLE);
                 mOpeningHoursTextView.setText(openingHours);
@@ -191,7 +190,7 @@ public class PartnerDetailFragment
             }
 
             // ADDRESS
-            String address = partnerDetail.address.format(resources);
+            String address = locationDetail.address.format(resources);
             if (!TextUtils.isEmpty(address)) {
                 mAddressLayout.setVisibility(View.VISIBLE);
                 mAddressTextView.setText(address);
@@ -200,7 +199,7 @@ public class PartnerDetailFragment
             }
 
             // PHONE
-            String phone = partnerDetail.phone;
+            String phone = locationDetail.phone;
             if (!TextUtils.isEmpty(phone)) {
                 mPhoneLayout.setVisibility(View.VISIBLE);
                 mPhoneTextView.setText(phone);
@@ -209,7 +208,7 @@ public class PartnerDetailFragment
             }
 
             // WEBSITE
-            String website = partnerDetail.website;
+            String website = locationDetail.website;
             if (!TextUtils.isEmpty(website)) {
                 mWebsiteLayout.setVisibility(View.VISIBLE);
                 mWebsiteTextView.setText(website);
@@ -218,7 +217,7 @@ public class PartnerDetailFragment
             }
 
             // WEBSITE
-            String email = partnerDetail.email;
+            String email = locationDetail.email;
             if (!TextUtils.isEmpty(email)) {
                 mEmailLayout.setVisibility(View.VISIBLE);
                 mEmailTextView.setText(email);
@@ -226,7 +225,7 @@ public class PartnerDetailFragment
                 mEmailLayout.setVisibility(View.GONE);
             }
 
-            mMainCategoryLabelTextView.setText(partnerDetail.label);
+            mMainCategoryLabelTextView.setText(locationDetail.label);
 
 //            Glide.with(getContext())
 //                    .load(reader.getLogo())

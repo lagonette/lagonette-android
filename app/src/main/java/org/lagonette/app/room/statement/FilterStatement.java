@@ -19,7 +19,7 @@ public abstract class FilterStatement
                     "category.display_order, " +
                     "category_metadata.is_visible, " +
                     "category_metadata.is_collapsed, " +
-                    "TOTAL(main_partner_metadata.is_visible) + TOTAL(side_partner_metadata.is_visible) AS category_is_partners_visible, " +
+                    "TOTAL(main_location_metadata.is_visible) + TOTAL(side_location_metadata.is_visible) AS category_is_partners_visible, " +
                     "NULL AS id, " +
                     "NULL AS name, " +
                     "NULL AS street, " +
@@ -28,8 +28,10 @@ public abstract class FilterStatement
                     "NULL AS is_exchange_office, " +
                     "NULL AS is_visible " +
                     FROM_CATEGORY_AND_METADATA +
-                    LEFT_JOIN_MAIN_PARTNER_AND_METADATA_ON_CATEGORY +
-                    LEFT_JOIN_SIDE_PARTNER_AND_METADATA_ON_CATEGORY +
+                    LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
+                    LEFT_JOIN_MAIN_LOCATION_AND_METADATA_ON_MAIN_PARTNER +
+                    LEFT_JOIN_SIDE_PARTNER_ON_CATEGORY +
+                    LEFT_JOIN_SIDE_LOCATION_AND_METADATA_ON_SIDE_PARTNER +
                     " WHERE main_partner.name LIKE :search " +
                     " OR side_partner.name LIKE :search " +
                     " GROUP BY category.id ";
@@ -53,7 +55,9 @@ public abstract class FilterStatement
                     "NULL AS is_visible " +
                     FROM_CATEGORY +
                     LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
+                    LEFT_JOIN_MAIN_LOCATION_ON_MAIN_PARTNER +
                     LEFT_JOIN_SIDE_PARTNER_ON_CATEGORY +
+                    LEFT_JOIN_SIDE_LOCATION_ON_SIDE_PARTNER +
                     " WHERE main_partner.main_category_id IS NOT NULL " +
                     " AND main_partner.name LIKE :search " +
                     " OR category.id IS NOT NULL " +
@@ -70,17 +74,17 @@ public abstract class FilterStatement
                     "category_metadata.is_visible, " +
                     "NULL AS is_collapsed, " +
                     "NULL AS category_is_partners_visible, " +
-                    "partner.id, " +
-                    "partner.name, " +
-                    "location.street, " +
-                    "location.zip_code, " +
-                    "location.city, " +
-                    "location.is_exchange_office, " +
-                    "partner_metadata.is_visible " +
+                    "main_partner.id, " +
+                    "main_partner.name, " +
+                    "main_location.street, " +
+                    "main_location.zip_code, " +
+                    "main_location.city, " +
+                    "main_location.is_exchange_office, " +
+                    "main_location_metadata.is_visible " +
                     FROM_CATEGORY_AND_METADATA +
-                    JOIN_PARTNER_AND_METADATA_ON_CATEGORY +
-                    JOIN_LOCATION_ON_PARTNER +
-                    " WHERE partner.name LIKE :search AND category_metadata.is_collapsed = 0 ";
+                    JOIN_MAIN_PARTNER_ON_CATEGORY +
+                    LEFT_JOIN_MAIN_LOCATION_AND_METADATA_ON_MAIN_PARTNER +
+                    " WHERE main_partner.name LIKE :search AND category_metadata.is_collapsed = 0 ";
 
     private static final String SQL_SIDE_PARTNERS =
             "SELECT 2 AS row_type, " +
@@ -97,10 +101,10 @@ public abstract class FilterStatement
                     "side_location.zip_code, " +
                     "side_location.city, " +
                     "side_location.is_exchange_office, " +
-                    "side_partner_metadata.is_visible " +
+                    "side_location_metadata.is_visible " +
                     FROM_CATEGORY_AND_METADATA +
-                    JOIN_SIDE_PARTNER_AND_METADATA_ON_CATEGORY +
-                    JOIN_LOCATION_ON_SIDE_PARTNER +
+                    JOIN_SIDE_PARTNER_ON_CATEGORY +
+                    JOIN_SIDE_LOCATION_AND_METADATA_ON_SIDE_PARTNER +
                     " WHERE side_partner.name LIKE :search " +
                     " AND category_metadata.is_collapsed = 0 ";
 
@@ -133,15 +137,15 @@ public abstract class FilterStatement
 
     public static final int PARTNER_NAME;
 
-    public static final int PARTNER_STREET;
+    public static final int LOCATION_STREET;
 
-    public static final int PARTNER_ZIP_CODE;
+    public static final int LOCATION_ZIP_CODE;
 
-    public static final int PARTNER_CITY;
+    public static final int LOCATION_CITY;
 
-    public static final int PARTNER_IS_EXCHANGE_OFFICE;
+    public static final int LOCATION_IS_EXCHANGE_OFFICE;
 
-    public static final int PARTNER_METADATA_IS_VISIBLE;
+    public static final int LOCATION_METADATA_IS_VISIBLE;
 
     public static final int VALUE_ROW_CATEGORY = 0;
 
@@ -174,11 +178,11 @@ public abstract class FilterStatement
         CATEGORY_IS_PARTNERS_VISIBLE = i++;
         PARTNER_ID = i++;
         PARTNER_NAME = i++;
-        PARTNER_STREET = i++;
-        PARTNER_ZIP_CODE = i++;
-        PARTNER_CITY = i++;
-        PARTNER_IS_EXCHANGE_OFFICE = i++;
-        PARTNER_METADATA_IS_VISIBLE = i++;
+        LOCATION_STREET = i++;
+        LOCATION_ZIP_CODE = i++;
+        LOCATION_CITY = i++;
+        LOCATION_IS_EXCHANGE_OFFICE = i++;
+        LOCATION_METADATA_IS_VISIBLE = i++;
     }
 
     public interface Contract {
@@ -201,11 +205,11 @@ public abstract class FilterStatement
 
         String getPartnerName();
 
-        String getPartnerAddress();
+        String getLocationAddress();
 
-        boolean isPartnerExchangeOffice();
+        boolean isLocationExchangeOffice();
 
-        boolean isPartnerVisible();
+        boolean isLocationVisible();
 
     }
 

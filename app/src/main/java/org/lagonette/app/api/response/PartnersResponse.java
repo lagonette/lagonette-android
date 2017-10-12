@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.lagonette.app.room.entity.PartnerMetadata;
+import org.lagonette.app.room.entity.LocationMetadata;
 
 import java.util.List;
 
@@ -18,11 +18,11 @@ public class PartnersResponse extends ApiResponse {
     public void prepareInsert(
             @NonNull List<org.lagonette.app.room.entity.Partner> partners,
             @NonNull List<org.lagonette.app.room.entity.Location> locations,
-            @NonNull List<org.lagonette.app.room.entity.PartnerMetadata> partnerMetadataList,
+            @NonNull List<LocationMetadata> locationMetadataList,
             @NonNull List<org.lagonette.app.room.entity.PartnerSideCategory> partnerSideCategories) {
         for (Partner partner : mPartners) {
             if (partner != null) {
-                partner.prepareInsert(partners, locations, partnerMetadataList, partnerSideCategories);
+                partner.prepareInsert(partners, locations, locationMetadataList, partnerSideCategories);
             }
         }
     }

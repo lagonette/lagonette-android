@@ -38,7 +38,7 @@ public interface Sql {
 
     String JOIN = " JOIN ";
 
-    String LEFT_JOIN = " LEFT JOIN ";
+    String LEFT = " LEFT";
 
     String ON = " ON ";
 

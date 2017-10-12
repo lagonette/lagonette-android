@@ -54,7 +54,9 @@ public class DataRefreshWorker
         try {
             database.beginTransaction();
 
+            // --- --- --- --
             // Get Categories
+            // --- --- --- --
             categoryMd5Client.call();
             if (!categoryMd5Client.isSuccess()) {
                 workerResponse.setIsSuccessful(false);
@@ -71,7 +73,9 @@ public class DataRefreshWorker
                 return;
             }
 
+            // --- --- --- -
             // Get Partners
+            // --- --- --- -
             partnerMd5SumClient.call();
             if (!partnerMd5SumClient.isSuccess()) {
                 workerResponse.setIsSuccessful(false);
@@ -88,11 +92,15 @@ public class DataRefreshWorker
                 return;
             }
 
+            // --- --- --- --- --- --- --- --- --- -
             // Clean up and end database transaction
+            // --- --- --- --- --- --- --- --- --- -
             cleanUpDatabase(database);
             database.setTransactionSuccessful();
 
+            // --- --- --- -
             // Save new md5
+            // --- --- --- -
             if (categoryMd5Client.isMd5SumChanged()) {
                 categoryClient.saveRemoteMd5Sum(preferences);
             }
@@ -101,7 +109,9 @@ public class DataRefreshWorker
                 partnerClient.saveRemoteMd5Sum(preferences);
             }
 
+            // --- --- --- --- --- -
             // Set worker successful
+            // --- --- --- --- --- -
             workerResponse.setIsSuccessful(true);
         } catch (ApiClientException e) {
             Log.e(TAG, "loadInBackground: ", e);

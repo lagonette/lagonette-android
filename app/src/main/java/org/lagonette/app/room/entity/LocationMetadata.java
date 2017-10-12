@@ -7,19 +7,19 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity(
-        tableName = "partner_metadata",
+        tableName = "location_metadata",
         foreignKeys = @ForeignKey(
-                entity = Partner.class,
+                entity = Location.class,
                 parentColumns = "id",
-                childColumns = "partner_id",
+                childColumns = "location_id",
                 onDelete = ForeignKey.CASCADE
         )
 )
-public class PartnerMetadata {
+public class LocationMetadata {
 
     @PrimaryKey
-    @ColumnInfo(name = "partner_id")
-    public long partnerId;
+    @ColumnInfo(name = "location_id")
+    public long locationId;
 
     @ColumnInfo(name = "is_visible")
     public boolean isVisible;

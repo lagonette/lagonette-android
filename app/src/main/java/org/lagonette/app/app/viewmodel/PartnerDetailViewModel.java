@@ -7,12 +7,12 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.repo.Resource;
-import org.lagonette.app.room.entity.statement.PartnerDetail;
+import org.lagonette.app.room.entity.statement.LocationDetail;
 
 public class PartnerDetailViewModel extends ViewModel {
 
     @NonNull
-    private LiveData<Resource<PartnerDetail>> mPartnerDetailResource;
+    private LiveData<Resource<LocationDetail>> mPartnerDetailResource;
 
     @NonNull
     private MutableLiveData<Long> mPartnerId;
@@ -27,7 +27,7 @@ public class PartnerDetailViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<Resource<PartnerDetail>> getPartnerDetail() {
+    public LiveData<Resource<LocationDetail>> getPartnerDetail() {
         return mPartnerDetailResource;
     }
 }
