@@ -17,6 +17,9 @@ public class Category {
     @SerializedName("parentId")
     public long parentId;
 
+    @SerializedName("parentCategoryType")
+    public long parentCategoryType;
+
     @SerializedName("label")
     public String label;
 
@@ -33,7 +36,7 @@ public class Category {
         category.id = id;
         category.categoryType = categoryType;
         category.parentId = parentId;
-        category.parentCategoryType = 1; // TODO This value has to come from JSON !
+        category.parentCategoryType = parentCategoryType;
         category.label = label;
         category.icon = icon;
         category.displayOrder = displayOrder;
