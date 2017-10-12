@@ -19,7 +19,7 @@ public class Location {
     public String openingHours;
 
     @SerializedName("isExchangeOffice")
-    public boolean isExchangeOffice;
+    public Boolean isExchangeOffice;
 
     @SerializedName("address")
     public String address;
@@ -37,7 +37,7 @@ public class Location {
     public double longitude;
 
     @SerializedName("displayLocation")
-    public boolean displayLocation;
+    public Boolean displayLocation;
 
     @Ignore
     public long partnerId;

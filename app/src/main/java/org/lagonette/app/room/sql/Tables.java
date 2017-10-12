@@ -4,8 +4,6 @@ public interface Tables {
 
     String PARTNER = "partner";
 
-    String PARTNER_METADATA = "partner_metadata";
-
     String CATEGORY = "category";
 
     String CATEGORY_METADATA = "category_metadata";
@@ -14,9 +12,11 @@ public interface Tables {
 
     String LOCATION = "location";
 
+    String LOCATION_METADATA = "location_metadata";
+
     String[] TABLES = new String[]{
             Tables.PARTNER,
-            Tables.PARTNER_METADATA,
+            Tables.LOCATION_METADATA,
             Tables.LOCATION,
             Tables.CATEGORY,
             Tables.CATEGORY_METADATA,
