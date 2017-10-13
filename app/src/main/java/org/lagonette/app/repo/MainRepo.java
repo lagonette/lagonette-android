@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import org.lagonette.app.app.arch.CursorLiveData;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
+import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.reader.FilterReader;
@@ -100,19 +101,19 @@ public class MainRepo {
         );
     }
 
-    public void setCategoryVisibility(long categoryId, boolean isVisible) {
+    public void setCategoryVisibility(@NonNull CategoryKey key, boolean isVisible) {
         mExecutor.execute(
                 () -> DB.get()
                         .categoryDao()
-                        .updateCategoryVisibility(categoryId, isVisible)
+                        .updateCategoryVisibility(key.id, key.type, isVisible)
         );
     }
 
-    public void setCategoryCollapsed(long categoryId, boolean isCollapsed) {
+    public void setCategoryCollapsed(@NonNull CategoryKey key, boolean isCollapsed) {
         mExecutor.execute(
                 () -> DB.get()
                         .categoryDao()
-                        .updateCategoryCollapsed(categoryId, isCollapsed)
+                        .updateCategoryCollapsed(key.id, key.type, isCollapsed)
         );
     }
 

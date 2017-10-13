@@ -10,20 +10,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.lagonette.app.R;
+import org.lagonette.app.room.embedded.CategoryKey;
 
 public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
     public interface OnCollapsedClickListener {
 
-        void onClick(long categoryId, boolean isCollapsed);
+        // TODO Use NotNull everywhere !
+        void onClick(@NonNull CategoryKey categoryKey, boolean isCollapsed);
+
     }
 
     public interface OnVisibilityClickListener {
 
-        void onClick(long categoryId, boolean visibility);
+        void onClick(@NonNull CategoryKey categoryKey, boolean visibility);
     }
 
-    public long categoryId;
+    public CategoryKey categoryKey;
 
     public boolean isVisible;
 
@@ -53,6 +56,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
                                 false
                         )
         );
+        categoryKey = new CategoryKey();
         iconImageView = itemView.findViewById(R.id.category_icon);
         visibilityButton = itemView.findViewById(R.id.category_visibility);
         collapsedButton = itemView.findViewById(R.id.category_collapsed);
@@ -62,7 +66,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
     public CategoryViewHolder setOnCollapsedClick(@Nullable CategoryViewHolder.OnCollapsedClickListener listener) {
         if (listener != null) {
             collapsedButton.setOnClickListener(
-                    v -> listener.onClick(categoryId, !isCollapsed)
+                    v -> listener.onClick(categoryKey, !isCollapsed)
             );
         }
         return CategoryViewHolder.this;
@@ -71,7 +75,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
     public CategoryViewHolder setOnVisibilityClick(@Nullable CategoryViewHolder.OnVisibilityClickListener listener) {
         if (listener != null) {
             visibilityButton.setOnClickListener(
-                    v -> listener.onClick(categoryId, !isVisible)
+                    v -> listener.onClick(categoryKey, !isVisible)
             );
         }
         return CategoryViewHolder.this;

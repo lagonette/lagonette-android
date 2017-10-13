@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.lagonette.app.room.embedded.CategoryKey;
+
 import java.util.List;
 
 public class Category {
@@ -33,8 +35,9 @@ public class Category {
             @NonNull List<org.lagonette.app.room.entity.Category> categories,
             @NonNull List<org.lagonette.app.room.entity.CategoryMetadata> categoryMetadataList) {
         org.lagonette.app.room.entity.Category category = new org.lagonette.app.room.entity.Category();
-        category.id = id;
-        category.categoryType = categoryType;
+        category.key = new CategoryKey();
+        category.key.id = id;
+        category.key.type = categoryType;
         category.parentId = parentId;
         category.parentCategoryType = parentCategoryType;
         category.label = label;
@@ -43,8 +46,7 @@ public class Category {
         categories.add(category);
 
         org.lagonette.app.room.entity.CategoryMetadata categoryMetadata = new org.lagonette.app.room.entity.CategoryMetadata();
-        categoryMetadata.categoryId = category.id;
-        categoryMetadata.categoryType = category.categoryType;
+        categoryMetadata.categoryKey = category.key.clone();
         categoryMetadata.isVisible = true;
         categoryMetadata.isCollapsed = true;
         categoryMetadataList.add(categoryMetadata);

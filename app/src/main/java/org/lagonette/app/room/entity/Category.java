@@ -1,22 +1,22 @@
 package org.lagonette.app.room.entity;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+
+import org.lagonette.app.room.embedded.CategoryKey;
 
 @Entity(
         tableName = "category",
         primaryKeys = {
                 "id",
-                "category_type"
+                "type"
         }
 )
 public class Category {
 
-    @ColumnInfo(name = "id")
-    public long id;
-
-    @ColumnInfo(name = "category_type")
-    public long categoryType;
+    @Embedded
+    public CategoryKey key;
 
     @ColumnInfo(name = "parent_id")
     public long parentId;

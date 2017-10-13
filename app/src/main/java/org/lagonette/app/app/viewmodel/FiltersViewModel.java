@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import org.lagonette.app.app.arch.EventShipper;
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.repo.Resource;
+import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.reader.FilterReader;
 
 public class FiltersViewModel extends ViewModel {
@@ -39,16 +40,16 @@ public class FiltersViewModel extends ViewModel {
                 .setPartnerVisibility(partnerId, isVisible);
     }
 
-    public void setCategoryVisibility(long categoryId, boolean isVisible) {
+    public void setCategoryVisibility(@NonNull CategoryKey categoryKey, boolean isVisible) {
         Repo
                 .get()
-                .setCategoryVisibility(categoryId, isVisible);
+                .setCategoryVisibility(categoryKey, isVisible);
     }
 
-    public void setCategoryCollapsed(long categoryId, boolean isCollapsed) {
+    public void setCategoryCollapsed(@NonNull CategoryKey categoryKey, boolean isCollapsed) {
         Repo
                 .get()
-                .setCategoryCollapsed(categoryId, isCollapsed);
+                .setCategoryCollapsed(categoryKey, isCollapsed);
     }
 
     public void showAllPartners() {

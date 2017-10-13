@@ -17,17 +17,20 @@ public interface CategoryDao {
     void deleteCategories();
 
     @Insert
+    long insertCategory(Category category);
+
+    @Insert
     long[] insertCategories(List<Category> categories);
 
     @Insert
     long[] insertCategoriesMetadatas(List<CategoryMetadata> categoriesMetadatas);
 
-    @Query("UPDATE category_metadata SET is_visible = :isVisible WHERE category_id = :id")
-    int updateCategoryVisibility(long id, boolean isVisible);
+    @Query("UPDATE category_metadata SET is_visible = :isVisible WHERE category_id = :id AND category_type = :type")
+    int updateCategoryVisibility(long id, long type, boolean isVisible);
 
     @Query("UPDATE category_metadata SET is_visible = :isVisible")
     int updateCategoryVisibilities(boolean isVisible);
 
-    @Query("UPDATE category_metadata SET is_collapsed = :isCollapsed WHERE category_id = :id")
-    int updateCategoryCollapsed(long id, boolean isCollapsed);
+    @Query("UPDATE category_metadata SET is_collapsed = :isCollapsed WHERE category_id = :id AND category_type = :type")
+    int updateCategoryCollapsed(long id,  long type, boolean isCollapsed);
 }

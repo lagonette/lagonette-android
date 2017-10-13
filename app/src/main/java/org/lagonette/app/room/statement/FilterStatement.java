@@ -1,7 +1,9 @@
 package org.lagonette.app.room.statement;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 
+import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.statement.base.GonetteStatement;
 
 import java.lang.annotation.Retention;
@@ -14,6 +16,7 @@ public abstract class FilterStatement
     private static final String SQL_CATEGORIES =
             "SELECT 0 AS row_type, " +
                     "category.id, " +
+                    "category.type, " +
                     "category.label, " +
                     "category.icon, " +
                     "category.display_order, " +
@@ -21,12 +24,12 @@ public abstract class FilterStatement
                     "category_metadata.is_collapsed, " +
                     "TOTAL(main_location_metadata.is_visible) + TOTAL(side_location_metadata.is_visible) AS category_is_partners_visible, " +
                     "NULL AS id, " +
-                    "NULL AS name, " +
                     "NULL AS street, " +
                     "NULL AS zip_code, " +
                     "NULL AS city, " +
                     "NULL AS is_exchange_office, " +
-                    "NULL AS is_visible " +
+                    "NULL AS is_visible, " +
+                    "NULL AS name " +
                     FROM_CATEGORY_AND_METADATA +
                     LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
                     LEFT_JOIN_MAIN_LOCATION_AND_METADATA_ON_MAIN_PARTNER +
@@ -40,6 +43,7 @@ public abstract class FilterStatement
             "SELECT " +
                     "3 AS row_type, " +
                     "category.id, " +
+                    "category.type, " +
                     "NULL AS label, " +
                     "NULL AS icon, " +
                     "category.display_order, " +
@@ -47,12 +51,12 @@ public abstract class FilterStatement
                     "NULL AS is_collapsed, " +
                     "NULL AS category_is_partners_visible, " +
                     "NULL AS id, " +
-                    "NULL AS name, " +
                     "NULL AS street, " +
                     "NULL AS zip_code, " +
                     "NULL AS city, " +
                     "NULL AS is_exchange_office, " +
-                    "NULL AS is_visible " +
+                    "NULL AS is_visible, " +
+                    "NULL AS name " +
                     FROM_CATEGORY +
                     LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
                     LEFT_JOIN_MAIN_LOCATION_ON_MAIN_PARTNER +
@@ -68,19 +72,20 @@ public abstract class FilterStatement
     private static final String SQL_MAIN_PARTNERS =
             "SELECT 1 AS row_type, " +
                     "category.id, " +
+                    "category.type, " +
                     "NULL AS label, " +
                     "NULL AS icon, " +
                     "category.display_order, " +
                     "category_metadata.is_visible, " +
                     "NULL AS is_collapsed, " +
                     "NULL AS category_is_partners_visible, " +
-                    "main_partner.id, " +
-                    "main_partner.name, " +
+                    "main_location.id, " +
                     "main_location.street, " +
                     "main_location.zip_code, " +
                     "main_location.city, " +
                     "main_location.is_exchange_office, " +
-                    "main_location_metadata.is_visible " +
+                    "main_location_metadata.is_visible, " +
+                    "main_partner.name " +
                     FROM_CATEGORY_AND_METADATA +
                     JOIN_MAIN_PARTNER_ON_CATEGORY +
                     LEFT_JOIN_MAIN_LOCATION_AND_METADATA_ON_MAIN_PARTNER +
@@ -89,19 +94,20 @@ public abstract class FilterStatement
     private static final String SQL_SIDE_PARTNERS =
             "SELECT 2 AS row_type, " +
                     "category.id, " +
+                    "category.type, " +
                     "NULL AS label, " +
                     "NULL AS icon, " +
                     "category.display_order, " +
                     "category_metadata.is_visible, " +
                     "NULL AS is_collapsed, " +
                     "NULL AS category_is_partners_visible, " +
-                    "side_partner.id, " +
-                    "side_partner.name, " +
+                    "side_location.id, " +
                     "side_location.street, " +
                     "side_location.zip_code, " +
                     "side_location.city, " +
                     "side_location.is_exchange_office, " +
-                    "side_location_metadata.is_visible " +
+                    "side_location_metadata.is_visible, " +
+                    "side_partner.name " +
                     FROM_CATEGORY_AND_METADATA +
                     JOIN_SIDE_PARTNER_ON_CATEGORY +
                     JOIN_SIDE_LOCATION_AND_METADATA_ON_SIDE_PARTNER +
@@ -122,6 +128,8 @@ public abstract class FilterStatement
     public static final int ROW_TYPE;
 
     public static final int CATEGORY_ID;
+
+    public static final int CATEGORY_TYPE;
 
     public static final int CATEGORY_LABEL;
 
@@ -171,28 +179,35 @@ public abstract class FilterStatement
         int i = 0;
         ROW_TYPE = i++;
         CATEGORY_ID = i++;
+        CATEGORY_TYPE = i++;
         CATEGORY_LABEL = i++;
         CATEGORY_ICON = i++;
         CATEGORY_METADATA_IS_VISIBLE = i++;
         CATEGORY_METADATA_IS_COLLAPSED = i++;
         CATEGORY_IS_PARTNERS_VISIBLE = i++;
         PARTNER_ID = i++;
-        PARTNER_NAME = i++;
         LOCATION_STREET = i++;
         LOCATION_ZIP_CODE = i++;
         LOCATION_CITY = i++;
         LOCATION_IS_EXCHANGE_OFFICE = i++;
         LOCATION_METADATA_IS_VISIBLE = i++;
+        PARTNER_NAME = i++;
     }
 
     public interface Contract {
 
         int getRowType();
 
-        long getCategoryId();
+        @NonNull
+        CategoryKey getCategoryKey();
 
+        @NonNull
+        CategoryKey getCategoryKey(@NonNull CategoryKey recycle);
+
+        @NonNull
         String getCategoryLabel();
 
+        @NonNull
         String getCategoryIcon();
 
         boolean isCategoryVisible();
@@ -203,13 +218,15 @@ public abstract class FilterStatement
 
         long getPartnerId();
 
-        String getPartnerName();
-
+        @NonNull
         String getLocationAddress();
 
         boolean isLocationExchangeOffice();
 
         boolean isLocationVisible();
+
+        @NonNull
+        String getPartnerName();
 
     }
 

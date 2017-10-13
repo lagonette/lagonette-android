@@ -75,10 +75,10 @@ public class FiltersFragment
                 (partnerId, visibility) -> mFiltersViewModel.setPartnerVisibility(partnerId, visibility)
         );
         mFilterAdapter.setOnCategoryVisibilityClickListener(
-                (categoryId, visibility) -> mFiltersViewModel.setCategoryVisibility(categoryId, visibility)
+                (categoryKey, visibility) -> mFiltersViewModel.setCategoryVisibility(categoryKey, visibility)
         );
         mFilterAdapter.setOnCategoryCollapsedClickListener(
-                (categoryId, isCollapsed) -> mFiltersViewModel.setCategoryCollapsed(categoryId, isCollapsed)
+                (categoryKey, isCollapsed) -> mFiltersViewModel.setCategoryCollapsed(categoryKey, isCollapsed)
         );
         mFilterAdapter.setOnPartnerShortcutClickListener(
                 () -> mFiltersViewModel.showAllPartners()

@@ -25,7 +25,7 @@ public interface PartnerDao {
     @Query("DELETE FROM partner")
     void deletePartners();
 
-    // TODO Use foreign key cascade
+    // TODO Use foreign key cascade and take care of metadata
     @Query("DELETE FROM location")
     void deleteLocations();
 

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.reader.base.CursorReader;
 import org.lagonette.app.room.statement.FilterStatement;
 
@@ -35,8 +36,15 @@ public class FilterReader
     }
 
     @Override
-    public long getCategoryId() {
-        return mCursor.getLong(FilterStatement.CATEGORY_ID);
+    public CategoryKey getCategoryKey() {
+        return getCategoryKey(new CategoryKey());
+    }
+
+    @Override
+    public CategoryKey getCategoryKey(@NonNull CategoryKey recycle) {
+        recycle.id = mCursor.getLong(FilterStatement.CATEGORY_ID);
+        recycle.type = mCursor.getLong(FilterStatement.CATEGORY_ID);
+        return recycle;
     }
 
     @Override

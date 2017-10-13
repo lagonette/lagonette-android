@@ -153,7 +153,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         return AdapterUtil.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
-                                mFilterReader.getCategoryId()
+                                mFilterReader.getCategoryKey().getUniqueId()
                         );
                     case FilterStatement.VALUE_ROW_MAIN_PARTNER:
                         return AdapterUtil.createItemId(
@@ -236,7 +236,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
-            holder.categoryId = mFilterReader.getCategoryId();
+            holder.categoryKey = mFilterReader.getCategoryKey(holder.categoryKey);
             holder.isPartnersVisible = mFilterReader.isCategoryPartnersVisible();
             holder.isVisible = mFilterReader.isCategoryVisible();
             holder.isCollapsed = mFilterReader.isCategoryCollapsed();
