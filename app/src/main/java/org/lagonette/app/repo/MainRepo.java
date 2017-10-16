@@ -93,11 +93,11 @@ public class MainRepo {
                 .getAsLiveData();
     }
 
-    public void setPartnerVisibility(long partnerId, boolean isVisible) {
+    public void setLocationVisibility(long locationId, boolean isVisible) {
         mExecutor.execute(
                 () -> DB.get()
                         .partnerDao()
-                        .updatePartnerVisibility(partnerId, isVisible)
+                        .updateLocationVisibility(locationId, isVisible)
         );
     }
 
@@ -117,7 +117,7 @@ public class MainRepo {
         );
     }
 
-    public void showAllPartners() {
+    public void showAllLocations() {
         mExecutor.execute(
                 () -> {
                     LaGonetteDatabase database = DB.get();
@@ -125,7 +125,7 @@ public class MainRepo {
                     database.categoryDao()
                             .updateCategoryVisibilities(true);
                     database.partnerDao()
-                            .updatePartnerVisibilities(true);
+                            .updateLocationVisibilities(true);
                     database.setTransactionSuccessful();
                     database.endTransaction();
                 }
@@ -140,7 +140,7 @@ public class MainRepo {
                     database.categoryDao()
                             .updateCategoryVisibilities(true);
                     database.partnerDao()
-                            .updatePartnerVisibilities(false);
+                            .updateLocationVisibilities(false);
                     // TODO metadata goes to location and not to partner now
 //                    database.partnerDao()
 //                            .updateExchangeOfficeVisibilities(true);

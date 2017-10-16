@@ -68,11 +68,11 @@ public class FiltersFragment
 
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
         mFilterAdapter.setHasStableIds(true);
-        mFilterAdapter.setOnPartnerClickListener(
-                partnerId -> mActivityViewModel.showPartner(partnerId, true)
+        mFilterAdapter.setOnLocationClickListener(
+                locationId -> mActivityViewModel.showLocation(locationId, true)
         );
-        mFilterAdapter.setOnPartnerVisibilityClickListener(
-                (partnerId, visibility) -> mFiltersViewModel.setPartnerVisibility(partnerId, visibility)
+        mFilterAdapter.setOnLocationVisibilityClickListener(
+                (locationId, visibility) -> mFiltersViewModel.setLocationVisibility(locationId, visibility)
         );
         mFilterAdapter.setOnCategoryVisibilityClickListener(
                 (categoryKey, visibility) -> mFiltersViewModel.setCategoryVisibility(categoryKey, visibility)
@@ -80,8 +80,8 @@ public class FiltersFragment
         mFilterAdapter.setOnCategoryCollapsedClickListener(
                 (categoryKey, isCollapsed) -> mFiltersViewModel.setCategoryCollapsed(categoryKey, isCollapsed)
         );
-        mFilterAdapter.setOnPartnerShortcutClickListener(
-                () -> mFiltersViewModel.showAllPartners()
+        mFilterAdapter.setOnLocationShortcutClickListener(
+                () -> mFiltersViewModel.showAllLocations()
         );
         mFilterAdapter.setOnExchangeOfficeShortcutClickListener(
                 () -> mFiltersViewModel.showAllExchangeOffices()

@@ -19,7 +19,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.viewholder.CategoryViewHolder;
 import org.lagonette.app.app.widget.viewholder.FooterViewHolder;
 import org.lagonette.app.app.widget.viewholder.LoadingViewHolder;
-import org.lagonette.app.app.widget.viewholder.PartnerViewHolder;
+import org.lagonette.app.app.widget.viewholder.LocationViewHolder;
 import org.lagonette.app.app.widget.viewholder.ShortcutViewHolder;
 import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.statement.FilterStatement;
@@ -57,10 +57,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private FilterReader mFilterReader;
 
     @Nullable
-    private PartnerViewHolder.OnClickListener mOnPartnerClickListener;
+    private LocationViewHolder.OnClickListener mOnLocationClickListener;
 
     @Nullable
-    private PartnerViewHolder.OnVisibilityClickListener mOnPartnerVisibilityClickListener;
+    private LocationViewHolder.OnVisibilityClickListener mOnLocationVisibilityClickListener;
 
     @Nullable
     private CategoryViewHolder.OnCollapsedClickListener mOnCategoryCollapsedClickListener;
@@ -69,7 +69,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private CategoryViewHolder.OnVisibilityClickListener mOnCategoryVisibilityClickListener;
 
     @Nullable
-    private ShortcutViewHolder.OnPartnerClickListener mOnPartnerShortcutClickListener;
+    private ShortcutViewHolder.OnLocationClickListener mOnLocationShortcutClickListener;
 
     @Nullable
     private ShortcutViewHolder.OnExchangeOfficeClickListener mOnExchangeOfficeShortcutClickListener;
@@ -115,7 +115,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         return R.id.view_type_footer;
                     case FilterStatement.VALUE_ROW_MAIN_PARTNER:
                     case FilterStatement.VALUE_ROW_SIDE_PARTNER:
-                        return R.id.view_type_partner;
+                        return R.id.view_type_location;
                     default:
                         throw new IllegalStateException("Filter row must be a PARTNER or a CATEGORY.");
                 }
@@ -184,7 +184,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             case R.id.view_type_shortcut:
                 return new ShortcutViewHolder(parent)
-                        .setOnPartnerClick(mOnPartnerShortcutClickListener)
+                        .setOnLocationClick(mOnLocationShortcutClickListener)
                         .setOnExchangeOfficeClick(mOnExchangeOfficeShortcutClickListener)
                         .setOnOfficeClick(mOfficeShortcutClickListener);
 
@@ -193,10 +193,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .setOnCollapsedClick(mOnCategoryCollapsedClickListener)
                         .setOnVisibilityClick(mOnCategoryVisibilityClickListener);
 
-            case R.id.view_type_partner:
-                return new PartnerViewHolder(parent)
-                        .setOnPartnerClick(mOnPartnerClickListener)
-                        .setOnVisibilityClick(mOnPartnerVisibilityClickListener);
+            case R.id.view_type_location:
+                return new LocationViewHolder(parent)
+                        .setOnLocationClick(mOnLocationClickListener)
+                        .setOnVisibilityClick(mOnLocationVisibilityClickListener);
 
             case R.id.view_type_footer:
                 return new FooterViewHolder(parent);
@@ -219,8 +219,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case R.id.view_type_category:
                 onBindCategoryViewHolder((CategoryViewHolder) holder, position - SHORTCUT_COUNT);
                 break;
-            case R.id.view_type_partner:
-                onBindPartnerViewHolder((PartnerViewHolder) holder, position - SHORTCUT_COUNT);
+            case R.id.view_type_location:
+                onBindLocationViewHolder((LocationViewHolder) holder, position - SHORTCUT_COUNT);
                 break;
             case R.id.view_type_footer:
             case R.id.view_type_loading:
@@ -266,9 +266,9 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private void onBindPartnerViewHolder(@NonNull PartnerViewHolder holder, int position) {
+    private void onBindLocationViewHolder(@NonNull LocationViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
-            holder.partnerId = mFilterReader.getPartnerId();
+            holder.locationId = mFilterReader.getPartnerId();
             holder.isVisible = mFilterReader.isLocationVisible();
             holder.isCategoryVisible = mFilterReader.isCategoryVisible();
             holder.isExchangeOffice = mFilterReader.isLocationExchangeOffice();
@@ -315,12 +315,12 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
-    public void setOnPartnerClickListener(@Nullable PartnerViewHolder.OnClickListener onPartnerClickListener) {
-        mOnPartnerClickListener = onPartnerClickListener;
+    public void setOnLocationClickListener(@Nullable LocationViewHolder.OnClickListener onLocationClickListener) {
+        mOnLocationClickListener = onLocationClickListener;
     }
 
-    public void setOnPartnerVisibilityClickListener(@Nullable PartnerViewHolder.OnVisibilityClickListener onPartnerVisibilityClickListener) {
-        this.mOnPartnerVisibilityClickListener = onPartnerVisibilityClickListener;
+    public void setOnLocationVisibilityClickListener(@Nullable LocationViewHolder.OnVisibilityClickListener onLocationVisibilityClickListener) {
+        this.mOnLocationVisibilityClickListener = onLocationVisibilityClickListener;
     }
 
     public void setOnCategoryCollapsedClickListener(@Nullable CategoryViewHolder.OnCollapsedClickListener onCategoryCollapsedClickListener) {
@@ -331,8 +331,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.mOnCategoryVisibilityClickListener = onCategoryVisibilityClickListener;
     }
 
-    public void setOnPartnerShortcutClickListener(@Nullable ShortcutViewHolder.OnPartnerClickListener partnerShortcutClickListener) {
-        mOnPartnerShortcutClickListener = partnerShortcutClickListener;
+    public void setOnLocationShortcutClickListener(@Nullable ShortcutViewHolder.OnLocationClickListener locationShortcutClickListener) {
+        mOnLocationShortcutClickListener = locationShortcutClickListener;
     }
 
     public void setOnExchangeOfficeShortcutClickListener(@Nullable ShortcutViewHolder.OnExchangeOfficeClickListener exchangeOfficeShortcutClickListener) {

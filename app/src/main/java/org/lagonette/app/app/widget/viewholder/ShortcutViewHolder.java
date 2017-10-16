@@ -11,7 +11,7 @@ import org.lagonette.app.R;
 
 public class ShortcutViewHolder extends RecyclerView.ViewHolder {
 
-    public interface OnPartnerClickListener {
+    public interface OnLocationClickListener {
 
         void onClick();
     }
@@ -27,7 +27,7 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
     }
 
     @NonNull
-    public final View partnerView;
+    public final View locationView;
 
     @NonNull
     public final View exchangeOfficeView;
@@ -45,14 +45,14 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
                                 false
                         )
         );
-        partnerView = itemView.findViewById(R.id.shortcut_partner);
+        locationView = itemView.findViewById(R.id.shortcut_location);
         exchangeOfficeView = itemView.findViewById(R.id.shortcut_exchange_office);
         officeView = itemView.findViewById(R.id.shortcut_office);
     }
 
-    public ShortcutViewHolder setOnPartnerClick(@Nullable ShortcutViewHolder.OnPartnerClickListener listener) {
+    public ShortcutViewHolder setOnLocationClick(@Nullable OnLocationClickListener listener) {
         if (listener != null) {
-            partnerView.setOnClickListener(
+            locationView.setOnClickListener(
                     v -> listener.onClick()
             );
         }
@@ -61,7 +61,7 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
 
     public ShortcutViewHolder setOnExchangeOfficeClick(@Nullable ShortcutViewHolder.OnExchangeOfficeClickListener listener) {
         if (listener != null) {
-            partnerView.setOnClickListener(
+            locationView.setOnClickListener(
                     v -> listener.onClick()
             );
         }
@@ -70,7 +70,7 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
 
     public ShortcutViewHolder setOnOfficeClick(@Nullable ShortcutViewHolder.OnOfficeClickListener listener) {
         if (listener != null) {
-            partnerView.setOnClickListener(
+            locationView.setOnClickListener(
                     v -> listener.onClick()
             );
         }

@@ -91,13 +91,13 @@ public class MapsActivity
                 );
 
         mViewModel
-                .getShowPartnerRequest()
+                .getShowLocationRequest()
                 .observe(
                         MapsActivity.this,
                         request -> {
                             if (request != null) {
-                                showPartner(
-                                        request.partnerId,
+                                showLocation(
+                                        request.locationId,
                                         request.zoom
                                 );
                             } else {
@@ -139,9 +139,9 @@ public class MapsActivity
         mCoordinator.closeBottomSheet();
     }
 
-    public void showPartner(long partnerId, boolean zoom) {
+    public void showLocation(long locationId, boolean zoom) {
         mCoordinator.focusOnMap();
-        mCoordinator.showPartner(partnerId, zoom);
+        mCoordinator.showLocation(locationId, zoom);
     }
 
     @Override

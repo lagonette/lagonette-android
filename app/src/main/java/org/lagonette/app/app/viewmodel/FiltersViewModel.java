@@ -34,10 +34,10 @@ public class FiltersViewModel extends ViewModel {
         return mFiltersResource;
     }
 
-    public void setPartnerVisibility(long partnerId, boolean isVisible) {
+    public void setLocationVisibility(long locationId, boolean isVisible) {
         Repo
                 .get()
-                .setPartnerVisibility(partnerId, isVisible);
+                .setLocationVisibility(locationId, isVisible);
     }
 
     public void setCategoryVisibility(@NonNull CategoryKey categoryKey, boolean isVisible) {
@@ -52,10 +52,10 @@ public class FiltersViewModel extends ViewModel {
                 .setCategoryCollapsed(categoryKey, isCollapsed);
     }
 
-    public void showAllPartners() {
+    public void showAllLocations() {
         Repo
                 .get()
-                .showAllPartners();
+                .showAllLocations();
     }
 
     public void showAllExchangeOffices() {

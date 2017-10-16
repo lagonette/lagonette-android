@@ -18,7 +18,7 @@
     tools:layout_marginTop="32dp">
 
     <LinearLayout
-        android:id="@+id/shortcut_partner"
+        android:id="@+id/shortcut_location"
         android:layout_width="84dp"
         android:layout_height="84dp"
         android:layout_weight="1"

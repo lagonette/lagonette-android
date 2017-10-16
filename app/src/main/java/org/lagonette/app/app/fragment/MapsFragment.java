@@ -355,7 +355,7 @@ public class MapsFragment
             // If so, we simulate a click on the marker behind.
             if (!mClusterManager.onMarkerClick(marker)) {
                 if (marker.getId().equals(mSelectedMarker.getId())) {
-                    mActivityViewModel.showPartner(mSelectedMarkerId, false);
+                    mActivityViewModel.showLocation(mSelectedMarkerId, false);
                     return true;
                 } else {
                     return false;
@@ -398,7 +398,7 @@ public class MapsFragment
 
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
-        mActivityViewModel.showPartner(partnerItem.getId(), false);
+        mActivityViewModel.showLocation(partnerItem.getId(), false);
         return true;
     }
 

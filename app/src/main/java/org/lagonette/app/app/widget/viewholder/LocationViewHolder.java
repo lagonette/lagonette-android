@@ -11,19 +11,19 @@ import android.widget.TextView;
 
 import org.lagonette.app.R;
 
-public class PartnerViewHolder extends RecyclerView.ViewHolder {
+public class LocationViewHolder extends RecyclerView.ViewHolder {
 
     public interface OnClickListener {
 
-        void onClick(long partnerId);
+        void onClick(long locationId);
     }
 
     public interface OnVisibilityClickListener {
 
-        void onClick(long partnerId, boolean visibility);
+        void onClick(long locationId, boolean visibility);
     }
 
-    public long partnerId;
+    public long locationId;
 
     public boolean isVisible;
 
@@ -45,37 +45,37 @@ public class PartnerViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     public final ImageButton visibilityButton;
 
-    public PartnerViewHolder(@NonNull ViewGroup parent) {
+    public LocationViewHolder(@NonNull ViewGroup parent) {
         super(
                 LayoutInflater
                         .from(parent.getContext())
                         .inflate(
-                                R.layout.row_partner,
+                                R.layout.row_location,
                                 parent,
                                 false
                         )
         );
-        nameTextView = itemView.findViewById(R.id.partner_name);
-        addressTextView = itemView.findViewById(R.id.partner_address);
-        exchangeOfficeIndicatorImage = itemView.findViewById(R.id.partner_exchange_office_indicator);
-        visibilityButton = itemView.findViewById(R.id.partner_visibility);
+        nameTextView = itemView.findViewById(R.id.location_name);
+        addressTextView = itemView.findViewById(R.id.location_address);
+        exchangeOfficeIndicatorImage = itemView.findViewById(R.id.location_exchange_office_indicator);
+        visibilityButton = itemView.findViewById(R.id.location_visibility);
     }
 
-    public PartnerViewHolder setOnPartnerClick(@Nullable OnClickListener listener) {
+    public LocationViewHolder setOnLocationClick(@Nullable OnClickListener listener) {
         if (listener != null) {
             itemView.setOnClickListener(
-                    v -> listener.onClick(partnerId)
+                    v -> listener.onClick(locationId)
             );
         }
-        return PartnerViewHolder.this;
+        return LocationViewHolder.this;
     }
 
-    public PartnerViewHolder setOnVisibilityClick(@Nullable OnVisibilityClickListener listener) {
+    public LocationViewHolder setOnVisibilityClick(@Nullable OnVisibilityClickListener listener) {
         if (listener != null) {
             visibilityButton.setOnClickListener(
-                    v -> listener.onClick(partnerId, !isVisible)
+                    v -> listener.onClick(locationId, !isVisible)
             );
         }
-        return PartnerViewHolder.this;
+        return LocationViewHolder.this;
     }
 }

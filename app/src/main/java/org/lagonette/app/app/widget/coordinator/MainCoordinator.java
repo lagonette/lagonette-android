@@ -106,9 +106,9 @@ public class MainCoordinator
 
     private boolean mLoadFiltersAfterBottomSheetCollapsed = false;
 
-    private long mSelectedPartnerId = Statement.NO_ID;
+    private long mSelectedLocationId = Statement.NO_ID;
 
-    private boolean mZoomForPartnerId;
+    private boolean mZoomForLocationId;
 
     private int mBottomSheetBackgroundColor;
 
@@ -271,7 +271,7 @@ public class MainCoordinator
             bottomSheet.getLayoutParams().height = CoordinatorLayout.LayoutParams.MATCH_PARENT;
             if (mShowPartnerAfterBottomSheetClose) {
                 mShowPartnerAfterBottomSheetClose = false;
-                showPartner(mSelectedPartnerId, mZoomForPartnerId);
+                showLocation(mSelectedLocationId, mZoomForLocationId);
             }
         } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
             if (mSwitchPartnerAfterBottomSheetCollapsed) {
@@ -334,11 +334,11 @@ public class MainCoordinator
         );
     }
 
-    public void showPartner(long partnerId, boolean zoom) {
-        mSelectedPartnerId = partnerId;
+    public void showLocation(long locationId, boolean zoom) {
+        mSelectedLocationId = locationId;
         if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
             mShowPartnerAfterBottomSheetClose = true;
-            mZoomForPartnerId = zoom;
+            mZoomForLocationId = zoom;
             closeBottomSheet();
         } else if (mBottomSheetType == BOTTOM_SHEET_PARTNER) {
             switchPartner(mBottomSheet);
@@ -348,13 +348,13 @@ public class MainCoordinator
     }
 
     public void moveMapAndOpenPartner(boolean zoom) {
-        mCallbacks.showPartner(mSelectedPartnerId, zoom, mOpenPartnerCallback);
+        mCallbacks.showPartner(mSelectedLocationId, zoom, mOpenPartnerCallback);
     }
 
     public void openPartner() {
-        mCallbacks.replaceBottomSheetByPartnerDetails(mSelectedPartnerId, false);
+        mCallbacks.replaceBottomSheetByPartnerDetails(mSelectedLocationId, false);
 
-        mBottomSheet.setTag(mSelectedPartnerId);
+        mBottomSheet.setTag(mSelectedLocationId);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         mBottomSheet.getLayoutParams().height = mCoordinatorLayout.getHeight() * 3 / 4;
         mSearchBarBehavior.enable();
@@ -367,11 +367,11 @@ public class MainCoordinator
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
             long currentPartnerId = (long) bottomSheet.getTag();
-            if (currentPartnerId != mSelectedPartnerId) {
-                mCallbacks.replaceBottomSheetByPartnerDetails(mSelectedPartnerId, true);
-                bottomSheet.setTag(mSelectedPartnerId);
+            if (currentPartnerId != mSelectedLocationId) {
+                mCallbacks.replaceBottomSheetByPartnerDetails(mSelectedLocationId, true);
+                bottomSheet.setTag(mSelectedLocationId);
             }
-            mCallbacks.showPartner(mSelectedPartnerId, false, null);
+            mCallbacks.showPartner(mSelectedLocationId, false, null);
             mBottomSheetType = BOTTOM_SHEET_PARTNER;
         }
     }

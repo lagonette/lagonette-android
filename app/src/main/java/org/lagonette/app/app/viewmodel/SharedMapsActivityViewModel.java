@@ -27,10 +27,10 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> mEnableMyPositionFAB;
 
     @NonNull
-    private final MutableLiveEvent<ShowPartnerEvent> mShowPartnerRequest;
+    private final MutableLiveEvent<ShowLocationEvent> mShowLocationRequest;
 
     @NonNull
-    private final ShowPartnerEvent mShowPartnerEvent;
+    private final ShowLocationEvent mShowLocationEvent;
 
     @NonNull
     private final MutableLiveEvent<Integer> mMapMovement;
@@ -49,14 +49,14 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         mWorkInProgress = new MutableLiveData<>();
         mMapIsReady = new MutableLiveEvent<>();
         mEnableMyPositionFAB = new MutableLiveData<>();
-        mShowPartnerRequest = new MutableLiveEvent<>();
+        mShowLocationRequest = new MutableLiveEvent<>();
         mMapMovement = new MutableLiveEvent<>();
         mSearch = new MutableLiveData<>();
         mMapTopPadding = new MutableLiveData<>();
         mMapBottomPadding = new MutableLiveData<>();
         mMapPadding = new MediatorLiveData<>();
 
-        mShowPartnerEvent = new ShowPartnerEvent();
+        mShowLocationEvent = new ShowLocationEvent();
 
         mSearch.postValue(""); // TODO Not sure if usefull
 
@@ -100,8 +100,8 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public LiveEvent<ShowPartnerEvent> getShowPartnerRequest() {
-        return mShowPartnerRequest;
+    public LiveEvent<ShowLocationEvent> getShowLocationRequest() {
+        return mShowLocationRequest;
     }
 
     @NonNull
@@ -145,19 +145,20 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         mEnableMyPositionFAB.postValue(enable);
     }
 
-    public void showPartner(long partnerId, boolean zoom) {
-        mShowPartnerEvent.partnerId = partnerId;
-        mShowPartnerEvent.zoom = zoom;
-        mShowPartnerRequest.send(mShowPartnerEvent);
+    public void showLocation(long locationId, boolean zoom) {
+        mShowLocationEvent.locationId = locationId;
+        mShowLocationEvent.zoom = zoom;
+        mShowLocationRequest.send(mShowLocationEvent);
     }
 
     public void showFullMap() {
-        mShowPartnerRequest.call();
+        mShowLocationRequest.call();
     }
 
-    public static class ShowPartnerEvent {
+    // TODO Make custom LiveData
+    public static class ShowLocationEvent {
 
-        public long partnerId;
+        public long locationId;
 
         public boolean zoom;
 
