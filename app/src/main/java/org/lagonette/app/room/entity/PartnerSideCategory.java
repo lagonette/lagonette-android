@@ -1,13 +1,17 @@
 package org.lagonette.app.room.entity;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+
+import org.lagonette.app.room.embedded.CategoryKey;
 
 @Entity(
         tableName = "partner_side_category",
         primaryKeys = {
                 "partner_id",
-                "category_id"
+                "category_id",
+                "category_type"
         }//,
 //        foreignKeys = {
 //                @ForeignKey(
@@ -29,6 +33,7 @@ public class PartnerSideCategory {
     @ColumnInfo(name = "partner_id")
     public long partnerId;
 
-    @ColumnInfo(name = "category_id")
-    public long categoryId;
+    @Embedded(prefix = "category_")
+    public CategoryKey categoryKey;
+
 }
