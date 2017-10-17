@@ -537,7 +537,7 @@ public class MapsFragment
             case Resource.ERROR:
                 //TODO
                 mActivityViewModel.setWorkInProgress(false);
-                errorGettingPartners(partnerResource.data.size() > 0);
+                errorGettingPartners(partnerResource.data.size() == 0);
                 showPartners(partnerResource.data);
                 break;
 

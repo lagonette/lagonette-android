@@ -28,18 +28,18 @@ public class MainRepo {
     @NonNull
     private final Executor mExecutor;
 
-    private boolean mShouldFetch;
+    private boolean mShouldUpdate;
 
     public MainRepo(@NonNull Context context, @NonNull Executor executor) {
         mContext = context;
         mExecutor = executor;
-        mShouldFetch = true;
+        mShouldUpdate = true;
     }
 
     public LiveData<Resource<List<PartnerItem>>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
-                this::shouldFetch,
+                this::shouldUpdate,
                 () -> Transformations.switchMap(
                         searchLiveData,
                         search -> DB
@@ -56,7 +56,7 @@ public class MainRepo {
     public LiveData<Resource<LocationDetail>> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
-                this::shouldFetch,
+                this::shouldUpdate,
                 () -> Transformations.switchMap(
                         partnerIdLiveData,
                         partnerId -> partnerId > Statement.NO_ID
@@ -72,7 +72,7 @@ public class MainRepo {
     public LiveData<Resource<FilterReader>> getFilters(@NonNull LiveData<String> searchLiveData) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
-                this::shouldFetch,
+                this::shouldUpdate,
                 () -> Transformations.map(
                         Transformations.switchMap(
                                 searchLiveData,
@@ -150,9 +150,9 @@ public class MainRepo {
         );
     }
 
-    private boolean shouldFetch() {
-        if (mShouldFetch) {
-            mShouldFetch = false;
+    private boolean shouldUpdate() {
+        if (mShouldUpdate) {
+            mShouldUpdate = false;
             return true;
         } else {
             return false;
