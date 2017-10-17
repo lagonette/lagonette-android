@@ -13,8 +13,29 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 public abstract class FilterStatement
         implements GonetteStatement {
 
+    public static final int VALUE_ROW_CATEGORY = 1;
+
+    public static final int VALUE_ROW_MAIN_PARTNER = 2;
+
+    public static final int VALUE_ROW_SIDE_PARTNER = 3;
+
+    public static final int VALUE_ROW_FOOTER = 4;
+
+    public static final int ROW_TYPE_COUNT = 5;
+
+    @Retention(SOURCE)
+    @IntDef({
+            VALUE_ROW_CATEGORY,
+            VALUE_ROW_MAIN_PARTNER,
+            VALUE_ROW_SIDE_PARTNER,
+            VALUE_ROW_FOOTER
+    })
+    public @interface RowType {
+    }
+
     private static final String SQL_CATEGORIES =
-            "SELECT 0 AS row_type, " +
+            "SELECT " +
+                    VALUE_ROW_CATEGORY + " AS row_type, " +
                     "category.id, " +
                     "category.type, " +
                     "category.label, " +
@@ -41,7 +62,7 @@ public abstract class FilterStatement
 
     private static final String SQL_FOOTERS =
             "SELECT " +
-                    "3 AS row_type, " +
+                    VALUE_ROW_FOOTER + " AS row_type, " +
                     "category.id, " +
                     "category.type, " +
                     "NULL AS label, " +
@@ -70,7 +91,8 @@ public abstract class FilterStatement
 
 
     private static final String SQL_MAIN_PARTNERS =
-            "SELECT 1 AS row_type, " +
+            "SELECT " +
+                    VALUE_ROW_MAIN_PARTNER + " AS row_type, " +
                     "category.id, " +
                     "category.type, " +
                     "NULL AS label, " +
@@ -92,7 +114,8 @@ public abstract class FilterStatement
                     " WHERE main_partner.name LIKE :search AND category_metadata.is_collapsed = 0 ";
 
     private static final String SQL_SIDE_PARTNERS =
-            "SELECT 2 AS row_type, " +
+            "SELECT " +
+                    VALUE_ROW_SIDE_PARTNER + " AS row_type, " +
                     "category.id, " +
                     "category.type, " +
                     "NULL AS label, " +
@@ -156,26 +179,6 @@ public abstract class FilterStatement
     public static final int LOCATION_IS_EXCHANGE_OFFICE;
 
     public static final int LOCATION_METADATA_IS_VISIBLE;
-
-    public static final int VALUE_ROW_CATEGORY = 0;
-
-    public static final int VALUE_ROW_MAIN_PARTNER = 1;
-
-    public static final int VALUE_ROW_SIDE_PARTNER = 2;
-
-    public static final int VALUE_ROW_FOOTER = 3;
-
-    public static final int ROW_TYPE_COUNT = 4;
-
-    @Retention(SOURCE)
-    @IntDef({
-            VALUE_ROW_CATEGORY,
-            VALUE_ROW_MAIN_PARTNER,
-            VALUE_ROW_SIDE_PARTNER,
-            VALUE_ROW_FOOTER
-    })
-    public @interface RowType {
-    }
 
     static {
         int i = 0;
