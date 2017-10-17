@@ -159,13 +159,13 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         return AdapterUtil.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
-                                mFilterReader.getPartnerId()
+                                mFilterReader.getLocationId()
                         );
                     case FilterStatement.VALUE_ROW_SIDE_PARTNER:
                         return AdapterUtil.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
-                                mFilterReader.getPartnerId()
+                                mFilterReader.getLocationId()
                         );
                     default:
                         return RecyclerView.NO_ID;
@@ -268,7 +268,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void onBindLocationViewHolder(@NonNull LocationViewHolder holder, int position) {
         if (mFilterReader.moveToPosition(position)) {
-            holder.locationId = mFilterReader.getPartnerId();
+            holder.locationId = mFilterReader.getLocationId();
             holder.isVisible = mFilterReader.isLocationVisible();
             holder.isCategoryVisible = mFilterReader.isCategoryVisible();
             holder.isExchangeOffice = mFilterReader.isLocationExchangeOffice();

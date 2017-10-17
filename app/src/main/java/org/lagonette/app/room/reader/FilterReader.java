@@ -72,9 +72,9 @@ public class FilterReader
         return 0 != mCursor.getInt(FilterStatement.CATEGORY_IS_PARTNERS_VISIBLE);
     }
 
-    @Override //TODO Get location ID ?
-    public long getPartnerId() {
-        return mCursor.getLong(FilterStatement.PARTNER_ID);
+    @Override
+    public long getLocationId() {
+        return mCursor.getLong(FilterStatement.LOCATION_ID);
     }
 
     @Override

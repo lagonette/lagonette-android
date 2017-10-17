@@ -141,7 +141,7 @@ public abstract class FilterStatement
 
     public static final int CATEGORY_IS_PARTNERS_VISIBLE;
 
-    public static final int PARTNER_ID;
+    public static final int LOCATION_ID;
 
     public static final int PARTNER_NAME;
 
@@ -185,7 +185,7 @@ public abstract class FilterStatement
         CATEGORY_METADATA_IS_VISIBLE = i++;
         CATEGORY_METADATA_IS_COLLAPSED = i++;
         CATEGORY_IS_PARTNERS_VISIBLE = i++;
-        PARTNER_ID = i++;
+        LOCATION_ID = i++;
         LOCATION_STREET = i++;
         LOCATION_ZIP_CODE = i++;
         LOCATION_CITY = i++;
@@ -216,7 +216,7 @@ public abstract class FilterStatement
 
         boolean isCategoryPartnersVisible();
 
-        long getPartnerId();
+        long getLocationId();
 
         @NonNull
         String getLocationAddress();
