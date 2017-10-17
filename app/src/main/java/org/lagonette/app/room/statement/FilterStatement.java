@@ -135,6 +135,8 @@ public abstract class FilterStatement
 
     public static final int CATEGORY_ICON;
 
+    public static final int CATEGORY_DISPLAY_ORDER;
+
     public static final int CATEGORY_METADATA_IS_VISIBLE;
 
     public static final int CATEGORY_METADATA_IS_COLLAPSED;
@@ -182,6 +184,7 @@ public abstract class FilterStatement
         CATEGORY_TYPE = i++;
         CATEGORY_LABEL = i++;
         CATEGORY_ICON = i++;
+        CATEGORY_DISPLAY_ORDER = i++;
         CATEGORY_METADATA_IS_VISIBLE = i++;
         CATEGORY_METADATA_IS_COLLAPSED = i++;
         CATEGORY_IS_PARTNERS_VISIBLE = i++;
