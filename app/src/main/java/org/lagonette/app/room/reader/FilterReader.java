@@ -43,7 +43,7 @@ public class FilterReader
     @Override
     public CategoryKey getCategoryKey(@NonNull CategoryKey recycle) {
         recycle.id = mCursor.getLong(FilterStatement.CATEGORY_ID);
-        recycle.type = mCursor.getLong(FilterStatement.CATEGORY_ID);
+        recycle.type = mCursor.getLong(FilterStatement.CATEGORY_TYPE);
         return recycle;
     }
 
