@@ -56,13 +56,13 @@ public abstract class ResourceAlgorithm<ResultType, Worker extends BackgroundWor
                     result.removeSource(dbSource);
                     //noinspection ConstantConditions
                     if (response.isSuccessful()) {
-                        result.addSource( // TODO setValue is never called
+                        result.addSource( //TODO setValue is never called
                                 loadFromDb(), // Re init loader
                                 newData -> result.setValue(Resource.success(newData))
                         );
                     } else {
                         onUpdateFailed();
-                        result.addSource( // TODO is onChanged() really called ?
+                        result.addSource( //TODO is onChanged() really called ?
                                 dbSource,
                                 newData -> result.setValue(
                                         Resource.error(response.getErrorMessage(), newData)

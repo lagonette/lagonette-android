@@ -4,8 +4,8 @@ import android.support.annotation.Nullable;
 
 public class WorkerResponse {
 
-    // TODO make and use this class correctly
-    // TODO Maybe make a Message class with toString(Context) method
+    //TODO make and use this class correctly
+    //TODO Maybe make a Message class with toString(Context) method
 
     private boolean mIsSuccessful = false;
 

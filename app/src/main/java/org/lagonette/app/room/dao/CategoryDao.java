@@ -12,7 +12,7 @@ import java.util.List;
 @Dao
 public interface CategoryDao {
 
-    // TODO Use foreign key cascade
+    //TODO Use foreign key cascade
     @Query("DELETE FROM category")
     void deleteCategories();
 

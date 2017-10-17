@@ -61,7 +61,7 @@ public class LaGonetteApplication
                         )
                         .addMigrations(new VoidMigration(1, 2))
                         .addMigrations(new VoidMigration(2, 3))
-                        //.fallbackToDestructiveMigration() // TODO Remove migration
+                        //.fallbackToDestructiveMigration() //TODO Remove migration
                         .build()
         );
     }

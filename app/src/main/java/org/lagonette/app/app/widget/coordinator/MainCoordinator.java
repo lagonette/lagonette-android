@@ -242,12 +242,12 @@ public class MainCoordinator
         outState.putInt(STATE_BOTTOM_SHEET_TYPE, mBottomSheetType);
     }
 
-    // TODO put this in onCreate ?
+    //TODO put this in onCreate ?
     public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         //noinspection WrongConstant
         mBottomSheetType = savedInstanceState.getInt(STATE_BOTTOM_SHEET_TYPE, BOTTOM_SHEET_NONE);
 
-        // TODO put in xml
+        //TODO put in xml
         if (mBottomSheetType == BOTTOM_SHEET_FILTERS) {
             mBottomSheet.setBackgroundColor(mFiltersBottomSheetBackgroundColor);
         }
@@ -279,13 +279,13 @@ public class MainCoordinator
                 switchPartner(bottomSheet);
             }
 
-            if (mLoadFiltersAfterBottomSheetCollapsed) { // TODO Maybe useless
+            if (mLoadFiltersAfterBottomSheetCollapsed) { //TODO Maybe useless
                 mLoadFiltersAfterBottomSheetCollapsed = false;
             }
         }
     }
 
-    // TODO Show/hide Exchange office in filters ?
+    //TODO Show/hide Exchange office in filters ?
 
     public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         manageStatusBarPaddingOnBottomSheetSlide(bottomSheet);
@@ -439,7 +439,7 @@ public class MainCoordinator
 
     @Override
     public void onParallaxTranslation(float translationY) {
-        // TODO useless ?
+        //TODO useless ?
 //        mParallaxMapsPaddingTop = (int) -translationY;
 //        updateMapPaddingTop();
 //        updateMapPaddingBottom();
@@ -449,7 +449,7 @@ public class MainCoordinator
         mMapTopPaddingSender.send(mParallaxMapsPaddingTop + mSearchBarMapsPaddingTop);
     }
 
-    // TODO useless ? Make the google logo move agqin!
+    //TODO useless ? Make the google logo move agqin!
     public void updateMapPaddingBottom() {
         mMapBottomPaddingSender.send(mParallaxMapsPaddingTop);
     }

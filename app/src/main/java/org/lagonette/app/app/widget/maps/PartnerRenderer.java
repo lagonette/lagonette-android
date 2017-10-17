@@ -106,7 +106,7 @@ public class PartnerRenderer
         setMinClusterSize(MIN_CLUSTER_SIZE);
     }
 
-    // TODO Display just a point instead of logo when zoom is huge
+    //TODO Display just a point instead of logo when zoom is huge
 
     @Override
     protected void onBeforeClusterItemRendered(
@@ -116,7 +116,7 @@ public class PartnerRenderer
         boolean isExchangeOffice = partnerItem.isExchangeOffice();
 
         markerOptions
-                .icon( // TODO Make a correct placeholder
+                .icon( //TODO Make a correct placeholder
                         isExchangeOffice
                                 ? mExchangeOfficePlaceholderBitmapDescriptor
                                 : mPartnerPlaceholderBitmapDescriptor
@@ -161,7 +161,7 @@ public class PartnerRenderer
                 .flat(true);
     }
 
-    // TODO Check, remake, improve and so on
+    //TODO Check, remake, improve and so on
 
     @Override
     public void onItemBitmapReady(
@@ -176,7 +176,7 @@ public class PartnerRenderer
                 : mPartnerBitmapDescriptors;
         BitmapDescriptor bitmapDescriptor = bitmapDescriptors.get(categoryId);
 
-        if (bitmapDescriptor == null) { // TODO Not tested yet.
+        if (bitmapDescriptor == null) { //TODO Not tested yet.
             mPartnerIconView.setImageBitmap(bitmap);
             mPartnerView.setBackground(
                     partnerItem.isExchangeOffice()

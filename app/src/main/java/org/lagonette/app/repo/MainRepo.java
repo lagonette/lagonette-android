@@ -51,7 +51,7 @@ public class MainRepo {
         )
                 .start()
                 .getAsLiveData();
-    } // TODO Fix "Application did not close the cursor or database object that was opened here" issue
+    } //TODO Fix "Application did not close the cursor or database object that was opened here" issue
 
     public LiveData<Resource<LocationDetail>> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
         return new LambdaResourceAlgorithm<>(
@@ -141,7 +141,7 @@ public class MainRepo {
                             .updateCategoryVisibilities(true);
                     database.partnerDao()
                             .updateLocationVisibilities(false);
-                    // TODO metadata goes to location and not to partner now
+                    //TODO metadata goes to location and not to partner now
 //                    database.partnerDao()
 //                            .updateExchangeOfficeVisibilities(true);
                     database.setTransactionSuccessful();

@@ -9,8 +9,8 @@ import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.reader.base.CursorReader;
 import org.lagonette.app.room.statement.FilterStatement;
 
-// TODO Make entity reader and build them with field position
-// TODO Maybe invent our own streamable object
+//TODO Make entity reader and build them with field position
+//TODO Maybe invent our own streamable object
 public class FilterReader
         extends CursorReader
         implements FilterStatement.Contract {
@@ -72,7 +72,7 @@ public class FilterReader
         return 0 != mCursor.getInt(FilterStatement.CATEGORY_IS_PARTNERS_VISIBLE);
     }
 
-    @Override // TODO Get location ID ?
+    @Override //TODO Get location ID ?
     public long getPartnerId() {
         return mCursor.getLong(FilterStatement.PARTNER_ID);
     }
@@ -84,7 +84,7 @@ public class FilterReader
 
     @Override
     public String getLocationAddress() {
-        // TODO use DisplayUtil.formatAddress
+        //TODO use DisplayUtil.formatAddress
         String street = mCursor.getString(FilterStatement.LOCATION_STREET);
         String zipCode = mCursor.getString(FilterStatement.LOCATION_ZIP_CODE);
         String city = mCursor.getString(FilterStatement.LOCATION_CITY);

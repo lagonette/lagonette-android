@@ -58,7 +58,7 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
 
         mShowLocationEvent = new ShowLocationEvent();
 
-        mSearch.postValue(""); // TODO Not sure if usefull
+        mSearch.postValue(""); //TODO Not sure if usefull
 
         mMapPadding.setValue(new int[] {0,0,0,0});
         mMapPadding.addSource(
@@ -155,7 +155,7 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         mShowLocationRequest.call();
     }
 
-    // TODO Make custom LiveData
+    //TODO Make custom LiveData
     public static class ShowLocationEvent {
 
         public long locationId;

@@ -21,15 +21,15 @@ public interface PartnerDao {
     @Insert
     long[] insertLocations(List<Location> locations);
 
-    // TODO Use foreign key cascade
+    //TODO Use foreign key cascade
     @Query("DELETE FROM partner")
     void deletePartners();
 
-    // TODO Use foreign key cascade and take care of metadata
+    //TODO Use foreign key cascade and take care of metadata
     @Query("DELETE FROM location")
     void deleteLocations();
 
-    // TODO Use foreign key cascade
+    //TODO Use foreign key cascade
     @Query("DELETE FROM partner_side_category")
     void deletePartnerSideCategories();
 

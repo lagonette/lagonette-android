@@ -16,7 +16,7 @@ import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
 
-// TODO Do not show empty fragment when there is no partner.
+//TODO Do not show empty fragment when there is no partner.
 public class FiltersFragment
         extends Fragment {
 
@@ -26,7 +26,7 @@ public class FiltersFragment
 
     public static FiltersFragment newInstance(@NonNull String search) {
         Bundle args = new Bundle(1);
-        args.putString(ARG_SEARCH, search); // TODO
+        args.putString(ARG_SEARCH, search); //TODO
         FiltersFragment fragment = new FiltersFragment();
         fragment.setArguments(args);
         return fragment;
@@ -52,7 +52,7 @@ public class FiltersFragment
                 .getFilters()
                 .observe(
                         FiltersFragment.this,
-                        filtersResource -> mFilterAdapter.setFilterReader(filtersResource.data) // TODO manage loading & error
+                        filtersResource -> mFilterAdapter.setFilterReader(filtersResource.data) //TODO manage loading & error
                 );
 
         mActivityViewModel = ViewModelProviders
@@ -91,7 +91,7 @@ public class FiltersFragment
         );
     }
 
-    // TODO Fix category visibility
+    //TODO Fix category visibility
 
     @Nullable
     @Override
@@ -116,7 +116,7 @@ public class FiltersFragment
 
         mFilterList.setLayoutManager(layoutManager);
         mFilterList.setAdapter(mFilterAdapter);
-        mFilterList.setItemAnimator(null); // TODO Remove
+        mFilterList.setItemAnimator(null); //TODO Remove
     }
 
 }

@@ -36,7 +36,7 @@ public class PartnerListTypeAdapter
     public List<Partner> read(JsonReader in) throws IOException {
         List<Partner> partners = mGson.fromJson(in, List.class);
         if(mSendWrongDataException) {
-            // TODO Use crashlitics
+            //TODO Use crashlitics
             FirebaseCrash.report(new IllegalArgumentException("API send incomplete data."));
             mSendWrongDataException = false;
         }

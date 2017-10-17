@@ -16,7 +16,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
     public interface OnCollapsedClickListener {
 
-        // TODO Use NotNull everywhere !
+        //TODO Use NotNull everywhere !
         void onClick(@NonNull CategoryKey categoryKey, boolean isCollapsed);
 
     }

@@ -37,7 +37,7 @@ public class MapsActivity
 
     @Override
     protected void onViewCreated() {
-        // TODO Change activity lifecycle dans BaseActivity
+        //TODO Change activity lifecycle dans BaseActivity
     }
 
     @Override
@@ -106,8 +106,8 @@ public class MapsActivity
                         }
                 );
 
-        // TODO Maybe make interface to send data xor just observe data, like LiveEvent but for LiveData
-        // TODO Maybe use LiveData to exchange info between Coordinator & Activity?
+        //TODO Maybe make interface to send data xor just observe data, like LiveEvent but for LiveData
+        //TODO Maybe use LiveData to exchange info between Coordinator & Activity?
         mCoordinator = new MainCoordinator(
                 MapsActivity.this,
                 search -> mViewModel.search(search),

@@ -66,7 +66,7 @@ public class Partner {
         partner.clientCode = clientCode;
         partner.name = name;
         partner.logo = logo;
-        partner.phone = phone; // TODO Format, use google lib phone
+        partner.phone = phone; //TODO Format, use google lib phone
         partner.website = website;
         partner.email = email;
         partner.description = description;
@@ -74,7 +74,7 @@ public class Partner {
         partner.shortDescription = shortDescription;
         partner.mainCategoryKey = new CategoryKey();
         partner.mainCategoryKey.id = mainCategoryId;
-        partner.mainCategoryKey.type = 0; // TODO Workaround, actually, partner associated with custom/parent category does not exit.
+        partner.mainCategoryKey.type = 0; //TODO Workaround, actually, partner associated with custom/parent category does not exit.
         partnerEntities.add(partner);
 
         for (Location location : locations) {
@@ -88,7 +88,7 @@ public class Partner {
                 org.lagonette.app.room.entity.PartnerSideCategory sideCategory = new org.lagonette.app.room.entity.PartnerSideCategory();
                 sideCategory.categoryKey = new CategoryKey();
                 sideCategory.categoryKey.id = sideCategoryId;
-                sideCategory.categoryKey.type = 0; // TODO Workaround, actually, partner associated with custom/parent category does not exit.
+                sideCategory.categoryKey.type = 0; //TODO Workaround, actually, partner associated with custom/parent category does not exit.
                 sideCategory.partnerId = id;
                 partnerSideCategoryEntities.add(sideCategory);
             }

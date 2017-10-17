@@ -117,7 +117,7 @@ public class DataRefreshWorker
             Log.e(TAG, "loadInBackground: ", e);
             FirebaseCrash.report(e);
             workerResponse.setIsSuccessful(false);
-            // TODO set message
+            //TODO set message
         } finally {
             database.endTransaction();
         }
@@ -126,7 +126,7 @@ public class DataRefreshWorker
     private void cleanUpDatabase(@NonNull LaGonetteDatabase db) {
         db.partnerDao().cleanLocation();
         db.partnerDao().cleanPartner();
-//        db.partnerDao().cleanPartnerMetadata(); // TODO clean partner metadata
+//        db.partnerDao().cleanPartnerMetadata(); //TODO clean partner metadata
     }
 
 }

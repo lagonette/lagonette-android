@@ -11,7 +11,7 @@ import com.google.maps.android.clustering.ClusterItem;
 public class PartnerItem
         implements ClusterItem {
 
-    @Ignore // TODO Try to use type converter
+    @Ignore //TODO Try to use type converter
     @NonNull
     private final LatLng mPosition;
 

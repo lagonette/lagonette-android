@@ -189,7 +189,7 @@ public class MapsFragment
                 );
     }
 
-    // TODO Use firebase to find broken data
+    //TODO Use firebase to find broken data
 
     @Nullable
     @Override
@@ -271,7 +271,7 @@ public class MapsFragment
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        // TODO Use LiveData
+        //TODO Use LiveData
         // Called when location service is connected and my position available.
         // Do nothing here.
     }
@@ -296,7 +296,7 @@ public class MapsFragment
         );
     }
 
-    // TODO Move this in Activity
+    //TODO Move this in Activity
     public boolean checkLocationPermission() {
         if (!mLocationPermissionGranted) {
             if (ContextCompat.checkSelfPermission(
@@ -350,7 +350,7 @@ public class MapsFragment
         );
         mMap.setOnMapClickListener(MapsFragment.this);
         mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(marker -> { // TODO Factorize ?
+        mMap.setOnMarkerClickListener(marker -> { //TODO Factorize ?
             // If cluster manager do not manage marker then the user has probably clicked on the selected marker.
             // If so, we simulate a click on the marker behind.
             if (!mClusterManager.onMarkerClick(marker)) {
@@ -464,7 +464,7 @@ public class MapsFragment
         removeSelectedMarker();
         PartnerItem partnerItem = mPartnerItems.get(id);
         if (partnerItem != null) {
-            LatLng latLng = new LatLng( // TODO Why not just getPosition ?
+            LatLng latLng = new LatLng( //TODO Why not just getPosition ?
                     partnerItem.getPosition().latitude,
                     partnerItem.getPosition().longitude
             );
@@ -535,14 +535,14 @@ public class MapsFragment
         switch (partnerResource.status) {
 
             case Resource.ERROR:
-                // TODO
+                //TODO
                 mActivityViewModel.setWorkInProgress(false);
                 errorGettingPartners(partnerResource.data.size() > 0);
                 showPartners(partnerResource.data);
                 break;
 
             case Resource.LOADING:
-                // TODO
+                //TODO
                 mActivityViewModel.setWorkInProgress(true);
                 showPartners(partnerResource.data);
                 break;
@@ -558,7 +558,7 @@ public class MapsFragment
         mPartnerItems.clear();
         mClusterManager.clearItems();
         if (partnerItems != null) {
-            for (PartnerItem item : partnerItems) { // TODO Improve -> Pass the item or keep in the ViewModel
+            for (PartnerItem item : partnerItems) { //TODO Improve -> Pass the item or keep in the ViewModel
                 mPartnerItems.put(item.getId(), item);
             }
             mClusterManager.addItems(partnerItems);
@@ -566,7 +566,7 @@ public class MapsFragment
         mClusterManager.cluster();
     }
 
-    // TODO
+    //TODO
     public void errorGettingPartners(boolean noPartnerAtAll) {
         Snackbar
                 .make(
@@ -580,7 +580,7 @@ public class MapsFragment
     }
 
 
-    // TODO Useless
+    //TODO Useless
     public interface Callback {
 
         void hideMyLocationButton();

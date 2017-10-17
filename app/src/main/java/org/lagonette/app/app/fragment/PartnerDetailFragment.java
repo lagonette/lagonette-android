@@ -87,7 +87,7 @@ public class PartnerDetailFragment
                 .of(PartnerDetailFragment.this)
                 .get(PartnerDetailViewModel.class);
 
-        // TODO Check
+        //TODO Check
         if (savedInstanceState == null) {
             long partnerId = getArguments().getLong(ARG_PARTNER_ID, Statement.NO_ID);
             mViewModel.setPartnerId(partnerId);
@@ -149,7 +149,7 @@ public class PartnerDetailFragment
 
             case Resource.LOADING:
                 displayLocation(resource.data);
-                // TODO
+                //TODO
                 break;
 
             case Resource.SUCCESS:
@@ -158,7 +158,7 @@ public class PartnerDetailFragment
 
             case Resource.ERROR:
                 displayLocation(resource.data);
-                // TODO
+                //TODO
                 break;
         }
     }
@@ -239,7 +239,7 @@ public class PartnerDetailFragment
         }
     }
 
-    // TODO factorize with MapsFragment
+    //TODO factorize with MapsFragment
     // Maybe it is to the activity to manage that
     public void errorNoDirectionAppFound() {
         Snackbar

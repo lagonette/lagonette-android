@@ -17,8 +17,8 @@
     <item name="loader_query_filters_partners" type="id"/>
     <item name="loader_query_filters_partners_visibility" type="id"/>
     <item name="loader_get_partners" type="id"/>
-    <item name="loader_update_partner_metadata" type="id"/> // TODO Loader in list, must managed several loader
-    <item name="loader_update_category_metadata" type="id"/> // TODO Loader in list, must managed several loader
+    <item name="loader_update_partner_metadata" type="id"/> //TODO Loader in list, must managed several loader
+    <item name="loader_update_category_metadata" type="id"/> //TODO Loader in list, must managed several loader
 
     <item name="view_type_loading" type="id"/>
     <item name="view_type_shortcut" type="id"/>

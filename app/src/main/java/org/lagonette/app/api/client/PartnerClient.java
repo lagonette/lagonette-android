@@ -58,7 +58,7 @@ public class PartnerClient
         mDatabase.partnerDao().deletePartnerSideCategories();
 
         mDatabase.partnerDao().insertLocations(locations);
-        mDatabase.partnerDao().insertLocationsMetadatas(locationMetadataList); // TODO Make metadata insert only by SQL
+        mDatabase.partnerDao().insertLocationsMetadatas(locationMetadataList); //TODO Make metadata insert only by SQL
         mDatabase.partnerDao().insertPartners(partners);
         mDatabase.partnerDao().insertPartnersSideCategories(partnerSideCategories);
     }

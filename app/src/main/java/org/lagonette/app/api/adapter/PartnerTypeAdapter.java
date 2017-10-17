@@ -77,7 +77,7 @@ public class PartnerTypeAdapter extends TypeAdapter<Partner> {
             }
         }
 
-        // TODO extract check method
+        //TODO extract check method
         if (TextUtils.isEmpty(partner.shortDescription)) {
             send = true;
             mStringBuilder.append("empty short description, ");

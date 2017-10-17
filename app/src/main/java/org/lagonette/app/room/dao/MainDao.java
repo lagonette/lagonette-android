@@ -17,7 +17,7 @@ import java.util.List;
 public interface MainDao {
 
     @Query(PartnerDetailStatement.SQL)
-    LiveData<LocationDetail> getLocationsDetail(long id); // TODO Use LiveData to update fragment ?
+    LiveData<LocationDetail> getLocationsDetail(long id); //TODO Use LiveData to update fragment ?
 
     @Query(MapPartnerStatement.SQL)
     LiveData<List<PartnerItem>> getMapLocations(String search);

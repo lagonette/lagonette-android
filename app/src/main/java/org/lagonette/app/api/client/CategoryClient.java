@@ -49,7 +49,7 @@ public class CategoryClient extends EntityClient<CategoriesResponse> {
         body.prepareInsert(categories, categoryMetadataList);
         mDatabase.categoryDao().deleteCategories();
         mDatabase.categoryDao().insertCategories(categories);
-        mDatabase.categoryDao().insertCategoriesMetadatas(categoryMetadataList); // TODO Make metadata insert only by SQL
+        mDatabase.categoryDao().insertCategoriesMetadatas(categoryMetadataList); //TODO Make metadata insert only by SQL
     }
 
     @Nullable

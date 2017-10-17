@@ -58,7 +58,7 @@ android {
 
             minifyEnabled false
             shrinkResources false
-            signingConfig signingConfigs.release // TODO really usefull ?
+            signingConfig signingConfigs.release //TODO really usefull ?
 
             buildConfigField "boolean", "LOG_SQL", "true"
             buildConfigField "boolean", "USE_DEV_API", "false"

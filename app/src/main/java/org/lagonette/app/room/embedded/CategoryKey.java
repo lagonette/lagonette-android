@@ -11,7 +11,7 @@ public class CategoryKey {
     public long type;
 
     public long getUniqueId() {
-        return id; // TODO correctly
+        return id; //TODO correctly
     }
 
     public CategoryKey clone() {
