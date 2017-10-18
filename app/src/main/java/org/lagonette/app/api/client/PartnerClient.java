@@ -63,6 +63,7 @@ public class PartnerClient
         mDatabase.partnerDao().insertPartnersSideCategories(partnerSideCategories);
     }
 
+    //TODO Maybe this method should not be here
     @Nullable
     public String getLocalMd5Sum(@NonNull SharedPreferences preferences) {
         return preferences.getString(
