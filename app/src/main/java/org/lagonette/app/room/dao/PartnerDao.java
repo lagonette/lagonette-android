@@ -45,8 +45,8 @@ public interface PartnerDao {
     @Query("UPDATE location_metadata SET is_visible = :isVisible")
     int updateLocationVisibilities(boolean isVisible);
 
-//    @Query("UPDATE partner_metadata SET is_visible = :isVisible WHERE partner_id IN (SELECT id FROM partner WHERE is_exchange_office <> 0)")
-//    int updateExchangeOfficeVisibilities(boolean isVisible);
+    @Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id IN (SELECT id FROM location WHERE is_exchange_office <> 0)")
+    int updateExchangeOfficeVisibilities(boolean isVisible);
 
     @Query("DELETE FROM location WHERE (street IS NULL OR street = '') AND latitude = 0 AND longitude = 0")
     void cleanLocation();

@@ -59,18 +59,18 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
         return ShortcutViewHolder.this;
     }
 
-    public ShortcutViewHolder setOnExchangeOfficeClick(@Nullable ShortcutViewHolder.OnExchangeOfficeClickListener listener) {
+    public ShortcutViewHolder setOnExchangeOfficeClick(@Nullable OnExchangeOfficeClickListener listener) {
         if (listener != null) {
-            locationView.setOnClickListener(
+            exchangeOfficeView.setOnClickListener(
                     v -> listener.onClick()
             );
         }
         return ShortcutViewHolder.this;
     }
 
-    public ShortcutViewHolder setOnOfficeClick(@Nullable ShortcutViewHolder.OnOfficeClickListener listener) {
+    public ShortcutViewHolder setOnOfficeClick(@Nullable OnOfficeClickListener listener) {
         if (listener != null) {
-            locationView.setOnClickListener(
+            officeView.setOnClickListener(
                     v -> listener.onClick()
             );
         }
