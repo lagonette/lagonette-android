@@ -54,9 +54,9 @@ public class DataRefreshWorker
         try {
             database.beginTransaction();
 
-            // --- --- --- --
-            // Get Categories
-            // --- --- --- --
+            // -------------- //
+            // Get Categories //
+            // -------------- //
             categoryMd5Client.call();
             if (!categoryMd5Client.isSuccess()) {
                 workerResponse.setIsSuccessful(false);
@@ -66,16 +66,16 @@ public class DataRefreshWorker
             if (categoryMd5Client.isMd5SumChanged()) {
                 Log.d(TAG, "Category MD5 sum has changed -> update categories");
                 categoryClient.call();
+
+                if (!categoryClient.isSuccess()) {
+                    workerResponse.setIsSuccessful(false);
+                    return;
+                }
             }
 
-            if (!categoryClient.isSuccess()) {
-                workerResponse.setIsSuccessful(false);
-                return;
-            }
-
-            // --- --- --- -
-            // Get Partners
-            // --- --- --- -
+            // ------------ //
+            // Get Partners //
+            // ------------ //
             partnerMd5SumClient.call();
             if (!partnerMd5SumClient.isSuccess()) {
                 workerResponse.setIsSuccessful(false);
@@ -85,22 +85,22 @@ public class DataRefreshWorker
             if (partnerMd5SumClient.isMd5SumChanged()) {
                 Log.d(TAG, "Partner MD5 sum has changed -> update partners");
                 partnerClient.call();
+
+                if (!partnerClient.isSuccess()) {
+                    workerResponse.setIsSuccessful(false);
+                    return;
+                }
             }
 
-            if (!partnerClient.isSuccess()) {
-                workerResponse.setIsSuccessful(false);
-                return;
-            }
-
-            // --- --- --- --- --- --- --- --- --- -
-            // Clean up and end database transaction
-            // --- --- --- --- --- --- --- --- --- -
+            // ------------------------------------- //
+            // Clean up and end database transaction //
+            // ------------------------------------- //
             cleanUpDatabase(database);
             database.setTransactionSuccessful();
 
-            // --- --- --- -
-            // Save new md5
-            // --- --- --- -
+            // ------------ //
+            // Save new md5 //
+            // ------------ //
             if (categoryMd5Client.isMd5SumChanged()) {
                 categoryClient.saveRemoteMd5Sum(preferences);
             }
@@ -109,10 +109,11 @@ public class DataRefreshWorker
                 partnerClient.saveRemoteMd5Sum(preferences);
             }
 
-            // --- --- --- --- --- -
-            // Set worker successful
-            // --- --- --- --- --- -
+            // --------------------- //
+            // Set worker successful //
+            // --------------------- //
             workerResponse.setIsSuccessful(true);
+            
         } catch (ApiClientException e) {
             Log.e(TAG, "loadInBackground: ", e);
             FirebaseCrash.report(e);
