@@ -34,4 +34,7 @@ public class Category {
     @ColumnInfo(name = "display_order")
     public int displayOrder;
 
+    @ColumnInfo(name = "hidden")
+    public boolean hidden = false;
+
 }

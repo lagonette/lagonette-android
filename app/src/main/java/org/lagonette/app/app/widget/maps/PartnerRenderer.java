@@ -113,7 +113,7 @@ public class PartnerRenderer
             final PartnerItem partnerItem,
             final MarkerOptions markerOptions) {
 
-        boolean isExchangeOffice = partnerItem.isExchangeOffice();
+        boolean isExchangeOffice = partnerItem.isExchangeOffice() && !partnerItem.isGonetteHeadquarter();
 
         markerOptions
                 .icon( //TODO Make a correct placeholder

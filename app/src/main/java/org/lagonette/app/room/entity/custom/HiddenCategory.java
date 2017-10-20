@@ -18,6 +18,7 @@ public class HiddenCategory
         label = "Hidden";
         icon = null;
         displayOrder = -1; //TODO
+        hidden = true;
 
 
         mMetadata = new CategoryMetadata();

@@ -15,6 +15,9 @@ public class PartnerItem
     @NonNull
     private final LatLng mPosition;
 
+    @ColumnInfo(name = "id")
+    private long mId;
+
     @ColumnInfo(name = "latitude")
     private double mLatitude;
 
@@ -25,18 +28,19 @@ public class PartnerItem
     @NonNull
     private final String mIconUrl;
 
-    @ColumnInfo(name = "id")
-    private long mId;
-
     @ColumnInfo(name = "is_exchange_office")
     private boolean mIsExchangeOffice;
 
-    @ColumnInfo(name = "main_category_id")
+    @ColumnInfo(name = "is_gonette_headquarter")
+    private boolean mIsGonetteHeadquarter;
+
+    @ColumnInfo(name = "main_category_id") //TODO Use CategoryKey
     private long mCategoryId;
 
-    public PartnerItem(long id, double latitude, double longitude, boolean isExchangeOffice, long categoryId, @NonNull String iconUrl) {
+    public PartnerItem(long id, boolean isGonetteHeadquarter, boolean isExchangeOffice, double latitude, double longitude, long categoryId, @NonNull String iconUrl) {
         mId = id;
         mIsExchangeOffice = isExchangeOffice;
+        mIsGonetteHeadquarter = isGonetteHeadquarter;
         mPosition = new LatLng(latitude, longitude);
         mLatitude = latitude;
         mLongitude = longitude;
@@ -86,5 +90,9 @@ public class PartnerItem
 
     public double getLongitude() {
         return mLongitude;
+    }
+
+    public boolean isGonetteHeadquarter() {
+        return mIsGonetteHeadquarter;
     }
 }
