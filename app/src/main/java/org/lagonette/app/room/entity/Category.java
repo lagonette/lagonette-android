@@ -18,6 +18,7 @@ public class Category {
     @Embedded
     public CategoryKey key;
 
+    //TODO Parent category key
     @ColumnInfo(name = "parent_id")
     public long parentId;
 

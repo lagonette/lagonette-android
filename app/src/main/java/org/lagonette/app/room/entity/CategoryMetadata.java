@@ -3,19 +3,13 @@ package org.lagonette.app.room.entity;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 
 import org.lagonette.app.room.embedded.CategoryKey;
 
 @Entity(
         tableName = "category_metadata",
-        primaryKeys = {"category_id", "category_type"},
-        foreignKeys = @ForeignKey(
-                entity = Category.class,
-                parentColumns = {"id", "type"},
-                childColumns = {"category_id", "category_type"},
-                onDelete = ForeignKey.CASCADE
-        )
+        primaryKeys = {"category_id", "category_type"}
+        //TODO Do not use foreign, if not metadata is deleted on category insert with Replace strategy
 )
 public class CategoryMetadata {
 

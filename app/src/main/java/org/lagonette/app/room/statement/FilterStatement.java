@@ -58,7 +58,7 @@ public abstract class FilterStatement
                     LEFT_JOIN_SIDE_LOCATION_AND_METADATA_ON_SIDE_PARTNER +
                     " WHERE main_partner.name LIKE :search " +
                     " OR side_partner.name LIKE :search " +
-                    " GROUP BY category.id ";
+                    " GROUP BY category.type, category.id ";
 
     private static final String SQL_FOOTERS =
             "SELECT " +
@@ -87,7 +87,7 @@ public abstract class FilterStatement
                     " AND main_partner.name LIKE :search " +
                     " OR category.id IS NOT NULL " +
                     " AND side_partner.name LIKE :search " +
-                    " GROUP BY category.id ";
+                    " GROUP BY category.type, category.id ";
 
 
     private static final String SQL_MAIN_PARTNERS =

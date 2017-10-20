@@ -7,6 +7,7 @@
 +todo Clean DB correctly
 (A) +todo Do API check with retrofit TypeAdapter (Post-processing GSON deserization)
 +todo Check retrofit to do api request correctly (stream, etc.)
++todo use @transactions
 
 +feature Collapsed/Hide all category in one click @filters
 +feature Display category on map in one click @filters @maps

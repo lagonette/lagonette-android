@@ -37,7 +37,7 @@ public class Partner {
     public String description;
 
     @SerializedName("isGonetteHeadquarter")
-    public boolean isGonetteHeadquarter;
+    public Boolean isGonetteHeadquarter;
 
     @SerializedName("shortDescription")
     public String shortDescription;

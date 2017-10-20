@@ -3,11 +3,13 @@ package org.lagonette.app.room.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.support.annotation.NonNull;
 
 import org.lagonette.app.room.entity.Location;
-import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.LocationMetadata;
+import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.PartnerSideCategory;
 
 import java.util.List;
@@ -15,10 +17,16 @@ import java.util.List;
 @Dao
 public interface PartnerDao {
 
-    @Insert
+    @Query("SELECT * FROM partner WHERE is_gonette_headquarter = 1")
+    Partner getHeadquarter();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertPartner(@NonNull Partner partner);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insertPartners(List<Partner> partners);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insertLocations(List<Location> locations);
 
     //TODO Use foreign key cascade
@@ -33,10 +41,10 @@ public interface PartnerDao {
     @Query("DELETE FROM partner_side_category")
     void deletePartnerSideCategories();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insertLocationsMetadatas(List<LocationMetadata> locationsMetadatas);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insertPartnersSideCategories(List<PartnerSideCategory> partnersSideCategories);
 
     @Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id = :id")

@@ -9,6 +9,7 @@ import org.lagonette.app.api.service.LaGonetteService;
 import org.lagonette.app.room.database.LaGonetteDatabase;
 import org.lagonette.app.room.entity.Category;
 import org.lagonette.app.room.entity.CategoryMetadata;
+import org.lagonette.app.room.entity.custom.HiddenCategory;
 import org.lagonette.app.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -47,9 +48,16 @@ public class CategoryClient extends EntityClient<CategoriesResponse> {
 
         mMd5Sum = body.md5Sum;
         body.prepareInsert(categories, categoryMetadataList);
+
         mDatabase.categoryDao().deleteCategories();
         mDatabase.categoryDao().insertCategories(categories);
         mDatabase.categoryDao().insertCategoriesMetadatas(categoryMetadataList); //TODO Make metadata insert only by SQL
+
+        // Manage hidden category
+        HiddenCategory hiddenCategory = new HiddenCategory();
+        CategoryMetadata categoryMetadata = hiddenCategory.getMetadata();
+        mDatabase.categoryDao().insertCategory(hiddenCategory);
+        mDatabase.categoryDao().insertCategoryMetadata(categoryMetadata);
     }
 
     @Nullable

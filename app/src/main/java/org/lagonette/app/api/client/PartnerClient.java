@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import org.lagonette.app.api.response.PartnersResponse;
 import org.lagonette.app.api.service.LaGonetteService;
 import org.lagonette.app.room.database.LaGonetteDatabase;
+import org.lagonette.app.room.entity.Category;
 import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.LocationMetadata;
@@ -53,6 +54,7 @@ public class PartnerClient
         mMd5Sum = body.md5Sum;
         body.prepareInsert(partners, locations, locationMetadataList, partnerSideCategories);
 
+        //TODO Make a better clean
         mDatabase.partnerDao().deletePartners();
         mDatabase.partnerDao().deleteLocations();
         mDatabase.partnerDao().deletePartnerSideCategories();
@@ -61,6 +63,18 @@ public class PartnerClient
         mDatabase.partnerDao().insertLocationsMetadatas(locationMetadataList); //TODO Make metadata insert only by SQL
         mDatabase.partnerDao().insertPartners(partners);
         mDatabase.partnerDao().insertPartnersSideCategories(partnerSideCategories);
+
+        // Manage headquarter
+        Partner headquarter = mDatabase.partnerDao().getHeadquarter();
+        Category hidden = mDatabase.categoryDao().getHiddenCategory();
+        if (headquarter != null && hidden != null) {
+
+            hidden.icon = headquarter.logo;
+            headquarter.mainCategoryKey = hidden.key.clone();
+
+            mDatabase.categoryDao().insertCategory(hidden);
+            mDatabase.partnerDao().insertPartner(headquarter);
+        }
     }
 
     //TODO Maybe this method should not be here
