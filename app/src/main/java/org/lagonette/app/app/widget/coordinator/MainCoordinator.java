@@ -29,11 +29,14 @@ public class MainCoordinator {
 
     private static final int ACTION_IDLE = 0;
 
-    private static final int ACTION_OPEN_FILTERS = 1;
+    private static final int ACTION_BACK = 1;
+
+    private static final int ACTION_OPEN_FILTERS = 2;
 
     @Retention(SOURCE)
     @IntDef({
             ACTION_IDLE,
+            ACTION_BACK,
             ACTION_OPEN_FILTERS
     })
     private @interface Action {
@@ -67,7 +70,25 @@ public class MainCoordinator {
 
     public void openFilters() {
         mPendingAction = ACTION_OPEN_FILTERS;
-        dispatchAction();
+        computeFiltersOpening();
+    }
+
+    public boolean back() {
+        switch (mBottomSheetState) {
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_EXPANDED:
+            case BottomSheetBehavior.STATE_SETTLING:
+                mPendingAction = ACTION_BACK;
+                computeBack();
+                return true;
+
+            default:
+            case BottomSheetBehavior.STATE_HIDDEN:
+                markPendingActionDone();
+                return false;
+        }
     }
 
     public void notifyBottomSheetStateChanged(@BottomSheetPerformer.State int newState) {
@@ -83,12 +104,35 @@ public class MainCoordinator {
     private void dispatchAction() {
         switch (mPendingAction) {
 
+            case ACTION_BACK:
+                computeBack();
+                break;
+
             case ACTION_OPEN_FILTERS:
                 computeFiltersOpening();
                 break;
 
             default:
             case ACTION_IDLE:
+                markPendingActionDone();
+                break;
+        }
+    }
+
+    private void computeBack() {
+        switch (mBottomSheetState) {
+
+            case BottomSheetBehavior.STATE_SETTLING:
+                // Do nothing
+                break;
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_EXPANDED:
+                mBottomSheetCallback.closeBottomSheet();
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
                 markPendingActionDone();
                 break;
         }

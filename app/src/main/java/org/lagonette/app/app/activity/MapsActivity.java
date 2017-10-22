@@ -182,9 +182,9 @@ public class MapsActivity
 
     @Override
     public void onBackPressed() {
-//        if (!mCoordinator.onBackPressed()) {
+        if (!mCoordinator.back()) {
             super.onBackPressed();
-//        }
+        }
     }
 
     public void showFullMap() {
