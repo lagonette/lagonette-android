@@ -17,10 +17,8 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-public class BottomSheetFragmentManager implements MainCoordinator.FragmentLoader {
-
-    public BottomSheetFragmentManager() {
-    }
+public class BottomSheetFragmentManager
+        implements MainCoordinator.FragmentLoader {
 
     public interface Observer {
 
@@ -56,19 +54,62 @@ public class BottomSheetFragmentManager implements MainCoordinator.FragmentLoade
         mFragmentManager = activity.getSupportFragmentManager();
     }
 
-    @Override
-    public void unloadFragment() {
+    public void init(@FragmentType int type) {
+        loadFragment(type);
+    }
+
+    public void restore(@FragmentType int type) {
+        if (mFragmentManager == null) {
+            throw new IllegalStateException("FragmentManager should not be NULL!");
+        }
+
+        switch (type) {
+
+            case FRAGMENT_NONE:
+                mFragment = null;
+                break;
+
+            case FRAGMENT_FILTERS:
+                mFragment = mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
+                break;
+
+            case FRAGMENT_PARTNER:
+                mFragment = mFragmentManager.findFragmentByTag(PartnerDetailFragment.TAG);
+                break;
+        }
+    }
+
+    public void loadFragment(@FragmentType int type) {
+        switch (type) {
+
+            case FRAGMENT_NONE:
+                unloadFragment();
+                break;
+
+            case FRAGMENT_FILTERS:
+                loadFiltersFragment();
+                break;
+
+            case FRAGMENT_PARTNER:
+                loadPartnerFragment();
+                break;
+        }
+    }
+
+    private void unloadFragment() {
         if (mFragmentManager != null && mFragment != null) {
             mFragmentManager.beginTransaction()
                     .remove(mFragment)
                     .commit();
             mFragment = null;
+        }
+
+        if (mObserver != null) {
             mObserver.notifyBottomSheetFragmentChanged(FRAGMENT_NONE);
         }
     }
 
-    @Override
-    public void loadFiltersFragment() {
+    private void loadFiltersFragment() {
         if (mFragmentManager != null) {
             mFragment = FiltersFragment.newInstance("");
             mFragmentManager
@@ -79,12 +120,14 @@ public class BottomSheetFragmentManager implements MainCoordinator.FragmentLoade
                             FiltersFragment.TAG
                     )
                     .commit();
-            mObserver.notifyBottomSheetFragmentChanged(FRAGMENT_FILTERS);
+
+            if (mObserver != null) {
+                mObserver.notifyBottomSheetFragmentChanged(FRAGMENT_FILTERS);
+            }
         }
     }
 
-    @Override
-    public void loadPartnerFragment() {
+    private void loadPartnerFragment() {
         if (mFragmentManager != null) {
             mFragment = PartnerDetailFragment.newInstance(Statement.NO_ID);
             mFragmentManager.beginTransaction()
@@ -94,11 +137,14 @@ public class BottomSheetFragmentManager implements MainCoordinator.FragmentLoade
                             PartnerDetailFragment.TAG
                     )
                     .commit();
-            mObserver.notifyBottomSheetFragmentChanged(FRAGMENT_PARTNER);
+
+            if (mObserver != null) {
+                mObserver.notifyBottomSheetFragmentChanged(FRAGMENT_PARTNER);
+            }
         }
     }
 
-    public void setObserver(Observer observer) {
+    public void observe(Observer observer) {
         mObserver = observer;
     }
 

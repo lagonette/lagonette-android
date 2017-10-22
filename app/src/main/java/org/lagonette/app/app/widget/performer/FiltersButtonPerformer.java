@@ -35,7 +35,7 @@ public class FiltersButtonPerformer {
         );
     }
 
-    public void setObserver(@Nullable Observer observer) {
+    public void observe(@Nullable Observer observer) {
         mObserver = observer;
     }
 }

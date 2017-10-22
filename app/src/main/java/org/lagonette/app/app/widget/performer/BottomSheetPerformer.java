@@ -46,10 +46,40 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
         mBottomSheetRes = bottomSheetRes;
     }
 
+    public void init(@BottomSheetPerformer.State int initState) {
+        if (mBehavior == null) {
+            throw new IllegalStateException("inject() must be called before init()");
+        }
+
+        mBehavior.setState(initState);
+    }
+
     public void inject(@NonNull View view) {
         View bottomSheet = view.findViewById(mBottomSheetRes);
         mBehavior = BottomSheetBehavior.from(bottomSheet);
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
+    }
+
+    public void restore(@BottomSheetPerformer.State int restoredState) {
+        if (mBehavior == null) {
+            throw new IllegalStateException("inject() must be called before restore()");
+        }
+
+        switch (restoredState) {
+
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_SETTLING:
+                restoredState = BottomSheetBehavior.STATE_COLLAPSED;
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_EXPANDED:
+                // Do nothing
+                break;
+        }
+
+        mBehavior.setState(restoredState);
     }
 
     @Override
@@ -78,7 +108,7 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
         // Do nothing
     }
 
-    public void setStateObserver(@Nullable StateObserver stateObserver) {
+    public void observe(@Nullable StateObserver stateObserver) {
         mStateObserver = stateObserver;
     }
 }

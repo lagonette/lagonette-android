@@ -23,11 +23,7 @@ public class MainCoordinator {
 
     public interface FragmentLoader {
 
-        void unloadFragment();
-
-        void loadFiltersFragment();
-
-        void loadPartnerFragment();
+        void loadFragment(@BottomSheetFragmentManager.FragmentType int type);
 
     }
 
@@ -205,15 +201,15 @@ public class MainCoordinator {
     }
 
     private void loadFiltersFragment() {
-        mFragmentLoader.loadFiltersFragment();
+        mFragmentLoader.loadFragment(BottomSheetFragmentManager.FRAGMENT_FILTERS);
     }
 
     private void loadPartnerFragment() {
-        mFragmentLoader.loadPartnerFragment();
+        mFragmentLoader.loadFragment(BottomSheetFragmentManager.FRAGMENT_PARTNER);
     }
 
     private void unloadFragment() {
-        mFragmentLoader.unloadFragment();
+        mFragmentLoader.loadFragment(BottomSheetFragmentManager.FRAGMENT_NONE);
     }
 
     private void wtf() {
