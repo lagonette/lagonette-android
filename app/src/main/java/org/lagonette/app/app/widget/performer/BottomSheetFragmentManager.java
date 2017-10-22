@@ -55,12 +55,16 @@ public class BottomSheetFragmentManager
     }
 
     public void init(@FragmentType int type) {
+        if (mFragmentManager == null) {
+            throw new IllegalStateException("inject() must be called before init()");
+        }
+
         loadFragment(type);
     }
 
     public void restore(@FragmentType int type) {
         if (mFragmentManager == null) {
-            throw new IllegalStateException("FragmentManager should not be NULL!");
+            throw new IllegalStateException("inject() must be called before restore()");
         }
 
         switch (type) {

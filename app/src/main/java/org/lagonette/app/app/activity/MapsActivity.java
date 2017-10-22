@@ -4,26 +4,21 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
 import org.lagonette.app.R;
-import org.lagonette.app.app.fragment.MapsFragment;
 import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.app.app.viewmodel.StateMapsActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.performer.BottomSheetFragmentManager;
 import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.FiltersButtonPerformer;
+import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
 
 public class MapsActivity
         extends BaseActivity {
 
     private static final String TAG = "MapsActivity";
-
-    private MapsFragment mMapsFragment;
-
-    private Fragment mBottomSheetFragment;
 
     private MainCoordinator mCoordinator;
 
@@ -37,13 +32,17 @@ public class MapsActivity
 
     private StateMapsActivityViewModel mStateViewModel;
 
+    private MapFragmentPerformer mMapFragmentPerformer;
+
     @Override
     protected void construct() {
         mBottomSheetFragmentManager = new BottomSheetFragmentManager();
+        mMapFragmentPerformer = new MapFragmentPerformer();
         mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
         mFiltersButtonPerformer = new FiltersButtonPerformer(R.id.filters_fab);
         mCoordinator = new MainCoordinator(mBottomSheetPerformer, mBottomSheetFragmentManager);
 
+        mMapFragmentPerformer.inject(MapsActivity.this);
         mBottomSheetFragmentManager.inject(MapsActivity.this);
 
         mViewModel = ViewModelProviders
@@ -69,10 +68,7 @@ public class MapsActivity
 
     @Override
     protected void init() {
-        mMapsFragment = MapsFragment.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.content, mMapsFragment, MapsFragment.TAG)
-                .commit();
+        mMapFragmentPerformer.init();
 
         MutableLiveData<Integer> bottomSheetFragment = mStateViewModel.getBottomSheetFragment();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
@@ -85,8 +81,7 @@ public class MapsActivity
 
     @Override
     protected void restore(@NonNull Bundle savedInstanceState) {
-        mMapsFragment = (MapsFragment) getSupportFragmentManager()
-                .findFragmentByTag(MapsFragment.TAG);
+        mMapFragmentPerformer.restore();
 
         MutableLiveData<Integer> bottomSheetFragment = mStateViewModel.getBottomSheetFragment();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
