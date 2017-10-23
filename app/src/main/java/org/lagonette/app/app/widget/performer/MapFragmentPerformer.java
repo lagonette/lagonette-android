@@ -37,4 +37,30 @@ public class MapFragmentPerformer {
 
         mFragment = (MapsFragment) mFragmentManager.findFragmentByTag(MapsFragment.TAG);
     }
+
+    public void moveOnMyLocation() {
+        if (mFragment != null) {
+            mFragment.moveOnMyLocation();
+        }
+    }
+
+    public boolean moveOnFootprint() {
+        if (mFragment != null) {
+            mFragment.moveOnFootprint();
+            return true;
+        }
+        return false;
+    }
+
+    public void stopMoving() {
+        if (mFragment != null) {
+            mFragment.stopMoving();
+        }
+    }
+
+    public void observeMovement(@Nullable MapsFragment.MapMovementCallback movementCallback) {
+        if (mFragment != null) {
+            mFragment.observeMovement(movementCallback);
+        }
+    }
 }

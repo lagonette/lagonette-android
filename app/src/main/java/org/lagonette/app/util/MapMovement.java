@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public final class MapMovement {
-
+//TODO Useless?
     public static final int MY_LOCATION = 0;
     public static final int FOOTPRINT = 1;
 

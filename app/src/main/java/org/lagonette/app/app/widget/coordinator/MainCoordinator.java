@@ -4,8 +4,10 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
+import org.lagonette.app.app.fragment.MapsFragment;
 import org.lagonette.app.app.widget.performer.BottomSheetFragmentManager;
 import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
 
 import java.lang.annotation.Retention;
 
@@ -33,21 +35,30 @@ public class MainCoordinator {
 
     private static final int ACTION_OPEN_FILTERS = 2;
 
+    private static final int ACTION_MOVE_ON_MY_LOCATION = 3;
+
+    private static final int ACTION_MOVE_ON_FOOTPRINT = 4;
+
     @Retention(SOURCE)
     @IntDef({
             ACTION_IDLE,
             ACTION_BACK,
-            ACTION_OPEN_FILTERS
+            ACTION_OPEN_FILTERS,
+            ACTION_MOVE_ON_MY_LOCATION,
+            ACTION_MOVE_ON_FOOTPRINT
     })
     private @interface Action {
 
     }
 
     @NonNull
-    private BottomSheetCallback mBottomSheetCallback;
+    private final BottomSheetCallback mBottomSheetCallback;
 
     @NonNull
-    private FragmentLoader mFragmentLoader;
+    private final FragmentLoader mFragmentLoader;
+
+    @NonNull
+    private final MapFragmentPerformer mMapFragmentPerformer;
 
     @Action
     private int mPendingAction;
@@ -58,14 +69,20 @@ public class MainCoordinator {
     @BottomSheetFragmentManager.FragmentType
     private int mBottomSheetFragment;
 
+    @MapsFragment.Movement
+    private int mMapMovement;
+
     public MainCoordinator(
             @NonNull BottomSheetCallback bottomSheetCallback,
-            @NonNull FragmentLoader fragmentLoader) {
+            @NonNull FragmentLoader fragmentLoader,
+            @NonNull MapFragmentPerformer mapFragmentPerformer) {
         mBottomSheetCallback = bottomSheetCallback;
         mFragmentLoader = fragmentLoader;
+        mMapFragmentPerformer = mapFragmentPerformer;
         mPendingAction = ACTION_IDLE;
         mBottomSheetState = BottomSheetBehavior.STATE_HIDDEN;
         mBottomSheetFragment = BottomSheetFragmentManager.FRAGMENT_NONE;
+        mMapMovement = MapsFragment.STATE_MOVEMENT_IDLE;
     }
 
     public void openFilters() {
@@ -91,6 +108,21 @@ public class MainCoordinator {
         }
     }
 
+    public void moveOnMyLocation() {
+        mPendingAction = ACTION_MOVE_ON_MY_LOCATION;
+        computeMyLocationMovement();
+    }
+
+    public void moveOnFootprint() {
+        mPendingAction = ACTION_MOVE_ON_FOOTPRINT;
+        computeMyLocationMovement();
+    }
+
+    public void notifyMapMovementChanged(@MapsFragment.Movement int newMovement) {
+        mMapMovement = newMovement;
+        dispatchAction();
+    }
+
     public void notifyBottomSheetStateChanged(@BottomSheetPerformer.State int newState) {
         mBottomSheetState = newState;
         dispatchAction();
@@ -112,9 +144,75 @@ public class MainCoordinator {
                 computeFiltersOpening();
                 break;
 
+            case ACTION_MOVE_ON_MY_LOCATION:
+                computeMyLocationMovement();
+                break;
+
+            case ACTION_MOVE_ON_FOOTPRINT:
+                computeFootprintMovement();
+                break;
+
             default:
             case ACTION_IDLE:
                 markPendingActionDone();
+                break;
+        }
+    }
+
+    private void computeFootprintMovement() {
+        switch (mBottomSheetState) {
+
+            case BottomSheetBehavior.STATE_SETTLING:
+                mMapFragmentPerformer.stopMoving();
+                break;
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_EXPANDED:
+                mMapFragmentPerformer.stopMoving();
+                mBottomSheetCallback.closeBottomSheet();
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+                switch (mMapMovement) {
+
+                    case MapsFragment.STATE_MOVEMENT_IDLE:
+                        mMapFragmentPerformer.moveOnFootprint();
+                        break;
+
+                    case MapsFragment.STATE_MOVEMENT_MOVE:
+                        markPendingActionDone();
+                        break;
+                }
+                break;
+        }
+    }
+
+    private void computeMyLocationMovement() {
+        switch (mBottomSheetState) {
+
+            case BottomSheetBehavior.STATE_SETTLING:
+                mMapFragmentPerformer.stopMoving();
+                break;
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_EXPANDED:
+                mMapFragmentPerformer.stopMoving();
+                mBottomSheetCallback.closeBottomSheet();
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+                switch (mMapMovement) {
+
+                    case MapsFragment.STATE_MOVEMENT_IDLE:
+                        mMapFragmentPerformer.moveOnMyLocation();
+                        break;
+
+                    case MapsFragment.STATE_MOVEMENT_MOVE:
+                        markPendingActionDone();
+                        break;
+                }
                 break;
         }
     }

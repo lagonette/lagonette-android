@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -44,12 +45,13 @@ import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.statement.Statement;
-import org.lagonette.app.util.MapMovement;
 import org.lagonette.app.util.SharedPreferencesUtil;
 import org.lagonette.app.util.SnackbarUtil;
 import org.lagonette.app.util.UiUtil;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 public class MapsFragment
@@ -60,6 +62,23 @@ public class MapsFragment
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener,
         OnMapReadyCallback {
+
+    public static final int STATE_MOVEMENT_IDLE = 0;
+
+    public static final int STATE_MOVEMENT_MOVE = 1;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({
+            STATE_MOVEMENT_IDLE,
+            STATE_MOVEMENT_MOVE
+    })
+    public @interface Movement {
+    }
+
+    public interface MapMovementCallback {
+
+        void notifyMapMovementState(@Movement int newState);
+    }
 
     public static final String TAG = "MapsFragment";
 
@@ -113,6 +132,8 @@ public class MapsFragment
 
     private LongSparseArray<PartnerItem> mPartnerItems;
 
+    private MapMovementCallback mMovementCallback;
+
     public static MapsFragment newInstance() {
         return new MapsFragment();
     }
@@ -120,6 +141,7 @@ public class MapsFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (savedInstanceState != null) {
             mConfChanged = true;
             mSelectedMarkerPosition = savedInstanceState.getParcelable(
@@ -168,25 +190,25 @@ public class MapsFragment
                                 .send(search)
                 );
 
-        mActivityViewModel
-                .getMapMovement()
-                .observe(
-                        MapsFragment.this,
-                        integer -> {
-                            if (integer != null) {
-                                @MapMovement.Movement int mapMovement = integer;
-                                switch (mapMovement) {
-                                    case MapMovement.FOOTPRINT:
-                                        moveOnFootprint();
-                                        break;
-                                    case MapMovement.MY_LOCATION:
-                                    default:
-                                        moveOnMyLocation();
-                                        break;
-                                }
-                            }
-                        }
-                );
+//        mActivityViewModel
+//                .getMapMovement()
+//                .observe(
+//                        MapsFragment.this,
+//                        integer -> {
+//                            if (integer != null) {
+//                                @MapMovement.Movement int mapMovement = integer;
+//                                switch (mapMovement) {
+//                                    case MapMovement.FOOTPRINT:
+//                                        moveOnFootprint();
+//                                        break;
+//                                    case MapMovement.MY_LOCATION:
+//                                    default:
+//                                        moveOnMyLocation();
+//                                        break;
+//                                }
+//                            }
+//                        }
+//                );
     }
 
     //TODO Use firebase to find broken data
@@ -349,7 +371,21 @@ public class MapsFragment
                 )
         );
         mMap.setOnMapClickListener(MapsFragment.this);
-        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnCameraMoveStartedListener(
+                reason -> {
+                    if (mMovementCallback != null) {
+                        mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_MOVE);
+                    }
+                }
+        );
+        mMap.setOnCameraIdleListener(
+                () -> {
+                    mClusterManager.onCameraIdle();
+                    if (mMovementCallback != null) {
+                        mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_IDLE);
+                    }
+                }
+        );
         mMap.setOnMarkerClickListener(marker -> { //TODO Factorize ?
             // If cluster manager do not manage marker then the user has probably clicked on the selected marker.
             // If so, we simulate a click on the marker behind.
@@ -429,7 +465,7 @@ public class MapsFragment
         }
     }
 
-    private void moveOnMyLocation() {
+    public void moveOnMyLocation() {
         Location lastLocation = getLastLocation();
         if (lastLocation != null) {
             mMap.animateCamera(
@@ -446,7 +482,7 @@ public class MapsFragment
         }
     }
 
-    private void moveOnFootprint() {
+    public void moveOnFootprint() {
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         new LatLng(
@@ -458,6 +494,10 @@ public class MapsFragment
                 ANIMATION_LENGTH_SHORT,
                 null
         );
+    }
+
+    public void stopMoving() {
+        mMap.stopAnimation();
     }
 
     public void showPartner(long id, boolean zoom, @Nullable GoogleMap.CancelableCallback callback) {
@@ -579,20 +619,8 @@ public class MapsFragment
                 .show();
     }
 
-
-    //TODO Useless
-    public interface Callback {
-
-        void hideMyLocationButton();
-
-        void showMyLocationButton();
-
-        void showPartner(long partnerId, boolean zoom);
-
-        void showFullMap();
-
-        void onMapReady();
-
+    public void observeMovement(@Nullable MapMovementCallback movementCallback) {
+        mMovementCallback = movementCallback;
     }
 
 }

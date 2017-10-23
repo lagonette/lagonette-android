@@ -12,7 +12,7 @@ import org.lagonette.app.app.viewmodel.StateMapsActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.performer.BottomSheetFragmentManager;
 import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
-import org.lagonette.app.app.widget.performer.FiltersButtonPerformer;
+import org.lagonette.app.app.widget.performer.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
 
 public class MapsActivity
@@ -26,7 +26,7 @@ public class MapsActivity
 
     private BottomSheetPerformer mBottomSheetPerformer;
 
-    private FiltersButtonPerformer mFiltersButtonPerformer;
+    private FabButtonsPerformer mFabButtonsPerformer;
 
     private BottomSheetFragmentManager mBottomSheetFragmentManager;
 
@@ -39,8 +39,12 @@ public class MapsActivity
         mBottomSheetFragmentManager = new BottomSheetFragmentManager();
         mMapFragmentPerformer = new MapFragmentPerformer();
         mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
-        mFiltersButtonPerformer = new FiltersButtonPerformer(R.id.filters_fab);
-        mCoordinator = new MainCoordinator(mBottomSheetPerformer, mBottomSheetFragmentManager);
+        mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
+        mCoordinator = new MainCoordinator(
+                mBottomSheetPerformer,
+                mBottomSheetFragmentManager,
+                mMapFragmentPerformer
+        );
 
         mMapFragmentPerformer.inject(MapsActivity.this);
         mBottomSheetFragmentManager.inject(MapsActivity.this);
@@ -63,7 +67,7 @@ public class MapsActivity
     protected void onViewCreated(@NonNull View view) {
         //TODO Change activity lifecycle in BaseActivity
         mBottomSheetPerformer.inject(view);
-        mFiltersButtonPerformer.inject(view);
+        mFabButtonsPerformer.inject(view);
     }
 
     @Override
@@ -103,7 +107,11 @@ public class MapsActivity
 
         bottomSheetFragment.observe(MapsActivity.this, mCoordinator::notifyBottomSheetFragmentChanged);
         bottomSheetState.observe(MapsActivity.this, mCoordinator::notifyBottomSheetStateChanged);
-        mFiltersButtonPerformer.observe(mCoordinator::openFilters);
+
+        mMapFragmentPerformer.observeMovement(mCoordinator::notifyMapMovementChanged); //TODO Maybe save & restore camera movement from LiveData ?
+        mFabButtonsPerformer.observeFiltersClick(mCoordinator::openFilters);
+        mFabButtonsPerformer.observePositionClick(mCoordinator::moveOnMyLocation);
+        mFabButtonsPerformer.observePositionLongClick(mCoordinator::moveOnFootprint);
 
 //        mViewModel
 //                .getWorkInProgress()

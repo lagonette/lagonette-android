@@ -32,8 +32,8 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     @NonNull
     private final ShowLocationEvent mShowLocationEvent;
 
-    @NonNull
-    private final MutableLiveEvent<Integer> mMapMovement;
+//    @NonNull
+//    private final MutableLiveEvent<Integer> mMapMovement;
 
     @NonNull
     private final MutableLiveData<Integer> mMapTopPadding;
@@ -50,7 +50,7 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         mMapIsReady = new MutableLiveEvent<>();
         mEnableMyPositionFAB = new MutableLiveData<>();
         mShowLocationRequest = new MutableLiveEvent<>();
-        mMapMovement = new MutableLiveEvent<>();
+//        mMapMovement = new MutableLiveEvent<>();
         mSearch = new MutableLiveData<>();
         mMapTopPadding = new MutableLiveData<>();
         mMapBottomPadding = new MutableLiveData<>();
@@ -104,15 +104,15 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         return mShowLocationRequest;
     }
 
-    @NonNull
-    public EventShipper.Sender<Integer> getMapMovementSender() {
-        return mMapMovement;
-    }
-
-    @NonNull
-    public LiveEvent<Integer> getMapMovement() {
-        return mMapMovement;
-    }
+//    @NonNull
+//    public EventShipper.Sender<Integer> getMapMovementSender() {
+//        return mMapMovement;
+//    }
+//
+//    @NonNull
+//    public LiveEvent<Integer> getMapMovement() {
+//        return mMapMovement;
+//    }
 
     @NonNull
     public MutableLiveData<Integer> getMapTopPadding() {
