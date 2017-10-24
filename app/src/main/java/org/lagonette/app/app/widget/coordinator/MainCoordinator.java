@@ -3,6 +3,7 @@ package org.lagonette.app.app.widget.coordinator;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.util.Log;
 
 import org.lagonette.app.app.fragment.MapsFragment;
 import org.lagonette.app.app.widget.performer.BottomSheetFragmentManager;
@@ -14,6 +15,8 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class MainCoordinator {
+
+    private static final String TAG = "MainCoordinator";
 
     public interface BottomSheetCallback {
 
@@ -86,11 +89,13 @@ public class MainCoordinator {
     }
 
     public void openFilters() {
+        Log.d(TAG, "Coordinator - Action: OPEN FILTERS");
         mPendingAction = ACTION_OPEN_FILTERS;
         computeFiltersOpening();
     }
 
     public boolean back() {
+        Log.d(TAG, "Coordinator - Action: BACK");
         switch (mBottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
@@ -109,26 +114,31 @@ public class MainCoordinator {
     }
 
     public void moveOnMyLocation() {
+        Log.d(TAG, "Coordinator - Action: MOVE ON MY LOCATION");
         mPendingAction = ACTION_MOVE_ON_MY_LOCATION;
         computeMyLocationMovement();
     }
 
     public void moveOnFootprint() {
+        Log.d(TAG, "Coordinator - Action: MOVE ON FOOTPRINT");
         mPendingAction = ACTION_MOVE_ON_FOOTPRINT;
-        computeMyLocationMovement();
+        computeFootprintMovement();
     }
 
     public void notifyMapMovementChanged(@MapsFragment.Movement int newMovement) {
+        Log.d(TAG, "Coordinator - Notification: Map movement " + newMovement);
         mMapMovement = newMovement;
         dispatchAction();
     }
 
     public void notifyBottomSheetStateChanged(@BottomSheetPerformer.State int newState) {
+        Log.d(TAG, "Coordinator - Notification: Bottom sheet state " + newState);
         mBottomSheetState = newState;
         dispatchAction();
     }
 
     public void notifyBottomSheetFragmentChanged(@BottomSheetFragmentManager.FragmentType int newFragment) {
+        Log.d(TAG, "Coordinator - Notification: Bottom sheet fragment " + newFragment);
         mBottomSheetFragment = newFragment;
         dispatchAction();
     }
@@ -154,7 +164,7 @@ public class MainCoordinator {
 
             default:
             case ACTION_IDLE:
-                markPendingActionDone();
+                // Do nothing
                 break;
         }
     }
@@ -331,6 +341,7 @@ public class MainCoordinator {
     }
 
     private void markPendingActionDone() {
+        Log.d(TAG, "Coordinator - Action DONE.");
         mPendingAction = ACTION_IDLE;
     }
 
