@@ -31,7 +31,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.crash.FirebaseCrash;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
@@ -56,8 +55,7 @@ import java.util.List;
 
 public class MapsFragment
         extends Fragment
-        implements ClusterManager.OnClusterClickListener<PartnerItem>,
-        ClusterManager.OnClusterItemClickListener<PartnerItem>,
+        implements ClusterManager.OnClusterItemClickListener<PartnerItem>,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener,
@@ -78,6 +76,11 @@ public class MapsFragment
     public interface MapMovementCallback {
 
         void notifyMapMovementState(@Movement int newState);
+    }
+
+    public interface ClusterClickCallback {
+
+        void notifyClusterClick();
     }
 
     public static final String TAG = "MapsFragment";
@@ -133,6 +136,8 @@ public class MapsFragment
     private LongSparseArray<PartnerItem> mPartnerItems;
 
     private MapMovementCallback mMovementCallback;
+
+    private ClusterClickCallback mClusterClickCallback;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -399,7 +404,15 @@ public class MapsFragment
             }
             return true;
         });
-        mClusterManager.setOnClusterClickListener(MapsFragment.this);
+        mClusterManager.setOnClusterClickListener(
+                cluster -> {
+                    if (mClusterClickCallback != null) {
+                        mClusterClickCallback.notifyClusterClick();
+                        return true;
+                    }
+                    return false;
+                }
+        );
         mClusterManager.setOnClusterItemClickListener(MapsFragment.this);
     }
 
@@ -418,19 +431,19 @@ public class MapsFragment
         }
     }
 
-    @Override
-    public boolean onClusterClick(Cluster<PartnerItem> cluster) {
-        mMap.animateCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                        cluster.getPosition(),
-                        mMap.getCameraPosition().zoom + CLUSTER_CLICK_ZOOM_IN
-                ),
-                ANIMATION_LENGTH_LONG,
-                null
-        );
-        showFullMap();
-        return true;
-    }
+//    @Override
+//    public boolean onClusterClick(Cluster<PartnerItem> cluster) {
+//        mMap.animateCamera(
+//                CameraUpdateFactory.newLatLngZoom(
+//                        cluster.getPosition(),
+//                        mMap.getCameraPosition().zoom + CLUSTER_CLICK_ZOOM_IN
+//                ),
+//                ANIMATION_LENGTH_LONG,
+//                null
+//        );
+//        showFullMap();
+//        return true;
+//    }
 
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
@@ -619,8 +632,12 @@ public class MapsFragment
                 .show();
     }
 
-    public void observeMovement(@Nullable MapMovementCallback movementCallback) {
-        mMovementCallback = movementCallback;
+    public void observeMovement(@Nullable MapMovementCallback callback) {
+        mMovementCallback = callback;
+    }
+
+    public void observeClusterClick(@Nullable ClusterClickCallback callback) {
+        mClusterClickCallback = callback;
     }
 
 }

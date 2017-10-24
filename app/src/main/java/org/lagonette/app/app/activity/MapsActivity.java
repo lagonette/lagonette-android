@@ -108,7 +108,9 @@ public class MapsActivity
         bottomSheetFragment.observe(MapsActivity.this, mCoordinator::notifyBottomSheetFragmentChanged);
         bottomSheetState.observe(MapsActivity.this, mCoordinator::notifyBottomSheetStateChanged);
 
-        mMapFragmentPerformer.observeMovement(mCoordinator::notifyMapMovementChanged); //TODO Maybe save & restore camera movement from LiveData ?
+        mMapFragmentPerformer.observeMovement(mCoordinator::notifyMapMovementChanged); //TODO Maybe save & restore camera movement into LiveData ?
+
+        mMapFragmentPerformer.observeClusterClick(mCoordinator::moveOnCluster); //TODO Maybe save & restore click into LiveData ?
         mFabButtonsPerformer.observeFiltersClick(mCoordinator::openFilters);
         mFabButtonsPerformer.observePositionClick(mCoordinator::moveOnMyLocation);
         mFabButtonsPerformer.observePositionLongClick(mCoordinator::moveOnFootprint);

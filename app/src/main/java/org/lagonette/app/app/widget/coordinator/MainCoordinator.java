@@ -42,13 +42,16 @@ public class MainCoordinator {
 
     private static final int ACTION_MOVE_ON_FOOTPRINT = 4;
 
+    private static final int ACTION_MOVE_ON_CLUSTER = 5;
+
     @Retention(SOURCE)
     @IntDef({
             ACTION_IDLE,
             ACTION_BACK,
             ACTION_OPEN_FILTERS,
             ACTION_MOVE_ON_MY_LOCATION,
-            ACTION_MOVE_ON_FOOTPRINT
+            ACTION_MOVE_ON_FOOTPRINT,
+            ACTION_MOVE_ON_CLUSTER
     })
     private @interface Action {
 
@@ -116,13 +119,19 @@ public class MainCoordinator {
     public void moveOnMyLocation() {
         Log.d(TAG, "Coordinator - Action: MOVE ON MY LOCATION");
         mPendingAction = ACTION_MOVE_ON_MY_LOCATION;
-        computeMyLocationMovement();
+        computeMovementToMyLocation();
     }
 
     public void moveOnFootprint() {
         Log.d(TAG, "Coordinator - Action: MOVE ON FOOTPRINT");
         mPendingAction = ACTION_MOVE_ON_FOOTPRINT;
-        computeFootprintMovement();
+        computeMovementToFootprint();
+    }
+
+    public void moveOnCluster() {
+        Log.d(TAG, "Coordinator - Action: MOVE ON CLUSTER");
+        mPendingAction = ACTION_MOVE_ON_CLUSTER;
+        computeMovementToCluster();
     }
 
     public void notifyMapMovementChanged(@MapsFragment.Movement int newMovement) {
@@ -155,11 +164,15 @@ public class MainCoordinator {
                 break;
 
             case ACTION_MOVE_ON_MY_LOCATION:
-                computeMyLocationMovement();
+                computeMovementToMyLocation();
                 break;
 
             case ACTION_MOVE_ON_FOOTPRINT:
-                computeFootprintMovement();
+                computeMovementToFootprint();
+                break;
+
+            case ACTION_MOVE_ON_CLUSTER:
+                computeMovementToCluster();
                 break;
 
             default:
@@ -169,7 +182,11 @@ public class MainCoordinator {
         }
     }
 
-    private void computeFootprintMovement() {
+    private void computeMovementToCluster() {
+
+    }
+
+    private void computeMovementToFootprint() {
         switch (mBottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
@@ -198,7 +215,7 @@ public class MainCoordinator {
         }
     }
 
-    private void computeMyLocationMovement() {
+    private void computeMovementToMyLocation() {
         switch (mBottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:

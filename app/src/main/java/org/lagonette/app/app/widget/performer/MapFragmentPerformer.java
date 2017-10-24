@@ -58,9 +58,15 @@ public class MapFragmentPerformer {
         }
     }
 
-    public void observeMovement(@Nullable MapsFragment.MapMovementCallback movementCallback) {
+    public void observeMovement(@Nullable MapsFragment.MapMovementCallback callback) {
         if (mFragment != null) {
-            mFragment.observeMovement(movementCallback);
+            mFragment.observeMovement(callback);
+        }
+    }
+
+    public void observeClusterClick(@Nullable MapsFragment.ClusterClickCallback callback) {
+        if (mFragment != null) {
+            mFragment.observeClusterClick(callback);
         }
     }
 }
