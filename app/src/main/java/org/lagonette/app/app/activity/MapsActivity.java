@@ -110,11 +110,11 @@ public class MapsActivity
 
         mMapFragmentPerformer.observeMovement(mCoordinator::notifyMapMovementChanged); //TODO Maybe save & restore camera movement into LiveData ?
 
-        mMapFragmentPerformer.observeClusterClick(cluster -> mCoordinator.moveOnCluster(cluster)); //TODO Maybe save & restore click state into LiveData ?
-        mMapFragmentPerformer.observeItemClick(item -> mCoordinator.moveOnItem(item)); //TODO Maybe save & restore click state into LiveData ?
+        mMapFragmentPerformer.observeClusterClick(cluster -> mCoordinator.moveToCluster(cluster)); //TODO Maybe save & restore click state into LiveData ?
+        mMapFragmentPerformer.observeItemClick(item -> mCoordinator.moveToItem(item)); //TODO Maybe save & restore click state into LiveData ?
         mFabButtonsPerformer.observeFiltersClick(mCoordinator::openFilters);
-        mFabButtonsPerformer.observePositionClick(mCoordinator::moveOnMyLocation);
-        mFabButtonsPerformer.observePositionLongClick(mCoordinator::moveOnFootprint);
+        mFabButtonsPerformer.observePositionClick(mCoordinator::moveToMyLocation);
+        mFabButtonsPerformer.observePositionLongClick(mCoordinator::moveToFootprint);
 
 //        mViewModel
 //                .getWorkInProgress()

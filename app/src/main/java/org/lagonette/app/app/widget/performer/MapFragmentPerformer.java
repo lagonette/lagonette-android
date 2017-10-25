@@ -41,29 +41,29 @@ public class MapFragmentPerformer {
         mFragment = (MapsFragment) mFragmentManager.findFragmentByTag(MapsFragment.TAG);
     }
 
-    public void moveOnMyLocation() {
+    public void moveToMyLocation() {
         if (mFragment != null) {
-            mFragment.moveOnMyLocation();
+            mFragment.moveToMyLocation();
         }
     }
 
-    public boolean moveOnFootprint() {
+    public boolean moveToFootprint() {
         if (mFragment != null) {
-            mFragment.moveOnFootprint();
+            mFragment.moveToFootprint();
             return true;
         }
         return false;
     }
 
-    public void moveOnCluster(@NonNull Cluster<PartnerItem> cluster) {
+    public void moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
         if (mFragment != null) {
-            mFragment.moveOnCluster(cluster);
+            mFragment.moveToCluster(cluster);
         }
     }
 
-    public void moveOnItem(@NonNull PartnerItem item) {
+    public void moveToItem(@NonNull PartnerItem item) {
         if (mFragment != null) {
-//            mFragment.moveOnItem(item);
+//            mFragment.moveToItem(item);
         }
     }
 

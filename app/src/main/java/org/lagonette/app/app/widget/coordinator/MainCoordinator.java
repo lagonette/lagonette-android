@@ -129,26 +129,26 @@ public class MainCoordinator {
         }
     }
 
-    public void moveOnMyLocation() {
+    public void moveToMyLocation() {
         Log.d(TAG, "Coordinator - Action: MOVE ON MY LOCATION");
         mPendingAction = ACTION_MOVE_ON_MY_LOCATION;
         computeMovementToMyLocation();
     }
 
-    public void moveOnFootprint() {
+    public void moveToFootprint() {
         Log.d(TAG, "Coordinator - Action: MOVE ON FOOTPRINT");
         mPendingAction = ACTION_MOVE_ON_FOOTPRINT;
         computeMovementToFootprint();
     }
 
-    public void moveOnCluster(@NonNull Cluster<PartnerItem> cluster) {
+    public void moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
         Log.d(TAG, "Coordinator - Action: MOVE ON CLUSTER");
         mPendingAction = ACTION_MOVE_ON_CLUSTER;
         mPendingCluster = cluster;
         computeMovementToCluster();
     }
 
-    public void moveOnItem(@NonNull PartnerItem item) {
+    public void moveToItem(@NonNull PartnerItem item) {
         Log.d(TAG, "Coordinator - Action: MOVE ON PARTNER ITEM");
         mPendingAction = ACTION_MOVE_ON_PARTNER_ITEM;
         mPendingItem = item;
@@ -225,7 +225,7 @@ public class MainCoordinator {
 
                     case MapsFragment.STATE_MOVEMENT_IDLE:
                         if (mPendingItem != null) {
-                            mMapFragmentPerformer.moveOnItem(mPendingItem);
+                            mMapFragmentPerformer.moveToItem(mPendingItem);
                             mPendingItem = null;
                         }
                         else {
@@ -259,7 +259,7 @@ public class MainCoordinator {
 
                     case MapsFragment.STATE_MOVEMENT_IDLE:
                         if (mPendingCluster != null) {
-                            mMapFragmentPerformer.moveOnCluster(mPendingCluster);
+                            mMapFragmentPerformer.moveToCluster(mPendingCluster);
                             mPendingCluster = null;
                         }
                         else {
@@ -289,7 +289,7 @@ public class MainCoordinator {
                 switch (mMapMovement) {
 
                     case MapsFragment.STATE_MOVEMENT_IDLE:
-                        mMapFragmentPerformer.moveOnFootprint();
+                        mMapFragmentPerformer.moveToFootprint();
                         break;
 
                     case MapsFragment.STATE_MOVEMENT_MOVE:
@@ -318,7 +318,7 @@ public class MainCoordinator {
                 switch (mMapMovement) {
 
                     case MapsFragment.STATE_MOVEMENT_IDLE:
-                        mMapFragmentPerformer.moveOnMyLocation();
+                        mMapFragmentPerformer.moveToMyLocation();
                         break;
 
                     case MapsFragment.STATE_MOVEMENT_MOVE:

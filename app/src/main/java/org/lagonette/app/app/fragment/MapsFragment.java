@@ -211,11 +211,11 @@ public class MapsFragment
 //                                @MapMovement.Movement int mapMovement = integer;
 //                                switch (mapMovement) {
 //                                    case MapMovement.FOOTPRINT:
-//                                        moveOnFootprint();
+//                                        moveToFootprint();
 //                                        break;
 //                                    case MapMovement.MY_LOCATION:
 //                                    default:
-//                                        moveOnMyLocation();
+//                                        moveToMyLocation();
 //                                        break;
 //                                }
 //                            }
@@ -446,7 +446,7 @@ public class MapsFragment
         }
     }
 
-    public boolean moveOnCluster(@NonNull Cluster<PartnerItem> cluster) {
+    public boolean moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         cluster.getPosition(),
@@ -490,7 +490,7 @@ public class MapsFragment
         }
     }
 
-    public void moveOnMyLocation() {
+    public void moveToMyLocation() {
         Location lastLocation = getLastLocation();
         if (lastLocation != null) {
             mMap.animateCamera(
@@ -507,7 +507,7 @@ public class MapsFragment
         }
     }
 
-    public void moveOnFootprint() {
+    public void moveToFootprint() {
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         new LatLng(
