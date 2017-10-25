@@ -110,7 +110,7 @@ public class MapsActivity
 
         mMapFragmentPerformer.observeMovement(mCoordinator::notifyMapMovementChanged); //TODO Maybe save & restore camera movement into LiveData ?
 
-        mMapFragmentPerformer.observeClusterClick(mCoordinator::moveOnCluster); //TODO Maybe save & restore click into LiveData ?
+        mMapFragmentPerformer.observeClusterClick(cluster -> mCoordinator.moveOnCluster(cluster)); //TODO Maybe save & restore click state into LiveData ?
         mFabButtonsPerformer.observeFiltersClick(mCoordinator::openFilters);
         mFabButtonsPerformer.observePositionClick(mCoordinator::moveOnMyLocation);
         mFabButtonsPerformer.observePositionLongClick(mCoordinator::moveOnFootprint);

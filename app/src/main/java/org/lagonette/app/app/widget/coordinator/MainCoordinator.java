@@ -2,13 +2,17 @@ package org.lagonette.app.app.widget.coordinator;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
+
+import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.app.fragment.MapsFragment;
 import org.lagonette.app.app.widget.performer.BottomSheetFragmentManager;
 import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
+import org.lagonette.app.room.entity.statement.PartnerItem;
 
 import java.lang.annotation.Retention;
 
@@ -69,6 +73,9 @@ public class MainCoordinator {
     @Action
     private int mPendingAction;
 
+    @Nullable
+    private Cluster<PartnerItem> mPendingCluster;
+
     @BottomSheetPerformer.State
     private int mBottomSheetState;
 
@@ -128,9 +135,10 @@ public class MainCoordinator {
         computeMovementToFootprint();
     }
 
-    public void moveOnCluster() {
+    public void moveOnCluster(@NonNull Cluster<PartnerItem> cluster) {
         Log.d(TAG, "Coordinator - Action: MOVE ON CLUSTER");
         mPendingAction = ACTION_MOVE_ON_CLUSTER;
+        mPendingCluster = cluster;
         computeMovementToCluster();
     }
 
@@ -183,7 +191,37 @@ public class MainCoordinator {
     }
 
     private void computeMovementToCluster() {
+        switch (mBottomSheetState) {
 
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_EXPANDED:
+                mBottomSheetCallback.closeBottomSheet();
+                break;
+
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_SETTLING:
+                // Well, it's okay. Just wait.
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+                switch (mMapMovement) {
+
+                    case MapsFragment.STATE_MOVEMENT_MOVE:
+                        // Well, it's okay. Just wait.
+                        break;
+
+                    case MapsFragment.STATE_MOVEMENT_IDLE:
+                        if (mPendingCluster != null) {
+                            mMapFragmentPerformer.moveOnCluster(mPendingCluster);
+                            mPendingCluster = null;
+                        }
+                        else {
+                            markPendingActionDone();
+                        }
+                        break;
+                }
+                break;
+        }
     }
 
     private void computeMovementToFootprint() {
@@ -360,6 +398,7 @@ public class MainCoordinator {
     private void markPendingActionDone() {
         Log.d(TAG, "Coordinator - Action DONE.");
         mPendingAction = ACTION_IDLE;
+        mPendingCluster = null;
     }
 
     private void closeBottomSheet() {

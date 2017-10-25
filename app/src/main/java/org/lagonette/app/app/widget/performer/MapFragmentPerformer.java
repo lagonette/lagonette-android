@@ -5,8 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.maps.android.clustering.Cluster;
+
 import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.MapsFragment;
+import org.lagonette.app.room.entity.statement.PartnerItem;
 
 public class MapFragmentPerformer {
 
@@ -67,6 +70,12 @@ public class MapFragmentPerformer {
     public void observeClusterClick(@Nullable MapsFragment.ClusterClickCallback callback) {
         if (mFragment != null) {
             mFragment.observeClusterClick(callback);
+        }
+    }
+
+    public void moveOnCluster(@NonNull Cluster<PartnerItem> cluster) {
+        if (mFragment != null) {
+            mFragment.moveOnCluster(cluster);
         }
     }
 }

@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
@@ -80,7 +81,7 @@ public class MapsFragment
 
     public interface ClusterClickCallback {
 
-        void notifyClusterClick();
+        void notifyClusterClick(@NonNull Cluster<PartnerItem> cluster);
     }
 
     public static final String TAG = "MapsFragment";
@@ -407,7 +408,7 @@ public class MapsFragment
         mClusterManager.setOnClusterClickListener(
                 cluster -> {
                     if (mClusterClickCallback != null) {
-                        mClusterClickCallback.notifyClusterClick();
+                        mClusterClickCallback.notifyClusterClick(cluster);
                         return true;
                     }
                     return false;
@@ -431,19 +432,17 @@ public class MapsFragment
         }
     }
 
-//    @Override
-//    public boolean onClusterClick(Cluster<PartnerItem> cluster) {
-//        mMap.animateCamera(
-//                CameraUpdateFactory.newLatLngZoom(
-//                        cluster.getPosition(),
-//                        mMap.getCameraPosition().zoom + CLUSTER_CLICK_ZOOM_IN
-//                ),
-//                ANIMATION_LENGTH_LONG,
-//                null
-//        );
-//        showFullMap();
-//        return true;
-//    }
+    public boolean moveOnCluster(@NonNull Cluster<PartnerItem> cluster) {
+        mMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                        cluster.getPosition(),
+                        mMap.getCameraPosition().zoom + CLUSTER_CLICK_ZOOM_IN
+                ),
+                ANIMATION_LENGTH_LONG,
+                null
+        );
+        return true;
+    }
 
     @Override
     public boolean onClusterItemClick(PartnerItem partnerItem) {
