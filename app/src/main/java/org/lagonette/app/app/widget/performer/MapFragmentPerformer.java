@@ -61,9 +61,9 @@ public class MapFragmentPerformer {
         }
     }
 
-    public void moveToItem(@NonNull PartnerItem item) {
+    public void moveToLocation(@NonNull PartnerItem item) {
         if (mFragment != null) {
-//            mFragment.moveToItem(item);
+            mFragment.moveToLocation(item);
         }
     }
 

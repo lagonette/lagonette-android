@@ -42,23 +42,23 @@ public class MainCoordinator {
 
     private static final int ACTION_OPEN_FILTERS = 2;
 
-    private static final int ACTION_MOVE_ON_MY_LOCATION = 3;
+    private static final int ACTION_MOVE_TO_MY_LOCATION = 3;
 
-    private static final int ACTION_MOVE_ON_FOOTPRINT = 4;
+    private static final int ACTION_MOVE_TO_FOOTPRINT = 4;
 
-    private static final int ACTION_MOVE_ON_CLUSTER = 5;
+    private static final int ACTION_MOVE_TO_CLUSTER = 5;
 
-    private static final int ACTION_MOVE_ON_PARTNER_ITEM = 6;
+    private static final int ACTION_MOVE_TO_LOCATION = 6;
 
     @Retention(SOURCE)
     @IntDef({
             ACTION_IDLE,
             ACTION_BACK,
             ACTION_OPEN_FILTERS,
-            ACTION_MOVE_ON_MY_LOCATION,
-            ACTION_MOVE_ON_FOOTPRINT,
-            ACTION_MOVE_ON_CLUSTER,
-            ACTION_MOVE_ON_PARTNER_ITEM
+            ACTION_MOVE_TO_MY_LOCATION,
+            ACTION_MOVE_TO_FOOTPRINT,
+            ACTION_MOVE_TO_CLUSTER,
+            ACTION_MOVE_TO_LOCATION
     })
     private @interface Action {
 
@@ -131,28 +131,28 @@ public class MainCoordinator {
 
     public void moveToMyLocation() {
         Log.d(TAG, "Coordinator - Action: MOVE ON MY LOCATION");
-        mPendingAction = ACTION_MOVE_ON_MY_LOCATION;
+        mPendingAction = ACTION_MOVE_TO_MY_LOCATION;
         computeMovementToMyLocation();
     }
 
     public void moveToFootprint() {
         Log.d(TAG, "Coordinator - Action: MOVE ON FOOTPRINT");
-        mPendingAction = ACTION_MOVE_ON_FOOTPRINT;
+        mPendingAction = ACTION_MOVE_TO_FOOTPRINT;
         computeMovementToFootprint();
     }
 
     public void moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
         Log.d(TAG, "Coordinator - Action: MOVE ON CLUSTER");
-        mPendingAction = ACTION_MOVE_ON_CLUSTER;
+        mPendingAction = ACTION_MOVE_TO_CLUSTER;
         mPendingCluster = cluster;
         computeMovementToCluster();
     }
 
-    public void moveToItem(@NonNull PartnerItem item) {
+    public void moveToLocation(@NonNull PartnerItem item) {
         Log.d(TAG, "Coordinator - Action: MOVE ON PARTNER ITEM");
-        mPendingAction = ACTION_MOVE_ON_PARTNER_ITEM;
+        mPendingAction = ACTION_MOVE_TO_LOCATION;
         mPendingItem = item;
-        computeMovementToPartnerItem();
+        computeMovementToLocation();
     }
 
     public void notifyMapMovementChanged(@MapsFragment.Movement int newMovement) {
@@ -184,15 +184,15 @@ public class MainCoordinator {
                 computeFiltersOpening();
                 break;
 
-            case ACTION_MOVE_ON_MY_LOCATION:
+            case ACTION_MOVE_TO_MY_LOCATION:
                 computeMovementToMyLocation();
                 break;
 
-            case ACTION_MOVE_ON_FOOTPRINT:
+            case ACTION_MOVE_TO_FOOTPRINT:
                 computeMovementToFootprint();
                 break;
 
-            case ACTION_MOVE_ON_CLUSTER:
+            case ACTION_MOVE_TO_CLUSTER:
                 computeMovementToCluster();
                 break;
 
@@ -203,7 +203,7 @@ public class MainCoordinator {
         }
     }
 
-    private void computeMovementToPartnerItem() {
+    private void computeMovementToLocation() {
         switch (mBottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
@@ -225,7 +225,7 @@ public class MainCoordinator {
 
                     case MapsFragment.STATE_MOVEMENT_IDLE:
                         if (mPendingItem != null) {
-                            mMapFragmentPerformer.moveToItem(mPendingItem);
+                            mMapFragmentPerformer.moveToLocation(mPendingItem);
                             mPendingItem = null;
                         }
                         else {

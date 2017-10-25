@@ -150,9 +150,9 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
 //        mShowLocationRequest.send(mShowLocationEvent);
 //    }
 
-    public void showFullMap() {
-        mShowLocationRequest.call();
-    }
+//    public void showFullMap() {
+//        mShowLocationRequest.call();
+//    }
 
     //TODO Make custom LiveData
     public static class ShowLocationEvent {

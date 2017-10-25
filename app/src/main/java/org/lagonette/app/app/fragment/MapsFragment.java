@@ -100,9 +100,9 @@ public class MapsFragment
 
     private static final String STATE_ASK_FOR_MY_LOCATION_PERMISSION = "state:ask_for_my_location_permission";
 
-    private static final String STATE_SELECTED_MARKER_POSITION = "state:selected_marker_position";
+//    private static final String STATE_SELECTED_MARKER_POSITION = "state:selected_marker_position";
 
-    private static final String STATE_SELECTED_MARKER_ID = "state:selected_marker_id";
+//    private static final String STATE_SELECTED_MARKER_ID = "state:selected_marker_id";
 
     public static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
@@ -126,11 +126,11 @@ public class MapsFragment
 
     private float mStartZoom;
 
-    private Marker mSelectedMarker;
+//    private Marker mSelectedMarker;
 
-    private LatLng mSelectedMarkerPosition = null;
+//    private LatLng mSelectedMarkerPosition = null;
 
-    private long mSelectedMarkerId = Statement.NO_ID;
+//    private long mSelectedMarkerId = Statement.NO_ID;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -156,12 +156,12 @@ public class MapsFragment
 
         if (savedInstanceState != null) {
             mConfChanged = true;
-            mSelectedMarkerPosition = savedInstanceState.getParcelable(
-                    STATE_SELECTED_MARKER_POSITION
-            );
-            mSelectedMarkerId = savedInstanceState.getLong(
-                    STATE_SELECTED_MARKER_ID
-            );
+//            mSelectedMarkerPosition = savedInstanceState.getParcelable(
+//                    STATE_SELECTED_MARKER_POSITION
+//            );
+//            mSelectedMarkerId = savedInstanceState.getLong(
+//                    STATE_SELECTED_MARKER_ID
+//            );
             mAskFormMyPositionPermission = savedInstanceState.getBoolean(
                     STATE_ASK_FOR_MY_LOCATION_PERMISSION
             );
@@ -246,10 +246,10 @@ public class MapsFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_ASK_FOR_MY_LOCATION_PERMISSION, mAskFormMyPositionPermission);
-        if (mSelectedMarker != null) {
-            outState.putParcelable(STATE_SELECTED_MARKER_POSITION, mSelectedMarker.getPosition());
-            outState.putLong(STATE_SELECTED_MARKER_ID, mSelectedMarkerId);
-        }
+//        if (mSelectedMarker != null) {
+//            outState.putParcelable(STATE_SELECTED_MARKER_POSITION, mSelectedMarker.getPosition());
+//            outState.putLong(STATE_SELECTED_MARKER_ID, mSelectedMarkerId);
+//        }
     }
 
     @Override
@@ -368,10 +368,10 @@ public class MapsFragment
                     ),
                     mStartZoom
             ));
-        } else if (mSelectedMarkerPosition != null) {
+        } /*else if (mSelectedMarkerPosition != null) {
             addSelectedMarker(mSelectedMarkerId, mSelectedMarkerPosition);
             mSelectedMarkerPosition = null;
-        }
+        }*/
 
         mClusterManager = new ClusterManager<>(getContext(), mMap);
         mClusterManager.setRenderer(
@@ -398,19 +398,20 @@ public class MapsFragment
                     }
                 }
         );
-        mMap.setOnMarkerClickListener(marker -> { //TODO Factorize ?
-            // If cluster manager do not manage marker then the user has probably clicked on the selected marker.
-            // If so, we simulate a click on the marker behind.
-            if (!mClusterManager.onMarkerClick(marker)) {
-                if (marker.getId().equals(mSelectedMarker.getId())) {
-//                    mActivityViewModel.showLocation(mSelectedMarkerId, false);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            return true;
-        });
+        mMap.setOnMarkerClickListener(mClusterManager);
+//        mMap.setOnMarkerClickListener(marker -> { //TODO Factorize ?
+//            // If cluster manager do not manage marker then the user has probably clicked on the selected marker.
+//            // If so, we simulate a click on the marker behind.
+//            if (!mClusterManager.onMarkerClick(marker)) {
+////                if (marker.getId().equals(mSelectedMarker.getId())) {
+//////                    mActivityViewModel.showLocation(mSelectedMarkerId, false);
+////                    return true;
+////                } else {
+//                    return false;
+////                }
+//            }
+//            return true;
+//        });
         mClusterManager.setOnClusterClickListener(
                 cluster -> {
                     if (mClusterClickCallback != null) {
@@ -446,6 +447,52 @@ public class MapsFragment
         }
     }
 
+    public void moveToLocation(@NonNull PartnerItem item) {
+        LatLng latLng = new LatLng( //TODO Why not just getPosition ?
+                item.getPosition().latitude,
+                item.getPosition().longitude
+        );
+//            addSelectedMarker(partnerItem.getId(), latLng);
+//        if (zoom) {
+            mMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
+                    ANIMATION_LENGTH_LONG,
+                    null
+            );
+//        } else {
+//            mMap.animateCamera(
+//                    CameraUpdateFactory.newLatLng(latLng),
+//                    ANIMATION_LENGTH_SHORT,
+//                    callback
+//            );
+//        }
+    }
+
+//    public void showPartner(long id, boolean zoom, @Nullable GoogleMap.CancelableCallback callback) {
+////        removeSelectedMarker();
+//        PartnerItem partnerItem = mPartnerItems.get(id);
+//        if (partnerItem != null) {
+//            LatLng latLng = new LatLng( //TODO Why not just getPosition ?
+//                    partnerItem.getPosition().latitude,
+//                    partnerItem.getPosition().longitude
+//            );
+////            addSelectedMarker(partnerItem.getId(), latLng);
+//            if (zoom) {
+//                mMap.animateCamera(
+//                        CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
+//                        ANIMATION_LENGTH_LONG,
+//                        callback
+//                );
+//            } else {
+//                mMap.animateCamera(
+//                        CameraUpdateFactory.newLatLng(latLng),
+//                        ANIMATION_LENGTH_SHORT,
+//                        callback
+//                );
+//            }
+//        }
+//    }
+
     public boolean moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
@@ -465,30 +512,30 @@ public class MapsFragment
 
     @Override
     public void onMapClick(LatLng latLng) {
-        showFullMap();
+//        showFullMap();
     }
 
-    private void showFullMap() {
-        removeSelectedMarker();
-        mActivityViewModel.showFullMap();
-    }
+//    private void showFullMap() {
+//        removeSelectedMarker();
+//        mActivityViewModel.showFullMap();
+//    }
 
-    private void addSelectedMarker(long partnerId, @NonNull LatLng position) {
-        mSelectedMarker = mMap.addMarker(
-                new MarkerOptions()
-                        .position(position)
-                        .zIndex(1f)
-        );
-        mSelectedMarkerId = partnerId;
-    }
+//    private void addSelectedMarker(long partnerId, @NonNull LatLng position) {
+//        mSelectedMarker = mMap.addMarker(
+//                new MarkerOptions()
+//                        .position(position)
+//                        .zIndex(1f)
+//        );
+//        mSelectedMarkerId = partnerId;
+//    }
 
-    private void removeSelectedMarker() {
-        if (mSelectedMarker != null) {
-            mSelectedMarker.remove();
-            mSelectedMarker = null;
-            mSelectedMarkerId = Statement.NO_ID;
-        }
-    }
+//    private void removeSelectedMarker() {
+//        if (mSelectedMarker != null) {
+//            mSelectedMarker.remove();
+//            mSelectedMarker = null;
+//            mSelectedMarkerId = Statement.NO_ID;
+//        }
+//    }
 
     public void moveToMyLocation() {
         Location lastLocation = getLastLocation();
@@ -523,31 +570,6 @@ public class MapsFragment
 
     public void stopMoving() {
         mMap.stopAnimation();
-    }
-
-    public void showPartner(long id, boolean zoom, @Nullable GoogleMap.CancelableCallback callback) {
-        removeSelectedMarker();
-        PartnerItem partnerItem = mPartnerItems.get(id);
-        if (partnerItem != null) {
-            LatLng latLng = new LatLng( //TODO Why not just getPosition ?
-                    partnerItem.getPosition().latitude,
-                    partnerItem.getPosition().longitude
-            );
-            addSelectedMarker(partnerItem.getId(), latLng);
-            if (zoom) {
-                mMap.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
-                        ANIMATION_LENGTH_LONG,
-                        callback
-                );
-            } else {
-                mMap.animateCamera(
-                        CameraUpdateFactory.newLatLng(latLng),
-                        ANIMATION_LENGTH_SHORT,
-                        callback
-                );
-            }
-        }
     }
 
     public void updateLocationUI() {
