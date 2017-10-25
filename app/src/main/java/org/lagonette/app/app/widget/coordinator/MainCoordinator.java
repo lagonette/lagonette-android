@@ -48,6 +48,8 @@ public class MainCoordinator {
 
     private static final int ACTION_MOVE_ON_CLUSTER = 5;
 
+    private static final int ACTION_MOVE_ON_PARTNER_ITEM = 6;
+
     @Retention(SOURCE)
     @IntDef({
             ACTION_IDLE,
@@ -55,7 +57,8 @@ public class MainCoordinator {
             ACTION_OPEN_FILTERS,
             ACTION_MOVE_ON_MY_LOCATION,
             ACTION_MOVE_ON_FOOTPRINT,
-            ACTION_MOVE_ON_CLUSTER
+            ACTION_MOVE_ON_CLUSTER,
+            ACTION_MOVE_ON_PARTNER_ITEM
     })
     private @interface Action {
 
@@ -75,6 +78,9 @@ public class MainCoordinator {
 
     @Nullable
     private Cluster<PartnerItem> mPendingCluster;
+
+    @Nullable
+    private PartnerItem mPendingItem;
 
     @BottomSheetPerformer.State
     private int mBottomSheetState;
@@ -142,6 +148,13 @@ public class MainCoordinator {
         computeMovementToCluster();
     }
 
+    public void moveOnItem(@NonNull PartnerItem item) {
+        Log.d(TAG, "Coordinator - Action: MOVE ON PARTNER ITEM");
+        mPendingAction = ACTION_MOVE_ON_PARTNER_ITEM;
+        mPendingItem = item;
+        computeMovementToPartnerItem();
+    }
+
     public void notifyMapMovementChanged(@MapsFragment.Movement int newMovement) {
         Log.d(TAG, "Coordinator - Notification: Map movement " + newMovement);
         mMapMovement = newMovement;
@@ -186,6 +199,40 @@ public class MainCoordinator {
             default:
             case ACTION_IDLE:
                 // Do nothing
+                break;
+        }
+    }
+
+    private void computeMovementToPartnerItem() {
+        switch (mBottomSheetState) {
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_EXPANDED:
+                mBottomSheetCallback.closeBottomSheet();
+                break;
+
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_SETTLING:
+                // Well, it's okay. Just wait.
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+                switch (mMapMovement) {
+
+                    case MapsFragment.STATE_MOVEMENT_MOVE:
+                        // Well, it's okay. Just wait.
+                        break;
+
+                    case MapsFragment.STATE_MOVEMENT_IDLE:
+                        if (mPendingItem != null) {
+                            mMapFragmentPerformer.moveOnItem(mPendingItem);
+                            mPendingItem = null;
+                        }
+                        else {
+                            markPendingActionDone();
+                        }
+                        break;
+                }
                 break;
         }
     }

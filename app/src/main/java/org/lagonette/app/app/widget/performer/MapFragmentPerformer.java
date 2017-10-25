@@ -55,6 +55,18 @@ public class MapFragmentPerformer {
         return false;
     }
 
+    public void moveOnCluster(@NonNull Cluster<PartnerItem> cluster) {
+        if (mFragment != null) {
+            mFragment.moveOnCluster(cluster);
+        }
+    }
+
+    public void moveOnItem(@NonNull PartnerItem item) {
+        if (mFragment != null) {
+//            mFragment.moveOnItem(item);
+        }
+    }
+
     public void stopMoving() {
         if (mFragment != null) {
             mFragment.stopMoving();
@@ -73,9 +85,9 @@ public class MapFragmentPerformer {
         }
     }
 
-    public void moveOnCluster(@NonNull Cluster<PartnerItem> cluster) {
+    public void observeItemClick(@Nullable MapsFragment.ItemClickCallback callback) {
         if (mFragment != null) {
-            mFragment.moveOnCluster(cluster);
+            mFragment.observeItemClick(callback);
         }
     }
 }

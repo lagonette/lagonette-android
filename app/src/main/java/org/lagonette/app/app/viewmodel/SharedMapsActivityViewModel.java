@@ -7,7 +7,6 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.app.arch.EventShipper;
 import org.lagonette.app.app.arch.LiveEvent;
 import org.lagonette.app.app.arch.MutableLiveEvent;
 import org.lagonette.app.util.IntegerUtil;
@@ -145,11 +144,11 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         mEnableMyPositionFAB.postValue(enable);
     }
 
-    public void showLocation(long locationId, boolean zoom) {
-        mShowLocationEvent.locationId = locationId;
-        mShowLocationEvent.zoom = zoom;
-        mShowLocationRequest.send(mShowLocationEvent);
-    }
+//    public void showLocation(long locationId, boolean zoom) {
+//        mShowLocationEvent.locationId = locationId;
+//        mShowLocationEvent.zoom = zoom;
+//        mShowLocationRequest.send(mShowLocationEvent);
+//    }
 
     public void showFullMap() {
         mShowLocationRequest.call();

@@ -56,8 +56,7 @@ import java.util.List;
 
 public class MapsFragment
         extends Fragment
-        implements ClusterManager.OnClusterItemClickListener<PartnerItem>,
-        GoogleApiClient.ConnectionCallbacks,
+        implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener,
         OnMapReadyCallback {
@@ -82,6 +81,11 @@ public class MapsFragment
     public interface ClusterClickCallback {
 
         void notifyClusterClick(@NonNull Cluster<PartnerItem> cluster);
+    }
+
+    public interface ItemClickCallback {
+
+        void notifyItemClick(@NonNull PartnerItem item);
     }
 
     public static final String TAG = "MapsFragment";
@@ -139,6 +143,8 @@ public class MapsFragment
     private MapMovementCallback mMovementCallback;
 
     private ClusterClickCallback mClusterClickCallback;
+
+    private ItemClickCallback mItemClickCallback;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -397,7 +403,7 @@ public class MapsFragment
             // If so, we simulate a click on the marker behind.
             if (!mClusterManager.onMarkerClick(marker)) {
                 if (marker.getId().equals(mSelectedMarker.getId())) {
-                    mActivityViewModel.showLocation(mSelectedMarkerId, false);
+//                    mActivityViewModel.showLocation(mSelectedMarkerId, false);
                     return true;
                 } else {
                     return false;
@@ -414,7 +420,15 @@ public class MapsFragment
                     return false;
                 }
         );
-        mClusterManager.setOnClusterItemClickListener(MapsFragment.this);
+        mClusterManager.setOnClusterItemClickListener(
+                item -> {
+                    if (mItemClickCallback != null) {
+                        mItemClickCallback.notifyItemClick(item);
+                        return true;
+                    }
+                    return false;
+                }
+        );
     }
 
     private void setupFootprint() {
@@ -444,11 +458,10 @@ public class MapsFragment
         return true;
     }
 
-    @Override
-    public boolean onClusterItemClick(PartnerItem partnerItem) {
-        mActivityViewModel.showLocation(partnerItem.getId(), false);
-        return true;
-    }
+//    public boolean onClusterItemClick(PartnerItem partnerItem) {
+//        mActivityViewModel.showLocation(partnerItem.getId(), false);
+//        return true;
+//    }
 
     @Override
     public void onMapClick(LatLng latLng) {
@@ -637,6 +650,10 @@ public class MapsFragment
 
     public void observeClusterClick(@Nullable ClusterClickCallback callback) {
         mClusterClickCallback = callback;
+    }
+
+    public void observeItemClick(@Nullable ItemClickCallback callback) {
+        mItemClickCallback = callback;
     }
 
 }
