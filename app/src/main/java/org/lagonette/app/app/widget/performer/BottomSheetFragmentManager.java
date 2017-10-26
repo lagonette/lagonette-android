@@ -59,7 +59,7 @@ public class BottomSheetFragmentManager
             throw new IllegalStateException("inject() must be called before init()");
         }
 
-        loadFragment(type);
+        loadFragment(type);//TODO Check when it is a location detail fragment
     }
 
     public void restore(@FragmentType int type) {
@@ -95,12 +95,13 @@ public class BottomSheetFragmentManager
                 break;
 
             case FRAGMENT_PARTNER:
-                loadPartnerFragment();
+                loadLocationFragment(Statement.NO_ID);
                 break;
         }
     }
 
-    private void unloadFragment() {
+    @Override
+    public void unloadFragment() {
         if (mFragmentManager != null && mFragment != null) {
             mFragmentManager.beginTransaction()
                     .remove(mFragment)
@@ -113,7 +114,8 @@ public class BottomSheetFragmentManager
         }
     }
 
-    private void loadFiltersFragment() {
+    @Override
+    public void loadFiltersFragment() {
         if (mFragmentManager != null) {
             mFragment = FiltersFragment.newInstance("");
             mFragmentManager
@@ -131,9 +133,10 @@ public class BottomSheetFragmentManager
         }
     }
 
-    private void loadPartnerFragment() {
+    @Override
+    public void loadLocationFragment(long locationId) {
         if (mFragmentManager != null) {
-            mFragment = PartnerDetailFragment.newInstance(Statement.NO_ID);
+            mFragment = PartnerDetailFragment.newInstance(locationId);
             mFragmentManager.beginTransaction()
                     .replace(
                             R.id.bottom_sheet,

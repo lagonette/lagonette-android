@@ -29,7 +29,7 @@ public class PartnerDetailFragment
 
     private static final String ARG_PARTNER_ID = "arg:partner_id";
 
-    public static PartnerDetailFragment newInstance(long partnerId) {
+    public static PartnerDetailFragment newInstance(long partnerId) { //TODO Rename location to partner
         Bundle args = new Bundle(1);
         args.putLong(ARG_PARTNER_ID, partnerId);
         PartnerDetailFragment partnerDetailFragment = new PartnerDetailFragment();
