@@ -14,30 +14,30 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.lagonette.app.R;
-import org.lagonette.app.app.viewmodel.PartnerDetailViewModel;
+import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.IntentUtil;
 import org.lagonette.app.util.SnackbarUtil;
 
-public class PartnerDetailFragment
+public class LocationDetailFragment
         extends Fragment
         implements View.OnClickListener {
 
-    public static final String TAG = "PartnerDetailContract";
+    public static final String TAG = "LocationDetailFragment";
 
-    private static final String ARG_PARTNER_ID = "arg:partner_id";
+    private static final String ARG_LOCATION_ID = "arg:location_id";
 
-    public static PartnerDetailFragment newInstance(long partnerId) { //TODO Rename location to partner
+    public static LocationDetailFragment newInstance(long locationId) {
         Bundle args = new Bundle(1);
-        args.putLong(ARG_PARTNER_ID, partnerId);
-        PartnerDetailFragment partnerDetailFragment = new PartnerDetailFragment();
-        partnerDetailFragment.setArguments(args);
-        return partnerDetailFragment;
+        args.putLong(ARG_LOCATION_ID, locationId);
+        LocationDetailFragment locationDetailFragment = new LocationDetailFragment();
+        locationDetailFragment.setArguments(args);
+        return locationDetailFragment;
     }
 
-    private PartnerDetailViewModel mViewModel;
+    private LocationDetailViewModel mViewModel;
 
     private TextView mNameTextView;
 
@@ -84,17 +84,17 @@ public class PartnerDetailFragment
         super.onCreate(savedInstanceState);
 
         mViewModel = ViewModelProviders
-                .of(PartnerDetailFragment.this)
-                .get(PartnerDetailViewModel.class);
+                .of(LocationDetailFragment.this)
+                .get(LocationDetailViewModel.class);
 
         //TODO Check
         if (savedInstanceState == null) {
-            long partnerId = getArguments().getLong(ARG_PARTNER_ID, Statement.NO_ID);
-            mViewModel.setPartnerId(partnerId);
+            long locationId = getArguments().getLong(ARG_LOCATION_ID, Statement.NO_ID);
+            mViewModel.setLocationId(locationId);
         }
 
-        mViewModel.getPartnerDetail().observe(
-                PartnerDetailFragment.this,
+        mViewModel.getLocationDetail().observe(
+                LocationDetailFragment.this,
                 this::dispatchLocationDetailResource
         );
     }
@@ -105,7 +105,7 @@ public class PartnerDetailFragment
             LayoutInflater inflater,
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_partner_detail, container, false);
+        return inflater.inflate(R.layout.fragment_location_detail, container, false);
     }
 
     @Override
@@ -137,11 +137,11 @@ public class PartnerDetailFragment
 //        mLogoImageView = view.findViewById(R.id.logo);
 //        mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
 
-//        mBackImageButton.setOnClickListener(PartnerDetailFragment.this);
-        mAddressLayout.setOnClickListener(PartnerDetailFragment.this);
-        mPhoneLayout.setOnClickListener(PartnerDetailFragment.this);
-        mWebsiteLayout.setOnClickListener(PartnerDetailFragment.this);
-        mEmailLayout.setOnClickListener(PartnerDetailFragment.this);
+//        mBackImageButton.setOnClickListener(LocationDetailFragment.this);
+        mAddressLayout.setOnClickListener(LocationDetailFragment.this);
+        mPhoneLayout.setOnClickListener(LocationDetailFragment.this);
+        mWebsiteLayout.setOnClickListener(LocationDetailFragment.this);
+        mEmailLayout.setOnClickListener(LocationDetailFragment.this);
     }
 
     private void dispatchLocationDetailResource(@NonNull Resource<LocationDetail> resource) {

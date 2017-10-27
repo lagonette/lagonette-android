@@ -10,7 +10,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.app.app.viewmodel.StateMapsActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
-import org.lagonette.app.app.widget.performer.BottomSheetFragmentManager;
+import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
 import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
@@ -28,7 +28,7 @@ public class MapsActivity
 
     private FabButtonsPerformer mFabButtonsPerformer;
 
-    private BottomSheetFragmentManager mBottomSheetFragmentManager;
+    private BottomSheetFragmentPerformer mBottomSheetFragmentPerformer;
 
     private StateMapsActivityViewModel mStateViewModel;
 
@@ -36,18 +36,18 @@ public class MapsActivity
 
     @Override
     protected void construct() {
-        mBottomSheetFragmentManager = new BottomSheetFragmentManager();
+        mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer();
         mMapFragmentPerformer = new MapFragmentPerformer();
         mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
         mCoordinator = new MainCoordinator(
                 mBottomSheetPerformer,
-                mBottomSheetFragmentManager,
+                mBottomSheetFragmentPerformer,
                 mMapFragmentPerformer
         );
 
         mMapFragmentPerformer.inject(MapsActivity.this);
-        mBottomSheetFragmentManager.inject(MapsActivity.this);
+        mBottomSheetFragmentPerformer.inject(MapsActivity.this);
 
         mViewModel = ViewModelProviders
                 .of(MapsActivity.this)
@@ -80,7 +80,7 @@ public class MapsActivity
         //noinspection ConstantConditions
         mBottomSheetPerformer.init(bottomSheetState.getValue());
         //noinspection ConstantConditions
-        mBottomSheetFragmentManager.init(bottomSheetFragment.getValue());
+        mBottomSheetFragmentPerformer.init(bottomSheetFragment.getValue());
     }
 
     @Override
@@ -93,7 +93,7 @@ public class MapsActivity
         //noinspection ConstantConditions
         mBottomSheetPerformer.restore(bottomSheetState.getValue());
         //noinspection ConstantConditions
-        mBottomSheetFragmentManager.restore(bottomSheetFragment.getValue());
+        mBottomSheetFragmentPerformer.restore(bottomSheetFragment.getValue());
     }
 
     @Override
@@ -102,7 +102,7 @@ public class MapsActivity
         MutableLiveData<Integer> bottomSheetFragment = mStateViewModel.getBottomSheetFragment();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
 
-        mBottomSheetFragmentManager.observe(bottomSheetFragment::setValue);
+        mBottomSheetFragmentPerformer.observe(bottomSheetFragment::setValue);
         mBottomSheetPerformer.observe(bottomSheetState::setValue);
 
         bottomSheetFragment.observe(MapsActivity.this, mCoordinator::notifyBottomSheetFragmentChanged);

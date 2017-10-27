@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.FiltersFragment;
-import org.lagonette.app.app.fragment.PartnerDetailFragment;
+import org.lagonette.app.app.fragment.LocationDetailFragment;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.room.statement.Statement;
 
@@ -17,7 +17,7 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-public class BottomSheetFragmentManager
+public class BottomSheetFragmentPerformer
         implements MainCoordinator.FragmentLoader {
 
     public interface Observer {
@@ -30,13 +30,13 @@ public class BottomSheetFragmentManager
 
     public static final int FRAGMENT_FILTERS = 1;
 
-    public static final int FRAGMENT_PARTNER = 2;
+    public static final int FRAGMENT_LOCATION = 2;
 
     @Retention(SOURCE)
     @IntDef({
             FRAGMENT_NONE,
             FRAGMENT_FILTERS,
-            FRAGMENT_PARTNER
+            FRAGMENT_LOCATION
     })
     public @interface FragmentType {
 
@@ -77,8 +77,8 @@ public class BottomSheetFragmentManager
                 mFragment = mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
                 break;
 
-            case FRAGMENT_PARTNER:
-                mFragment = mFragmentManager.findFragmentByTag(PartnerDetailFragment.TAG);
+            case FRAGMENT_LOCATION:
+                mFragment = mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
                 break;
         }
     }
@@ -94,7 +94,7 @@ public class BottomSheetFragmentManager
                 loadFiltersFragment();
                 break;
 
-            case FRAGMENT_PARTNER:
+            case FRAGMENT_LOCATION:
                 loadLocationFragment(Statement.NO_ID);
                 break;
         }
@@ -136,17 +136,17 @@ public class BottomSheetFragmentManager
     @Override
     public void loadLocationFragment(long locationId) {
         if (mFragmentManager != null) {
-            mFragment = PartnerDetailFragment.newInstance(locationId);
+            mFragment = LocationDetailFragment.newInstance(locationId);
             mFragmentManager.beginTransaction()
                     .replace(
                             R.id.bottom_sheet,
                             mFragment,
-                            PartnerDetailFragment.TAG
+                            LocationDetailFragment.TAG
                     )
                     .commit();
 
             if (mObserver != null) {
-                mObserver.notifyBottomSheetFragmentChanged(FRAGMENT_PARTNER);
+                mObserver.notifyBottomSheetFragmentChanged(FRAGMENT_LOCATION);
             }
         }
     }

@@ -53,14 +53,14 @@ public class MainRepo {
                 .getAsLiveData();
     } //TODO Fix "Application did not close the cursor or database object that was opened here" issue
 
-    public LiveData<Resource<LocationDetail>> getPartnerDetail(@NonNull LiveData<Long> partnerIdLiveData) {
+    public LiveData<Resource<LocationDetail>> getLocationDetail(@NonNull LiveData<Long> locationIdLiveData) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldUpdate,
                 () -> Transformations.switchMap(
-                        partnerIdLiveData,
-                        partnerId -> partnerId > Statement.NO_ID
-                                ? DB.get().mainDao().getLocationsDetail(partnerId)
+                        locationIdLiveData,
+                        locationId -> locationId > Statement.NO_ID
+                                ? DB.get().mainDao().getLocationsDetail(locationId)
                                 : null
                 ),
                 () -> new DataRefreshWorker(mContext)
