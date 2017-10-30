@@ -9,9 +9,9 @@ import android.util.Log;
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.app.fragment.MapsFragment;
-import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
 import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 import org.lagonette.app.room.entity.statement.PartnerItem;
 
 import java.lang.annotation.Retention;
@@ -89,8 +89,8 @@ public class MainCoordinator {
     @BottomSheetPerformer.State
     private int mBottomSheetState;
 
-    @BottomSheetFragmentPerformer.FragmentType
-    private int mBottomSheetFragment;
+    @NonNull
+    private BottomSheetFragmentType mBottomSheetFragmentType;
 
     @MapsFragment.Movement
     private int mMapMovement;
@@ -101,12 +101,11 @@ public class MainCoordinator {
             @NonNull BottomSheetCallback bottomSheetCallback,
             @NonNull FragmentLoader fragmentLoader,
             @NonNull MapFragmentPerformer mapFragmentPerformer) {
-        mBottomSheetCallback = bottomSheetCallback;
+        mBottomSheetCallback = bottomSheetCallback; //TODO do init in init()
         mFragmentLoader = fragmentLoader;
         mMapFragmentPerformer = mapFragmentPerformer;
         mPendingAction = ACTION_IDLE;
         mBottomSheetState = BottomSheetBehavior.STATE_HIDDEN;
-        mBottomSheetFragment = BottomSheetFragmentPerformer.FRAGMENT_NONE;
         mMapMovement = MapsFragment.STATE_MOVEMENT_IDLE;
     }
 
@@ -173,9 +172,9 @@ public class MainCoordinator {
         dispatchAction();
     }
 
-    public void notifyBottomSheetFragmentChanged(@BottomSheetFragmentPerformer.FragmentType int newFragment) {
-        Log.d(TAG, "Coordinator <- Notification: Bottom sheet fragment " + newFragment);
-        mBottomSheetFragment = newFragment;
+    public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentType newFragmentType) {
+        Log.d(TAG, "Coordinator <- Notification: Bottom sheet fragment " + newFragmentType);
+        mBottomSheetFragmentType = newFragmentType;
         dispatchAction();
     }
 
@@ -214,10 +213,10 @@ public class MainCoordinator {
     }
 
     private void computeMovementToLocation() {
-        switch (mBottomSheetFragment) {
+        switch (mBottomSheetFragmentType.getFragmentType()) {
 
-            case BottomSheetFragmentPerformer.FRAGMENT_NONE:
-            case BottomSheetFragmentPerformer.FRAGMENT_FILTERS:
+            case BottomSheetFragmentType.FRAGMENT_NONE:
+            case BottomSheetFragmentType.FRAGMENT_FILTERS:
                 switch (mBottomSheetState) {
 
                     case BottomSheetBehavior.STATE_COLLAPSED:
@@ -241,7 +240,7 @@ public class MainCoordinator {
                 }
                 break;
 
-            case BottomSheetFragmentPerformer.FRAGMENT_LOCATION:
+            case BottomSheetFragmentType.FRAGMENT_LOCATION:
                 switch (mBottomSheetState) {
 
                     case BottomSheetBehavior.STATE_COLLAPSED:
@@ -400,89 +399,89 @@ public class MainCoordinator {
         switch (mBottomSheetState) {
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                switch (mBottomSheetFragment) {
+                switch (mBottomSheetFragmentType.getFragmentType()) {
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_NONE:
+                    case BottomSheetFragmentType.FRAGMENT_NONE:
                         loadFiltersFragment();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_LOCATION:
+                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
                         loadFiltersFragment();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_FILTERS:
+                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
                         openBottomSheet();
                         break;
                 }
                 break;
 
             case BottomSheetBehavior.STATE_COLLAPSED:
-                switch (mBottomSheetFragment) {
+                switch (mBottomSheetFragmentType.getFragmentType()) {
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_NONE:
+                    case BottomSheetFragmentType.FRAGMENT_NONE:
                         wtf();
                         closeBottomSheet();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_LOCATION:
+                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
                         closeBottomSheet();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_FILTERS:
+                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
                         markPendingActionDone();
                         break;
                 }
                 break;
 
             case BottomSheetBehavior.STATE_EXPANDED:
-                switch (mBottomSheetFragment) {
+                switch (mBottomSheetFragmentType.getFragmentType()) {
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_NONE:
+                    case BottomSheetFragmentType.FRAGMENT_NONE:
                         wtf();
                         closeBottomSheet();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_LOCATION:
+                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
                         closeBottomSheet();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_FILTERS:
+                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
                         markPendingActionDone();
                         break;
                 }
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
-                switch (mBottomSheetFragment) {
+                switch (mBottomSheetFragmentType.getFragmentType()) {
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_NONE:
+                    case BottomSheetFragmentType.FRAGMENT_NONE:
                         wtf();
                         closeBottomSheet();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_FILTERS:
+                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
                         markPendingActionDone();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_LOCATION:
+                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
                         markPendingActionDone();
                         break;
                 }
                 break;
 
             case BottomSheetBehavior.STATE_SETTLING:
-                switch (mBottomSheetFragment) {
+                switch (mBottomSheetFragmentType.getFragmentType()) {
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_NONE:
+                    case BottomSheetFragmentType.FRAGMENT_NONE:
                         wtf();
                         closeBottomSheet();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_FILTERS:
+                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
                         markPendingActionDone();
                         break;
 
-                    case BottomSheetFragmentPerformer.FRAGMENT_LOCATION:
+                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
                         closeBottomSheet();
                         break;
                 }

@@ -6,7 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
-import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
+import org.lagonette.app.app.widget.livedata.BottomSheetFragmentTypeLiveData;
 
 public class StateMapsActivityViewModel extends AndroidViewModel {
 
@@ -14,14 +14,14 @@ public class StateMapsActivityViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> mBottomSheetState;
 
     @NonNull
-    private final MutableLiveData<Integer> mBottomSheetFragment;
+    private final BottomSheetFragmentTypeLiveData mBottomSheetFragmentType;
 
     public StateMapsActivityViewModel(Application application) {
         super(application);
         mBottomSheetState = new MutableLiveData<>();
-        mBottomSheetFragment = new MutableLiveData<>();
+        mBottomSheetFragmentType = new BottomSheetFragmentTypeLiveData();
         mBottomSheetState.setValue(BottomSheetBehavior.STATE_HIDDEN);
-        mBottomSheetFragment.setValue(BottomSheetFragmentPerformer.FRAGMENT_NONE);
+        mBottomSheetFragmentType.notifyUnload();
     }
 
     @NonNull
@@ -30,7 +30,7 @@ public class StateMapsActivityViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public MutableLiveData<Integer> getBottomSheetFragment() {
-        return mBottomSheetFragment;
+    public BottomSheetFragmentTypeLiveData getBottomSheetFragmentType() {
+        return mBottomSheetFragmentType;
     }
 }

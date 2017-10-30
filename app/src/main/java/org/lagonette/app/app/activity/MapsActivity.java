@@ -10,6 +10,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.app.app.viewmodel.StateMapsActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
+import org.lagonette.app.app.widget.livedata.BottomSheetFragmentTypeLiveData;
 import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
 import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.FabButtonsPerformer;
@@ -74,38 +75,38 @@ public class MapsActivity
     protected void init() {
         mMapFragmentPerformer.init();
 
-        MutableLiveData<Integer> bottomSheetFragment = mStateViewModel.getBottomSheetFragment();
+        BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
 
         //noinspection ConstantConditions
         mBottomSheetPerformer.init(bottomSheetState.getValue());
         //noinspection ConstantConditions
-        mBottomSheetFragmentPerformer.init(bottomSheetFragment.getValue());
+        mBottomSheetFragmentPerformer.init(bottomSheetFragmentType.getValue());
     }
 
     @Override
     protected void restore(@NonNull Bundle savedInstanceState) {
         mMapFragmentPerformer.restore();
 
-        MutableLiveData<Integer> bottomSheetFragment = mStateViewModel.getBottomSheetFragment();
+        BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
 
         //noinspection ConstantConditions
         mBottomSheetPerformer.restore(bottomSheetState.getValue());
         //noinspection ConstantConditions
-        mBottomSheetFragmentPerformer.restore(bottomSheetFragment.getValue());
+        mBottomSheetFragmentPerformer.restore(bottomSheetFragmentType.getValue());
     }
 
     @Override
     protected void onActivityCreated() {
 
-        MutableLiveData<Integer> bottomSheetFragment = mStateViewModel.getBottomSheetFragment();
+        BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
 
-        mBottomSheetFragmentPerformer.observe(bottomSheetFragment::setValue);
+        mBottomSheetFragmentPerformer.observe(bottomSheetFragmentType);
         mBottomSheetPerformer.observe(bottomSheetState::setValue);
 
-        bottomSheetFragment.observe(MapsActivity.this, mCoordinator::notifyBottomSheetFragmentChanged);
+        bottomSheetFragmentType.observe(MapsActivity.this, mCoordinator::notifyBottomSheetFragmentChanged);
         bottomSheetState.observe(MapsActivity.this, mCoordinator::notifyBottomSheetStateChanged);
 
         mMapFragmentPerformer.observeMovement(mCoordinator::notifyMapMovementChanged); //TODO Maybe save & restore camera movement into LiveData ?
