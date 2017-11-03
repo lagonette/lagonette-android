@@ -56,6 +56,9 @@ public class BottomSheetFragmentTypeLiveData
         if (mLocation == null) {
             mLocation = BottomSheetFragmentType.location(locationId);
         }
+        else {
+            mLocation.setLocationId(locationId);
+        }
         return mLocation;
     }
 }

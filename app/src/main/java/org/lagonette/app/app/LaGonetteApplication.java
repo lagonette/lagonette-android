@@ -59,9 +59,9 @@ public class LaGonetteApplication
                                 LaGonetteDatabase.class,
                                 DatabaseUtil.DATABASE_NAME
                         )
-                        .addMigrations(new VoidMigration(1, 2))
-                        .addMigrations(new VoidMigration(2, 3))
-                        //.fallbackToDestructiveMigration() //TODO Remove migration
+//                        .addMigrations(new VoidMigration(1, 2))
+//                        .addMigrations(new VoidMigration(2, 3))
+                        .fallbackToDestructiveMigration() //TODO Remove migration
                         .build()
         );
     }

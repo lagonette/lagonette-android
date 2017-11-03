@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.R;
@@ -78,7 +79,7 @@ public class BottomSheetFragmentPerformer
                 break;
 
             case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                loadLocationFragment(type.getLocationId());
+                loadLocationFragment(type.getLocationId(), false);
                 break;
         }
     }
@@ -117,10 +118,17 @@ public class BottomSheetFragmentPerformer
     }
 
     @Override
-    public void loadLocationFragment(long locationId) {
+    public void loadLocationFragment(long locationId, boolean animation) {
         if (mFragmentManager != null) {
             mFragment = LocationDetailFragment.newInstance(locationId);
-            mFragmentManager.beginTransaction()
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
+            if (animation) {
+                transaction.setCustomAnimations(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                );
+            }
+            transaction
                     .replace(
                             R.id.bottom_sheet,
                             mFragment,

@@ -13,6 +13,7 @@ import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.room.statement.Statement;
 
 import java.lang.annotation.Retention;
 
@@ -34,7 +35,7 @@ public class MainCoordinator {
 
         void loadFiltersFragment();
 
-        void loadLocationFragment(long locationId);
+        void loadLocationFragment(long locationId, boolean animation);
 
         void unloadFragment();
 
@@ -68,7 +69,7 @@ public class MainCoordinator {
 
     }
 
-    private class State {
+    private static class State {
 
         @BottomSheetPerformer.State
         public int bottomSheetState;
@@ -78,14 +79,12 @@ public class MainCoordinator {
 
         @MapsFragment.Movement
         public int mapMovement;
-
-        public boolean wasCoordinatorMovement;
     }
 
     /**
      * Action and those attributes.
      */
-    private class PendingAction {
+    private static class PendingAction {
 
         @ActionType
         public int type;
@@ -95,6 +94,15 @@ public class MainCoordinator {
 
         @Nullable
         public PartnerItem item;
+
+        boolean shouldMove;
+
+        public void done() {
+            type = ACTION_IDLE;
+            cluster = null;
+            item = null;
+            shouldMove = false;
+        }
     }
 
     private final State mState;
@@ -152,12 +160,14 @@ public class MainCoordinator {
     public void moveToMyLocation() {
         Log.d(TAG, "Coordinator -> Action: MOVE ON MY LOCATION");
         mPendingAction.type = ACTION_MOVE_TO_MY_LOCATION;
+        mPendingAction.shouldMove = true;
         computeMovementToMyLocation();
     }
 
     public void moveToFootprint() {
         Log.d(TAG, "Coordinator -> Action: MOVE ON FOOTPRINT");
         mPendingAction.type = ACTION_MOVE_TO_FOOTPRINT;
+        mPendingAction.shouldMove = true;
         computeMovementToFootprint();
     }
 
@@ -165,6 +175,7 @@ public class MainCoordinator {
         Log.d(TAG, "Coordinator -> Action: MOVE ON CLUSTER");
         mPendingAction.type = ACTION_MOVE_TO_CLUSTER;
         mPendingAction.cluster = cluster;
+        mPendingAction.shouldMove = true;
         computeMovementToCluster();
     }
 
@@ -172,6 +183,7 @@ public class MainCoordinator {
         Log.d(TAG, "Coordinator -> Action: MOVE ON PARTNER ITEM");
         mPendingAction.type = ACTION_MOVE_TO_LOCATION;
         mPendingAction.item = item;
+        mPendingAction.shouldMove = true;
         computeMovementToLocation();
     }
 
@@ -222,7 +234,33 @@ public class MainCoordinator {
 
             default:
             case ACTION_IDLE:
-                // Do nothing
+                computeIdle();
+                break;
+        }
+    }
+
+    private void computeIdle() {
+        switch (mState.bottomSheetFragmentType.getFragmentType()) {
+
+            case BottomSheetFragmentType.FRAGMENT_FILTERS:
+                break;
+            case BottomSheetFragmentType.FRAGMENT_LOCATION:
+                switch (mState.bottomSheetState) {
+
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        unloadFragment();
+                        break;
+                }
+                break;
+
+            default:
+            case BottomSheetFragmentType.FRAGMENT_NONE:
                 break;
         }
     }
@@ -249,7 +287,10 @@ public class MainCoordinator {
 
                     case BottomSheetBehavior.STATE_HIDDEN:
                         if (mPendingAction.item != null) {
-                            loadLocationFragment(mPendingAction.item.getId());
+                            loadLocationFragment(mPendingAction.item.getId(), false);
+                        }
+                        else {
+                            markPendingActionDone();
                         }
                         break;
                 }
@@ -260,8 +301,18 @@ public class MainCoordinator {
 
                     case BottomSheetBehavior.STATE_COLLAPSED:
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        //TODO
-                        markPendingActionDone();
+                        long selectedId = mPendingAction.item != null
+                                ?  mPendingAction.item.getId()
+                                : Statement.NO_ID;
+                        if (mPendingAction.shouldMove) {
+                            mPendingAction.shouldMove = false;
+                            mMapFragmentPerformer.moveToLocation(mPendingAction.item);
+                        }
+                        else if (mState.bottomSheetFragmentType.getLocationId() != selectedId) {
+                            loadLocationFragment(mPendingAction.item.getId(), true);
+                        } else {
+                            markPendingActionDone();
+                        }
                         break;
 
                     case BottomSheetBehavior.STATE_DRAGGING:
@@ -281,12 +332,12 @@ public class MainCoordinator {
 
                             case MapsFragment.STATE_MOVEMENT_IDLE:
                                 if (mPendingAction.item != null) {
-                                    if (mState.wasCoordinatorMovement) { //TODO Use reason to mark action done if the user move something
-                                        mState.wasCoordinatorMovement = false;
-                                        openBottomSheet();
+                                    if (mPendingAction.shouldMove) { //TODO Use reason to mark action done if the user move something
+                                        mPendingAction.shouldMove = false;
+                                        moveMapToLocation(mPendingAction.item);
                                     }
                                     else {
-                                        moveMapToLocation(mPendingAction.item);
+                                        openBottomSheet();
                                     }
                                 }
                                 else {
@@ -321,7 +372,8 @@ public class MainCoordinator {
                         break;
 
                     case MapsFragment.STATE_MOVEMENT_IDLE:
-                        if (mPendingAction.cluster != null) {
+                        if (mPendingAction.cluster != null && mPendingAction.shouldMove) {
+                            mPendingAction.shouldMove = false;
                             moveMapToCluster(mPendingAction.cluster);
                         }
                         else {
@@ -416,11 +468,8 @@ public class MainCoordinator {
             case BottomSheetBehavior.STATE_HIDDEN:
                 switch (mState.bottomSheetFragmentType.getFragmentType()) {
 
-                    case BottomSheetFragmentType.FRAGMENT_NONE:
-                        loadFiltersFragment();
-                        break;
-
                     case BottomSheetFragmentType.FRAGMENT_LOCATION:
+                    case BottomSheetFragmentType.FRAGMENT_NONE:
                         loadFiltersFragment();
                         break;
 
@@ -506,34 +555,26 @@ public class MainCoordinator {
 
     private void markPendingActionDone() {
         Log.d(TAG, "Coordinator -- Action DONE.");
-        mPendingAction.type = ACTION_IDLE;
-        mPendingAction.cluster = null;
-        mPendingAction.item = null;
-        mState.wasCoordinatorMovement = false;
+        mPendingAction.done();
     }
 
     private void stopMovingMap() {
-        mState.wasCoordinatorMovement = false;
         mMapFragmentPerformer.stopMoving();
     }
 
     private void moveMapToCluster(@NonNull Cluster<PartnerItem> cluster) {
-        mState.wasCoordinatorMovement = true;
         mMapFragmentPerformer.moveToCluster(cluster);
     }
 
     private void moveMapToFootprint() {
-        mState.wasCoordinatorMovement = true;
         mMapFragmentPerformer.moveToFootprint();
     }
 
     private void moveMapToMyLocation() {
-        mState.wasCoordinatorMovement = true;
         mMapFragmentPerformer.moveToMyLocation();
     }
 
     private void moveMapToLocation(@NonNull PartnerItem item) {
-        mState.wasCoordinatorMovement = true;
         mMapFragmentPerformer.moveToLocation(item);
     }
 
@@ -549,8 +590,8 @@ public class MainCoordinator {
         mFragmentLoader.loadFiltersFragment();
     }
 
-    private void loadLocationFragment(long locationId) {
-        mFragmentLoader.loadLocationFragment(locationId);
+    private void loadLocationFragment(long locationId, boolean animation) {
+        mFragmentLoader.loadLocationFragment(locationId, animation);
     }
 
     private void unloadFragment() {
