@@ -28,8 +28,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -39,12 +37,11 @@ import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 
 import org.json.JSONException;
 import org.lagonette.app.R;
-import org.lagonette.app.app.viewmodel.MapsViewModel;
+import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.PartnerItem;
-import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.SharedPreferencesUtil;
 import org.lagonette.app.util.SnackbarUtil;
 import org.lagonette.app.util.UiUtil;
@@ -110,7 +107,7 @@ public class MapsFragment
 
     public static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
-    private MapsViewModel mViewModel;
+    private MapViewModel mViewModel;
 
     private SharedMapsActivityViewModel mActivityViewModel;
 
@@ -197,7 +194,7 @@ public class MapsFragment
 
         mViewModel = ViewModelProviders
                 .of(MapsFragment.this)
-                .get(MapsViewModel.class);
+                .get(MapViewModel.class);
 
         mActivityViewModel = ViewModelProviders
                 .of(getActivity())

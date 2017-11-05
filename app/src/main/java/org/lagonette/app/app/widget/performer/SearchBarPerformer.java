@@ -6,25 +6,15 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
+import org.lagonette.app.repo.Resource;
 import org.lagonette.app.util.UiUtil;
 
 public class SearchBarPerformer {
-
-    public static final int IDLE = 0;
-
-    public static final int IN_PROGRESS = 1;
-
-    @IntDef({
-            IDLE,
-            IN_PROGRESS
-    })
-    public @interface WorkState {
-
-    }
 
     @Nullable
     private TopEscapeBehavior mBehavior;
@@ -41,8 +31,8 @@ public class SearchBarPerformer {
     @IdRes
     private final int mProgressBarRes;
 
-    @WorkState
-    private int mWorkState;
+    @Resource.Status
+    private int mWorkStatus;
 
     public SearchBarPerformer(int searchBarRes, int progressBarRes) {
         mSearchBarRes = searchBarRes;
@@ -58,31 +48,32 @@ public class SearchBarPerformer {
         setupSearchBarMarginTop(mSearchBar);
     }
 
-    public void init() {
-        if (mBehavior == null || mSearchBar == null) {
-            throw new IllegalStateException("inject() must be called before init()");
-        }
+//    public void init() {
+//        if (mBehavior == null || mSearchBar == null) {
+//            throw new IllegalStateException("inject() must be called before init()");
+//        }
+//
+//        setWorkState(Resource.SUCCESS);
+//    }
+//
+//    public void restore(@Resource.Status int workState) {
+//        if (mBehavior == null) {
+//            throw new IllegalStateException("inject() must be called before restore()");
+//        }
+//
+//        setWorkState(workState);
+//    }
 
-        setWorkState(IDLE);
-    }
+    public void setWorkState(@Resource.Status int workState) {
+        mWorkStatus = workState;
+        switch (mWorkStatus) {
 
-    public void restore(@WorkState int workState) {
-        if (mBehavior == null) {
-            throw new IllegalStateException("inject() must be called before restore()");
-        }
-
-        setWorkState(workState);
-    }
-
-    public void setWorkState(@WorkState int workState) {
-        mWorkState = workState;
-        switch (mWorkState) {
-
-            case IN_PROGRESS:
+            case Resource.LOADING:
                 mProgressBar.setVisibility(View.VISIBLE);
                 break;
 
-            case IDLE:
+            case Resource.ERROR:
+            case Resource.SUCCESS:
                 mProgressBar.setVisibility(View.GONE);
                 break;
         }
