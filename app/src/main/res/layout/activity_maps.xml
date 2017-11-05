@@ -46,7 +46,7 @@
         app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_behavior="org.lagonette.app.app.widget.behavior.LaGonetteDisappearBehavior"
+        app:layout_behavior="org.lagonette.app.app.widget.behavior.TopEscapeBehavior"
         app:leave_length="56dp"
         app:move_length="56dp" />
 
@@ -60,7 +60,7 @@
         app:dependency="@id/bottom_sheet"
         app:elevation="@dimen/fab_elevation_secondary"
         app:fabSize="normal"
-        app:layout_behavior="org.lagonette.app.app.widget.behavior.LaGonetteDisappearBehavior"
+        app:layout_behavior="org.lagonette.app.app.widget.behavior.TopEscapeBehavior"
         app:leave_length="56dp"
         app:move_length="56dp" />
 
@@ -76,7 +76,7 @@
         android:layout_marginStart="@dimen/search_bar_margin_start"
         android:layout_marginTop="@dimen/search_bar_margin_top"
         app:dependency="@id/bottom_sheet"
-        app:layout_behavior="org.lagonette.app.app.widget.behavior.LaGonetteDisappearBehavior"
+        app:layout_behavior="org.lagonette.app.app.widget.behavior.TopEscapeBehavior"
         app:leave_length="56dp"
         app:move_length="56dp" />
 

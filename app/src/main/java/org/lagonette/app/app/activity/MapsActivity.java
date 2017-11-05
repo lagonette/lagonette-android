@@ -15,6 +15,7 @@ import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
 import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.SearchBarPerformer;
 
 public class MapsActivity
         extends BaseActivity {
@@ -35,12 +36,15 @@ public class MapsActivity
 
     private MapFragmentPerformer mMapFragmentPerformer;
 
+    private SearchBarPerformer mSearchBarPerformer;
+
     @Override
     protected void construct() {
         mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer();
         mMapFragmentPerformer = new MapFragmentPerformer();
         mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
+        mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar);
         mCoordinator = new MainCoordinator(
                 mBottomSheetPerformer,
                 mBottomSheetFragmentPerformer,
@@ -69,6 +73,7 @@ public class MapsActivity
         //TODO Change activity lifecycle in BaseActivity
         mBottomSheetPerformer.inject(view);
         mFabButtonsPerformer.inject(view);
+        mSearchBarPerformer.inject(view);
     }
 
     @Override
@@ -82,6 +87,7 @@ public class MapsActivity
         mBottomSheetPerformer.init(bottomSheetState.getValue());
         //noinspection ConstantConditions
         mBottomSheetFragmentPerformer.init(bottomSheetFragmentType.getValue());
+        mSearchBarPerformer.init();
     }
 
     @Override
@@ -95,6 +101,7 @@ public class MapsActivity
         mBottomSheetPerformer.restore(bottomSheetState.getValue());
         //noinspection ConstantConditions
         mBottomSheetFragmentPerformer.restore(bottomSheetFragmentType.getValue());
+        mSearchBarPerformer.restore();
     }
 
     @Override

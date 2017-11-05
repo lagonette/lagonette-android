@@ -46,18 +46,18 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
         mBottomSheetRes = bottomSheetRes;
     }
 
+    public void inject(@NonNull View view) {
+        View bottomSheet = view.findViewById(mBottomSheetRes);
+        mBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
+    }
+
     public void init(@BottomSheetPerformer.State int initState) {
         if (mBehavior == null) {
             throw new IllegalStateException("inject() must be called before init()");
         }
 
         mBehavior.setState(initState);
-    }
-
-    public void inject(@NonNull View view) {
-        View bottomSheet = view.findViewById(mBottomSheetRes);
-        mBehavior = BottomSheetBehavior.from(bottomSheet);
-        mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
     }
 
     public void restore(@BottomSheetPerformer.State int restoredState) {
