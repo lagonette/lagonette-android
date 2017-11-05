@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.FiltersViewModel;
-import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
+import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
 
 //TODO Do not show empty fragment when there is no partner.
@@ -34,7 +34,7 @@ public class FiltersFragment
 
     private FiltersViewModel mFiltersViewModel;
 
-    private SharedMapsActivityViewModel mActivityViewModel;
+    private StateMapActivityViewModel mStateViewModel;
 
     private RecyclerView mFilterList;
 
@@ -55,15 +55,15 @@ public class FiltersFragment
                         filtersResource -> mFilterAdapter.setFilterReader(filtersResource.data) //TODO manage loading & error
                 );
 
-        mActivityViewModel = ViewModelProviders
+        mStateViewModel = ViewModelProviders
                 .of(getActivity())
-                .get(SharedMapsActivityViewModel.class);
+                .get(StateMapActivityViewModel.class);
 
-        mActivityViewModel
+        mStateViewModel
                 .getSearch()
                 .observe(
                         FiltersFragment.this,
-                        search -> mFiltersViewModel.getSearch().send(search)
+                        mFiltersViewModel.getSearch()::setValue
                 );
 
         mFilterAdapter = new FilterAdapter(getContext(), getResources());

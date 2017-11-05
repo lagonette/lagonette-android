@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.app.arch.EventShipper;
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.embedded.CategoryKey;
@@ -25,8 +24,8 @@ public class FiltersViewModel extends ViewModel {
     }
 
     @NonNull
-    public EventShipper.Sender<String> getSearch() {
-        return search -> mSearch.postValue(search);
+    public MutableLiveData<String> getSearch() {
+        return mSearch;
     }
 
     @NonNull

@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.app.arch.EventShipper;
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.PartnerItem;
@@ -29,7 +28,7 @@ public class MapViewModel extends ViewModel {
     }
 
     @NonNull
-    public EventShipper.Sender<String> getSearch() {
-        return search -> mSearch.setValue(search);
+    public MutableLiveData<String> getSearch() {
+        return mSearch;
     }
 }

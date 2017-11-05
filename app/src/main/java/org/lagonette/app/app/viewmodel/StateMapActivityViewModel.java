@@ -14,15 +14,20 @@ public class StateMapActivityViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> mBottomSheetState;
 
     @NonNull
+    private final MutableLiveData<String> mSearch;
+
+    @NonNull
     private final BottomSheetFragmentTypeLiveData mBottomSheetFragmentType;
 
     public StateMapActivityViewModel(Application application) {
         super(application);
         mBottomSheetState = new MutableLiveData<>();
         mBottomSheetFragmentType = new BottomSheetFragmentTypeLiveData();
+        mSearch = new MutableLiveData<>();
 
         mBottomSheetState.setValue(BottomSheetBehavior.STATE_HIDDEN);
         mBottomSheetFragmentType.notifyUnload();
+        mSearch.setValue("");
     }
 
     @NonNull
@@ -33,5 +38,10 @@ public class StateMapActivityViewModel extends AndroidViewModel {
     @NonNull
     public BottomSheetFragmentTypeLiveData getBottomSheetFragmentType() {
         return mBottomSheetFragmentType;
+    }
+
+    @NonNull
+    public MutableLiveData<String> getSearch() {
+        return mSearch;
     }
 }

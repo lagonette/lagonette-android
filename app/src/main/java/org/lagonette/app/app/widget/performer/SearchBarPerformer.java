@@ -6,15 +6,26 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.util.UiUtil;
 
 public class SearchBarPerformer {
+
+    public interface SearchObserver {
+
+        void notifySearch(@Nullable String search);
+    }
+
+    @Nullable
+    private SearchObserver mSearchObserver;
 
     @Nullable
     private TopEscapeBehavior mBehavior;
@@ -25,27 +36,39 @@ public class SearchBarPerformer {
     @Nullable
     private ProgressBar mProgressBar;
 
+    @Nullable
+    private TextView mSearchText;
+
     @IdRes
     private int mSearchBarRes;
 
     @IdRes
     private final int mProgressBarRes;
 
+    @IdRes
+    private final int mSearchTextRes;
+
     @Resource.Status
     private int mWorkStatus;
 
-    public SearchBarPerformer(int searchBarRes, int progressBarRes) {
+    public SearchBarPerformer(
+            @IdRes int searchBarRes,
+            @IdRes int progressBarRes,
+            @IdRes int searchTextRes) {
         mSearchBarRes = searchBarRes;
         mProgressBarRes = progressBarRes;
+        mSearchTextRes = searchTextRes;
     }
 
     public void inject(@NonNull View view) {
         mSearchBar = view.findViewById(mSearchBarRes);
+        mProgressBar = view.findViewById(mProgressBarRes);
+        mSearchText = view.findViewById(mSearchTextRes);
+
         mBehavior = TopEscapeBehavior.from(mSearchBar);
 
-        mProgressBar = view.findViewById(mProgressBarRes);
-
         setupSearchBarMarginTop(mSearchBar);
+        setupSearchText(mSearchText);
     }
 
 //    public void init() {
@@ -89,5 +112,36 @@ public class SearchBarPerformer {
                     params.bottomMargin
             );
         }
+    }
+
+    private void setupSearchText(@NonNull TextView searchText) {
+        //TODO Activity leaks ?
+        // Add TextWatcher later to avoid callback called on configuration changed.
+        searchText.post(
+                () -> searchText.addTextChangedListener(
+                        new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable editable) {
+                                if (mSearchObserver != null) {
+                                    mSearchObserver.notifySearch(editable.toString());
+                                }
+                            }
+                        }
+                )
+        );
+    }
+
+    public void observeSearch(@NonNull SearchObserver observer) {
+        mSearchObserver = observer;
     }
 }

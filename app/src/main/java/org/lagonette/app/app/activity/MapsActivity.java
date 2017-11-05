@@ -48,7 +48,7 @@ public class MapsActivity
         mMapFragmentPerformer = new MapFragmentPerformer();
         mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
-        mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar, R.id.progress_bar);
+        mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
         mCoordinator = new MainCoordinator(
                 mBottomSheetPerformer,
                 mBottomSheetFragmentPerformer,
@@ -118,6 +118,7 @@ public class MapsActivity
 
         BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
+        MutableLiveData<String> search = mStateViewModel.getSearch();
 
         // Coordinator -- Observe states
         mBottomSheetFragmentPerformer.observe(bottomSheetFragmentType);
@@ -137,7 +138,7 @@ public class MapsActivity
         mFabButtonsPerformer.observePositionLongClick(mCoordinator::moveToFootprint);
 
         // Performers -- Interactions
-        mMapViewModel.getMapPartners()
+        mMapViewModel.getMapPartners() //TODO do not use MapViewModel here, but get status by mStateViewModel
                 .observe(
                         MapsActivity.this,
                         resource -> mSearchBarPerformer.setWorkState(
@@ -146,6 +147,8 @@ public class MapsActivity
                                         : Resource.SUCCESS
                         )
                 );
+
+        mSearchBarPerformer.observeSearch(search::setValue);
 
 //        mSharedViewModel
 //                .getWorkInProgress()
@@ -180,21 +183,21 @@ public class MapsActivity
 //                        }
 //                );
 
-        mSharedViewModel
-                .getShowLocationRequest()
-                .observe(
-                        MapsActivity.this,
-                        request -> {
-                            if (request != null) {
-                                showLocation(
-                                        request.locationId,
-                                        request.zoom
-                                );
-                            } else {
-                                showFullMap();
-                            }
-                        }
-                );
+//        mSharedViewModel
+//                .getShowLocationRequest()
+//                .observe(
+//                        MapsActivity.this,
+//                        request -> {
+//                            if (request != null) {
+//                                showLocation(
+//                                        request.locationId,
+//                                        request.zoom
+//                                );
+//                            } else {
+//                                showFullMap();
+//                            }
+//                        }
+//                );
 
         //TODO Maybe make interface to send data xor just observe data, like LiveEvent but for LiveData
         //TODO Maybe use LiveData to exchange info between Coordinator & Activity?
@@ -211,11 +214,11 @@ public class MapsActivity
 //        mCoordinator.start(savedInstanceState);
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
 //        mCoordinator.onRestoreInstanceState(savedInstanceState);
-    }
+//    }
 
     @Override
     public void onBackPressed() {
@@ -224,20 +227,20 @@ public class MapsActivity
         }
     }
 
-    public void showFullMap() {
+//    public void showFullMap() {
 //        mCoordinator.focusOnMap();
 //        mCoordinator.closeBottomSheet();
-    }
+//    }
 
-    public void showLocation(long locationId, boolean zoom) {
+//    public void showLocation(long locationId, boolean zoom) {
 //        mCoordinator.focusOnMap();
 //        mCoordinator.showLocation(locationId, zoom);
-    }
+//    }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
 //        mCoordinator.onSaveInstanceState(outState);
-    }
+//    }
 
 }

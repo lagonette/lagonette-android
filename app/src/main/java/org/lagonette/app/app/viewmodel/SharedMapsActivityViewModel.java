@@ -13,8 +13,8 @@ import org.lagonette.app.util.IntegerUtil;
 
 public class SharedMapsActivityViewModel extends AndroidViewModel {
 
-    @NonNull
-    private final MutableLiveData<String> mSearch;
+//    @NonNull
+//    private final MutableLiveData<String> mSearch;
 
     @NonNull
     private final MutableLiveData<Boolean> mWorkInProgress;
@@ -25,11 +25,11 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
     @NonNull
     private final MutableLiveData<Boolean> mEnableMyPositionFAB;
 
-    @NonNull
-    private final MutableLiveEvent<ShowLocationEvent> mShowLocationRequest;
+//    @NonNull
+//    private final MutableLiveEvent<ShowLocationEvent> mShowLocationRequest;
 
-    @NonNull
-    private final ShowLocationEvent mShowLocationEvent;
+//    @NonNull
+//    private final ShowLocationEvent mShowLocationEvent;
 
 //    @NonNull
 //    private final MutableLiveEvent<Integer> mMapMovement;
@@ -48,16 +48,16 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         mWorkInProgress = new MutableLiveData<>();
         mMapIsReady = new MutableLiveEvent<>();
         mEnableMyPositionFAB = new MutableLiveData<>();
-        mShowLocationRequest = new MutableLiveEvent<>();
+//        mShowLocationRequest = new MutableLiveEvent<>();
 //        mMapMovement = new MutableLiveEvent<>();
-        mSearch = new MutableLiveData<>();
+//        mSearch = new MutableLiveData<>();
         mMapTopPadding = new MutableLiveData<>();
         mMapBottomPadding = new MutableLiveData<>();
         mMapPadding = new MediatorLiveData<>();
 
-        mShowLocationEvent = new ShowLocationEvent();
+//        mShowLocationEvent = new ShowLocationEvent();
 
-        mSearch.postValue(""); //TODO Not sure if usefull
+//        mSearch.postValue(""); //TODO Not sure if usefull
 
         mMapPadding.setValue(new int[] {0,0,0,0});
         mMapPadding.addSource(
@@ -78,10 +78,10 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         );
     }
 
-    @NonNull
-    public LiveData<String> getSearch() {
-        return mSearch;
-    }
+//    @NonNull
+//    public LiveData<String> getSearch() {
+//        return mSearch;
+//    }
 
     @NonNull
     public LiveData<Boolean> getWorkInProgress() {
@@ -98,10 +98,10 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         return mEnableMyPositionFAB;
     }
 
-    @NonNull
-    public LiveEvent<ShowLocationEvent> getShowLocationRequest() {
-        return mShowLocationRequest;
-    }
+//    @NonNull
+//    public LiveEvent<ShowLocationEvent> getShowLocationRequest() {
+//        return mShowLocationRequest;
+//    }
 
 //    @NonNull
 //    public EventShipper.Sender<Integer> getMapMovementSender() {
@@ -128,9 +128,9 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
         return mMapPadding;
     }
 
-    public void search(@NonNull String search) {
-        mSearch.setValue(search);
-    }
+//    public void search(@NonNull String search) {
+//        mSearch.setValue(search);
+//    }
 
     public void setWorkInProgress(boolean workInProgress) {
         mWorkInProgress.postValue(workInProgress);
@@ -154,13 +154,13 @@ public class SharedMapsActivityViewModel extends AndroidViewModel {
 //        mShowLocationRequest.call();
 //    }
 
-    //TODO Make custom LiveData
-    public static class ShowLocationEvent {
-
-        public long locationId;
-
-        public boolean zoom;
-
-    }
+//    TODO Make custom LiveData
+//    public static class ShowLocationEvent {
+//
+//        public long locationId;
+//
+//        public boolean zoom;
+//
+//    }
 
 }

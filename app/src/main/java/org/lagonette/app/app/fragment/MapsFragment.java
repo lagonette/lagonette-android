@@ -39,6 +39,7 @@ import org.json.JSONException;
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
+import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.PartnerItem;
@@ -109,7 +110,9 @@ public class MapsFragment
 
     private MapViewModel mViewModel;
 
-    private SharedMapsActivityViewModel mActivityViewModel;
+    private SharedMapsActivityViewModel mActivityViewModel; //TODO Remove
+
+    private StateMapActivityViewModel mStateViewModel;
 
     private boolean mLocationPermissionGranted = false;
 
@@ -200,14 +203,25 @@ public class MapsFragment
                 .of(getActivity())
                 .get(SharedMapsActivityViewModel.class);
 
-        mActivityViewModel
+        mStateViewModel = ViewModelProviders
+                .of(getActivity())
+                .get(StateMapActivityViewModel.class);
+
+        mStateViewModel
                 .getSearch()
                 .observe(
                         MapsFragment.this,
-                        search -> mViewModel
-                                .getSearch()
-                                .send(search)
+                        mViewModel.getSearch()::setValue
                 );
+
+//        mActivityViewModel
+//                .getSearch()
+//                .observe(
+//                        MapsFragment.this,
+//                        search -> mViewModel
+//                                .getSearch()
+//                                .send(search)
+//                );
 
 //        mActivityViewModel
 //                .getMapMovement()
