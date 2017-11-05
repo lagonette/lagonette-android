@@ -44,7 +44,7 @@ public class MapsActivity
         mMapFragmentPerformer = new MapFragmentPerformer();
         mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
-        mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar);
+        mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar, R.id.progress_bar);
         mCoordinator = new MainCoordinator(
                 mBottomSheetPerformer,
                 mBottomSheetFragmentPerformer,
@@ -101,7 +101,7 @@ public class MapsActivity
         mBottomSheetPerformer.restore(bottomSheetState.getValue());
         //noinspection ConstantConditions
         mBottomSheetFragmentPerformer.restore(bottomSheetFragmentType.getValue());
-        mSearchBarPerformer.restore();
+        mSearchBarPerformer.restore(SearchBarPerformer.IDLE);
     }
 
     @Override

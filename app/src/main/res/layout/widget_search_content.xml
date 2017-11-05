@@ -32,7 +32,9 @@
         style="@android:style/Widget.DeviceDefault.ProgressBar"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_margin="12dp"/>
+        android:layout_margin="12dp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 
     <ImageButton
