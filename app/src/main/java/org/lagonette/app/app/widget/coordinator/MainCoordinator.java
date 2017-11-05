@@ -55,6 +55,8 @@ public class MainCoordinator {
 
     private static final int ACTION_MOVE_TO_LOCATION = 6;
 
+    private static final int ACTION_SHOW_FULL_MAP = 7;
+
     @Retention(SOURCE)
     @IntDef({
             ACTION_IDLE,
@@ -63,7 +65,8 @@ public class MainCoordinator {
             ACTION_MOVE_TO_MY_LOCATION,
             ACTION_MOVE_TO_FOOTPRINT,
             ACTION_MOVE_TO_CLUSTER,
-            ACTION_MOVE_TO_LOCATION
+            ACTION_MOVE_TO_LOCATION,
+            ACTION_SHOW_FULL_MAP
     })
     private @interface ActionType {
 
@@ -157,22 +160,28 @@ public class MainCoordinator {
         }
     }
 
+    public void showFullMap() {
+        Log.d(TAG, "Coordinator -> Action: SHOW FULL MAP");
+        mPendingAction.type = ACTION_SHOW_FULL_MAP;
+        computeFullMapShowing();
+    }
+
     public void moveToMyLocation() {
-        Log.d(TAG, "Coordinator -> Action: MOVE ON MY LOCATION");
+        Log.d(TAG, "Coordinator -> Action: MOVE TO MY LOCATION");
         mPendingAction.type = ACTION_MOVE_TO_MY_LOCATION;
         mPendingAction.shouldMove = true;
         computeMovementToMyLocation();
     }
 
     public void moveToFootprint() {
-        Log.d(TAG, "Coordinator -> Action: MOVE ON FOOTPRINT");
+        Log.d(TAG, "Coordinator -> Action: MOVE TO FOOTPRINT");
         mPendingAction.type = ACTION_MOVE_TO_FOOTPRINT;
         mPendingAction.shouldMove = true;
         computeMovementToFootprint();
     }
 
     public void moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
-        Log.d(TAG, "Coordinator -> Action: MOVE ON CLUSTER");
+        Log.d(TAG, "Coordinator -> Action: MOVE TO CLUSTER");
         mPendingAction.type = ACTION_MOVE_TO_CLUSTER;
         mPendingAction.cluster = cluster;
         mPendingAction.shouldMove = true;
@@ -180,7 +189,7 @@ public class MainCoordinator {
     }
 
     public void moveToLocation(@NonNull PartnerItem item) {
-        Log.d(TAG, "Coordinator -> Action: MOVE ON PARTNER ITEM");
+        Log.d(TAG, "Coordinator -> Action: MOVE TO PARTNER ITEM");
         mPendingAction.type = ACTION_MOVE_TO_LOCATION;
         mPendingAction.item = item;
         mPendingAction.shouldMove = true;
@@ -232,6 +241,10 @@ public class MainCoordinator {
                 computeMovementToLocation();
                 break;
 
+            case ACTION_SHOW_FULL_MAP:
+                computeFullMapShowing();
+                break;
+
             default:
             case ACTION_IDLE:
                 computeIdle();
@@ -261,6 +274,28 @@ public class MainCoordinator {
 
             default:
             case BottomSheetFragmentType.FRAGMENT_NONE:
+                break;
+        }
+    }
+
+    private void computeFullMapShowing() {
+        switch (mState.bottomSheetState) {
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_EXPANDED:
+                mBottomSheetCallback.closeBottomSheet();
+                break;
+
+            case BottomSheetBehavior.STATE_SETTLING:
+                // Well, just wait.
+                break;
+
+            case BottomSheetBehavior.STATE_DRAGGING:
+                markPendingActionDone();
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+                markPendingActionDone();
                 break;
         }
     }

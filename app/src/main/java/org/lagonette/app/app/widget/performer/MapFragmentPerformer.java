@@ -90,4 +90,10 @@ public class MapFragmentPerformer {
             mFragment.observeItemClick(callback);
         }
     }
+
+    public void observeMapClick(@Nullable MapsFragment.MapClickCallback callback) {
+        if (mFragment != null) {
+            mFragment.observeMapClick(callback);
+        }
+    }
 }

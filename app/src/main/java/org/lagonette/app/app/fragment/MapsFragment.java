@@ -58,7 +58,6 @@ public class MapsFragment
         extends Fragment
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMapClickListener,
         OnMapReadyCallback {
 
     public static final int STATE_MOVEMENT_IDLE = 0;
@@ -86,6 +85,11 @@ public class MapsFragment
     public interface ItemClickCallback {
 
         void notifyItemClick(@NonNull PartnerItem item);
+    }
+
+    public interface MapClickCallback {
+
+        void notifyMapClick();
     }
 
     public static final String TAG = "MapsFragment";
@@ -140,11 +144,17 @@ public class MapsFragment
 
     private LongSparseArray<PartnerItem> mPartnerItems;
 
+    @Nullable
     private MapMovementCallback mMovementCallback;
 
+    @Nullable
     private ClusterClickCallback mClusterClickCallback;
 
+    @Nullable
     private ItemClickCallback mItemClickCallback;
+
+    @Nullable
+    private MapClickCallback mMapClickCallback;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -382,7 +392,13 @@ public class MapsFragment
                         mClusterManager
                 )
         );
-        mMap.setOnMapClickListener(MapsFragment.this);
+        mMap.setOnMapClickListener(
+                latLng -> {
+                    if (mMapClickCallback != null) {
+                        mMapClickCallback.notifyMapClick();
+                    }
+                }
+        );
         mMap.setOnCameraMoveStartedListener(
                 reason -> {
                     if (mMovementCallback != null) {
@@ -509,11 +525,6 @@ public class MapsFragment
 //        mActivityViewModel.showLocation(partnerItem.getId(), false);
 //        return true;
 //    }
-
-    @Override
-    public void onMapClick(LatLng latLng) {
-//        showFullMap();
-    }
 
 //    private void showFullMap() {
 //        removeSelectedMarker();
@@ -676,6 +687,10 @@ public class MapsFragment
 
     public void observeItemClick(@Nullable ItemClickCallback callback) {
         mItemClickCallback = callback;
+    }
+
+    public void observeMapClick(@Nullable MapClickCallback callback) {
+        mMapClickCallback = callback;
     }
 
 }
