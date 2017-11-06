@@ -673,6 +673,17 @@ public class MapsFragment
         mClusterManager.cluster();
     }
 
+    public void setMapPadding(int left, int top, int right, int bottom) {
+        if (mMap != null) {
+            mMap.setPadding(
+                    left,
+                    top,
+                    right,
+                    bottom
+            );
+        }
+    }
+
     //TODO
     public void errorGettingPartners(boolean noPartnerAtAll) {
         Snackbar

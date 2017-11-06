@@ -1,29 +1,46 @@
 package org.lagonette.app.app.widget.performer;
 
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.MapsFragment;
+import org.lagonette.app.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.app.room.entity.statement.PartnerItem;
 
 public class MapFragmentPerformer {
 
     private MapsFragment mFragment;
 
-    @Nullable
-    private FragmentManager mFragmentManager;
+    @NonNull
+    private final FragmentManager mFragmentManager;
+    
+    @IdRes
+    private int mMapFragmentRes;
 
-    public void inject(@NonNull AppCompatActivity activity) {
+    @Nullable
+    private ParallaxBehavior<View> mBehavior;
+
+    public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes) {
         mFragmentManager = activity.getSupportFragmentManager();
+        mMapFragmentRes = mapFragmentRes;
+    }
+
+    public void inject(@NonNull View view) {
+        View mapFragmentView = view.findViewById(mMapFragmentRes);
+        mBehavior = ParallaxBehavior.from(mapFragmentView);
+
+        mBehavior.setOnParallaxTranslationListener(this::updateVerticalMapPadding);
     }
 
     public void init() {
-        if (mFragmentManager == null) {
+        if (mBehavior == null) {
             throw new IllegalStateException("inject() must be called before init()");
         }
 
@@ -34,7 +51,7 @@ public class MapFragmentPerformer {
     }
 
     public void restore() {
-        if (mFragmentManager == null) {
+        if (mBehavior == null) {
             throw new IllegalStateException("inject() must be called before restore()");
         }
 
@@ -71,6 +88,15 @@ public class MapFragmentPerformer {
         if (mFragment != null) {
             mFragment.stopMoving();
         }
+    }
+
+    public void updateVerticalMapPadding(float vertical) {
+        mFragment.setMapPadding(
+                0,
+                (int) - vertical,
+                0,
+                0
+        );
     }
 
     public void observeMovement(@Nullable MapsFragment.MapMovementCallback callback) {

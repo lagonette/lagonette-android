@@ -38,7 +38,7 @@ public class MapsActivity
     @Override
     protected void construct() {
         mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer();
-        mMapFragmentPerformer = new MapFragmentPerformer();
+        mMapFragmentPerformer = new MapFragmentPerformer(MapsActivity.this, R.id.content);
         mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
         mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
@@ -52,8 +52,7 @@ public class MapsActivity
                 .of(MapsActivity.this)
                 .get(StateMapActivityViewModel.class);
 
-        mMapFragmentPerformer.inject(MapsActivity.this);
-        mBottomSheetFragmentPerformer.inject(MapsActivity.this);
+        mBottomSheetFragmentPerformer.inject(MapsActivity.this); //TODO Pass activity through constructor and inject view if needed with inject method
     }
 
     @Override
@@ -64,6 +63,7 @@ public class MapsActivity
     @Override
     protected void onViewCreated(@NonNull View view) {
         //TODO Change activity lifecycle in BaseActivity
+        mMapFragmentPerformer.inject(view);
         mBottomSheetPerformer.inject(view);
         mFabButtonsPerformer.inject(view);
         mSearchBarPerformer.inject(view);
