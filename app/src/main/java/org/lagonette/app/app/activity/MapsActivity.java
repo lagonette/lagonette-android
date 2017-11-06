@@ -125,6 +125,7 @@ public class MapsActivity
         mBottomSheetPerformer.observe(bottomSheetState::setValue);
 
         bottomSheetFragmentType.observe(MapsActivity.this, mCoordinator::notifyBottomSheetFragmentChanged);
+        bottomSheetFragmentType.observe(MapsActivity.this, mSearchBarPerformer::notifyBottomSheetFragmentChanged);
         bottomSheetState.observe(MapsActivity.this, mCoordinator::notifyBottomSheetStateChanged);
 
         mMapFragmentPerformer.observeMovement(mCoordinator::notifyMapMovementChanged); //TODO Maybe save & restore camera movement into LiveData ?

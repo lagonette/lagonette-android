@@ -2,18 +2,17 @@ package org.lagonette.app.app.widget.performer;
 
 import android.os.Build;
 import android.support.annotation.IdRes;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
+import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.util.UiUtil;
 
@@ -143,5 +142,21 @@ public class SearchBarPerformer {
 
     public void observeSearch(@NonNull SearchObserver observer) {
         mSearchObserver = observer;
+    }
+
+    public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentType bottomSheetFragmentType) {
+        if (mBehavior != null) {
+            switch (bottomSheetFragmentType.getFragmentType()) {
+
+                case BottomSheetFragmentType.FRAGMENT_FILTERS:
+                    mBehavior.disable();
+                    break;
+
+                case BottomSheetFragmentType.FRAGMENT_LOCATION:
+                case BottomSheetFragmentType.FRAGMENT_NONE:
+                    mBehavior.enable();
+                    break;
+            }
+        }
     }
 }
