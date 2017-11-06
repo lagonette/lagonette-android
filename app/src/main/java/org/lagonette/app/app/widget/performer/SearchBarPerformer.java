@@ -75,7 +75,7 @@ public class SearchBarPerformer {
 //            throw new IllegalStateException("inject() must be called before init()");
 //        }
 //
-//        setWorkState(Resource.SUCCESS);
+//        setWorkStatus(Resource.SUCCESS);
 //    }
 //
 //    public void restore(@Resource.Status int workState) {
@@ -83,10 +83,10 @@ public class SearchBarPerformer {
 //            throw new IllegalStateException("inject() must be called before restore()");
 //        }
 //
-//        setWorkState(workState);
+//        setWorkStatus(workState);
 //    }
 
-    public void setWorkState(@Resource.Status int workState) {
+    public void setWorkStatus(@Resource.Status int workState) {
         mWorkStatus = workState;
         switch (mWorkStatus) {
 

@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import org.lagonette.app.R;
-import org.lagonette.app.app.viewmodel.MapViewModel;
-import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.livedata.BottomSheetFragmentTypeLiveData;
@@ -17,7 +15,6 @@ import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.SearchBarPerformer;
-import org.lagonette.app.repo.Resource;
 
 public class MapsActivity
         extends BaseActivity {
@@ -26,8 +23,6 @@ public class MapsActivity
 
     private MainCoordinator mCoordinator;
 
-    private SharedMapsActivityViewModel mSharedViewModel;
-
     private BottomSheetPerformer mBottomSheetPerformer;
 
     private FabButtonsPerformer mFabButtonsPerformer;
@@ -35,8 +30,6 @@ public class MapsActivity
     private BottomSheetFragmentPerformer mBottomSheetFragmentPerformer;
 
     private StateMapActivityViewModel mStateViewModel;
-
-    private MapViewModel mMapViewModel;
 
     private MapFragmentPerformer mMapFragmentPerformer;
 
@@ -55,20 +48,12 @@ public class MapsActivity
                 mMapFragmentPerformer
         );
 
-        mMapFragmentPerformer.inject(MapsActivity.this);
-        mBottomSheetFragmentPerformer.inject(MapsActivity.this);
-
-        mMapViewModel = ViewModelProviders
-                .of(MapsActivity.this)
-                .get(MapViewModel.class);
-
-        mSharedViewModel = ViewModelProviders
-                .of(MapsActivity.this)
-                .get(SharedMapsActivityViewModel.class);
-
         mStateViewModel = ViewModelProviders
                 .of(MapsActivity.this)
                 .get(StateMapActivityViewModel.class);
+
+        mMapFragmentPerformer.inject(MapsActivity.this);
+        mBottomSheetFragmentPerformer.inject(MapsActivity.this);
     }
 
     @Override
@@ -125,7 +110,6 @@ public class MapsActivity
         mBottomSheetPerformer.observe(bottomSheetState::setValue);
 
         bottomSheetFragmentType.observe(MapsActivity.this, mCoordinator::notifyBottomSheetFragmentChanged);
-        bottomSheetFragmentType.observe(MapsActivity.this, mSearchBarPerformer::notifyBottomSheetFragmentChanged);
         bottomSheetState.observe(MapsActivity.this, mCoordinator::notifyBottomSheetStateChanged);
 
         mMapFragmentPerformer.observeMovement(mCoordinator::notifyMapMovementChanged); //TODO Maybe save & restore camera movement into LiveData ?
@@ -139,17 +123,11 @@ public class MapsActivity
         mFabButtonsPerformer.observePositionLongClick(mCoordinator::moveToFootprint);
 
         // Performers -- Interactions
-        mMapViewModel.getMapPartners() //TODO do not use MapViewModel here, but get status by mStateViewModel
-                .observe(
-                        MapsActivity.this,
-                        resource -> mSearchBarPerformer.setWorkState(
-                                resource != null
-                                        ? resource.status
-                                        : Resource.SUCCESS
-                        )
-                );
+        mStateViewModel.getWorkStatus().observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
 
         mSearchBarPerformer.observeSearch(search::setValue);
+
+        bottomSheetFragmentType.observe(MapsActivity.this, mSearchBarPerformer::notifyBottomSheetFragmentChanged);
 
 //        mSharedViewModel
 //                .getWorkInProgress()

@@ -641,23 +641,21 @@ public class MapsFragment
     }
 
     public void dispatchPartnersResource(@NonNull Resource<List<PartnerItem>> partnerResource) {
+        mStateViewModel.setWorkStatus(partnerResource.status);
         switch (partnerResource.status) {
 
             case Resource.ERROR:
                 //TODO
-                mActivityViewModel.setWorkInProgress(false);
                 errorGettingPartners(partnerResource.data.size() == 0);
                 showPartners(partnerResource.data);
                 break;
 
             case Resource.LOADING:
                 //TODO
-                mActivityViewModel.setWorkInProgress(true);
                 showPartners(partnerResource.data);
                 break;
 
             case Resource.SUCCESS:
-                mActivityViewModel.setWorkInProgress(false);
                 showPartners(partnerResource.data);
                 break;
         }
