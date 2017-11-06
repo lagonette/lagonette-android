@@ -2,7 +2,7 @@
 +fixme Last footer missing
 
 +todo Footer -> Use Item decoration ?
-+todo Save info when ViewModel is cleared (onSaveStateInstance ?)
++todo Save info when ViewModel is cleared (onSaveStateInstance ?) https://medium.com/google-developers/viewmodels-persistence-onsaveinstancestate-restoring-ui-state-and-loaders-fc7cc4a6c090
 +todo Primary Keys must be annotated with @NonNull unless they are auto generated => https://issuetracker.google.com/issues/64292391
 +todo Clean DB correctly
 (A) +todo Do API check with retrofit TypeAdapter (Post-processing GSON deserization)
