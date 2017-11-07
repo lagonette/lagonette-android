@@ -1,10 +1,12 @@
 package org.lagonette.app.app.widget.performer;
 
+import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.google.maps.android.clustering.Cluster;
@@ -13,8 +15,22 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.MapsFragment;
 import org.lagonette.app.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.util.UiUtil;
 
 public class MapFragmentPerformer {
+
+    public static class Padding {
+
+        public int parallaxOffset, searchBarOffset, searchBarHeight, statusBarHeight;
+
+        public int getTop() {
+            return statusBarHeight + searchBarHeight + searchBarOffset - parallaxOffset;
+        }
+
+        public int getBottom() {
+            return -parallaxOffset;
+        }
+    }
 
     private MapsFragment mFragment;
 
@@ -27,16 +43,22 @@ public class MapFragmentPerformer {
     @Nullable
     private ParallaxBehavior<View> mBehavior;
 
-    public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes) {
+    @NonNull
+    private final Padding mPadding;
+
+    public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes, @DimenRes int searchBarHeightRes) {
         mFragmentManager = activity.getSupportFragmentManager();
         mMapFragmentRes = mapFragmentRes;
+        mPadding = new Padding();
+        mPadding.statusBarHeight = UiUtil.getStatusBarHeight(activity.getResources());
+        mPadding.searchBarHeight = activity.getResources().getDimensionPixelOffset(searchBarHeightRes);
     }
 
     public void inject(@NonNull View view) {
         View mapFragmentView = view.findViewById(mMapFragmentRes);
         mBehavior = ParallaxBehavior.from(mapFragmentView);
 
-        mBehavior.setOnParallaxTranslationListener(this::updateVerticalMapPadding);
+        mBehavior.setOnParallaxTranslationListener(this::notifyParallaxOffsetChanged);
     }
 
     public void init() {
@@ -90,12 +112,22 @@ public class MapFragmentPerformer {
         }
     }
 
-    public void updateVerticalMapPadding(float vertical) {
+    public void notifySearchBarOffsetChanged(int searchBarOffset) {
+        mPadding.searchBarOffset = searchBarOffset;
+        updateMapPadding();
+    }
+
+    public void notifyParallaxOffsetChanged(float parallaxOffset) {
+        mPadding.parallaxOffset = (int) parallaxOffset;
+        updateMapPadding();
+    }
+
+    private void updateMapPadding() {
         mFragment.setMapPadding(
                 0,
-                (int) - vertical,
+                mPadding.getTop(),
                 0,
-                0
+                mPadding.getBottom()
         );
     }
 

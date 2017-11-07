@@ -23,6 +23,14 @@ public class SearchBarPerformer {
         void notifySearch(@Nullable String search);
     }
 
+    public interface OffsetObserver {
+
+        void notifyOffsetChanged(int offset);
+    }
+
+    @Nullable
+    private OffsetObserver mOffsetObserver;
+
     @Nullable
     private SearchObserver mSearchObserver;
 
@@ -65,6 +73,13 @@ public class SearchBarPerformer {
         mSearchText = view.findViewById(mSearchTextRes);
 
         mBehavior = TopEscapeBehavior.from(mSearchBar);
+        mBehavior.setOnMoveListener(
+                (child, translationY) -> {
+                    if (mOffsetObserver != null) {
+                        mOffsetObserver.notifyOffsetChanged(translationY);
+                    }
+                }
+        );
 
         setupSearchBarMarginTop(mSearchBar);
         setupSearchText(mSearchText);
@@ -142,6 +157,10 @@ public class SearchBarPerformer {
 
     public void observeSearch(@NonNull SearchObserver observer) {
         mSearchObserver = observer;
+    }
+
+    public void observeOffset(@NonNull OffsetObserver observer) {
+        mOffsetObserver = observer;
     }
 
     public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentType bottomSheetFragmentType) {

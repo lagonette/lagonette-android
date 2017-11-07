@@ -38,7 +38,7 @@ public class MapsActivity
     @Override
     protected void construct() {
         mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer();
-        mMapFragmentPerformer = new MapFragmentPerformer(MapsActivity.this, R.id.content);
+        mMapFragmentPerformer = new MapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
         mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
         mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
@@ -126,6 +126,7 @@ public class MapsActivity
         mStateViewModel.getWorkStatus().observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
 
         mSearchBarPerformer.observeSearch(search::setValue);
+        mSearchBarPerformer.observeOffset(mMapFragmentPerformer::notifySearchBarOffsetChanged);
 
         bottomSheetFragmentType.observe(MapsActivity.this, mSearchBarPerformer::notifyBottomSheetFragmentChanged);
 
