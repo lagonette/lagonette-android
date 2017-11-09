@@ -101,7 +101,7 @@ public class BottomSheetFragmentPerformer
     @Override
     public void loadFiltersFragment() {
         if (mFragmentManager != null) {
-            mFragment = FiltersFragment.newInstance(""); //TODO put search string here
+            mFragment = FiltersFragment.newInstance();
             mFragmentManager
                     .beginTransaction()
                     .replace(

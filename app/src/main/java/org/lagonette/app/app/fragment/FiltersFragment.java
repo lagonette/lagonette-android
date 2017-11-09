@@ -22,11 +22,8 @@ public class FiltersFragment
 
     public static final String TAG = "FiltersFragment";
 
-    private static final String ARG_SEARCH = "arg:search";
-
-    public static FiltersFragment newInstance(@NonNull String search) {
-        Bundle args = new Bundle(1);
-        args.putString(ARG_SEARCH, search); //TODO
+    public static FiltersFragment newInstance() {
+        Bundle args = new Bundle(0);
         FiltersFragment fragment = new FiltersFragment();
         fragment.setArguments(args);
         return fragment;

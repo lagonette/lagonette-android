@@ -1,5 +1,6 @@
 package org.lagonette.app.app.activity;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -104,6 +105,7 @@ public class MapsActivity
         BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
         MutableLiveData<String> search = mStateViewModel.getSearch();
+        LiveData<Integer> workStatus = mStateViewModel.getWorkStatus();
 
         // Coordinator -- Observe states
         mBottomSheetFragmentPerformer.observe(bottomSheetFragmentType);
@@ -123,7 +125,7 @@ public class MapsActivity
         mFabButtonsPerformer.observePositionLongClick(mCoordinator::moveToFootprint);
 
         // Performers -- Interactions
-        mStateViewModel.getWorkStatus().observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
+        workStatus.observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
 
         mSearchBarPerformer.observeSearch(search::setValue);
         mSearchBarPerformer.observeOffset(mMapFragmentPerformer::notifySearchBarOffsetChanged);
