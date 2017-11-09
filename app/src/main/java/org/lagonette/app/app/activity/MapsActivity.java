@@ -101,6 +101,8 @@ public class MapsActivity
 
     @Override
     protected void onActivityCreated() {
+        //TODO Check correctly initialisation and conf change.
+        //TODO Do state must be stored in LiveData ?
 
         BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
@@ -124,7 +126,7 @@ public class MapsActivity
         mFabButtonsPerformer.observePositionClick(mCoordinator::moveToMyLocation);
         mFabButtonsPerformer.observePositionLongClick(mCoordinator::moveToFootprint);
 
-        // Performers -- Interactions
+        // Performers -- Interact
         workStatus.observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
 
         mSearchBarPerformer.observeSearch(search::setValue);
