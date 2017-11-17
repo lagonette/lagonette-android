@@ -40,7 +40,7 @@ public class MapsActivity
     protected void construct() {
         mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer();
         mMapFragmentPerformer = new MapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
-        mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
+        mBottomSheetPerformer = new BottomSheetPerformer(MapsActivity.this, R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
         mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
         mCoordinator = new MainCoordinator(
@@ -102,7 +102,7 @@ public class MapsActivity
     @Override
     protected void onActivityCreated() {
         //TODO Check correctly initialisation and conf change.
-        //TODO Do state must be stored in LiveData ?
+        //TODO Do coordinator state must be stored in LiveData ?
 
         BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
         MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
@@ -111,7 +111,7 @@ public class MapsActivity
 
         // Coordinator -- Observe states
         mBottomSheetFragmentPerformer.observe(bottomSheetFragmentType);
-        mBottomSheetPerformer.observe(bottomSheetState::setValue);
+        mBottomSheetPerformer.observeState(bottomSheetState::setValue);
 
         bottomSheetFragmentType.observe(MapsActivity.this, mCoordinator::notifyBottomSheetFragmentChanged);
         bottomSheetState.observe(MapsActivity.this, mCoordinator::notifyBottomSheetStateChanged);

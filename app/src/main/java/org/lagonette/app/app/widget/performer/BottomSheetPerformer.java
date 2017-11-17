@@ -1,13 +1,16 @@
 package org.lagonette.app.app.widget.performer;
 
+import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.util.Log;
 import android.view.View;
 
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
+import org.lagonette.app.util.UiUtil;
 
 import java.lang.annotation.Retention;
 
@@ -39,16 +42,22 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
     @Nullable
     private BottomSheetBehavior<View> mBehavior;
 
+    @Nullable
+    private View mBottomSheet;
+
+    private final int mStatusBarHeight;
+
     @IdRes
     private int mBottomSheetRes;
 
-    public BottomSheetPerformer(int bottomSheetRes) {
+    public BottomSheetPerformer(@NonNull Context context, int bottomSheetRes) {
+        mStatusBarHeight = UiUtil.getStatusBarHeight(context.getResources());
         mBottomSheetRes = bottomSheetRes;
     }
 
     public void inject(@NonNull View view) {
-        View bottomSheet = view.findViewById(mBottomSheetRes);
-        mBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheet = view.findViewById(mBottomSheetRes);
+        mBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
     }
 
@@ -105,10 +114,31 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
 
     @Override
     public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-        // Do nothing
+        // TODO Call an observer, store and pass value through a LiveData, give it to fragment performer, let performer send value to fragment
+        if (mBottomSheet != null) {
+            int top = mBottomSheet.getTop();
+            if (top <= mStatusBarHeight) {
+                Log.wtf("XOXO", "onSlide: " + top);
+                mBottomSheet.setPadding(
+                        0,
+                        mStatusBarHeight - top,
+                        0,
+                        0
+                );
+            }
+            else if (mBottomSheet.getPaddingTop() != 0) {
+                mBottomSheet.setPadding(
+                        0,
+                        0,
+                        0,
+                        0
+                );
+            }
+        }
     }
 
-    public void observe(@Nullable StateObserver stateObserver) {
+    public void observeState(@Nullable StateObserver stateObserver) {
         mStateObserver = stateObserver;
     }
+
 }

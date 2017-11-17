@@ -375,7 +375,7 @@ public class MapsFragment
     }
 
     private void setupMap() {
-        mMap.setPadding(0, mStatusBarHeight, 0, 0);
+        mMap.setPadding(0, mStatusBarHeight, 0, 0); // TODO Useless ?
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
