@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,7 @@ import org.lagonette.app.util.IntentUtil;
 import org.lagonette.app.util.SnackbarUtil;
 
 public class LocationDetailFragment
-        extends Fragment
+        extends SlideableFragment
         implements View.OnClickListener {
 
     public static final String TAG = "LocationDetailFragment";
@@ -38,6 +37,8 @@ public class LocationDetailFragment
     }
 
     private LocationDetailViewModel mViewModel;
+
+    private View mHeaderView;
 
     private TextView mNameTextView;
 
@@ -111,6 +112,8 @@ public class LocationDetailFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 //        mBackImageButton = view.findViewById(R.id.back);
+
+        mHeaderView = view.findViewById(R.id.fragment_header);
 
         mPartnerTypeTextView = view.findViewById(R.id.type_partner);
 
@@ -341,6 +344,11 @@ public class LocationDetailFragment
         if (!success) {
             errorNoEmailAppFound();
         }
+    }
+
+    @Override
+    public void updateTopPadding(int top) {
+        mHeaderView.setPadding(0, top, 0, 0);
     }
 
 }

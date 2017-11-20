@@ -1,8 +1,8 @@
 package org.lagonette.app.app.widget.performer;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.FiltersFragment;
 import org.lagonette.app.app.fragment.LocationDetailFragment;
+import org.lagonette.app.app.fragment.SlideableFragment;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
+import org.lagonette.app.util.UiUtil;
 
 public class BottomSheetFragmentPerformer
         implements MainCoordinator.FragmentLoader {
@@ -26,13 +28,28 @@ public class BottomSheetFragmentPerformer
 
     }
 
+    public interface Slideable {
+
+        void updateTopPadding(int topPadding);
+
+    }
+
     @Nullable
-    private Fragment mFragment;
+    private SlideableFragment mFragment;
 
     private Observer mObserver;
 
     @Nullable
     private FragmentManager mFragmentManager;
+
+    private int mTopPadding;
+
+    private int mStatusBarHeight;
+
+    public BottomSheetFragmentPerformer(@NonNull Resources resources) {
+        mStatusBarHeight = UiUtil.getStatusBarHeight(resources);
+        mTopPadding = 0;
+    }
 
     public void inject(@NonNull AppCompatActivity activity) {
         mFragmentManager = activity.getSupportFragmentManager();
@@ -58,11 +75,11 @@ public class BottomSheetFragmentPerformer
                 break;
 
             case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                mFragment = mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
+                mFragment = (SlideableFragment) mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
                 break;
 
             case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                mFragment = mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
+                mFragment = (SlideableFragment) mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
                 break;
         }
     }
@@ -138,6 +155,18 @@ public class BottomSheetFragmentPerformer
 
             if (mObserver != null) {
                 mObserver.notifyLocationLoaded(locationId);
+            }
+        }
+    }
+
+    public void updateTopPadding(int top) {
+        if (mFragment != null) {
+            if (top <= mStatusBarHeight) {
+                mTopPadding = mStatusBarHeight - top;
+                mFragment.updateTopPadding(mTopPadding);
+            }
+            else if (mTopPadding != 0) {
+                mFragment.updateTopPadding(0);
             }
         }
     }
