@@ -31,6 +31,8 @@ public class FiltersFragment
 
     private StateMapActivityViewModel mStateViewModel;
 
+    private View mFilterContainer;
+
     private RecyclerView mFilterList;
 
     private FilterAdapter mFilterAdapter;
@@ -96,6 +98,7 @@ public class FiltersFragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        mFilterContainer = view.findViewById(R.id.filter_container);
         mFilterList = view.findViewById(R.id.filter_list);
     }
 
@@ -117,7 +120,7 @@ public class FiltersFragment
 
     @Override
     public void updateTopPadding(int top) {
-        mFilterList.setPadding(0, top, 0, 0);
+        mFilterContainer.setPadding(0, top, 0, 0);
     }
 
 }
