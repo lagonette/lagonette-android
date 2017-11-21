@@ -38,7 +38,7 @@ public class MapsActivity
 
     @Override
     protected void construct() {
-        mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(getResources());
+        mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(getResources(), R.dimen.search_bar_supposed_height);
         mMapFragmentPerformer = new MapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
         mBottomSheetPerformer = new BottomSheetPerformer(MapsActivity.this, R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
@@ -130,10 +130,15 @@ public class MapsActivity
         workStatus.observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
 
         mSearchBarPerformer.observeSearch(search::setValue);
-        mSearchBarPerformer.observeOffset(mMapFragmentPerformer::notifySearchBarOffsetChanged);
+        mSearchBarPerformer.observeOffset(
+                offset -> {
+                    mMapFragmentPerformer.notifySearchBarOffsetChanged(offset);
+                    mBottomSheetFragmentPerformer.notifySearchBarOffsetChanged(offset);
+                }
+        );
 
         // TODO store and pass value through a LiveData, give it to fragment performer, let performer send value to fragment
-        mBottomSheetPerformer.observeSlide(mBottomSheetFragmentPerformer::updateTopPadding);
+        mBottomSheetPerformer.observeSlide(mBottomSheetFragmentPerformer::notifyBottomSheetSlide);
 
         bottomSheetFragmentType.observe(MapsActivity.this, mSearchBarPerformer::notifyBottomSheetFragmentChanged);
 

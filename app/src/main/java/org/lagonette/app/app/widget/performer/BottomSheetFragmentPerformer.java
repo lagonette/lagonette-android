@@ -1,6 +1,7 @@
 package org.lagonette.app.app.widget.performer;
 
 import android.content.res.Resources;
+import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -34,6 +35,33 @@ public class BottomSheetFragmentPerformer
 
     }
 
+    public static class Padding {
+
+        public int bottomSheetTop, searchBarHeight, searchBarOffset, statusBarHeight;
+
+        private int mTopPadding;
+
+        // TODO Do not use searchBarHeight, use an inverted offset or something else
+        public boolean updateTop() {
+            int limit = statusBarHeight + searchBarHeight + searchBarOffset;
+            if (bottomSheetTop <= limit) {
+                mTopPadding = limit - bottomSheetTop;
+                return true;
+            }
+            else if (mTopPadding != 0) {
+                mTopPadding = 0;
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        public int getTop() {
+            return mTopPadding;
+        }
+    }
+
     @Nullable
     private SlideableFragment mFragment;
 
@@ -42,13 +70,15 @@ public class BottomSheetFragmentPerformer
     @Nullable
     private FragmentManager mFragmentManager;
 
-    private int mTopPadding;
+    @NonNull
+    private Padding mPadding;
 
-    private int mStatusBarHeight;
-
-    public BottomSheetFragmentPerformer(@NonNull Resources resources) {
-        mStatusBarHeight = UiUtil.getStatusBarHeight(resources);
-        mTopPadding = 0;
+    public BottomSheetFragmentPerformer(@NonNull Resources resources, @DimenRes int searchBarHeightRes) {
+        mPadding = new Padding();
+        mPadding.statusBarHeight = UiUtil.getStatusBarHeight(resources);
+        mPadding.searchBarHeight = resources.getDimensionPixelOffset(searchBarHeightRes);
+        mPadding.searchBarOffset = 0;
+        mPadding.bottomSheetTop = 0;
     }
 
     public void inject(@NonNull AppCompatActivity activity) {
@@ -159,15 +189,19 @@ public class BottomSheetFragmentPerformer
         }
     }
 
-    public void updateTopPadding(int top) {
-        if (mFragment != null) {
-            if (top <= mStatusBarHeight) {
-                mTopPadding = mStatusBarHeight - top;
-                mFragment.updateTopPadding(mTopPadding);
-            }
-            else if (mTopPadding != 0) {
-                mFragment.updateTopPadding(0);
-            }
+    public void notifySearchBarOffsetChanged(int searchBarOffset) {
+        mPadding.searchBarOffset = searchBarOffset;
+        updateBottomSheetTopPadding();
+    }
+
+    public void notifyBottomSheetSlide(int top) {
+        mPadding.bottomSheetTop = top;
+        updateBottomSheetTopPadding();
+    }
+
+    private void updateBottomSheetTopPadding() {
+        if (mFragment != null && mPadding.updateTop()) {
+            mFragment.updateTopPadding(mPadding.getTop());
         }
     }
 

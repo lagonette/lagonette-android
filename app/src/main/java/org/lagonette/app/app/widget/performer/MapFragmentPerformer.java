@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.google.maps.android.clustering.Cluster;
@@ -23,6 +22,7 @@ public class MapFragmentPerformer {
 
         public int parallaxOffset, searchBarOffset, searchBarHeight, statusBarHeight;
 
+        // TODO Do not use searchBarHeight, use an inverted offset or something else
         public int getTop() {
             return statusBarHeight + searchBarHeight + searchBarOffset - parallaxOffset;
         }
