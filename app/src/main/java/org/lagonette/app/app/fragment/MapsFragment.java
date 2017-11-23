@@ -38,7 +38,6 @@ import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 import org.json.JSONException;
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.MapViewModel;
-import org.lagonette.app.app.viewmodel.SharedMapsActivityViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.repo.Resource;
@@ -102,15 +101,9 @@ public class MapsFragment
 
     private static final String STATE_ASK_FOR_MY_LOCATION_PERMISSION = "state:ask_for_my_location_permission";
 
-//    private static final String STATE_SELECTED_MARKER_POSITION = "state:selected_marker_position";
-
-//    private static final String STATE_SELECTED_MARKER_ID = "state:selected_marker_id";
-
     public static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
     private MapViewModel mViewModel;
-
-    private SharedMapsActivityViewModel mActivityViewModel; //TODO Remove
 
     private StateMapActivityViewModel mStateViewModel;
 
@@ -129,12 +122,6 @@ public class MapsFragment
     private double mStartLongitude;
 
     private float mStartZoom;
-
-//    private Marker mSelectedMarker;
-
-//    private LatLng mSelectedMarkerPosition = null;
-
-//    private long mSelectedMarkerId = Statement.NO_ID;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -166,12 +153,6 @@ public class MapsFragment
 
         if (savedInstanceState != null) {
             mConfChanged = true;
-//            mSelectedMarkerPosition = savedInstanceState.getParcelable(
-//                    STATE_SELECTED_MARKER_POSITION
-//            );
-//            mSelectedMarkerId = savedInstanceState.getLong(
-//                    STATE_SELECTED_MARKER_ID
-//            );
             mAskFormMyPositionPermission = savedInstanceState.getBoolean(
                     STATE_ASK_FOR_MY_LOCATION_PERMISSION
             );
@@ -199,10 +180,6 @@ public class MapsFragment
                 .of(MapsFragment.this)
                 .get(MapViewModel.class);
 
-        mActivityViewModel = ViewModelProviders
-                .of(getActivity())
-                .get(SharedMapsActivityViewModel.class);
-
         mStateViewModel = ViewModelProviders
                 .of(getActivity())
                 .get(StateMapActivityViewModel.class);
@@ -213,35 +190,6 @@ public class MapsFragment
                         MapsFragment.this,
                         mViewModel.getSearch()::setValue
                 );
-
-//        mActivityViewModel
-//                .getSearch()
-//                .observe(
-//                        MapsFragment.this,
-//                        search -> mViewModel
-//                                .getSearch()
-//                                .send(search)
-//                );
-
-//        mActivityViewModel
-//                .getMapMovement()
-//                .observe(
-//                        MapsFragment.this,
-//                        integer -> {
-//                            if (integer != null) {
-//                                @MapMovement.Movement int mapMovement = integer;
-//                                switch (mapMovement) {
-//                                    case MapMovement.FOOTPRINT:
-//                                        moveToFootprint();
-//                                        break;
-//                                    case MapMovement.MY_LOCATION:
-//                                    default:
-//                                        moveToMyLocation();
-//                                        break;
-//                                }
-//                            }
-//                        }
-//                );
     }
 
     //TODO Use firebase to find broken data
@@ -267,10 +215,6 @@ public class MapsFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_ASK_FOR_MY_LOCATION_PERMISSION, mAskFormMyPositionPermission);
-//        if (mSelectedMarker != null) {
-//            outState.putParcelable(STATE_SELECTED_MARKER_POSITION, mSelectedMarker.getPosition());
-//            outState.putLong(STATE_SELECTED_MARKER_ID, mSelectedMarkerId);
-//        }
     }
 
     @Override
@@ -304,24 +248,11 @@ public class MapsFragment
         mMap = googleMap;
         setupMap();
         setupFootprint();
-        mActivityViewModel.callMapIsReady();
 
         mViewModel.getMapPartners().observe(
                 MapsFragment.this,
                 this::dispatchPartnersResource
         );
-
-        mActivityViewModel
-                .getMapPadding()
-                .observe(
-                        MapsFragment.this,
-                        paddings -> mMap.setPadding(
-                                paddings[0],
-                                paddings[1],
-                                paddings[2],
-                                paddings[3]
-                        )
-                );
     }
 
     @Override
@@ -389,74 +320,58 @@ public class MapsFragment
                     ),
                     mStartZoom
             ));
-        } /*else if (mSelectedMarkerPosition != null) {
-            addSelectedMarker(mSelectedMarkerId, mSelectedMarkerPosition);
-            mSelectedMarkerPosition = null;
-        }*/
 
-        mClusterManager = new ClusterManager<>(getContext(), mMap);
-        mClusterManager.setRenderer(
-                new PartnerRenderer(
-                        getContext(),
-                        LayoutInflater.from(getContext()),
-                        mMap,
-                        mClusterManager
-                )
-        );
-        mMap.setOnMapClickListener(
-                latLng -> {
-                    if (mMapClickCallback != null) {
-                        mMapClickCallback.notifyMapClick();
+            mClusterManager = new ClusterManager<>(getContext(), mMap);
+            mClusterManager.setRenderer(
+                    new PartnerRenderer(
+                            getContext(),
+                            LayoutInflater.from(getContext()),
+                            mMap,
+                            mClusterManager
+                    )
+            );
+            mMap.setOnMapClickListener(
+                    latLng -> {
+                        if (mMapClickCallback != null) {
+                            mMapClickCallback.notifyMapClick();
+                        }
                     }
-                }
-        );
-        mMap.setOnCameraMoveStartedListener(
-                reason -> {
-                    if (mMovementCallback != null) {
-                        mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_MOVE);
+            );
+            mMap.setOnCameraMoveStartedListener(
+                    reason -> {
+                        if (mMovementCallback != null) {
+                            mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_MOVE);
+                        }
                     }
-                }
-        );
-        mMap.setOnCameraIdleListener(
-                () -> {
-                    mClusterManager.onCameraIdle();
-                    if (mMovementCallback != null) {
-                        mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_IDLE);
+            );
+            mMap.setOnCameraIdleListener(
+                    () -> {
+                        mClusterManager.onCameraIdle();
+                        if (mMovementCallback != null) {
+                            mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_IDLE);
+                        }
                     }
-                }
-        );
-        mMap.setOnMarkerClickListener(mClusterManager);
-//        mMap.setOnMarkerClickListener(marker -> { //TODO Factorize ?
-//            // If cluster manager do not manage marker then the user has probably clicked on the selected marker.
-//            // If so, we simulate a click on the marker behind.
-//            if (!mClusterManager.onMarkerClick(marker)) {
-////                if (marker.getId().equals(mSelectedMarker.getId())) {
-//////                    mActivityViewModel.showLocation(mSelectedMarkerId, false);
-////                    return true;
-////                } else {
-//                    return false;
-////                }
-//            }
-//            return true;
-//        });
-        mClusterManager.setOnClusterClickListener(
-                cluster -> {
-                    if (mClusterClickCallback != null) {
-                        mClusterClickCallback.notifyClusterClick(cluster);
-                        return true;
+            );
+            mMap.setOnMarkerClickListener(mClusterManager);
+            mClusterManager.setOnClusterClickListener(
+                    cluster -> {
+                        if (mClusterClickCallback != null) {
+                            mClusterClickCallback.notifyClusterClick(cluster);
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
-                }
-        );
-        mClusterManager.setOnClusterItemClickListener(
-                item -> {
-                    if (mItemClickCallback != null) {
-                        mItemClickCallback.notifyItemClick(item);
-                        return true;
+            );
+            mClusterManager.setOnClusterItemClickListener(
+                    item -> {
+                        if (mItemClickCallback != null) {
+                            mItemClickCallback.notifyItemClick(item);
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
-                }
-        );
+            );
+        }
     }
 
     private void setupFootprint() {
@@ -479,46 +394,12 @@ public class MapsFragment
                 item.getPosition().latitude,
                 item.getPosition().longitude
         );
-//            addSelectedMarker(partnerItem.getId(), latLng);
-//        if (zoom) {
-            mMap.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
-                    ANIMATION_LENGTH_LONG,
-                    null
-            );
-//        } else {
-//            mMap.animateCamera(
-//                    CameraUpdateFactory.newLatLng(latLng),
-//                    ANIMATION_LENGTH_SHORT,
-//                    callback
-//            );
-//        }
+        mMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
+                ANIMATION_LENGTH_LONG,
+                null
+        );
     }
-
-//    public void showPartner(long id, boolean zoom, @Nullable GoogleMap.CancelableCallback callback) {
-////        removeSelectedMarker();
-//        PartnerItem partnerItem = mPartnerItems.get(id);
-//        if (partnerItem != null) {
-//            LatLng latLng = new LatLng( //TODO Why not just getPosition ?
-//                    partnerItem.getPosition().latitude,
-//                    partnerItem.getPosition().longitude
-//            );
-////            addSelectedMarker(partnerItem.getId(), latLng);
-//            if (zoom) {
-//                mMap.animateCamera(
-//                        CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
-//                        ANIMATION_LENGTH_LONG,
-//                        callback
-//                );
-//            } else {
-//                mMap.animateCamera(
-//                        CameraUpdateFactory.newLatLng(latLng),
-//                        ANIMATION_LENGTH_SHORT,
-//                        callback
-//                );
-//            }
-//        }
-//    }
 
     public boolean moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
         mMap.animateCamera(
@@ -531,33 +412,6 @@ public class MapsFragment
         );
         return true;
     }
-
-//    public boolean onClusterItemClick(PartnerItem partnerItem) {
-//        mActivityViewModel.showLocation(partnerItem.getId(), false);
-//        return true;
-//    }
-
-//    private void showFullMap() {
-//        removeSelectedMarker();
-//        mActivityViewModel.showFullMap();
-//    }
-
-//    private void addSelectedMarker(long partnerId, @NonNull LatLng position) {
-//        mSelectedMarker = mMap.addMarker(
-//                new MarkerOptions()
-//                        .position(position)
-//                        .zIndex(1f)
-//        );
-//        mSelectedMarkerId = partnerId;
-//    }
-
-//    private void removeSelectedMarker() {
-//        if (mSelectedMarker != null) {
-//            mSelectedMarker.remove();
-//            mSelectedMarker = null;
-//            mSelectedMarkerId = Statement.NO_ID;
-//        }
-//    }
 
     public void moveToMyLocation() {
         Location lastLocation = getLastLocation();
@@ -601,7 +455,7 @@ public class MapsFragment
 
         boolean permission = checkLocationPermission();
         mMap.setMyLocationEnabled(permission);
-        mActivityViewModel.setEnableMyPositionFAB(permission);
+        //TODO Check the behavior when MyPosition Fab is not enabled
     }
 
     public Location getLastLocation() {

@@ -65,9 +65,6 @@ public class FiltersFragment
 
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
         mFilterAdapter.setHasStableIds(true);
-//        mFilterAdapter.setOnLocationClickListener(
-//                locationId -> mActivityViewModel.showLocation(locationId, true)
-//        );
         mFilterAdapter.setOnLocationVisibilityClickListener(
                 (locationId, visibility) -> mFiltersViewModel.setLocationVisibility(locationId, visibility)
         );

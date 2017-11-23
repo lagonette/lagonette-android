@@ -141,76 +141,7 @@ public class MapsActivity
         mBottomSheetPerformer.observeSlide(mBottomSheetFragmentPerformer::notifyBottomSheetSlide);
 
         bottomSheetFragmentType.observe(MapsActivity.this, mSearchBarPerformer::notifyBottomSheetFragmentChanged);
-
-//        mSharedViewModel
-//                .getWorkInProgress()
-//                .observe(
-//                        MapsActivity.this,
-//                        workInProgress -> {
-//                            if (workInProgress != null && workInProgress) {
-//                                mCoordinator.showProgressBar();
-//                            } else {
-//                                mCoordinator.hideProgressBar();
-//                            }
-//                        }
-//                );
-
-//        mSharedViewModel
-//                .getMapIsReady()
-//                .observe(
-//                        MapsActivity.this,
-//                        aVoid -> mCoordinator.onMapReady()
-//                );
-
-//        mSharedViewModel
-//                .getEnableMyPositionFAB()
-//                .observe(
-//                        MapsActivity.this,
-//                        enable -> {
-//                            if (enable != null && enable) {
-//                                mCoordinator.showMyLocationButton();
-//                            } else {
-//                                mCoordinator.hideMyLocationButton();
-//                            }
-//                        }
-//                );
-
-//        mSharedViewModel
-//                .getShowLocationRequest()
-//                .observe(
-//                        MapsActivity.this,
-//                        request -> {
-//                            if (request != null) {
-//                                showLocation(
-//                                        request.locationId,
-//                                        request.zoom
-//                                );
-//                            } else {
-//                                showFullMap();
-//                            }
-//                        }
-//                );
-
-        //TODO Maybe make interface to send data xor just observe data, like LiveEvent but for LiveData
-        //TODO Maybe use LiveData to exchange info between Coordinator & Activity?
-//        mCoordinator = new OldMainCoordinator(
-//                MapsActivity.this,
-//                search -> mSharedViewModel.search(search),
-//                mSharedViewModel.getMapMovementSender(),
-//                () -> SoftKeyboardUtil.hideSoftKeyboard(MapsActivity.this),
-//                topPadding ->  mSharedViewModel.getMapTopPadding().setValue(topPadding),
-//                bottomPadding ->  mSharedViewModel.getMapBottomPadding().setValue(bottomPadding),
-//                MapsActivity.this
-//        );
-//        mCoordinator.inject(findViewById(android.R.id.content));
-//        mCoordinator.start(savedInstanceState);
     }
-
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        mCoordinator.onRestoreInstanceState(savedInstanceState);
-//    }
 
     @Override
     public void onBackPressed() {
@@ -218,21 +149,5 @@ public class MapsActivity
             super.onBackPressed();
         }
     }
-
-//    public void showFullMap() {
-//        mCoordinator.focusOnMap();
-//        mCoordinator.closeBottomSheet();
-//    }
-
-//    public void showLocation(long locationId, boolean zoom) {
-//        mCoordinator.focusOnMap();
-//        mCoordinator.showLocation(locationId, zoom);
-//    }
-
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        mCoordinator.onSaveInstanceState(outState);
-//    }
 
 }
