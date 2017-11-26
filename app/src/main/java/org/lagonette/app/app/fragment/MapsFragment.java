@@ -312,6 +312,57 @@ public class MapsFragment
 
         updateLocationUI();
 
+        mClusterManager = new ClusterManager<>(getContext(), mMap);
+        mClusterManager.setRenderer(
+                new PartnerRenderer(
+                        getContext(),
+                        LayoutInflater.from(getContext()),
+                        mMap,
+                        mClusterManager
+                )
+        );
+        mMap.setOnMapClickListener(
+                latLng -> {
+                    if (mMapClickCallback != null) {
+                        mMapClickCallback.notifyMapClick();
+                    }
+                }
+        );
+        mMap.setOnCameraMoveStartedListener(
+                reason -> {
+                    if (mMovementCallback != null) {
+                        mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_MOVE);
+                    }
+                }
+        );
+        mMap.setOnCameraIdleListener(
+                () -> {
+                    mClusterManager.onCameraIdle();
+                    if (mMovementCallback != null) {
+                        mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_IDLE);
+                    }
+                }
+        );
+        mMap.setOnMarkerClickListener(mClusterManager);
+        mClusterManager.setOnClusterClickListener(
+                cluster -> {
+                    if (mClusterClickCallback != null) {
+                        mClusterClickCallback.notifyClusterClick(cluster);
+                        return true;
+                    }
+                    return false;
+                }
+        );
+        mClusterManager.setOnClusterItemClickListener(
+                item -> {
+                    if (mItemClickCallback != null) {
+                        mItemClickCallback.notifyItemClick(item);
+                        return true;
+                    }
+                    return false;
+                }
+        );
+
         if (!mConfChanged) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(
@@ -320,57 +371,6 @@ public class MapsFragment
                     ),
                     mStartZoom
             ));
-
-            mClusterManager = new ClusterManager<>(getContext(), mMap);
-            mClusterManager.setRenderer(
-                    new PartnerRenderer(
-                            getContext(),
-                            LayoutInflater.from(getContext()),
-                            mMap,
-                            mClusterManager
-                    )
-            );
-            mMap.setOnMapClickListener(
-                    latLng -> {
-                        if (mMapClickCallback != null) {
-                            mMapClickCallback.notifyMapClick();
-                        }
-                    }
-            );
-            mMap.setOnCameraMoveStartedListener(
-                    reason -> {
-                        if (mMovementCallback != null) {
-                            mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_MOVE);
-                        }
-                    }
-            );
-            mMap.setOnCameraIdleListener(
-                    () -> {
-                        mClusterManager.onCameraIdle();
-                        if (mMovementCallback != null) {
-                            mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_IDLE);
-                        }
-                    }
-            );
-            mMap.setOnMarkerClickListener(mClusterManager);
-            mClusterManager.setOnClusterClickListener(
-                    cluster -> {
-                        if (mClusterClickCallback != null) {
-                            mClusterClickCallback.notifyClusterClick(cluster);
-                            return true;
-                        }
-                        return false;
-                    }
-            );
-            mClusterManager.setOnClusterItemClickListener(
-                    item -> {
-                        if (mItemClickCallback != null) {
-                            mItemClickCallback.notifyItemClick(item);
-                            return true;
-                        }
-                        return false;
-                    }
-            );
         }
     }
 
