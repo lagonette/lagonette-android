@@ -2,42 +2,26 @@ package org.lagonette.app.app.widget.performer;
 
 import android.content.Context;
 import android.support.annotation.IdRes;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
+import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.util.UiUtil;
-
-import java.lang.annotation.Retention;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallback
         implements MainCoordinator.BottomSheetCallback {
 
     public interface StateObserver {
 
-        void notifyBottomSheetStateChanged(@BottomSheetPerformer.State int newState);
+        void notifyBottomSheetStateChanged(@MainState.State int newState);
     }
 
     public interface SlideObserver {
 
         void notifyBottomSheetTopChanged(int top);
-    }
-
-    @Retention(SOURCE)
-    @IntDef({
-            BottomSheetBehavior.STATE_DRAGGING,
-            BottomSheetBehavior.STATE_SETTLING,
-            BottomSheetBehavior.STATE_EXPANDED,
-            BottomSheetBehavior.STATE_COLLAPSED,
-            BottomSheetBehavior.STATE_HIDDEN
-    })
-    public @interface State {
-
     }
 
     @Nullable
@@ -68,7 +52,7 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
     }
 
-    public void init(@BottomSheetPerformer.State int initState) {
+    public void init(@MainState.State int initState) {
         if (mBehavior == null) {
             throw new IllegalStateException("inject() must be called before init()");
         }
@@ -76,7 +60,7 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
         mBehavior.setState(initState);
     }
 
-    public void restore(@BottomSheetPerformer.State int restoredState) {
+    public void restore(@MainState.State int restoredState) {
         if (mBehavior == null) {
             throw new IllegalStateException("inject() must be called before restore()");
         }
@@ -113,7 +97,7 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
     }
 
     @Override
-    public void onStateChanged(@NonNull View bottomSheet, @BottomSheetPerformer.State int newState) {
+    public void onStateChanged(@NonNull View bottomSheet, @MainState.State int newState) {
         if (mStateObserver != null) {
             mStateObserver.notifyBottomSheetStateChanged(newState);
         }

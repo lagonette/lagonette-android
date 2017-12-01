@@ -11,6 +11,8 @@ public class BottomSheetFragmentTypeLiveData
         extends LiveData<BottomSheetFragmentType>
         implements BottomSheetFragmentPerformer.Observer {
 
+    //TODO Do not implement BottomSheetFragmentPerformer.Observer
+
     @Nullable
     private BottomSheetFragmentType mNone;
 
@@ -36,7 +38,7 @@ public class BottomSheetFragmentTypeLiveData
     }
 
     @NonNull
-    private BottomSheetFragmentType getNone() {
+    public BottomSheetFragmentType getNone() {
         if (mNone == null) {
             mNone = BottomSheetFragmentType.none();
         }

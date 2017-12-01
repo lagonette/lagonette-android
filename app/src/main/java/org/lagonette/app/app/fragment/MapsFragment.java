@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -39,6 +38,7 @@ import org.json.JSONException;
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
+import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.PartnerItem;
@@ -47,8 +47,6 @@ import org.lagonette.app.util.SnackbarUtil;
 import org.lagonette.app.util.UiUtil;
 
 import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 public class MapsFragment
@@ -57,21 +55,9 @@ public class MapsFragment
         GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback {
 
-    public static final int STATE_MOVEMENT_IDLE = 0;
-
-    public static final int STATE_MOVEMENT_MOVE = 1;
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({
-            STATE_MOVEMENT_IDLE,
-            STATE_MOVEMENT_MOVE
-    })
-    public @interface Movement {
-    }
-
     public interface MapMovementCallback {
 
-        void notifyMapMovementState(@Movement int newState);
+        void notifyMapMovementState(@MainState.Movement int newState);
     }
 
     public interface ClusterClickCallback {
@@ -331,7 +317,7 @@ public class MapsFragment
         mMap.setOnCameraMoveStartedListener(
                 reason -> {
                     if (mMovementCallback != null) {
-                        mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_MOVE);
+                        mMovementCallback.notifyMapMovementState(MainState.STATE_MOVEMENT_MOVE);
                     }
                 }
         );
@@ -339,7 +325,7 @@ public class MapsFragment
                 () -> {
                     mClusterManager.onCameraIdle();
                     if (mMovementCallback != null) {
-                        mMovementCallback.notifyMapMovementState(STATE_MOVEMENT_IDLE);
+                        mMovementCallback.notifyMapMovementState(MainState.STATE_MOVEMENT_IDLE);
                     }
                 }
         );

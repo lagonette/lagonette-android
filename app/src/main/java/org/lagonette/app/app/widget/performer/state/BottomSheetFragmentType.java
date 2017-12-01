@@ -8,7 +8,7 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-public class BottomSheetFragmentType{
+public class BottomSheetFragmentType {
 
     public static final int FRAGMENT_NONE = 0;
 
