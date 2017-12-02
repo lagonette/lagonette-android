@@ -65,7 +65,7 @@ public class MapsActivity
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
 
-        mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(getResources(), R.dimen.search_bar_supposed_height);
+        mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(MapsActivity.this, getResources(), R.dimen.search_bar_supposed_height);
         mMapFragmentPerformer = new MapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
         mBottomSheetPerformer = new BottomSheetPerformer(MapsActivity.this, R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
@@ -77,8 +77,6 @@ public class MapsActivity
                 mBottomSheetFragmentPerformer,
                 mMapFragmentPerformer
         );
-
-        mBottomSheetFragmentPerformer.inject(MapsActivity.this); //TODO Pass activity through constructor and inject view if needed with inject method
     }
 
     @Override
@@ -88,7 +86,6 @@ public class MapsActivity
 
     @Override
     protected void onViewCreated(@NonNull View view) {
-        //TODO Change activity lifecycle in BaseActivity
         mMapFragmentPerformer.inject(view);
         mBottomSheetPerformer.inject(view);
         mFabButtonsPerformer.inject(view);
@@ -113,8 +110,8 @@ public class MapsActivity
         //TODO Check correctly initialisation and conf change.
 
         // Performer's action --> LiveData
-        mMapFragmentPerformer.observeClusterClick(mAction::moveToCluster); //TODO Maybe save & restore click state into LiveData ?
-        mMapFragmentPerformer.observeItemClick(mAction::moveToLocation); //TODO Maybe save & restore click state into LiveData ?
+        mMapFragmentPerformer.observeClusterClick(mAction::moveToCluster);
+        mMapFragmentPerformer.observeItemClick(mAction::moveToLocation);
         mMapFragmentPerformer.observeMapClick(mAction::showFullMap);
         mFabButtonsPerformer.observeFiltersClick(mAction::openFilters);
         mFabButtonsPerformer.observePositionClick(mAction::moveToMyLocation);
@@ -124,7 +121,7 @@ public class MapsActivity
 
         // Performer's state --> LiveData
         mBottomSheetPerformer.observeState(mState::notifyBottomSheetStateChanged);
-        mMapFragmentPerformer.observeMovement(mState::notifyMapMovementChanged); //TODO Maybe save & restore camera movement into LiveData ?
+        mMapFragmentPerformer.observeMovement(mState::notifyMapMovementChanged);
         mBottomSheetFragmentPerformer.observe(mBottomSheetFragmentType);
 
         // LiveData --> Performer, Coordinator

@@ -73,16 +73,13 @@ public class BottomSheetFragmentPerformer
     @NonNull
     private Padding mPadding;
 
-    public BottomSheetFragmentPerformer(@NonNull Resources resources, @DimenRes int searchBarHeightRes) {
+    public BottomSheetFragmentPerformer(@NonNull AppCompatActivity activity, @NonNull Resources resources, @DimenRes int searchBarHeightRes) {
         mPadding = new Padding();
+        mFragmentManager = activity.getSupportFragmentManager();
         mPadding.statusBarHeight = UiUtil.getStatusBarHeight(resources);
         mPadding.searchBarHeight = resources.getDimensionPixelOffset(searchBarHeightRes);
         mPadding.searchBarOffset = 0;
         mPadding.bottomSheetTop = 0;
-    }
-
-    public void inject(@NonNull AppCompatActivity activity) {
-        mFragmentManager = activity.getSupportFragmentManager();
     }
 
     public void init(@NonNull BottomSheetFragmentType type) {
