@@ -37,10 +37,17 @@ public class StateMapActivityViewModel extends AndroidViewModel {
 
     public StateMapActivityViewModel(Application application) {
         super(application);
-        mMainStatefulActionLiveData = new MainStatefulActionLiveData();
+
         mBottomSheetFragmentTypeLiveData = new BottomSheetFragmentTypeLiveData();
-        mMainActionLiveData = new MainActionLiveData(new MainAction());
-        mMainStateLiveData = new MainStateLiveData(new MainState(mBottomSheetFragmentTypeLiveData.getNone()));
+
+        MainStatefulAction statefulAction = new MainStatefulAction(
+                new MainAction(),
+                new MainState(mBottomSheetFragmentTypeLiveData.getNone())
+        );
+
+        mMainStatefulActionLiveData = new MainStatefulActionLiveData(statefulAction);
+        mMainActionLiveData = new MainActionLiveData(statefulAction.action);
+        mMainStateLiveData = new MainStateLiveData(statefulAction.state);
         mSearch = new MutableLiveData<>();
         mWorkStatus = new MutableLiveData<>();
 
@@ -57,7 +64,7 @@ public class StateMapActivityViewModel extends AndroidViewModel {
                 mMainStateLiveData::notifyBottomSheetFragmentChanged
         );
 
-        mSearch.setValue("");
+        mSearch.setValue(""); //TODO Maybe this is should be done in performer#init() ?
     }
 
     @NonNull

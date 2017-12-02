@@ -2,30 +2,18 @@ package org.lagonette.app.app.widget.livedata;
 
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 
 public class MainStateLiveData
-        extends LiveData<MainState>
-        implements BottomSheetFragmentPerformer.Observer {
+        extends LiveData<MainState> {
 
     private static final String TAG = "MainCoordinatorStateLiv";
 
     @NonNull
     private MainState mState;
-
-    @Nullable
-    private BottomSheetFragmentType mNone;
-
-    @Nullable
-    private BottomSheetFragmentType mFilters;
-
-    @Nullable
-    private BottomSheetFragmentType mLocation;
 
     public MainStateLiveData(@NonNull MainState state) {
         mState = state;
@@ -49,46 +37,4 @@ public class MainStateLiveData
         setValue(mState);
     }
 
-    //TODO extract BottomSheetFragmentType in its own custom LiveData and do not implements BottomSheetFragmentPerformer.Observer
-    @Override
-    public void notifyUnload() {
-        notifyBottomSheetFragmentChanged(getNone());
-    }
-
-    @Override
-    public void notifyFiltersLoaded() {
-        notifyBottomSheetFragmentChanged(getFilters());
-    }
-
-    @Override
-    public void notifyLocationLoaded(long locationId) {
-        notifyBottomSheetFragmentChanged(getLocation(locationId));
-    }
-
-    @NonNull
-    private BottomSheetFragmentType getNone() {
-        if (mNone == null) {
-            mNone = BottomSheetFragmentType.none();
-        }
-        return mNone;
-    }
-
-    @NonNull
-    private BottomSheetFragmentType getFilters() {
-        if (mFilters == null) {
-            mFilters = BottomSheetFragmentType.filters();
-        }
-        return mFilters;
-    }
-
-    @NonNull
-    private BottomSheetFragmentType getLocation(long locationId) {
-        if (mLocation == null) {
-            mLocation = BottomSheetFragmentType.location(locationId);
-        }
-        else {
-            mLocation.setLocationId(locationId);
-        }
-        return mLocation;
-    }
 }

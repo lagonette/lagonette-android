@@ -9,9 +9,12 @@ import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
 
 public class MainStatefulActionLiveData extends MediatorLiveData<MainStatefulAction> {
 
-    //TODO Fix @NonNull and add final
     @NonNull
-    private MainStatefulAction mStatefulAction;
+    private final MainStatefulAction mStatefulAction;
+
+    public MainStatefulActionLiveData(@NonNull MainStatefulAction statefulAction) {
+        mStatefulAction = statefulAction;
+    }
 
     public void setAction(MainAction action) {
         mStatefulAction.action = action;

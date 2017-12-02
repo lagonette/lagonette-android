@@ -37,6 +37,10 @@ public class MapsActivity
 
     private BottomSheetFragmentTypeLiveData mBottomSheetFragmentType;
 
+    private MutableLiveData<String> mSearch;
+
+    private LiveData<Integer> mWorkStatus;
+
     private BottomSheetPerformer mBottomSheetPerformer;
 
     private FabButtonsPerformer mFabButtonsPerformer;
@@ -58,6 +62,8 @@ public class MapsActivity
         mAction = mStateViewModel.getMainActionLiveData();
         mState = mStateViewModel.getMainStateLiveData();
         mBottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
+        mSearch = mStateViewModel.getSearch();
+        mWorkStatus = mStateViewModel.getWorkStatus();
 
         mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(getResources(), R.dimen.search_bar_supposed_height);
         mMapFragmentPerformer = new MapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
@@ -92,47 +98,21 @@ public class MapsActivity
     @Override
     protected void init() {
         mMapFragmentPerformer.init();
-
-//        BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
-//        MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
-
-        //noinspection ConstantConditions
-//        mBottomSheetPerformer.init(bottomSheetState.getValue());
-        //noinspection ConstantConditions
-//        mBottomSheetFragmentPerformer.init(bottomSheetFragmentType.getValue());
-//        mSearchBarPerformer.init();
+        mBottomSheetPerformer.init();
     }
 
     @Override
     protected void restore(@NonNull Bundle savedInstanceState) {
         mMapFragmentPerformer.restore();
-
-//        BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
-//        MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
-
         //noinspection ConstantConditions
-//        mBottomSheetPerformer.restore(bottomSheetState.getValue());
-        //noinspection ConstantConditions
-//        mBottomSheetFragmentPerformer.restore(bottomSheetFragmentType.getValue());
-        //noinspection ConstantConditions
-//        mSearchBarPerformer.restore(mMapViewModel.getMapPartners().getValue().status);
+        mBottomSheetFragmentPerformer.restore(mBottomSheetFragmentType.getValue());
     }
 
     @Override
     protected void onActivityCreated() {
         //TODO Check correctly initialisation and conf change.
 
-        //TODO Do coordinator state must be stored in LiveData ?
-        //TODO Do coordinator action must be stored in LiveData ?
-
-//        BottomSheetFragmentTypeLiveData bottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
-//        MutableLiveData<Integer> bottomSheetState = mStateViewModel.getBottomSheetState();
-        MutableLiveData<String> search = mStateViewModel.getSearch();
-        LiveData<Integer> workStatus = mStateViewModel.getWorkStatus();
-
-
-
-        // Performer -- Observe actions
+        // Performer's action --> LiveData
         mMapFragmentPerformer.observeClusterClick(mAction::moveToCluster); //TODO Maybe save & restore click state into LiveData ?
         mMapFragmentPerformer.observeItemClick(mAction::moveToLocation); //TODO Maybe save & restore click state into LiveData ?
         mMapFragmentPerformer.observeMapClick(mAction::showFullMap);
@@ -140,26 +120,20 @@ public class MapsActivity
         mFabButtonsPerformer.observePositionClick(mAction::moveToMyLocation);
         mFabButtonsPerformer.observePositionLongClick(mAction::moveToFootprint);
 
-        // LiveData -- Observe states
-        mBottomSheetFragmentPerformer.observe(mState);
-//        mBottomSheetPerformer.observeState(bottomSheetState::setValue);
+        mSearchBarPerformer.observeSearch(mSearch::setValue);
+
+        // Performer's state --> LiveData
         mBottomSheetPerformer.observeState(mState::notifyBottomSheetStateChanged);
         mMapFragmentPerformer.observeMovement(mState::notifyMapMovementChanged); //TODO Maybe save & restore camera movement into LiveData ?
+        mBottomSheetFragmentPerformer.observe(mBottomSheetFragmentType);
 
-//        bottomSheetState.observe(MapsActivity.this, mCoordinator::notifyBottomSheetStateChanged);
-//        bottomSheetFragmentType.observe(MapsActivity.this, mCoordinator::notifyBottomSheetFragmentChanged);
-
-
-        // Coordinator -- Process
+        // LiveData --> Performer, Coordinator
+        mWorkStatus.observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
         mMainStatefulAction.observe(MapsActivity.this, mCoordinator::process);
 
-
-
-
-        // Performers -- Interact
-        workStatus.observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
-
-        mSearchBarPerformer.observeSearch(search::setValue);
+        // Performer --> Performer
+        // TODO store and pass value through a LiveData, give it to fragment performer, let performer send value to fragment
+        mBottomSheetPerformer.observeSlide(mBottomSheetFragmentPerformer::notifyBottomSheetSlide);
         mSearchBarPerformer.observeOffset(
                 offset -> {
                     mMapFragmentPerformer.notifySearchBarOffsetChanged(offset);
@@ -167,8 +141,7 @@ public class MapsActivity
                 }
         );
 
-        // TODO store and pass value through a LiveData, give it to fragment performer, let performer send value to fragment
-        mBottomSheetPerformer.observeSlide(mBottomSheetFragmentPerformer::notifyBottomSheetSlide);
+
 
         mBottomSheetFragmentType.observe(MapsActivity.this, mSearchBarPerformer::notifyBottomSheetFragmentChanged);
     }

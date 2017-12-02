@@ -4,11 +4,14 @@ import android.support.annotation.NonNull;
 
 public class MainStatefulAction {
 
-    //TODO Fix @NonNull and add final
     @NonNull
     public MainAction action;
 
-    //TODO Fix @NonNull and add final
     @NonNull
     public MainState state;
+
+    public MainStatefulAction(@NonNull MainAction action, @NonNull MainState state) {
+        this.action = action;
+        this.state = state;
+    }
 }

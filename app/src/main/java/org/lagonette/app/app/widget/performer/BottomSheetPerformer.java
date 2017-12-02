@@ -52,12 +52,12 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
     }
 
-    public void init(@MainState.State int initState) {
+    public void init() {
         if (mBehavior == null) {
             throw new IllegalStateException("inject() must be called before init()");
         }
 
-        mBehavior.setState(initState);
+        mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
     public void restore(@MainState.State int restoredState) {
