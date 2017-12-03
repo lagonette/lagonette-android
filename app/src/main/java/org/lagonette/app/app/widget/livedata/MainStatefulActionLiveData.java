@@ -25,4 +25,14 @@ public class MainStatefulActionLiveData extends MediatorLiveData<MainStatefulAct
         mStatefulAction.state = state;
         setValue(mStatefulAction);
     }
+
+    @NonNull
+    @Override
+    public MainStatefulAction getValue() {
+        MainStatefulAction statefulAction = super.getValue();
+        if (statefulAction == null) {
+            statefulAction = mStatefulAction;
+        }
+        return statefulAction;
+    }
 }

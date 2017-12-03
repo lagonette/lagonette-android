@@ -83,7 +83,7 @@ public class StateMapActivityViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public LiveData<MainStatefulAction> getMainStatefulActionLiveData() {
+    public MainStatefulActionLiveData getMainStatefulActionLiveData() {
         return mMainStatefulActionLiveData;
     }
 

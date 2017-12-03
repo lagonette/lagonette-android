@@ -63,4 +63,14 @@ public class BottomSheetFragmentTypeLiveData
         }
         return mLocation;
     }
+
+    @NonNull
+    @Override
+    public BottomSheetFragmentType getValue() {
+        BottomSheetFragmentType type = super.getValue();
+        if (type == null) {
+            type = getNone();
+        }
+        return type;
+    }
 }

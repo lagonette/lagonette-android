@@ -10,10 +10,10 @@ import android.view.View;
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
-import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
 import org.lagonette.app.app.widget.livedata.BottomSheetFragmentTypeLiveData;
 import org.lagonette.app.app.widget.livedata.MainActionLiveData;
 import org.lagonette.app.app.widget.livedata.MainStateLiveData;
+import org.lagonette.app.app.widget.livedata.MainStatefulActionLiveData;
 import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
 import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.FabButtonsPerformer;
@@ -29,7 +29,7 @@ public class MapsActivity
 
     private StateMapActivityViewModel mStateViewModel;
 
-    private LiveData<MainStatefulAction> mMainStatefulAction;
+    private MainStatefulActionLiveData mMainStatefulAction;
 
     private MainActionLiveData mAction;
 
@@ -53,7 +53,6 @@ public class MapsActivity
 
     @Override
     protected void construct() {
-
         mStateViewModel = ViewModelProviders
                 .of(MapsActivity.this)
                 .get(StateMapActivityViewModel.class);
@@ -65,9 +64,15 @@ public class MapsActivity
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
 
-        mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(MapsActivity.this, getResources(), R.dimen.search_bar_supposed_height);
+        mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(
+                MapsActivity.this,
+                getResources(),
+                R.id.fragment_filters,
+                R.id.fragment_location_detail,
+                R.dimen.search_bar_supposed_height
+        );
+        mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
         mMapFragmentPerformer = new MapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
-        mBottomSheetPerformer = new BottomSheetPerformer(MapsActivity.this, R.id.bottom_sheet);
         mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
         mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
 
@@ -137,8 +142,6 @@ public class MapsActivity
                     mBottomSheetFragmentPerformer.notifySearchBarOffsetChanged(offset);
                 }
         );
-
-
 
         mBottomSheetFragmentType.observe(MapsActivity.this, mSearchBarPerformer::notifyBottomSheetFragmentChanged);
     }

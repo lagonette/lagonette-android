@@ -2,16 +2,15 @@ package org.lagonette.app.app.widget.performer;
 
 import android.content.res.Resources;
 import android.support.annotation.DimenRes;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.FiltersFragment;
 import org.lagonette.app.app.fragment.LocationDetailFragment;
-import org.lagonette.app.app.fragment.SlideableFragment;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 import org.lagonette.app.util.UiUtil;
@@ -63,31 +62,39 @@ public class BottomSheetFragmentPerformer
     }
 
     @Nullable
-    private SlideableFragment mFragment;
+    private LocationDetailFragment mLocationDetailFragment;
+
+    @Nullable
+    private FiltersFragment mFiltersFragment;
 
     private Observer mObserver;
 
     @Nullable
     private FragmentManager mFragmentManager;
 
+    @IdRes
+    private final int mFiltersContainerRes;
+
+    @IdRes
+    private final int mLocationDetailContainerRes;
+
     @NonNull
     private Padding mPadding;
 
-    public BottomSheetFragmentPerformer(@NonNull AppCompatActivity activity, @NonNull Resources resources, @DimenRes int searchBarHeightRes) {
-        mPadding = new Padding();
+    public BottomSheetFragmentPerformer(
+            @NonNull AppCompatActivity activity,
+            @NonNull Resources resources,
+            @IdRes int filtersContainerRes,
+            @IdRes int locationDetailContainerRed,
+            @DimenRes int searchBarHeightRes) {
         mFragmentManager = activity.getSupportFragmentManager();
+        mFiltersContainerRes = filtersContainerRes;
+        mLocationDetailContainerRes = locationDetailContainerRed;
+        mPadding = new Padding();
         mPadding.statusBarHeight = UiUtil.getStatusBarHeight(resources);
         mPadding.searchBarHeight = resources.getDimensionPixelOffset(searchBarHeightRes);
         mPadding.searchBarOffset = 0;
         mPadding.bottomSheetTop = 0;
-    }
-
-    public void init(@NonNull BottomSheetFragmentType type) {
-        if (mFragmentManager == null) {
-            throw new IllegalStateException("inject() must be called before init()");
-        }
-
-        loadFragment(type);
     }
 
     public void restore(@NonNull BottomSheetFragmentType type) {
@@ -95,18 +102,47 @@ public class BottomSheetFragmentPerformer
             throw new IllegalStateException("inject() must be called before restore()");
         }
 
+        mFiltersFragment = (FiltersFragment) mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
+        mLocationDetailFragment = (LocationDetailFragment) mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
+
         switch (type.getFragmentType()) {
 
             case BottomSheetFragmentType.FRAGMENT_NONE:
-                mFragment = null;
+                if (mFiltersFragment != null) {
+                    mFragmentManager
+                            .beginTransaction()
+                            .remove(mFiltersFragment)
+                            .commit();
+                    mFiltersFragment = null;
+                }
+
+                if (mLocationDetailFragment != null) {
+                    mFragmentManager
+                            .beginTransaction()
+                            .remove(mLocationDetailFragment)
+                            .commit();
+                    mLocationDetailFragment = null;
+                }
                 break;
 
             case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                mFragment = (SlideableFragment) mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
+                if (mLocationDetailFragment != null) {
+                    mFragmentManager
+                            .beginTransaction()
+                            .remove(mLocationDetailFragment)
+                            .commit();
+                    mLocationDetailFragment = null;
+                }
                 break;
 
             case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                mFragment = (SlideableFragment) mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
+                if (mFiltersFragment != null) {
+                    mFragmentManager
+                            .beginTransaction()
+                            .remove(mFiltersFragment)
+                            .commit();
+                    mFiltersFragment = null;
+                }
                 break;
         }
     }
@@ -130,11 +166,20 @@ public class BottomSheetFragmentPerformer
 
     @Override
     public void unloadFragment() {
-        if (mFragmentManager != null && mFragment != null) {
-            mFragmentManager.beginTransaction()
-                    .remove(mFragment)
-                    .commit();
-            mFragment = null;
+        if (mFragmentManager != null) {
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
+
+            if (mFiltersFragment != null) {
+                transaction.remove(mFiltersFragment);
+                mFiltersFragment = null;
+            }
+
+            if (mLocationDetailFragment != null) {
+                transaction.remove(mLocationDetailFragment);
+                mLocationDetailFragment = null;
+            }
+
+            transaction.commit();
         }
 
         if (mObserver != null) {
@@ -145,15 +190,21 @@ public class BottomSheetFragmentPerformer
     @Override
     public void loadFiltersFragment() {
         if (mFragmentManager != null) {
-            mFragment = FiltersFragment.newInstance();
-            mFragmentManager
-                    .beginTransaction()
-                    .replace(
-                            R.id.bottom_sheet,
-                            mFragment,
-                            FiltersFragment.TAG
-                    )
-                    .commit();
+            mFiltersFragment = FiltersFragment.newInstance();
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
+
+            if (mLocationDetailFragment != null) {
+                transaction.remove(mLocationDetailFragment);
+                mLocationDetailFragment = null;
+            }
+
+            transaction.add(
+                    mFiltersContainerRes,
+                    mFiltersFragment,
+                    FiltersFragment.TAG
+            );
+
+            transaction.commit();
 
             if (mObserver != null) {
                 mObserver.notifyFiltersLoaded();
@@ -164,21 +215,28 @@ public class BottomSheetFragmentPerformer
     @Override
     public void loadLocationFragment(long locationId, boolean animation) {
         if (mFragmentManager != null) {
-            mFragment = LocationDetailFragment.newInstance(locationId);
+            mLocationDetailFragment = LocationDetailFragment.newInstance(locationId);
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
+
             if (animation) {
                 transaction.setCustomAnimations(
                         android.R.anim.fade_in,
                         android.R.anim.fade_out
                 );
             }
-            transaction
-                    .replace(
-                            R.id.bottom_sheet,
-                            mFragment,
-                            LocationDetailFragment.TAG
-                    )
-                    .commit();
+
+            if (mFiltersFragment != null) {
+                transaction.remove(mFiltersFragment);
+                mFiltersFragment = null;
+            }
+
+            transaction.replace(
+                    mLocationDetailContainerRes,
+                    mLocationDetailFragment,
+                    LocationDetailFragment.TAG
+            );
+
+            transaction.commit();
 
             if (mObserver != null) {
                 mObserver.notifyLocationLoaded(locationId);
@@ -197,8 +255,14 @@ public class BottomSheetFragmentPerformer
     }
 
     private void updateBottomSheetTopPadding() {
-        if (mFragment != null && mPadding.updateTop()) {
-            mFragment.updateTopPadding(mPadding.getTop());
+        if (mPadding.updateTop()) {
+            if (mFiltersFragment != null) {
+                mFiltersFragment.updateTopPadding(mPadding.getTop());
+            }
+
+            if (mLocationDetailFragment != null) {
+                mLocationDetailFragment.updateTopPadding(mPadding.getTop());
+            }
         }
     }
 

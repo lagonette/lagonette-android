@@ -36,13 +36,10 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
     @Nullable
     private View mBottomSheet;
 
-    private final int mStatusBarHeight;
-
     @IdRes
     private int mBottomSheetRes;
 
-    public BottomSheetPerformer(@NonNull Context context, int bottomSheetRes) {
-        mStatusBarHeight = UiUtil.getStatusBarHeight(context.getResources());
+    public BottomSheetPerformer(int bottomSheetRes) {
         mBottomSheetRes = bottomSheetRes;
     }
 
