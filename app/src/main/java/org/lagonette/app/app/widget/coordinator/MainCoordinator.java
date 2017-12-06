@@ -8,7 +8,7 @@ import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
-import org.lagonette.app.app.widget.performer.MapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.statement.Statement;

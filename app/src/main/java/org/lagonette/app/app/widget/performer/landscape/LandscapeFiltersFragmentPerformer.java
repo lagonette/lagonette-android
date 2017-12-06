@@ -1,4 +1,4 @@
-package org.lagonette.app.app.widget.performer;
+package org.lagonette.app.app.widget.performer.landscape;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;

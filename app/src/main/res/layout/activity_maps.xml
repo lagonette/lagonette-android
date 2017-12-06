@@ -14,11 +14,11 @@
         app:layout_behavior="org.lagonette.app.app.widget.behavior.ParallaxBehavior" />
 
     <View
-        android:id="@+id/shadow"
+        android:id="@+id/shadow_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:layout_gravity="top"
-        android:background="@drawable/bg_bottom_sheet"
+        android:background="@drawable/bg_shadow_bottom_sheet"
         app:layout_anchor="@id/bottom_sheet"
         app:layout_anchorGravity="top" />
 
@@ -46,6 +46,7 @@
             android:background="@android:color/transparent"
             android:clipToPadding="true"
             tools:elevation="2dp" />
+
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
