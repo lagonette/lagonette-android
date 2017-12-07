@@ -1,5 +1,6 @@
-package org.lagonette.app.app.widget.coordinator;
+package org.lagonette.app.app.widget.coordinator.base;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
@@ -22,33 +23,9 @@ import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_M
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_OPEN_FILTERS;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_SHOW_FULL_MAP;
 
-public class MainCoordinator {
+public abstract class AbstractMainCoordinator implements MainCoordinator {
 
-    private static final String TAG = "MainCoordinator";
-
-    public interface BottomSheetCallback {
-
-        void closeBottomSheet();
-
-        void openBottomSheet();
-
-    }
-
-    public interface FragmentLoader {
-
-        void loadFiltersFragment();
-
-        void loadLocationFragment(long locationId, boolean animation);
-
-        void unloadFragment();
-
-    }
-
-    public interface DoneMarker {
-
-        void markPendingActionasDone();
-
-    }
+    private static final String TAG = "AbstractMainCoordinator";
 
     @NonNull
     private final DoneMarker mDoneMarker;
@@ -62,7 +39,7 @@ public class MainCoordinator {
     @NonNull
     private final MapFragmentPerformer mMapFragmentPerformer;
 
-    public MainCoordinator(
+    public AbstractMainCoordinator(
             @NonNull DoneMarker doneMarker,
             @NonNull BottomSheetCallback bottomSheetCallback,
             @NonNull FragmentLoader fragmentLoader,
@@ -73,6 +50,7 @@ public class MainCoordinator {
         mDoneMarker = doneMarker;
     }
 
+    @Override
     public boolean back(@NonNull MainStatefulAction statefulAction) {
         Log.d(TAG, "Coordinator -> Action: BACK");
         switch (statefulAction.state.bottomSheetState) {
@@ -92,6 +70,8 @@ public class MainCoordinator {
         }
     }
 
+    @Override
+    @CallSuper
     public void process(@NonNull MainStatefulAction statefulAction) {
         switch (statefulAction.action.type) {
 
@@ -126,6 +106,37 @@ public class MainCoordinator {
             default:
             case ACTION_IDLE:
                 computeIdle(statefulAction);
+                break;
+        }
+    }
+
+    protected abstract void computeFiltersOpening(@NonNull MainStatefulAction statefulAction);
+
+    private void computeMovementToMyLocation(@NonNull MainStatefulAction statefulAction) {
+        switch (statefulAction.state.bottomSheetState) {
+
+            case BottomSheetBehavior.STATE_SETTLING:
+                stopMovingMap();
+                break;
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_EXPANDED:
+                stopMovingMap();
+                closeBottomSheet(); //TODO Warn there are 2 actions done.
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+                switch (statefulAction.state.mapMovement) {
+
+                    case MainState.STATE_MOVEMENT_IDLE:
+                        moveMapToMyLocation();
+                        break;
+
+                    case MainState.STATE_MOVEMENT_MOVE:
+                        markPendingActionDone();
+                        break;
+                }
                 break;
         }
     }
@@ -187,7 +198,7 @@ public class MainCoordinator {
 
                     case BottomSheetBehavior.STATE_COLLAPSED:
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        mBottomSheetCallback.closeBottomSheet();
+                        closeBottomSheet();
                         break;
 
                     case BottomSheetBehavior.STATE_DRAGGING:
@@ -201,8 +212,7 @@ public class MainCoordinator {
                     case BottomSheetBehavior.STATE_HIDDEN:
                         if (statefulAction.action.item != null) {
                             loadLocationFragment(statefulAction.action.item.getId(), false);
-                        }
-                        else {
+                        } else {
                             markPendingActionDone();
                         }
                         break;
@@ -215,13 +225,12 @@ public class MainCoordinator {
                     case BottomSheetBehavior.STATE_COLLAPSED:
                     case BottomSheetBehavior.STATE_EXPANDED:
                         long selectedId = statefulAction.action.item != null
-                                ?  statefulAction.action.item.getId()
+                                ? statefulAction.action.item.getId()
                                 : Statement.NO_ID;
                         if (statefulAction.action.shouldMove) {
                             statefulAction.action.shouldMove = false;
-                            mMapFragmentPerformer.moveToLocation(statefulAction.action.item);
-                        }
-                        else if (statefulAction.state.bottomSheetFragmentType.getLocationId() != selectedId) {
+                            moveMapToLocation(statefulAction.action.item);
+                        } else if (statefulAction.state.bottomSheetFragmentType.getLocationId() != selectedId) {
                             loadLocationFragment(statefulAction.action.item.getId(), true);
                         } else {
                             markPendingActionDone();
@@ -248,12 +257,10 @@ public class MainCoordinator {
                                     if (statefulAction.action.shouldMove) { //TODO Use reason to mark action done if the user move something
                                         statefulAction.action.shouldMove = false;
                                         moveMapToLocation(statefulAction.action.item);
-                                    }
-                                    else {
+                                    } else {
                                         openBottomSheet();
                                     }
-                                }
-                                else {
+                                } else {
                                     markPendingActionDone();
                                 }
                                 break;
@@ -288,8 +295,7 @@ public class MainCoordinator {
                         if (statefulAction.action.cluster != null && statefulAction.action.shouldMove) {
                             statefulAction.action.shouldMove = false;
                             moveMapToCluster(statefulAction.action.cluster);
-                        }
-                        else {
+                        } else {
                             markPendingActionDone();
                         }
                         break;
@@ -327,35 +333,6 @@ public class MainCoordinator {
         }
     }
 
-    private void computeMovementToMyLocation(@NonNull MainStatefulAction statefulAction) {
-        switch (statefulAction.state.bottomSheetState) {
-
-            case BottomSheetBehavior.STATE_SETTLING:
-                stopMovingMap();
-                break;
-
-            case BottomSheetBehavior.STATE_COLLAPSED:
-            case BottomSheetBehavior.STATE_DRAGGING:
-            case BottomSheetBehavior.STATE_EXPANDED:
-                stopMovingMap();
-                mBottomSheetCallback.closeBottomSheet();
-                break;
-
-            case BottomSheetBehavior.STATE_HIDDEN:
-                switch (statefulAction.state.mapMovement) {
-
-                    case MainState.STATE_MOVEMENT_IDLE:
-                        moveMapToMyLocation();
-                        break;
-
-                    case MainState.STATE_MOVEMENT_MOVE:
-                        markPendingActionDone();
-                        break;
-                }
-                break;
-        }
-    }
-
     private void computeBack(@NonNull MainStatefulAction statefulAction) {
         switch (statefulAction.state.bottomSheetState) {
 
@@ -375,142 +352,51 @@ public class MainCoordinator {
         }
     }
 
-    private void computeFiltersOpening(@NonNull MainStatefulAction statefulAction) {
-        switch (statefulAction.state.bottomSheetState) {
-
-            case BottomSheetBehavior.STATE_HIDDEN:
-                switch (statefulAction.state.bottomSheetFragmentType.getFragmentType()) {
-
-                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                    case BottomSheetFragmentType.FRAGMENT_NONE:
-                        loadFiltersFragment();
-                        break;
-
-                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        openBottomSheet();
-                        break;
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_COLLAPSED:
-                switch (statefulAction.state.bottomSheetFragmentType.getFragmentType()) {
-
-                    case BottomSheetFragmentType.FRAGMENT_NONE:
-                        wtf();
-                        closeBottomSheet();
-                        break;
-
-                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                        closeBottomSheet();
-                        break;
-
-                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        markPendingActionDone();
-                        break;
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_EXPANDED:
-                switch (statefulAction.state.bottomSheetFragmentType.getFragmentType()) {
-
-                    case BottomSheetFragmentType.FRAGMENT_NONE:
-                        wtf();
-                        closeBottomSheet();
-                        break;
-
-                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                        closeBottomSheet();
-                        break;
-
-                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        markPendingActionDone();
-                        break;
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_DRAGGING:
-                switch (statefulAction.state.bottomSheetFragmentType.getFragmentType()) {
-
-                    case BottomSheetFragmentType.FRAGMENT_NONE:
-                        wtf();
-                        closeBottomSheet();
-                        break;
-
-                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        markPendingActionDone();
-                        break;
-
-                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                        markPendingActionDone();
-                        break;
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_SETTLING:
-                switch (statefulAction.state.bottomSheetFragmentType.getFragmentType()) {
-
-                    case BottomSheetFragmentType.FRAGMENT_NONE:
-                        wtf();
-                        closeBottomSheet();
-                        break;
-
-                    case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        markPendingActionDone();
-                        break;
-
-                    case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                        closeBottomSheet();
-                        break;
-                }
-                break;
-        }
+    protected void markPendingActionDone() {
+        mDoneMarker.markPendingActionAsDone();
     }
 
-    private void markPendingActionDone() {
-        mDoneMarker.markPendingActionasDone();
-    }
-
-    private void stopMovingMap() {
+    protected void stopMovingMap() {
         mMapFragmentPerformer.stopMoving();
     }
 
-    private void moveMapToCluster(@NonNull Cluster<PartnerItem> cluster) {
+    protected void moveMapToCluster(@NonNull Cluster<PartnerItem> cluster) {
         mMapFragmentPerformer.moveToCluster(cluster);
     }
 
-    private void moveMapToFootprint() {
+    protected void moveMapToFootprint() {
         mMapFragmentPerformer.moveToFootprint();
     }
 
-    private void moveMapToMyLocation() {
+    protected void moveMapToMyLocation() {
         mMapFragmentPerformer.moveToMyLocation();
     }
 
-    private void moveMapToLocation(@NonNull PartnerItem item) {
+    protected void moveMapToLocation(@NonNull PartnerItem item) {
         mMapFragmentPerformer.moveToLocation(item);
     }
 
-    private void closeBottomSheet() {
+    protected void closeBottomSheet() {
         mBottomSheetCallback.closeBottomSheet();
     }
 
-    private void openBottomSheet() {
+    protected void openBottomSheet() {
         mBottomSheetCallback.openBottomSheet();
     }
 
-    private void loadFiltersFragment() {
+    protected void loadFiltersFragment() {
         mFragmentLoader.loadFiltersFragment();
     }
 
-    private void loadLocationFragment(long locationId, boolean animation) {
+    protected void loadLocationFragment(long locationId, boolean animation) {
         mFragmentLoader.loadLocationFragment(locationId, animation);
     }
 
-    private void unloadFragment() {
+    protected void unloadFragment() {
         mFragmentLoader.unloadFragment();
     }
 
-    private void wtf() {
+    protected void wtf() {
         //TODO log exception, just in case
     }
 }

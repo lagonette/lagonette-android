@@ -1,4 +1,4 @@
-package org.lagonette.app.app.widget.performer;
+package org.lagonette.app.app.widget.performer.base;
 
 import android.os.Build;
 import android.support.annotation.IdRes;
@@ -11,12 +11,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
-import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.util.UiUtil;
 
-public class SearchBarPerformer {
+public abstract class SearchBarPerformer {
 
     public interface SearchObserver {
 
@@ -29,22 +27,16 @@ public class SearchBarPerformer {
     }
 
     @Nullable
-    private OffsetObserver mOffsetObserver;
-
-    @Nullable
     private SearchObserver mSearchObserver;
 
     @Nullable
-    private TopEscapeBehavior mBehavior;
-
-    @Nullable
-    private View mSearchBar;
+    protected View mSearchBar;
 
     @Nullable
     private ProgressBar mProgressBar;
 
     @Nullable
-    private TextView mSearchText;
+    private TextView mSearchTextView;
 
     @IdRes
     private int mSearchBarRes;
@@ -70,19 +62,10 @@ public class SearchBarPerformer {
     public void inject(@NonNull View view) {
         mSearchBar = view.findViewById(mSearchBarRes);
         mProgressBar = view.findViewById(mProgressBarRes);
-        mSearchText = view.findViewById(mSearchTextRes);
-
-        mBehavior = TopEscapeBehavior.from(mSearchBar);
-        mBehavior.setOnMoveListener(
-                (child, translationY) -> {
-                    if (mOffsetObserver != null) {
-                        mOffsetObserver.notifyOffsetChanged(translationY);
-                    }
-                }
-        );
+        mSearchTextView = view.findViewById(mSearchTextRes);
 
         setupSearchBarMarginTop(mSearchBar);
-        setupSearchText(mSearchText);
+        setupSearchTextView(mSearchTextView);
     }
 
 //    public void init() {
@@ -128,7 +111,7 @@ public class SearchBarPerformer {
         }
     }
 
-    private void setupSearchText(@NonNull TextView searchText) {
+    private void setupSearchTextView(@NonNull TextView searchText) {
         //TODO Activity leaks ?
         // Add TextWatcher later to avoid callback called on configuration changed.
         searchText.post(
@@ -157,25 +140,5 @@ public class SearchBarPerformer {
 
     public void observeSearch(@NonNull SearchObserver observer) {
         mSearchObserver = observer;
-    }
-
-    public void observeOffset(@NonNull OffsetObserver observer) {
-        mOffsetObserver = observer;
-    }
-
-    public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentType bottomSheetFragmentType) {
-        if (mBehavior != null) {
-            switch (bottomSheetFragmentType.getFragmentType()) {
-
-                case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                    mBehavior.disable();
-                    break;
-
-                case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                case BottomSheetFragmentType.FRAGMENT_NONE:
-                    mBehavior.enable();
-                    break;
-            }
-        }
     }
 }

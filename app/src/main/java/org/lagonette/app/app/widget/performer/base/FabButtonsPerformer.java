@@ -1,4 +1,4 @@
-package org.lagonette.app.app.widget.performer;
+package org.lagonette.app.app.widget.performer.base;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -6,12 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
-public class FabButtonsPerformer {
-
-    public interface FiltersObserver {
-
-        void notifyFiltersButtonClick();
-    }
+public abstract class FabButtonsPerformer {
 
     public interface PositionClickObserver {
 
@@ -24,9 +19,6 @@ public class FabButtonsPerformer {
     }
 
     @Nullable
-    private FiltersObserver mFiltersObserver;
-
-    @Nullable
     private PositionClickObserver mPositionClickObserver;
 
     @Nullable
@@ -35,12 +27,8 @@ public class FabButtonsPerformer {
     @IdRes
     private int mPositionButtonRes;
 
-    @IdRes
-    private int mFiltersButtonRes;
-
-    public FabButtonsPerformer(int positionRes, int filtersRes) {
+    public FabButtonsPerformer(int positionRes) {
         mPositionButtonRes = positionRes;
-        mFiltersButtonRes = filtersRes;
     }
 
     public void inject(@NonNull View view) {
@@ -61,19 +49,6 @@ public class FabButtonsPerformer {
                     return false;
                 }
         );
-
-        FloatingActionButton filtersFab = view.findViewById(mFiltersButtonRes);
-        filtersFab.setOnClickListener(
-                button -> {
-                    if (mFiltersObserver != null) {
-                        mFiltersObserver.notifyFiltersButtonClick();
-                    }
-                }
-        );
-    }
-
-    public void observeFiltersClick(@Nullable FiltersObserver observer) {
-        mFiltersObserver = observer;
     }
 
     public void observePositionClick(@Nullable PositionClickObserver observer) {

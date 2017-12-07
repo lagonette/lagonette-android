@@ -45,7 +45,7 @@ public class MainAction {
     }
 
     @ActionType
-    public int type;
+    public int type; //TODO Enum
 
     @Nullable
     public Cluster<PartnerItem> cluster;

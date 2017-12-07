@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.app.fragment.FiltersFragment;
 import org.lagonette.app.app.fragment.LocationDetailFragment;
-import org.lagonette.app.app.widget.coordinator.MainCoordinator;
+import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 import org.lagonette.app.util.UiUtil;
 

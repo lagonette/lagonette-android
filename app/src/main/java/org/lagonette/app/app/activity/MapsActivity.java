@@ -11,20 +11,28 @@ import android.view.View;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
-import org.lagonette.app.app.widget.coordinator.MainCoordinator;
+import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
+import org.lagonette.app.app.widget.coordinator.landscape.LandscapeMainCoordinator;
+import org.lagonette.app.app.widget.coordinator.portrait.PortraitMainCoordinator;
 import org.lagonette.app.app.widget.livedata.BottomSheetFragmentTypeLiveData;
 import org.lagonette.app.app.widget.livedata.MainActionLiveData;
 import org.lagonette.app.app.widget.livedata.MainStateLiveData;
 import org.lagonette.app.app.widget.livedata.MainStatefulActionLiveData;
 import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
-import org.lagonette.app.app.widget.performer.BottomSheetPerformer;
-import org.lagonette.app.app.widget.performer.FabButtonsPerformer;
-import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetFragmentPerformer;
-import org.lagonette.app.app.widget.performer.landscape.LandscapeFiltersFragmentPerformer;
+import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.base.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
-import org.lagonette.app.app.widget.performer.SearchBarPerformer;
+import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
+import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetFragmentPerformer;
+import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.landscape.LandscapeFabButtonsPerformer;
+import org.lagonette.app.app.widget.performer.landscape.LandscapeFiltersFragmentPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeMapFragmentPerformer;
-import org.lagonette.app.app.widget.performer.portrait.MainMapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.landscape.LandscapeSearchBarPerformer;
+import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.portrait.PortraitFabButtonsPerformer;
+import org.lagonette.app.app.widget.performer.portrait.PortraitMapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.portrait.PortraitSearchBarPerformer;
 
 public class MapsActivity
         extends BaseActivity {
@@ -76,9 +84,16 @@ public class MapsActivity
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
 
-        mBottomSheetPerformer = new BottomSheetPerformer(R.id.bottom_sheet);
+        mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(
+                MapsActivity.this,
+                resources,
+                R.id.fragment_filters,
+                R.id.fragment_location_detail,
+                R.dimen.search_bar_supposed_height
+        );
 
         if (resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mBottomSheetPerformer = new LandscapeBottomSheetPerformer(R.id.bottom_sheet);
             mMapFragmentPerformer = new LandscapeMapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
             mLandscapeFiltersFragmentPerformer = new LandscapeFiltersFragmentPerformer(MapsActivity.this, R.id.fragment_filters);
             mLandscapeBottomSheetFragmentPerformer = new LandscapeBottomSheetFragmentPerformer(
@@ -87,20 +102,23 @@ public class MapsActivity
                     R.id.fragment_location_detail,
                     R.dimen.search_bar_supposed_height
             );
+            mFabButtonsPerformer = new LandscapeFabButtonsPerformer(R.id.my_location_fab);
+            mSearchBarPerformer = new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
+
+            mCoordinator = new LandscapeMainCoordinator(
+                    mAction::markDone,
+                    mBottomSheetPerformer,
+                    mBottomSheetFragmentPerformer,
+                    mMapFragmentPerformer
+            );
         }
         else {
-            mMapFragmentPerformer = new MainMapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
-            mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(
-                    MapsActivity.this,
-                    resources,
-                    R.id.fragment_filters,
-                    R.id.fragment_location_detail,
-                    R.dimen.search_bar_supposed_height
-            );
-            mFabButtonsPerformer = new FabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
-            mSearchBarPerformer = new SearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
+            mBottomSheetPerformer = new PortraitBottomSheetPerformer(R.id.bottom_sheet);
+            mMapFragmentPerformer = new PortraitMapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
+            mFabButtonsPerformer = new PortraitFabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
+            mSearchBarPerformer = new PortraitSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
 
-            mCoordinator = new MainCoordinator(
+            mCoordinator = new PortraitMainCoordinator(
                     mAction::markDone,
                     mBottomSheetPerformer,
                     mBottomSheetFragmentPerformer,
@@ -118,14 +136,8 @@ public class MapsActivity
     protected void onViewCreated(@NonNull View view) {
         mMapFragmentPerformer.inject(view);
         mBottomSheetPerformer.inject(view);
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-        }
-        else {
-            mFabButtonsPerformer.inject(view);
-            mSearchBarPerformer.inject(view);
-        }
+        mSearchBarPerformer.inject(view);
+        mFabButtonsPerformer.inject(view);
     }
 
     @Override
@@ -156,6 +168,28 @@ public class MapsActivity
 
     @Override
     protected void onActivityCreated() {
+        // Performer's action --> LiveData
+        mMapFragmentPerformer.observeClusterClick(mAction::moveToCluster);
+        mMapFragmentPerformer.observeItemClick(mAction::moveToLocation);
+        mMapFragmentPerformer.observeMapClick(mAction::showFullMap);
+        mFabButtonsPerformer.observePositionClick(mAction::moveToMyLocation);
+        mFabButtonsPerformer.observePositionLongClick(mAction::moveToFootprint);
+
+        mSearchBarPerformer.observeSearch(mSearch::setValue);
+
+        // Performer's state --> LiveData
+        mBottomSheetPerformer.observeState(mState::notifyBottomSheetStateChanged);
+        mMapFragmentPerformer.observeMovement(mState::notifyMapMovementChanged);
+        mBottomSheetFragmentPerformer.observe(mBottomSheetFragmentType);
+
+        // LiveData --> Performer, Coordinator
+        mWorkStatus.observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
+        mMainStatefulAction.observe(MapsActivity.this, mCoordinator::process);
+
+        // Performer --> Performer
+        // TODO store and pass value through a LiveData, give it to fragment performer, let performer send value to fragment
+        mBottomSheetPerformer.observeSlide(mBottomSheetFragmentPerformer::notifyBottomSheetSlide);
+
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
         }
@@ -163,36 +197,20 @@ public class MapsActivity
             //TODO Check correctly initialisation and conf change.
 
             // Performer's action --> LiveData
-            mMapFragmentPerformer.observeClusterClick(mAction::moveToCluster);
-            mMapFragmentPerformer.observeItemClick(mAction::moveToLocation);
-            mMapFragmentPerformer.observeMapClick(mAction::showFullMap);
-            mFabButtonsPerformer.observeFiltersClick(mAction::openFilters);
-            mFabButtonsPerformer.observePositionClick(mAction::moveToMyLocation);
-            mFabButtonsPerformer.observePositionLongClick(mAction::moveToFootprint);
-
-            mSearchBarPerformer.observeSearch(mSearch::setValue);
-
-            // Performer's state --> LiveData
-            mBottomSheetPerformer.observeState(mState::notifyBottomSheetStateChanged);
-            mMapFragmentPerformer.observeMovement(mState::notifyMapMovementChanged);
-            mBottomSheetFragmentPerformer.observe(mBottomSheetFragmentType);
-
-            // LiveData --> Performer, Coordinator
-            mWorkStatus.observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
-            mMainStatefulAction.observe(MapsActivity.this, mCoordinator::process);
+            ((PortraitFabButtonsPerformer) mFabButtonsPerformer).observeFiltersClick(mAction::openFilters); //TODO Do better
 
             // Performer --> Performer
-            // TODO store and pass value through a LiveData, give it to fragment performer, let performer send value to fragment
-            mBottomSheetPerformer.observeSlide(mBottomSheetFragmentPerformer::notifyBottomSheetSlide);
-            mSearchBarPerformer.observeOffset(
+            mBottomSheetFragmentType.observe(
+                    MapsActivity.this,
+                    ((PortraitSearchBarPerformer)mSearchBarPerformer)::notifyBottomSheetFragmentChanged
+            );
+            ((PortraitSearchBarPerformer)mSearchBarPerformer).observeOffset(
                     offset -> {
                         //TODO Do better
-                        ((MainMapFragmentPerformer) mMapFragmentPerformer).notifySearchBarOffsetChanged(offset);
+                        ((PortraitMapFragmentPerformer) mMapFragmentPerformer).notifySearchBarOffsetChanged(offset);
                         mBottomSheetFragmentPerformer.notifySearchBarOffsetChanged(offset);
                     }
             );
-
-            mBottomSheetFragmentType.observe(MapsActivity.this, mSearchBarPerformer::notifyBottomSheetFragmentChanged);
         }
     }
 

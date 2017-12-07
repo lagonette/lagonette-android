@@ -1,17 +1,16 @@
-package org.lagonette.app.app.widget.performer;
+package org.lagonette.app.app.widget.performer.base;
 
-import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
-import org.lagonette.app.app.widget.coordinator.MainCoordinator;
+import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.util.UiUtil;
 
-public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallback
+public abstract class BottomSheetPerformer
+        extends BottomSheetBehavior.BottomSheetCallback
         implements MainCoordinator.BottomSheetCallback {
 
     public interface StateObserver {
@@ -31,7 +30,7 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
     private SlideObserver mSlideObserver;
 
     @Nullable
-    private BottomSheetBehavior<View> mBehavior;
+    protected BottomSheetBehavior<View> mBehavior;
 
     @Nullable
     private View mBottomSheet;
@@ -83,13 +82,6 @@ public class BottomSheetPerformer extends BottomSheetBehavior.BottomSheetCallbac
     public void closeBottomSheet() {
         if (mBehavior != null) {
             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
-    }
-
-    @Override
-    public void openBottomSheet() {
-        if (mBehavior != null) {
-            mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
     }
 
