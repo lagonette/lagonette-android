@@ -5,13 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
 
-import com.google.maps.android.clustering.Cluster;
-
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
+import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
+import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
-import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.statement.Statement;
 
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_BACK;
@@ -28,24 +27,24 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
     private static final String TAG = "AbstractMainCoordinator";
 
     @NonNull
-    private final DoneMarker mDoneMarker;
+    protected final DoneMarker mDoneMarker;
 
     @NonNull
-    private final BottomSheetCallback mBottomSheetCallback;
+    protected final BottomSheetPerformer mBottomSheetPerformer;
 
     @NonNull
-    private final FragmentLoader mFragmentLoader;
+    protected final BottomSheetFragmentPerformer mBottomSheetFragmentPerformer;
 
     @NonNull
-    private final MapFragmentPerformer mMapFragmentPerformer;
+    protected final MapFragmentPerformer mMapFragmentPerformer;
 
     public AbstractMainCoordinator(
             @NonNull DoneMarker doneMarker,
-            @NonNull BottomSheetCallback bottomSheetCallback,
-            @NonNull FragmentLoader fragmentLoader,
+            @NonNull BottomSheetPerformer bottomSheetPerformer,
+            @NonNull BottomSheetFragmentPerformer bottomSheetFragmentPerformer,
             @NonNull MapFragmentPerformer mapFragmentPerformer) {
-        mBottomSheetCallback = bottomSheetCallback; //TODO do init in init()
-        mFragmentLoader = fragmentLoader;
+        mBottomSheetPerformer = bottomSheetPerformer; //TODO do init in init()
+        mBottomSheetFragmentPerformer = bottomSheetFragmentPerformer;
         mMapFragmentPerformer = mapFragmentPerformer;
         mDoneMarker = doneMarker;
     }
@@ -65,7 +64,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
 
             default:
             case BottomSheetBehavior.STATE_HIDDEN:
-                markPendingActionDone();
+                mDoneMarker.markPendingActionAsDone();
                 return false;
         }
     }
@@ -116,25 +115,25 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
         switch (statefulAction.state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
-                stopMovingMap();
+                mMapFragmentPerformer.stopMoving();
                 break;
 
             case BottomSheetBehavior.STATE_COLLAPSED:
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_EXPANDED:
-                stopMovingMap();
-                closeBottomSheet(); //TODO Warn there are 2 actions done.
+                mMapFragmentPerformer.stopMoving();
+                mBottomSheetPerformer.closeBottomSheet(); //TODO Warn there are 2 actions done.
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
                 switch (statefulAction.state.mapMovement) {
 
                     case MainState.STATE_MOVEMENT_IDLE:
-                        moveMapToMyLocation();
+                        mMapFragmentPerformer.moveToMyLocation();
                         break;
 
                     case MainState.STATE_MOVEMENT_MOVE:
-                        markPendingActionDone();
+                        mDoneMarker.markPendingActionAsDone();
                         break;
                 }
                 break;
@@ -156,7 +155,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                         break;
 
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        unloadFragment();
+                        mBottomSheetFragmentPerformer.unloadFragment();
                         break;
                 }
                 break;
@@ -172,7 +171,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
             case BottomSheetBehavior.STATE_EXPANDED:
-                mBottomSheetCallback.closeBottomSheet();
+                mBottomSheetPerformer.closeBottomSheet();
                 break;
 
             case BottomSheetBehavior.STATE_SETTLING:
@@ -180,11 +179,11 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
-                markPendingActionDone();
+                mDoneMarker.markPendingActionAsDone();
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                markPendingActionDone();
+                mDoneMarker.markPendingActionAsDone();
                 break;
         }
     }
@@ -198,11 +197,11 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
 
                     case BottomSheetBehavior.STATE_COLLAPSED:
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        closeBottomSheet();
+                        mBottomSheetPerformer.closeBottomSheet();
                         break;
 
                     case BottomSheetBehavior.STATE_DRAGGING:
-                        markPendingActionDone();
+                        mDoneMarker.markPendingActionAsDone();
                         break;
 
                     case BottomSheetBehavior.STATE_SETTLING:
@@ -211,9 +210,9 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
 
                     case BottomSheetBehavior.STATE_HIDDEN:
                         if (statefulAction.action.item != null) {
-                            loadLocationFragment(statefulAction.action.item.getId(), false);
+                            mBottomSheetFragmentPerformer.loadLocationFragment(statefulAction.action.item.getId(), false);
                         } else {
-                            markPendingActionDone();
+                            mDoneMarker.markPendingActionAsDone();
                         }
                         break;
                 }
@@ -229,16 +228,16 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                                 : Statement.NO_ID;
                         if (statefulAction.action.shouldMove) {
                             statefulAction.action.shouldMove = false;
-                            moveMapToLocation(statefulAction.action.item);
+                            mMapFragmentPerformer.moveToLocation(statefulAction.action.item);
                         } else if (statefulAction.state.bottomSheetFragmentType.getLocationId() != selectedId) {
-                            loadLocationFragment(statefulAction.action.item.getId(), true);
+                            mBottomSheetFragmentPerformer.loadLocationFragment(statefulAction.action.item.getId(), true);
                         } else {
-                            markPendingActionDone();
+                            mDoneMarker.markPendingActionAsDone();
                         }
                         break;
 
                     case BottomSheetBehavior.STATE_DRAGGING:
-                        markPendingActionDone();
+                        mDoneMarker.markPendingActionAsDone();
                         break;
 
                     case BottomSheetBehavior.STATE_SETTLING:
@@ -256,12 +255,12 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                                 if (statefulAction.action.item != null) {
                                     if (statefulAction.action.shouldMove) { //TODO Use reason to mark action done if the user move something
                                         statefulAction.action.shouldMove = false;
-                                        moveMapToLocation(statefulAction.action.item);
+                                        mMapFragmentPerformer.moveToLocation(statefulAction.action.item);
                                     } else {
-                                        openBottomSheet();
+                                        mBottomSheetPerformer.collapseBottomSheet();
                                     }
                                 } else {
-                                    markPendingActionDone();
+                                    mDoneMarker.markPendingActionAsDone();
                                 }
                                 break;
                         }
@@ -276,7 +275,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
             case BottomSheetBehavior.STATE_EXPANDED:
-                mBottomSheetCallback.closeBottomSheet();
+                mBottomSheetPerformer.closeBottomSheet();
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
@@ -294,9 +293,9 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                     case MainState.STATE_MOVEMENT_IDLE:
                         if (statefulAction.action.cluster != null && statefulAction.action.shouldMove) {
                             statefulAction.action.shouldMove = false;
-                            moveMapToCluster(statefulAction.action.cluster);
+                            mMapFragmentPerformer.moveToCluster(statefulAction.action.cluster);
                         } else {
-                            markPendingActionDone();
+                            mDoneMarker.markPendingActionAsDone();
                         }
                         break;
                 }
@@ -308,25 +307,25 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
         switch (statefulAction.state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
-                stopMovingMap();
+                mMapFragmentPerformer.stopMoving();
                 break;
 
             case BottomSheetBehavior.STATE_COLLAPSED:
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_EXPANDED:
-                stopMovingMap();
-                mBottomSheetCallback.closeBottomSheet();
+                mMapFragmentPerformer.stopMoving();
+                mBottomSheetPerformer.closeBottomSheet();
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
                 switch (statefulAction.state.mapMovement) {
 
                     case MainState.STATE_MOVEMENT_IDLE:
-                        moveMapToFootprint();
+                        mMapFragmentPerformer.moveToFootprint();
                         break;
 
                     case MainState.STATE_MOVEMENT_MOVE:
-                        markPendingActionDone();
+                        mDoneMarker.markPendingActionAsDone();
                         break;
                 }
                 break;
@@ -343,57 +342,13 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
             case BottomSheetBehavior.STATE_COLLAPSED:
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_EXPANDED:
-                mBottomSheetCallback.closeBottomSheet();
+                mBottomSheetPerformer.closeBottomSheet();
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                markPendingActionDone();
+                mDoneMarker.markPendingActionAsDone();
                 break;
         }
-    }
-
-    protected void markPendingActionDone() {
-        mDoneMarker.markPendingActionAsDone();
-    }
-
-    protected void stopMovingMap() {
-        mMapFragmentPerformer.stopMoving();
-    }
-
-    protected void moveMapToCluster(@NonNull Cluster<PartnerItem> cluster) {
-        mMapFragmentPerformer.moveToCluster(cluster);
-    }
-
-    protected void moveMapToFootprint() {
-        mMapFragmentPerformer.moveToFootprint();
-    }
-
-    protected void moveMapToMyLocation() {
-        mMapFragmentPerformer.moveToMyLocation();
-    }
-
-    protected void moveMapToLocation(@NonNull PartnerItem item) {
-        mMapFragmentPerformer.moveToLocation(item);
-    }
-
-    protected void closeBottomSheet() {
-        mBottomSheetCallback.closeBottomSheet();
-    }
-
-    protected void openBottomSheet() {
-        mBottomSheetCallback.openBottomSheet();
-    }
-
-    protected void loadFiltersFragment() {
-        mFragmentLoader.loadFiltersFragment();
-    }
-
-    protected void loadLocationFragment(long locationId, boolean animation) {
-        mFragmentLoader.loadLocationFragment(locationId, animation);
-    }
-
-    protected void unloadFragment() {
-        mFragmentLoader.unloadFragment();
     }
 
     protected void wtf() {

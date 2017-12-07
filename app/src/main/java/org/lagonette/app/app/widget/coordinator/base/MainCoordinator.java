@@ -6,24 +6,6 @@ import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
 
 public interface MainCoordinator {
 
-    interface BottomSheetCallback {
-
-        void closeBottomSheet();
-
-        void openBottomSheet();
-
-    }
-
-    interface FragmentLoader {
-
-        void loadFiltersFragment();
-
-        void loadLocationFragment(long locationId, boolean animation);
-
-        void unloadFragment();
-
-    }
-
     interface DoneMarker {
 
         void markPendingActionAsDone();

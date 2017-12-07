@@ -5,6 +5,8 @@ import android.support.design.widget.BottomSheetBehavior;
 
 import org.lagonette.app.app.widget.coordinator.base.AbstractMainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
+import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
+import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 
@@ -13,10 +15,10 @@ public class PortraitMainCoordinator
 
     public PortraitMainCoordinator(
             @NonNull DoneMarker doneMarker,
-            @NonNull BottomSheetCallback bottomSheetCallback,
-            @NonNull FragmentLoader fragmentLoader,
+            @NonNull BottomSheetPerformer bottomSheetPerformer,
+            @NonNull BottomSheetFragmentPerformer bottomSheetFragmentPerformer,
             @NonNull MapFragmentPerformer mapFragmentPerformer) {
-        super(doneMarker, bottomSheetCallback, fragmentLoader, mapFragmentPerformer);
+        super(doneMarker, bottomSheetPerformer, bottomSheetFragmentPerformer, mapFragmentPerformer);
     }
 
     @Override
@@ -28,11 +30,11 @@ public class PortraitMainCoordinator
 
                     case BottomSheetFragmentType.FRAGMENT_LOCATION:
                     case BottomSheetFragmentType.FRAGMENT_NONE:
-                        loadFiltersFragment();
+                        mBottomSheetFragmentPerformer.loadFiltersFragment();
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        openBottomSheet();
+                        mBottomSheetPerformer.expandBottomSheet();
                         break;
                 }
                 break;
@@ -42,15 +44,15 @@ public class PortraitMainCoordinator
 
                     case BottomSheetFragmentType.FRAGMENT_NONE:
                         wtf();
-                        closeBottomSheet();
+                        mBottomSheetPerformer.closeBottomSheet();
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                        closeBottomSheet();
+                        mBottomSheetPerformer.closeBottomSheet();
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        markPendingActionDone();
+                        mDoneMarker.markPendingActionAsDone();
                         break;
                 }
                 break;
@@ -60,15 +62,15 @@ public class PortraitMainCoordinator
 
                     case BottomSheetFragmentType.FRAGMENT_NONE:
                         wtf();
-                        closeBottomSheet();
+                        mBottomSheetPerformer.closeBottomSheet();
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                        closeBottomSheet();
+                        mBottomSheetPerformer.closeBottomSheet();
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        markPendingActionDone();
+                        mDoneMarker.markPendingActionAsDone();
                         break;
                 }
                 break;
@@ -78,15 +80,15 @@ public class PortraitMainCoordinator
 
                     case BottomSheetFragmentType.FRAGMENT_NONE:
                         wtf();
-                        closeBottomSheet();
+                        mBottomSheetPerformer.closeBottomSheet();
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        markPendingActionDone();
+                        mDoneMarker.markPendingActionAsDone();
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                        markPendingActionDone();
+                        mDoneMarker.markPendingActionAsDone();
                         break;
                 }
                 break;
@@ -96,15 +98,15 @@ public class PortraitMainCoordinator
 
                     case BottomSheetFragmentType.FRAGMENT_NONE:
                         wtf();
-                        closeBottomSheet();
+                        mBottomSheetPerformer.closeBottomSheet();
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        markPendingActionDone();
+                        mDoneMarker.markPendingActionAsDone();
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                        closeBottomSheet();
+                        mBottomSheetPerformer.closeBottomSheet();
                         break;
                 }
                 break;

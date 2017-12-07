@@ -11,12 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.app.fragment.FiltersFragment;
 import org.lagonette.app.app.fragment.LocationDetailFragment;
-import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 import org.lagonette.app.util.UiUtil;
 
-public class BottomSheetFragmentPerformer
-        implements MainCoordinator.FragmentLoader {
+public class BottomSheetFragmentPerformer {
 
     public interface Observer {
 
@@ -164,7 +162,6 @@ public class BottomSheetFragmentPerformer
         }
     }
 
-    @Override
     public void unloadFragment() {
         if (mFragmentManager != null) {
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
@@ -187,7 +184,6 @@ public class BottomSheetFragmentPerformer
         }
     }
 
-    @Override
     public void loadFiltersFragment() {
         if (mFragmentManager != null) {
             mFiltersFragment = FiltersFragment.newInstance();
@@ -212,7 +208,6 @@ public class BottomSheetFragmentPerformer
         }
     }
 
-    @Override
     public void loadLocationFragment(long locationId, boolean animation) {
         if (mFragmentManager != null) {
             mLocationDetailFragment = LocationDetailFragment.newInstance(locationId);
