@@ -34,7 +34,7 @@ import org.lagonette.app.app.widget.performer.portrait.PortraitFabButtonsPerform
 import org.lagonette.app.app.widget.performer.portrait.PortraitMapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitSearchBarPerformer;
 
-public class MapsActivity
+public class MainActivity
         extends BaseActivity {
 
     private static final String TAG = "MapsActivity";
@@ -74,7 +74,7 @@ public class MapsActivity
         final Resources resources = getResources();
 
         mStateViewModel = ViewModelProviders
-                .of(MapsActivity.this)
+                .of(MainActivity.this)
                 .get(StateMapActivityViewModel.class);
 
         mMainStatefulAction = mStateViewModel.getMainStatefulActionLiveData();
@@ -85,7 +85,7 @@ public class MapsActivity
         mWorkStatus = mStateViewModel.getWorkStatus();
 
         mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(
-                MapsActivity.this,
+                MainActivity.this,
                 resources,
                 R.id.fragment_filters,
                 R.id.fragment_location_detail,
@@ -94,10 +94,10 @@ public class MapsActivity
 
         if (resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mBottomSheetPerformer = new LandscapeBottomSheetPerformer(R.id.bottom_sheet);
-            mMapFragmentPerformer = new LandscapeMapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
-            mLandscapeFiltersFragmentPerformer = new LandscapeFiltersFragmentPerformer(MapsActivity.this, R.id.fragment_filters);
+            mMapFragmentPerformer = new LandscapeMapFragmentPerformer(MainActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
+            mLandscapeFiltersFragmentPerformer = new LandscapeFiltersFragmentPerformer(MainActivity.this, R.id.fragment_filters);
             mLandscapeBottomSheetFragmentPerformer = new LandscapeBottomSheetFragmentPerformer(
-                    MapsActivity.this,
+                    MainActivity.this,
                     resources,
                     R.id.fragment_location_detail,
                     R.dimen.search_bar_supposed_height
@@ -114,7 +114,7 @@ public class MapsActivity
         }
         else {
             mBottomSheetPerformer = new PortraitBottomSheetPerformer(R.id.bottom_sheet);
-            mMapFragmentPerformer = new PortraitMapFragmentPerformer(MapsActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
+            mMapFragmentPerformer = new PortraitMapFragmentPerformer(MainActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
             mFabButtonsPerformer = new PortraitFabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
             mSearchBarPerformer = new PortraitSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
 
@@ -129,7 +129,7 @@ public class MapsActivity
 
     @Override
     protected void setContentView() {
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_main);
     }
 
     @Override
@@ -183,8 +183,8 @@ public class MapsActivity
         mBottomSheetFragmentPerformer.observe(mBottomSheetFragmentType);
 
         // LiveData --> Performer, Coordinator
-        mWorkStatus.observe(MapsActivity.this, mSearchBarPerformer::setWorkStatus);
-        mMainStatefulAction.observe(MapsActivity.this, mCoordinator::process);
+        mWorkStatus.observe(MainActivity.this, mSearchBarPerformer::setWorkStatus);
+        mMainStatefulAction.observe(MainActivity.this, mCoordinator::process);
 
         // Performer --> Performer
         // TODO store and pass value through a LiveData, give it to fragment performer, let performer send value to fragment
@@ -201,7 +201,7 @@ public class MapsActivity
 
             // Performer --> Performer
             mBottomSheetFragmentType.observe(
-                    MapsActivity.this,
+                    MainActivity.this,
                     ((PortraitSearchBarPerformer)mSearchBarPerformer)::notifyBottomSheetFragmentChanged
             );
             ((PortraitSearchBarPerformer)mSearchBarPerformer).observeOffset(
