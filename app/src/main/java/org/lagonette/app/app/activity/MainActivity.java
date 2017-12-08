@@ -172,7 +172,6 @@ public class MainActivity
         mMainStatefulAction.observe(MainActivity.this, mCoordinator::process);
 
         // Performer --> Performer
-        mBottomSheetPerformer.setFiltersFragmentPerformer(mFiltersFragmentPerformer);
         mBottomSheetPerformer.setLocationDetailFragmentPerformer(mLocationDetailFragmentPerformer);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
