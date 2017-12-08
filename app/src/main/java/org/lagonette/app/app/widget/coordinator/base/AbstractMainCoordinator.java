@@ -7,7 +7,6 @@ import android.util.Log;
 
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
-import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
@@ -33,18 +32,13 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
     protected final BottomSheetPerformer mBottomSheetPerformer;
 
     @NonNull
-    protected final BottomSheetFragmentPerformer mBottomSheetFragmentPerformer;
-
-    @NonNull
     protected final MapFragmentPerformer mMapFragmentPerformer;
 
     public AbstractMainCoordinator(
             @NonNull DoneMarker doneMarker,
             @NonNull BottomSheetPerformer bottomSheetPerformer,
-            @NonNull BottomSheetFragmentPerformer bottomSheetFragmentPerformer,
             @NonNull MapFragmentPerformer mapFragmentPerformer) {
-        mBottomSheetPerformer = bottomSheetPerformer; //TODO do init in init()
-        mBottomSheetFragmentPerformer = bottomSheetFragmentPerformer;
+        mBottomSheetPerformer = bottomSheetPerformer;
         mMapFragmentPerformer = mapFragmentPerformer;
         mDoneMarker = doneMarker;
     }
@@ -155,7 +149,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                         break;
 
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        mBottomSheetFragmentPerformer.unloadFragment();
+                        mBottomSheetPerformer.unloadFragment();
                         break;
                 }
                 break;
@@ -210,7 +204,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
 
                     case BottomSheetBehavior.STATE_HIDDEN:
                         if (statefulAction.action.item != null) {
-                            mBottomSheetFragmentPerformer.loadLocationFragment(statefulAction.action.item.getId(), false);
+                            mBottomSheetPerformer.loadLocationFragment(statefulAction.action.item.getId(), false);
                         } else {
                             mDoneMarker.markPendingActionAsDone();
                         }
@@ -230,7 +224,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                             statefulAction.action.shouldMove = false;
                             mMapFragmentPerformer.moveToLocation(statefulAction.action.item);
                         } else if (statefulAction.state.bottomSheetFragmentType.getLocationId() != selectedId) {
-                            mBottomSheetFragmentPerformer.loadLocationFragment(statefulAction.action.item.getId(), true);
+                            mBottomSheetPerformer.loadLocationFragment(statefulAction.action.item.getId(), true);
                         } else {
                             mDoneMarker.markPendingActionAsDone();
                         }

@@ -18,12 +18,12 @@ import org.lagonette.app.app.widget.livedata.BottomSheetFragmentTypeLiveData;
 import org.lagonette.app.app.widget.livedata.MainActionLiveData;
 import org.lagonette.app.app.widget.livedata.MainStateLiveData;
 import org.lagonette.app.app.widget.livedata.MainStatefulActionLiveData;
-import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.FabButtonsPerformer;
+import org.lagonette.app.app.widget.performer.base.FiltersFragmentPerformer;
+import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
-import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetFragmentPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeFabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeFiltersFragmentPerformer;
@@ -59,11 +59,9 @@ public class MainActivity
 
     private FabButtonsPerformer mFabButtonsPerformer;
 
-    private BottomSheetFragmentPerformer mBottomSheetFragmentPerformer;
+    private FiltersFragmentPerformer mFiltersFragmentPerformer;
 
-    private LandscapeFiltersFragmentPerformer mLandscapeFiltersFragmentPerformer;
-
-    private LandscapeBottomSheetFragmentPerformer mLandscapeBottomSheetFragmentPerformer;
+    private LocationDetailFragmentPerformer mLocationDetailFragmentPerformer;
 
     private MapFragmentPerformer mMapFragmentPerformer;
 
@@ -84,36 +82,24 @@ public class MainActivity
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
 
-        mBottomSheetFragmentPerformer = new BottomSheetFragmentPerformer(
-                MainActivity.this,
-                resources,
-                R.id.fragment_filters,
-                R.id.fragment_location_detail,
-                R.dimen.search_bar_supposed_height
-        );
+        mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(MainActivity.this, R.id.fragment_location_detail);
 
         if (resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mBottomSheetPerformer = new LandscapeBottomSheetPerformer(R.id.bottom_sheet);
+            mFiltersFragmentPerformer = new LandscapeFiltersFragmentPerformer(MainActivity.this, R.id.fragment_filters);
+            mBottomSheetPerformer = new LandscapeBottomSheetPerformer(resources, R.id.bottom_sheet, R.dimen.search_bar_supposed_height);
             mMapFragmentPerformer = new LandscapeMapFragmentPerformer(MainActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
-            mLandscapeFiltersFragmentPerformer = new LandscapeFiltersFragmentPerformer(MainActivity.this, R.id.fragment_filters);
-            mLandscapeBottomSheetFragmentPerformer = new LandscapeBottomSheetFragmentPerformer(
-                    MainActivity.this,
-                    resources,
-                    R.id.fragment_location_detail,
-                    R.dimen.search_bar_supposed_height
-            );
             mFabButtonsPerformer = new LandscapeFabButtonsPerformer(R.id.my_location_fab);
             mSearchBarPerformer = new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
 
             mCoordinator = new LandscapeMainCoordinator(
                     mAction::markDone,
                     mBottomSheetPerformer,
-                    mBottomSheetFragmentPerformer,
                     mMapFragmentPerformer
             );
         }
         else {
-            mBottomSheetPerformer = new PortraitBottomSheetPerformer(R.id.bottom_sheet);
+            mFiltersFragmentPerformer = new FiltersFragmentPerformer(MainActivity.this, R.id.fragment_filters);
+            mBottomSheetPerformer = new PortraitBottomSheetPerformer(resources, R.id.bottom_sheet, R.dimen.search_bar_supposed_height);
             mMapFragmentPerformer = new PortraitMapFragmentPerformer(MainActivity.this, R.id.content, R.dimen.search_bar_supposed_height);
             mFabButtonsPerformer = new PortraitFabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
             mSearchBarPerformer = new PortraitSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
@@ -121,7 +107,6 @@ public class MainActivity
             mCoordinator = new PortraitMainCoordinator(
                     mAction::markDone,
                     mBottomSheetPerformer,
-                    mBottomSheetFragmentPerformer,
                     mMapFragmentPerformer
             );
         }
@@ -145,7 +130,7 @@ public class MainActivity
         mMapFragmentPerformer.init();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mLandscapeFiltersFragmentPerformer.init();
+            mFiltersFragmentPerformer.init();
         }
         else {
             mBottomSheetPerformer.init();
@@ -155,14 +140,14 @@ public class MainActivity
     @Override
     protected void restore(@NonNull Bundle savedInstanceState) {
         mMapFragmentPerformer.restore();
+        mFiltersFragmentPerformer.restore();
+        mLocationDetailFragmentPerformer.restore();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mLandscapeFiltersFragmentPerformer.restore();
-            mLandscapeBottomSheetFragmentPerformer.restore(mBottomSheetFragmentType.getValue());
+            mFiltersFragmentPerformer.restore();
         }
         else {
-            //noinspection ConstantConditions
-            mBottomSheetFragmentPerformer.restore(mBottomSheetFragmentType.getValue());
+
         }
     }
 
@@ -178,17 +163,17 @@ public class MainActivity
         mSearchBarPerformer.observeSearch(mSearch::setValue);
 
         // Performer's state --> LiveData
+        mBottomSheetPerformer.observeFragmentLoaded(mBottomSheetFragmentType);
         mBottomSheetPerformer.observeState(mState::notifyBottomSheetStateChanged);
         mMapFragmentPerformer.observeMovement(mState::notifyMapMovementChanged);
-        mBottomSheetFragmentPerformer.observe(mBottomSheetFragmentType);
 
         // LiveData --> Performer, Coordinator
         mWorkStatus.observe(MainActivity.this, mSearchBarPerformer::setWorkStatus);
         mMainStatefulAction.observe(MainActivity.this, mCoordinator::process);
 
         // Performer --> Performer
-        // TODO store and pass value through a LiveData, give it to fragment performer, let performer send value to fragment
-        mBottomSheetPerformer.observeSlide(mBottomSheetFragmentPerformer::notifyBottomSheetSlide);
+        mBottomSheetPerformer.setFiltersFragmentPerformer(mFiltersFragmentPerformer);
+        mBottomSheetPerformer.setLocationDetailFragmentPerformer(mLocationDetailFragmentPerformer);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
@@ -200,6 +185,7 @@ public class MainActivity
             ((PortraitFabButtonsPerformer) mFabButtonsPerformer).observeFiltersClick(mAction::openFilters); //TODO Do better
 
             // Performer --> Performer
+            mBottomSheetPerformer.setFiltersFragmentPerformer(mFiltersFragmentPerformer);
             mBottomSheetFragmentType.observe(
                     MainActivity.this,
                     ((PortraitSearchBarPerformer)mSearchBarPerformer)::notifyBottomSheetFragmentChanged
@@ -208,7 +194,7 @@ public class MainActivity
                     offset -> {
                         //TODO Do better
                         ((PortraitMapFragmentPerformer) mMapFragmentPerformer).notifySearchBarOffsetChanged(offset);
-                        mBottomSheetFragmentPerformer.notifySearchBarOffsetChanged(offset);
+                        mBottomSheetPerformer.notifySearchBarOffsetChanged(offset);
                     }
             );
         }

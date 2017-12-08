@@ -114,7 +114,6 @@ public class FiltersFragment
         mFilterList.setItemAnimator(null); //TODO Remove
     }
 
-
     @Override
     public void updateTopPadding(int top) {
         mFilterContainer.setPadding(0, top, 0, 0);

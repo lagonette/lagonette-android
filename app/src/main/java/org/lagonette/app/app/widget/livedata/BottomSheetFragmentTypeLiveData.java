@@ -4,14 +4,14 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.app.app.widget.performer.BottomSheetFragmentPerformer;
+import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 
 public class BottomSheetFragmentTypeLiveData
         extends LiveData<BottomSheetFragmentType>
-        implements BottomSheetFragmentPerformer.Observer {
+        implements BottomSheetPerformer.FragmentObserver {
 
-    //TODO Do not implement BottomSheetFragmentPerformer.Observer
+    //TODO Do not implement BottomSheetPerformer.FragmentObserver
 
     @Nullable
     private BottomSheetFragmentType mNone;
