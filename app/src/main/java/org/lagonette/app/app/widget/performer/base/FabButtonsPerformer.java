@@ -8,21 +8,21 @@ import android.view.View;
 
 public abstract class FabButtonsPerformer {
 
-    public interface PositionClickObserver {
+    public interface OnPositionClickCommand {
 
         void notifyPositionButtonClick();
     }
 
-    public interface PositionLongClickObserver {
+    public interface OnPositionLongClickCommand {
 
         void notifyPositionButtonLongClick();
     }
 
     @Nullable
-    private PositionClickObserver mPositionClickObserver;
+    private OnPositionClickCommand mOnPositionClickCommand;
 
     @Nullable
-    private PositionLongClickObserver mPositionLongClickObserver;
+    private OnPositionLongClickCommand mOnPositionLongClickCommand;
 
     @IdRes
     private int mPositionButtonRes;
@@ -35,15 +35,15 @@ public abstract class FabButtonsPerformer {
         FloatingActionButton positionFab = view.findViewById(mPositionButtonRes);
         positionFab.setOnClickListener(
                 button -> {
-                    if (mPositionClickObserver != null) {
-                        mPositionClickObserver.notifyPositionButtonClick();
+                    if (mOnPositionClickCommand != null) {
+                        mOnPositionClickCommand.notifyPositionButtonClick();
                     }
                 }
         );
         positionFab.setOnLongClickListener(
                 button -> {
-                    if (mPositionLongClickObserver != null) {
-                        mPositionLongClickObserver.notifyPositionButtonLongClick();
+                    if (mOnPositionLongClickCommand != null) {
+                        mOnPositionLongClickCommand.notifyPositionButtonLongClick();
                         return true;
                     }
                     return false;
@@ -51,11 +51,11 @@ public abstract class FabButtonsPerformer {
         );
     }
 
-    public void observePositionClick(@Nullable PositionClickObserver observer) {
-        mPositionClickObserver = observer;
+    public void onPositionClick(@Nullable OnPositionClickCommand command) {
+        mOnPositionClickCommand = command;
     }
 
-    public void observePositionLongClick(@Nullable PositionLongClickObserver observer) {
-        mPositionLongClickObserver = observer;
+    public void observePositionLongClick(@Nullable OnPositionLongClickCommand command) {
+        mOnPositionLongClickCommand = command;
     }
 }

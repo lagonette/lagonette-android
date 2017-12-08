@@ -16,7 +16,7 @@ import org.lagonette.app.util.UiUtil;
 
 public abstract class SearchBarPerformer {
 
-    public interface SearchObserver {
+    public interface OnSearchCommand {
 
         void notifySearch(@Nullable String search);
     }
@@ -27,7 +27,7 @@ public abstract class SearchBarPerformer {
     }
 
     @Nullable
-    private SearchObserver mSearchObserver;
+    private OnSearchCommand mOnSearchCommand;
 
     @Nullable
     protected View mSearchBar;
@@ -129,8 +129,8 @@ public abstract class SearchBarPerformer {
 
                             @Override
                             public void afterTextChanged(Editable editable) {
-                                if (mSearchObserver != null) {
-                                    mSearchObserver.notifySearch(editable.toString());
+                                if (mOnSearchCommand != null) {
+                                    mOnSearchCommand.notifySearch(editable.toString());
                                 }
                             }
                         }
@@ -138,7 +138,7 @@ public abstract class SearchBarPerformer {
         );
     }
 
-    public void observeSearch(@NonNull SearchObserver observer) {
-        mSearchObserver = observer;
+    public void onSearch(@NonNull OnSearchCommand onSearch) {
+        mOnSearchCommand = onSearch;
     }
 }

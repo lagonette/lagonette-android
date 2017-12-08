@@ -55,22 +55,22 @@ public class MapsFragment
         GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback {
 
-    public interface MapMovementCallback {
+    public interface OnMapMovementCommand {
 
         void notifyMapMovementState(@MainState.Movement int newState);
     }
 
-    public interface ClusterClickCallback {
+    public interface OnClusterClickCommand {
 
         void notifyClusterClick(@NonNull Cluster<PartnerItem> cluster);
     }
 
-    public interface ItemClickCallback {
+    public interface OnItemClickCommand {
 
         void notifyItemClick(@NonNull PartnerItem item);
     }
 
-    public interface MapClickCallback {
+    public interface OnMapClickCommand {
 
         void notifyMapClick();
     }
@@ -118,16 +118,16 @@ public class MapsFragment
     private LongSparseArray<PartnerItem> mPartnerItems;
 
     @Nullable
-    private MapMovementCallback mMovementCallback;
+    private OnMapMovementCommand mOnMovementCommand;
 
     @Nullable
-    private ClusterClickCallback mClusterClickCallback;
+    private OnClusterClickCommand mOnClusterClickCommand;
 
     @Nullable
-    private ItemClickCallback mItemClickCallback;
+    private OnItemClickCommand mOnItemClickCommand;
 
     @Nullable
-    private MapClickCallback mMapClickCallback;
+    private OnMapClickCommand mOnMapClickCommand;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -309,31 +309,31 @@ public class MapsFragment
         );
         mMap.setOnMapClickListener(
                 latLng -> {
-                    if (mMapClickCallback != null) {
-                        mMapClickCallback.notifyMapClick();
+                    if (mOnMapClickCommand != null) {
+                        mOnMapClickCommand.notifyMapClick();
                     }
                 }
         );
         mMap.setOnCameraMoveStartedListener(
                 reason -> {
-                    if (mMovementCallback != null) {
-                        mMovementCallback.notifyMapMovementState(MainState.STATE_MOVEMENT_MOVE);
+                    if (mOnMovementCommand != null) {
+                        mOnMovementCommand.notifyMapMovementState(MainState.STATE_MOVEMENT_MOVE);
                     }
                 }
         );
         mMap.setOnCameraIdleListener(
                 () -> {
                     mClusterManager.onCameraIdle();
-                    if (mMovementCallback != null) {
-                        mMovementCallback.notifyMapMovementState(MainState.STATE_MOVEMENT_IDLE);
+                    if (mOnMovementCommand != null) {
+                        mOnMovementCommand.notifyMapMovementState(MainState.STATE_MOVEMENT_IDLE);
                     }
                 }
         );
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(
                 cluster -> {
-                    if (mClusterClickCallback != null) {
-                        mClusterClickCallback.notifyClusterClick(cluster);
+                    if (mOnClusterClickCommand != null) {
+                        mOnClusterClickCommand.notifyClusterClick(cluster);
                         return true;
                     }
                     return false;
@@ -341,8 +341,8 @@ public class MapsFragment
         );
         mClusterManager.setOnClusterItemClickListener(
                 item -> {
-                    if (mItemClickCallback != null) {
-                        mItemClickCallback.notifyItemClick(item);
+                    if (mOnItemClickCommand != null) {
+                        mOnItemClickCommand.notifyItemClick(item);
                         return true;
                     }
                     return false;
@@ -537,20 +537,20 @@ public class MapsFragment
                 .show();
     }
 
-    public void observeMovement(@Nullable MapMovementCallback callback) {
-        mMovementCallback = callback;
+    public void onMovement(@Nullable OnMapMovementCommand command) {
+        mOnMovementCommand = command;
     }
 
-    public void observeClusterClick(@Nullable ClusterClickCallback callback) {
-        mClusterClickCallback = callback;
+    public void onClusterClick(@Nullable OnClusterClickCommand command) {
+        mOnClusterClickCommand = command;
     }
 
-    public void observeItemClick(@Nullable ItemClickCallback callback) {
-        mItemClickCallback = callback;
+    public void observeItemClick(@Nullable OnItemClickCommand command) {
+        mOnItemClickCommand = command;
     }
 
-    public void observeMapClick(@Nullable MapClickCallback callback) {
-        mMapClickCallback = callback;
+    public void observeMapClick(@Nullable OnMapClickCommand command) {
+        mOnMapClickCommand = command;
     }
 
 }

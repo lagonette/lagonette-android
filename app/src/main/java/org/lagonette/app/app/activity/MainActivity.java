@@ -154,18 +154,18 @@ public class MainActivity
     @Override
     protected void onActivityCreated() {
         // Performer's action --> LiveData
-        mMapFragmentPerformer.observeClusterClick(mAction::moveToCluster);
-        mMapFragmentPerformer.observeItemClick(mAction::moveToLocation);
-        mMapFragmentPerformer.observeMapClick(mAction::showFullMap);
-        mFabButtonsPerformer.observePositionClick(mAction::moveToMyLocation);
+        mMapFragmentPerformer.onClusterClick(mAction::moveToCluster);
+        mMapFragmentPerformer.onItemClick(mAction::moveToLocation);
+        mMapFragmentPerformer.onMapClick(mAction::showFullMap);
+        mFabButtonsPerformer.onPositionClick(mAction::moveToMyLocation);
         mFabButtonsPerformer.observePositionLongClick(mAction::moveToFootprint);
 
-        mSearchBarPerformer.observeSearch(mSearch::setValue);
+        mSearchBarPerformer.onSearch(mSearch::setValue);
 
         // Performer's state --> LiveData
         mBottomSheetPerformer.observeFragmentLoaded(mBottomSheetFragmentType);
         mBottomSheetPerformer.observeState(mState::notifyBottomSheetStateChanged);
-        mMapFragmentPerformer.observeMovement(mState::notifyMapMovementChanged);
+        mMapFragmentPerformer.onMovement(mState::notifyMapMovementChanged);
 
         // LiveData --> Performer, Coordinator
         mWorkStatus.observe(MainActivity.this, mSearchBarPerformer::setWorkStatus);

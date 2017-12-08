@@ -78,27 +78,27 @@ public  abstract class MapFragmentPerformer {
         }
     }
 
-    public void observeMovement(@Nullable MapsFragment.MapMovementCallback callback) {
+    public void onMovement(@Nullable MapsFragment.OnMapMovementCommand command) {
         if (mFragment != null) {
-            mFragment.observeMovement(callback);
+            mFragment.onMovement(command);
         }
     }
 
-    public void observeClusterClick(@Nullable MapsFragment.ClusterClickCallback callback) {
+    public void onClusterClick(@Nullable MapsFragment.OnClusterClickCommand command) {
         if (mFragment != null) {
-            mFragment.observeClusterClick(callback);
+            mFragment.onClusterClick(command);
         }
     }
 
-    public void observeItemClick(@Nullable MapsFragment.ItemClickCallback callback) {
+    public void onItemClick(@Nullable MapsFragment.OnItemClickCommand command) {
         if (mFragment != null) {
-            mFragment.observeItemClick(callback);
+            mFragment.observeItemClick(command);
         }
     }
 
-    public void observeMapClick(@Nullable MapsFragment.MapClickCallback callback) {
+    public void onMapClick(@Nullable MapsFragment.OnMapClickCommand command) {
         if (mFragment != null) {
-            mFragment.observeMapClick(callback);
+            mFragment.observeMapClick(command);
         }
     }
 }
