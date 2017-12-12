@@ -16,7 +16,7 @@ public class PortraitSearchBarPerformer
     private TopEscapeBehavior mBehavior;
 
     @Nullable
-    private OffsetObserver mOffsetObserver;
+    private OnOffsetChangedCommand mOnOffsetChangedCommand;
 
     public PortraitSearchBarPerformer(
             @IdRes int searchBarRes,
@@ -32,15 +32,15 @@ public class PortraitSearchBarPerformer
         mBehavior = TopEscapeBehavior.from(mSearchBar);
         mBehavior.setOnMoveListener(
                 (child, translationY) -> {
-                    if (mOffsetObserver != null) {
-                        mOffsetObserver.notifyOffsetChanged(translationY);
+                    if (mOnOffsetChangedCommand != null) {
+                        mOnOffsetChangedCommand.notifyOffsetChanged(translationY);
                     }
                 }
         );
     }
 
-    public void observeOffset(@NonNull OffsetObserver observer) {
-        mOffsetObserver = observer;
+    public void onOffsetChanged(@NonNull OnOffsetChangedCommand command) {
+        mOnOffsetChangedCommand = command;
     }
 
     public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentType bottomSheetFragmentType) {

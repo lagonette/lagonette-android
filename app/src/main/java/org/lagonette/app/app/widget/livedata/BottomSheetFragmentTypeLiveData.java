@@ -23,17 +23,17 @@ public class BottomSheetFragmentTypeLiveData
     private BottomSheetFragmentType mLocation;
 
     @Override
-    public void notifyUnload() {
+    public void onUnload() {
         super.setValue(getNone());
     }
 
     @Override
-    public void notifyFiltersLoaded() {
+    public void onFiltersLoaded() {
         super.setValue(getFilters());
     }
 
     @Override
-    public void notifyLocationLoaded(long locationId) {
+    public void onLocationLoaded(long locationId) {
         super.setValue(getLocation(locationId));
     }
 

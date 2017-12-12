@@ -57,22 +57,22 @@ public class MapsFragment
 
     public interface OnMapMovementCommand {
 
-        void notifyMapMovementState(@MainState.Movement int newState);
+        void onMapMovementStateChanged(@MainState.Movement int newState);
     }
 
     public interface OnClusterClickCommand {
 
-        void notifyClusterClick(@NonNull Cluster<PartnerItem> cluster);
+        void onClusterClick(@NonNull Cluster<PartnerItem> cluster);
     }
 
     public interface OnItemClickCommand {
 
-        void notifyItemClick(@NonNull PartnerItem item);
+        void onItemClick(@NonNull PartnerItem item);
     }
 
     public interface OnMapClickCommand {
 
-        void notifyMapClick();
+        void onMapClick();
     }
 
     public static final String TAG = "MapsFragment";
@@ -310,14 +310,14 @@ public class MapsFragment
         mMap.setOnMapClickListener(
                 latLng -> {
                     if (mOnMapClickCommand != null) {
-                        mOnMapClickCommand.notifyMapClick();
+                        mOnMapClickCommand.onMapClick();
                     }
                 }
         );
         mMap.setOnCameraMoveStartedListener(
                 reason -> {
                     if (mOnMovementCommand != null) {
-                        mOnMovementCommand.notifyMapMovementState(MainState.STATE_MOVEMENT_MOVE);
+                        mOnMovementCommand.onMapMovementStateChanged(MainState.STATE_MOVEMENT_MOVE);
                     }
                 }
         );
@@ -325,7 +325,7 @@ public class MapsFragment
                 () -> {
                     mClusterManager.onCameraIdle();
                     if (mOnMovementCommand != null) {
-                        mOnMovementCommand.notifyMapMovementState(MainState.STATE_MOVEMENT_IDLE);
+                        mOnMovementCommand.onMapMovementStateChanged(MainState.STATE_MOVEMENT_IDLE);
                     }
                 }
         );
@@ -333,7 +333,7 @@ public class MapsFragment
         mClusterManager.setOnClusterClickListener(
                 cluster -> {
                     if (mOnClusterClickCommand != null) {
-                        mOnClusterClickCommand.notifyClusterClick(cluster);
+                        mOnClusterClickCommand.onClusterClick(cluster);
                         return true;
                     }
                     return false;
@@ -342,7 +342,7 @@ public class MapsFragment
         mClusterManager.setOnClusterItemClickListener(
                 item -> {
                     if (mOnItemClickCommand != null) {
-                        mOnItemClickCommand.notifyItemClick(item);
+                        mOnItemClickCommand.onItemClick(item);
                         return true;
                     }
                     return false;

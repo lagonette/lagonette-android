@@ -55,7 +55,7 @@ public abstract class FabButtonsPerformer {
         mOnPositionClickCommand = command;
     }
 
-    public void observePositionLongClick(@Nullable OnPositionLongClickCommand command) {
+    public void onPositionLongClick(@Nullable OnPositionLongClickCommand command) {
         mOnPositionLongClickCommand = command;
     }
 }

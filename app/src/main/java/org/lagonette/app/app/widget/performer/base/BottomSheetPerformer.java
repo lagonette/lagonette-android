@@ -14,18 +14,18 @@ import org.lagonette.app.util.UiUtil;
 public abstract class BottomSheetPerformer
         extends BottomSheetBehavior.BottomSheetCallback {
 
-    public interface StateObserver {
+    public interface OnStateChangedCommand {
 
-        void notifyBottomSheetStateChanged(@MainState.State int newState);
+        void onStateChanged(@MainState.State int newState);
     }
 
     public interface FragmentObserver {
 
-        void notifyUnload();
+        void onUnload();
 
-        void notifyFiltersLoaded();
+        void onFiltersLoaded();
 
-        void notifyLocationLoaded(long locationId);
+        void onLocationLoaded(long locationId);
 
     }
 
@@ -72,7 +72,7 @@ public abstract class BottomSheetPerformer
     private Slideable mSlideablePerformer;
 
     @Nullable
-    private StateObserver mStateObserver;
+    private OnStateChangedCommand mOnStateChangedCommand;
 
     @Nullable
     protected BottomSheetBehavior<View> mBehavior;
@@ -168,7 +168,7 @@ public abstract class BottomSheetPerformer
         mSlideablePerformer = null;
 
         if (mFragmentObserver != null) {
-            mFragmentObserver.notifyUnload();
+            mFragmentObserver.onUnload();
         }
     }
 
@@ -178,7 +178,7 @@ public abstract class BottomSheetPerformer
             mSlideablePerformer = mFiltersFragmentPerformer;
 
             if (mFragmentObserver != null) {
-                mFragmentObserver.notifyFiltersLoaded();
+                mFragmentObserver.onFiltersLoaded();
             }
         }
     }
@@ -190,15 +190,15 @@ public abstract class BottomSheetPerformer
             mSlideablePerformer = mLocationDetailFragmentPerformer;
 
             if (mFragmentObserver != null) {
-                mFragmentObserver.notifyLocationLoaded(locationId);
+                mFragmentObserver.onLocationLoaded(locationId);
             }
         }
     }
 
     @Override
     public void onStateChanged(@NonNull View bottomSheet, @MainState.State int newState) {
-        if (mStateObserver != null) {
-            mStateObserver.notifyBottomSheetStateChanged(newState);
+        if (mOnStateChangedCommand != null) {
+            mOnStateChangedCommand.onStateChanged(newState);
         }
     }
 
@@ -223,11 +223,11 @@ public abstract class BottomSheetPerformer
         }
     }
 
-    public void observeState(@Nullable StateObserver stateObserver) {
-        mStateObserver = stateObserver;
+    public void onStateChanged(@Nullable OnStateChangedCommand onStateChangedCommand) {
+        mOnStateChangedCommand = onStateChangedCommand;
     }
 
-    public void observeFragmentLoaded(@Nullable FragmentObserver fragmentObserver) {
+    public void onFragmentLoaded(@Nullable FragmentObserver fragmentObserver) {
         mFragmentObserver = fragmentObserver;
     }
 

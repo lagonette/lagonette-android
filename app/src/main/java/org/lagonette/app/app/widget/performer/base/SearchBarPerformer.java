@@ -21,7 +21,7 @@ public abstract class SearchBarPerformer {
         void notifySearch(@Nullable String search);
     }
 
-    public interface OffsetObserver {
+    public interface OnOffsetChangedCommand {
 
         void notifyOffsetChanged(int offset);
     }

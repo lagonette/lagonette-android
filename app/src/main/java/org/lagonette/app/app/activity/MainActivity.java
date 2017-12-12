@@ -158,13 +158,13 @@ public class MainActivity
         mMapFragmentPerformer.onItemClick(mAction::moveToLocation);
         mMapFragmentPerformer.onMapClick(mAction::showFullMap);
         mFabButtonsPerformer.onPositionClick(mAction::moveToMyLocation);
-        mFabButtonsPerformer.observePositionLongClick(mAction::moveToFootprint);
+        mFabButtonsPerformer.onPositionLongClick(mAction::moveToFootprint);
 
         mSearchBarPerformer.onSearch(mSearch::setValue);
 
         // Performer's state --> LiveData
-        mBottomSheetPerformer.observeFragmentLoaded(mBottomSheetFragmentType);
-        mBottomSheetPerformer.observeState(mState::notifyBottomSheetStateChanged);
+        mBottomSheetPerformer.onFragmentLoaded(mBottomSheetFragmentType);
+        mBottomSheetPerformer.onStateChanged(mState::notifyBottomSheetStateChanged);
         mMapFragmentPerformer.onMovement(mState::notifyMapMovementChanged);
 
         // LiveData --> Performer, Coordinator
@@ -181,15 +181,17 @@ public class MainActivity
             //TODO Check correctly initialisation and conf change.
 
             // Performer's action --> LiveData
-            ((PortraitFabButtonsPerformer) mFabButtonsPerformer).observeFiltersClick(mAction::openFilters); //TODO Do better
+            ((PortraitFabButtonsPerformer) mFabButtonsPerformer).onFiltersClick(mAction::openFilters); //TODO Do better
 
-            // Performer --> Performer
-            mBottomSheetPerformer.setFiltersFragmentPerformer(mFiltersFragmentPerformer);
+            // LiveData --> Performer, Coordinator
             mBottomSheetFragmentType.observe(
                     MainActivity.this,
                     ((PortraitSearchBarPerformer)mSearchBarPerformer)::notifyBottomSheetFragmentChanged
             );
-            ((PortraitSearchBarPerformer)mSearchBarPerformer).observeOffset(
+
+            // Performer --> Performer
+            mBottomSheetPerformer.setFiltersFragmentPerformer(mFiltersFragmentPerformer);
+            ((PortraitSearchBarPerformer)mSearchBarPerformer).onOffsetChanged(
                     offset -> {
                         //TODO Do better
                         ((PortraitMapFragmentPerformer) mMapFragmentPerformer).notifySearchBarOffsetChanged(offset);

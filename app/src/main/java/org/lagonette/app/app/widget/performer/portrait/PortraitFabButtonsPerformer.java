@@ -10,13 +10,13 @@ import org.lagonette.app.app.widget.performer.base.FabButtonsPerformer;
 
 public class PortraitFabButtonsPerformer extends FabButtonsPerformer {
 
-    public interface FiltersObserver {
+    public interface OnFiltersClickCommand {
 
         void notifyFiltersButtonClick();
     }
 
     @Nullable
-    private FiltersObserver mFiltersObserver;
+    private OnFiltersClickCommand mOnFiltersClickCommand;
 
     @IdRes
     private int mFiltersButtonRes;
@@ -33,14 +33,14 @@ public class PortraitFabButtonsPerformer extends FabButtonsPerformer {
         FloatingActionButton filtersFab = view.findViewById(mFiltersButtonRes);
         filtersFab.setOnClickListener(
                 button -> {
-                    if (mFiltersObserver != null) {
-                        mFiltersObserver.notifyFiltersButtonClick();
+                    if (mOnFiltersClickCommand != null) {
+                        mOnFiltersClickCommand.notifyFiltersButtonClick();
                     }
                 }
         );
     }
 
-    public void observeFiltersClick(@Nullable FiltersObserver observer) {
-        mFiltersObserver = observer;
+    public void onFiltersClick(@Nullable OnFiltersClickCommand command) {
+        mOnFiltersClickCommand = command;
     }
 }
