@@ -147,7 +147,7 @@ public class MainActivity
             mFiltersFragmentPerformer.restore();
         }
         else {
-
+            //TODO Unload filters fragment on conf' changed if needed (do not forget when 2 conf' changed occurred and the bottom sheet fragment does not changed
         }
     }
 
