@@ -1,6 +1,5 @@
 package org.lagonette.app.app.widget.presenter;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +43,6 @@ public class PortraitMainPresenter
     @Override
     public void init(@NonNull AppCompatActivity activity) {
         super.init(activity);
-        mBottomSheetPerformer.init();
     }
 
     @Override

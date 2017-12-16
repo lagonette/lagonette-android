@@ -88,6 +88,7 @@ public abstract class MainPresenter<CO extends MainCoordinator,
     @CallSuper
     public void init(@NonNull AppCompatActivity activity) {
         mMapFragmentPerformer.init();
+        mBottomSheetPerformer.init();
     }
 
     @Override

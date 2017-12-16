@@ -14,7 +14,7 @@ public class LandscapeFiltersFragmentPerformer extends FiltersFragmentPerformer 
     @Override
     public void restore() {
         super.restore();
-        if (isLoaded()) {
+        if (!isLoaded()) {
             loadFragment();
         }
     }
