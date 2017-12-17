@@ -5,16 +5,16 @@ import android.support.design.widget.BottomSheetBehavior;
 
 import org.lagonette.app.app.widget.coordinator.base.AbstractMainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
-import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
 
 public class PortraitMainCoordinator
-        extends AbstractMainCoordinator {
+        extends AbstractMainCoordinator<PortraitBottomSheetPerformer> {
 
     public PortraitMainCoordinator(
             @NonNull DoneMarker doneMarker,
-            @NonNull BottomSheetPerformer bottomSheetPerformer,
+            @NonNull PortraitBottomSheetPerformer bottomSheetPerformer,
             @NonNull MapFragmentPerformer mapFragmentPerformer) {
         super(doneMarker, bottomSheetPerformer, mapFragmentPerformer);
     }

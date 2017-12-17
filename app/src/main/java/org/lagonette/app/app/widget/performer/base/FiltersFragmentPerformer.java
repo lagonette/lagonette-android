@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.app.fragment.FiltersFragment;
 
-public class FiltersFragmentPerformer
+public abstract class FiltersFragmentPerformer
         implements BottomSheetPerformer.Slideable {
 
 
@@ -28,9 +28,7 @@ public class FiltersFragmentPerformer
         mFiltersContainerRes = filtersContainerRes;
     }
 
-    public void init () {
-        loadFragment();
-    }
+    public abstract void init();
 
     public void restore() {
         mFragment = (FiltersFragment) mFragmentManager.findFragmentByTag(FiltersFragment.TAG);

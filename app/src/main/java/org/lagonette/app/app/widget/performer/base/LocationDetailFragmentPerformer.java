@@ -55,7 +55,11 @@ public class LocationDetailFragmentPerformer
         }
     }
 
-    public void loadLocationFragment(long locationId, boolean animation) {
+    public boolean isLoaded() {
+        return mFragment != null;
+    }
+
+    public void loadFragment(long locationId, boolean animation) {
         if (mFragmentManager != null) {
             mFragment = LocationDetailFragment.newInstance(locationId);
             FragmentTransaction transaction = mFragmentManager.beginTransaction();

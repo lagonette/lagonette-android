@@ -3,7 +3,6 @@ package org.lagonette.app.app.widget.presenter;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
@@ -18,16 +17,12 @@ import org.lagonette.app.app.widget.livedata.MainStateLiveData;
 import org.lagonette.app.app.widget.livedata.MainStatefulActionLiveData;
 import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.FabButtonsPerformer;
-import org.lagonette.app.app.widget.performer.base.FiltersFragmentPerformer;
-import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
 
 public abstract class MainPresenter<CO extends MainCoordinator,
         BSP extends BottomSheetPerformer,
         FBP extends FabButtonsPerformer,
-        FFP extends FiltersFragmentPerformer,
-        LDFP extends LocationDetailFragmentPerformer,
         MFP extends MapFragmentPerformer,
         SBP extends SearchBarPerformer>
         implements ActivityPresenter {
@@ -51,10 +46,6 @@ public abstract class MainPresenter<CO extends MainCoordinator,
     protected BSP mBottomSheetPerformer;
 
     protected FBP mFabButtonsPerformer;
-
-    protected FFP mFiltersFragmentPerformer;
-
-    protected LDFP mLocationDetailFragmentPerformer;
 
     protected MFP mMapFragmentPerformer;
 
@@ -95,8 +86,7 @@ public abstract class MainPresenter<CO extends MainCoordinator,
     @CallSuper
     public void restore(@NonNull AppCompatActivity activity, @NonNull Bundle savedInstanceState) {
         mMapFragmentPerformer.restore();
-        mFiltersFragmentPerformer.restore();
-        mLocationDetailFragmentPerformer.restore();
+        mBottomSheetPerformer.restore(mState.getValue());
     }
 
     @Override
@@ -119,9 +109,6 @@ public abstract class MainPresenter<CO extends MainCoordinator,
         // LiveData --> Performer, Coordinator
         mWorkStatus.observe(activity, mSearchBarPerformer::setWorkStatus);
         mMainStatefulAction.observe(activity, mCoordinator::process);
-
-        // Performer --> Performer
-        mBottomSheetPerformer.setLocationDetailFragmentPerformer(mLocationDetailFragmentPerformer);
     }
 
     @CallSuper

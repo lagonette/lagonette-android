@@ -1,6 +1,7 @@
 package org.lagonette.app.app.widget.performer.base;
 
 import android.content.res.Resources;
+import android.support.annotation.CallSuper;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -62,14 +63,11 @@ public abstract class BottomSheetPerformer
         }
     }
 
-    @Nullable
-    private LocationDetailFragmentPerformer mLocationDetailFragmentPerformer;
+    @NonNull
+    protected final LocationDetailFragmentPerformer mLocationDetailFragmentPerformer;
 
     @Nullable
-    private FiltersFragmentPerformer mFiltersFragmentPerformer;
-
-    @Nullable
-    private Slideable mSlideablePerformer;
+    protected Slideable mSlideablePerformer;
 
     @Nullable
     private OnStateChangedCommand mOnStateChangedCommand;
@@ -84,15 +82,17 @@ public abstract class BottomSheetPerformer
     private int mBottomSheetRes;
 
     @Nullable
-    private FragmentObserver mFragmentObserver;
+    protected FragmentObserver mFragmentObserver;
 
     @NonNull
     private Padding mPadding;
 
     public BottomSheetPerformer(
             @NonNull Resources resources,
+            @NonNull LocationDetailFragmentPerformer locationDetailFragmentPerformer,
             @IdRes int bottomSheetRes,
             @DimenRes int searchBarHeightRes) {
+        mLocationDetailFragmentPerformer = locationDetailFragmentPerformer;
         mBottomSheetRes = bottomSheetRes;
         mPadding = new Padding();
         mPadding.statusBarHeight = UiUtil.getStatusBarHeight(resources);
@@ -112,29 +112,16 @@ public abstract class BottomSheetPerformer
             throw new IllegalStateException("inject() must be called before init()");
         }
 
+        //mLocationDetailFragmentPerformer.init();
+
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
-    public void restore(@MainState.State int restoredState) {
-        if (mBehavior == null) {
-            throw new IllegalStateException("inject() must be called before restore()");
-        }
-
-        switch (restoredState) {
-
-            case BottomSheetBehavior.STATE_DRAGGING:
-            case BottomSheetBehavior.STATE_SETTLING:
-                restoredState = BottomSheetBehavior.STATE_COLLAPSED;
-                break;
-
-            case BottomSheetBehavior.STATE_HIDDEN:
-            case BottomSheetBehavior.STATE_COLLAPSED:
-            case BottomSheetBehavior.STATE_EXPANDED:
-                // Do nothing
-                break;
-        }
-
-        mBehavior.setState(restoredState);
+    // TODO One State class by performer ?
+    // TODO Put *FragmentPerformer#restore() here
+    @CallSuper
+    public void restore(@NonNull MainState mainState) {
+        mLocationDetailFragmentPerformer.restore();
     }
 
     public void closeBottomSheet() {
@@ -156,9 +143,6 @@ public abstract class BottomSheetPerformer
     }
 
     public void unloadFragment() {
-        if (mFiltersFragmentPerformer != null) {
-            mFiltersFragmentPerformer.unloadFragment();
-        }
 
         if (mLocationDetailFragmentPerformer != null) {
             mLocationDetailFragmentPerformer.unloadFragment();
@@ -172,21 +156,10 @@ public abstract class BottomSheetPerformer
         }
     }
 
-    public void loadFiltersFragment() {
-        if (mFiltersFragmentPerformer != null) {
-            mFiltersFragmentPerformer.loadFragment();
-            mSlideablePerformer = mFiltersFragmentPerformer;
-
-            if (mFragmentObserver != null) {
-                mFragmentObserver.onFiltersLoaded();
-            }
-        }
-    }
-
     //TODO Remove animation boolean
     public void loadLocationFragment(long locationId, boolean animation) {
         if (mLocationDetailFragmentPerformer != null) {
-            mLocationDetailFragmentPerformer.loadLocationFragment(locationId, animation);
+            mLocationDetailFragmentPerformer.loadFragment(locationId, animation);
             mSlideablePerformer = mLocationDetailFragmentPerformer;
 
             if (mFragmentObserver != null) {
@@ -229,13 +202,5 @@ public abstract class BottomSheetPerformer
 
     public void onFragmentLoaded(@Nullable FragmentObserver fragmentObserver) {
         mFragmentObserver = fragmentObserver;
-    }
-
-    public void setLocationDetailFragmentPerformer(@Nullable LocationDetailFragmentPerformer locationDetailFragmentPerformer) {
-        mLocationDetailFragmentPerformer = locationDetailFragmentPerformer;
-    }
-
-    public void setFiltersFragmentPerformer(@Nullable FiltersFragmentPerformer filtersFragmentPerformer) {
-        mFiltersFragmentPerformer = filtersFragmentPerformer;
     }
 }
