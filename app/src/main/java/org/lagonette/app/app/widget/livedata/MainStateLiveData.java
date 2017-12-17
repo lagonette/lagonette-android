@@ -2,6 +2,7 @@ package org.lagonette.app.app.widget.livedata;
 
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.lagonette.app.app.widget.coordinator.state.MainState;
@@ -17,6 +18,17 @@ public class MainStateLiveData
 
     public MainStateLiveData(@NonNull MainState state) {
         mState = state;
+    }
+
+    // TODO Workaround
+    @Nullable
+    @Override
+    public MainState getValue() {
+        MainState value = super.getValue();
+        if (value == null) {
+            value = mState;
+        }
+        return value;
     }
 
     public void notifyMapMovementChanged(@MainState.Movement int newMovement) {
