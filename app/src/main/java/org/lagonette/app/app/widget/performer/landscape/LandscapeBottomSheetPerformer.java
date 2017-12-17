@@ -83,4 +83,11 @@ public class LandscapeBottomSheetPerformer
         }
     }
 
+    @Override
+    public void openBottomSheet() {
+        if (mBehavior != null) {
+            mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+    }
+
 }

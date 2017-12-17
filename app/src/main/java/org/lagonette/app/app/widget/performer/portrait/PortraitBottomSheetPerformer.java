@@ -92,6 +92,13 @@ public class PortraitBottomSheetPerformer
     }
 
     @Override
+    public void openBottomSheet() {
+        if (mBehavior != null) {
+            mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+    }
+
+    @Override
     public void unloadFragment() {
         if (mFiltersFragmentPerformer != null) {
             mFiltersFragmentPerformer.unloadFragment();

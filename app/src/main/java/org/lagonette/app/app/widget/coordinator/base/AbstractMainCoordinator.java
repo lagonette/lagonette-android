@@ -251,7 +251,7 @@ public abstract class AbstractMainCoordinator<BSP extends BottomSheetPerformer> 
                                         statefulAction.action.shouldMove = false;
                                         mMapFragmentPerformer.moveToLocation(statefulAction.action.item);
                                     } else {
-                                        mBottomSheetPerformer.collapseBottomSheet();
+                                        mBottomSheetPerformer.openBottomSheet();
                                     }
                                 } else {
                                     mDoneMarker.markPendingActionAsDone();

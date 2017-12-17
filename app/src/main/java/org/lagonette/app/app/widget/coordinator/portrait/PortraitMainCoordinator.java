@@ -19,6 +19,8 @@ public class PortraitMainCoordinator
         super(doneMarker, bottomSheetPerformer, mapFragmentPerformer);
     }
 
+    // TODO Maybe restoring bottom sheet or performers must be done here ?
+
     @Override
     protected void computeFiltersOpening(@NonNull MainStatefulAction statefulAction) {
         switch (statefulAction.state.bottomSheetState) {
@@ -32,7 +34,7 @@ public class PortraitMainCoordinator
                         break;
 
                     case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                        mBottomSheetPerformer.expandBottomSheet();
+                        mBottomSheetPerformer.openBottomSheet();
                         break;
                 }
                 break;

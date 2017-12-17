@@ -130,17 +130,7 @@ public abstract class BottomSheetPerformer
         }
     }
 
-    public void expandBottomSheet() {
-        if (mBehavior != null) {
-            mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
-    }
-
-    public void collapseBottomSheet() {
-        if (mBehavior != null) {
-            mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-    }
+    public abstract void openBottomSheet();
 
     public void unloadFragment() {
 
