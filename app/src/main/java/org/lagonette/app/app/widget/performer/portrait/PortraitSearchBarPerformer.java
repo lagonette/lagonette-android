@@ -7,7 +7,7 @@ import android.view.View;
 
 import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
 import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
-import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
+import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
 
 public class PortraitSearchBarPerformer
         extends SearchBarPerformer {
@@ -43,18 +43,13 @@ public class PortraitSearchBarPerformer
         mOnOffsetChangedCommand = command;
     }
 
-    public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentType bottomSheetFragmentType) {
+    public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentState bottomSheetFragmentState) {
         if (mBehavior != null) {
-            switch (bottomSheetFragmentType.getFragmentType()) {
-
-                case BottomSheetFragmentType.FRAGMENT_FILTERS:
-                    mBehavior.disable();
-                    break;
-
-                case BottomSheetFragmentType.FRAGMENT_LOCATION:
-                case BottomSheetFragmentType.FRAGMENT_NONE:
-                    mBehavior.enable();
-                    break;
+            if (bottomSheetFragmentState.isFiltersLoaded()) {
+                mBehavior.disable();
+            }
+            else {
+                mBehavior.enable();
             }
         }
     }

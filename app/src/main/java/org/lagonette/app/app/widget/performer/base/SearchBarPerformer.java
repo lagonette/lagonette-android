@@ -68,22 +68,6 @@ public abstract class SearchBarPerformer {
         setupSearchTextView(mSearchTextView);
     }
 
-//    public void init() {
-//        if (mBehavior == null || mSearchBar == null) {
-//            throw new IllegalStateException("inject() must be called before init()");
-//        }
-//
-//        setWorkStatus(Resource.SUCCESS);
-//    }
-//
-//    public void restore(@Resource.Status int workState) {
-//        if (mBehavior == null) {
-//            throw new IllegalStateException("inject() must be called before restore()");
-//        }
-//
-//        setWorkStatus(workState);
-//    }
-
     public void setWorkStatus(@Resource.Status int workState) {
         mWorkStatus = workState;
         switch (mWorkStatus) {

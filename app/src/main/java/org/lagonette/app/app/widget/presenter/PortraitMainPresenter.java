@@ -8,7 +8,6 @@ import org.lagonette.app.app.widget.coordinator.portrait.PortraitMainCoordinator
 import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitFabButtonsPerformer;
-import org.lagonette.app.app.widget.performer.portrait.PortraitFiltersFragmentPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitMapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitSearchBarPerformer;
 
@@ -28,8 +27,6 @@ public class PortraitMainPresenter
         mSearchBarPerformer = new PortraitSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
         mBottomSheetPerformer = new PortraitBottomSheetPerformer(
                 activity.getResources(),
-                new PortraitFiltersFragmentPerformer(activity, R.id.fragment_filters),
-                new LocationDetailFragmentPerformer(activity, R.id.fragment_location_detail),
                 R.id.bottom_sheet,
                 R.dimen.search_bar_supposed_height
         );
@@ -37,6 +34,8 @@ public class PortraitMainPresenter
         mCoordinator = new PortraitMainCoordinator(
                 mAction::markDone,
                 mBottomSheetPerformer,
+                mFiltersFragmentPerformer,
+                mLocationDetailFragmentPerformer,
                 mMapFragmentPerformer
         );
     }
@@ -46,12 +45,15 @@ public class PortraitMainPresenter
         super.onActivityCreated(activity);
 
         //TODO Check correctly initialisation and conf change.
+        // Performer's state --> LiveData
+        mFiltersFragmentPerformer.onFragmentLoaded(mBottomSheetFragmentState::notifyFiltersLoaded);
+        mFiltersFragmentPerformer.onFragmentUnloaded(mBottomSheetFragmentState::notifyFiltersUnloaded);
 
         // Performer's action --> LiveData
         mFabButtonsPerformer.onFiltersClick(mAction::openFilters);
 
         // LiveData --> Performer, Coordinator
-        mBottomSheetFragmentType.observe(
+        mBottomSheetFragmentState.observe(
                 activity,
                 mSearchBarPerformer::notifyBottomSheetFragmentChanged
         );

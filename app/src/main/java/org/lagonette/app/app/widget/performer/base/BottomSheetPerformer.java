@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.performer.base;
 
 import android.content.res.Resources;
-import android.support.annotation.CallSuper;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -18,16 +17,6 @@ public abstract class BottomSheetPerformer
     public interface OnStateChangedCommand {
 
         void onStateChanged(@MainState.State int newState);
-    }
-
-    public interface FragmentObserver {
-
-        void onUnload();
-
-        void onFiltersLoaded();
-
-        void onLocationLoaded(long locationId);
-
     }
 
     public interface Slideable {
@@ -63,9 +52,6 @@ public abstract class BottomSheetPerformer
         }
     }
 
-    @NonNull
-    protected final LocationDetailFragmentPerformer mLocationDetailFragmentPerformer;
-
     @Nullable
     protected Slideable mSlideablePerformer;
 
@@ -81,18 +67,13 @@ public abstract class BottomSheetPerformer
     @IdRes
     private int mBottomSheetRes;
 
-    @Nullable
-    protected FragmentObserver mFragmentObserver;
-
     @NonNull
     private Padding mPadding;
 
     public BottomSheetPerformer(
             @NonNull Resources resources,
-            @NonNull LocationDetailFragmentPerformer locationDetailFragmentPerformer,
             @IdRes int bottomSheetRes,
             @DimenRes int searchBarHeightRes) {
-        mLocationDetailFragmentPerformer = locationDetailFragmentPerformer;
         mBottomSheetRes = bottomSheetRes;
         mPadding = new Padding();
         mPadding.statusBarHeight = UiUtil.getStatusBarHeight(resources);
@@ -107,23 +88,6 @@ public abstract class BottomSheetPerformer
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
     }
 
-    public void init() {
-        if (mBehavior == null) {
-            throw new IllegalStateException("inject() must be called before init()");
-        }
-
-        //mLocationDetailFragmentPerformer.init();
-
-        mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
-
-    // TODO One State class by performer ?
-    // TODO Put *FragmentPerformer#restore() here
-    @CallSuper
-    public void restore(@NonNull MainState mainState) {
-        mLocationDetailFragmentPerformer.restore();
-    }
-
     public void closeBottomSheet() {
         if (mBehavior != null) {
             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -131,32 +95,6 @@ public abstract class BottomSheetPerformer
     }
 
     public abstract void openBottomSheet();
-
-    public void unloadFragment() {
-
-        if (mLocationDetailFragmentPerformer != null) {
-            mLocationDetailFragmentPerformer.unloadFragment();
-        }
-
-        //TODO Use Observer pattern to be sure *FragmentPerformer unloading is managed each times its called
-        mSlideablePerformer = null;
-
-        if (mFragmentObserver != null) {
-            mFragmentObserver.onUnload();
-        }
-    }
-
-    //TODO Remove animation boolean
-    public void loadLocationFragment(long locationId, boolean animation) {
-        if (mLocationDetailFragmentPerformer != null) {
-            mLocationDetailFragmentPerformer.loadFragment(locationId, animation);
-            mSlideablePerformer = mLocationDetailFragmentPerformer;
-
-            if (mFragmentObserver != null) {
-                mFragmentObserver.onLocationLoaded(locationId);
-            }
-        }
-    }
 
     @Override
     public void onStateChanged(@NonNull View bottomSheet, @MainState.State int newState) {
@@ -190,7 +128,4 @@ public abstract class BottomSheetPerformer
         mOnStateChangedCommand = onStateChangedCommand;
     }
 
-    public void onFragmentLoaded(@Nullable FragmentObserver fragmentObserver) {
-        mFragmentObserver = fragmentObserver;
-    }
 }

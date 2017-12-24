@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
+import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
 
 public class MainStateLiveData
         extends LiveData<MainState> {
@@ -43,9 +43,9 @@ public class MainStateLiveData
         setValue(mState);
     }
 
-    public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentType newFragmentType) {
+    public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentState newFragmentType) {
         Log.d(TAG, "State <- Bottom sheet fragment " + newFragmentType);
-        mState.bottomSheetFragmentType = newFragmentType;
+        mState.bottomSheetFragmentState = newFragmentType;
         setValue(mState);
     }
 

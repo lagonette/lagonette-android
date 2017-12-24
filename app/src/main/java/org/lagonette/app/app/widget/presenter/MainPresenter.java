@@ -9,14 +9,17 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
-import org.lagonette.app.app.widget.livedata.BottomSheetFragmentTypeLiveData;
+import org.lagonette.app.app.widget.livedata.BottomSheetFragmentStateLiveData;
 import org.lagonette.app.app.widget.livedata.MainActionLiveData;
 import org.lagonette.app.app.widget.livedata.MainStateLiveData;
 import org.lagonette.app.app.widget.livedata.MainStatefulActionLiveData;
 import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.FabButtonsPerformer;
+import org.lagonette.app.app.widget.performer.base.FiltersFragmentPerformer;
+import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
 
@@ -35,7 +38,7 @@ public abstract class MainPresenter<CO extends MainCoordinator,
 
     protected MainStatefulActionLiveData mMainStatefulAction;
 
-    protected BottomSheetFragmentTypeLiveData mBottomSheetFragmentType;
+    protected BottomSheetFragmentStateLiveData mBottomSheetFragmentState;
 
     protected MutableLiveData<String> mSearch;
 
@@ -51,6 +54,10 @@ public abstract class MainPresenter<CO extends MainCoordinator,
 
     protected SBP mSearchBarPerformer;
 
+    protected FiltersFragmentPerformer mFiltersFragmentPerformer;
+
+    protected LocationDetailFragmentPerformer mLocationDetailFragmentPerformer;
+
     @Override
     @CallSuper
     public void construct(@NonNull AppCompatActivity activity) {
@@ -62,9 +69,12 @@ public abstract class MainPresenter<CO extends MainCoordinator,
         mMainStatefulAction = mStateViewModel.getMainStatefulActionLiveData();
         mAction = mStateViewModel.getMainActionLiveData();
         mState = mStateViewModel.getMainStateLiveData();
-        mBottomSheetFragmentType = mStateViewModel.getBottomSheetFragmentType();
+        mBottomSheetFragmentState = mStateViewModel.getBottomSheetFragmentState();
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
+
+        mFiltersFragmentPerformer = new FiltersFragmentPerformer(activity, R.id.fragment_filters);
+        mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity, R.id.fragment_location_detail);
     }
 
     @Override
@@ -78,15 +88,13 @@ public abstract class MainPresenter<CO extends MainCoordinator,
     @Override
     @CallSuper
     public void init(@NonNull AppCompatActivity activity) {
-        mMapFragmentPerformer.init();
-        mBottomSheetPerformer.init();
+        mCoordinator.init();
     }
 
     @Override
     @CallSuper
     public void restore(@NonNull AppCompatActivity activity, @NonNull Bundle savedInstanceState) {
-        mMapFragmentPerformer.restore();
-        mBottomSheetPerformer.restore(mState.getValue());
+        mCoordinator.restore(mMainStatefulAction.getValue().state);
     }
 
     @Override
@@ -102,7 +110,8 @@ public abstract class MainPresenter<CO extends MainCoordinator,
         mSearchBarPerformer.onSearch(mSearch::setValue);
 
         // Performer's state --> LiveData
-        mBottomSheetPerformer.onFragmentLoaded(mBottomSheetFragmentType);
+        mLocationDetailFragmentPerformer.onFragmentLoaded(mBottomSheetFragmentState::notifyLocationDetailLoaded);
+        mLocationDetailFragmentPerformer.onFragmentUnloaded(mBottomSheetFragmentState::notifyLocationDetailUnloaded);
         mBottomSheetPerformer.onStateChanged(mState::notifyBottomSheetStateChanged);
         mMapFragmentPerformer.onMovement(mState::notifyMapMovementChanged);
 

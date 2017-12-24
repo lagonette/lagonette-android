@@ -8,8 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.app.fragment.FiltersFragment;
 
-public abstract class FiltersFragmentPerformer
+public class FiltersFragmentPerformer
         implements BottomSheetPerformer.Slideable {
+
+    public interface FragmentLoadedCommand {
+
+        void onFiltersLoaded();
+    }
+
+    public interface FragmentUnloadedCommand {
+
+        void onFiltersUnloaded();
+    }
 
 
     @Nullable
@@ -17,6 +27,12 @@ public abstract class FiltersFragmentPerformer
 
     @NonNull
     private FragmentManager mFragmentManager;
+
+    @Nullable
+    private FragmentUnloadedCommand mFragmentUnloadedCommand;
+
+    @Nullable
+    private FragmentLoadedCommand mFragmentLoadedCommand;
 
     @IdRes
     private final int mFiltersContainerRes;
@@ -28,9 +44,7 @@ public abstract class FiltersFragmentPerformer
         mFiltersContainerRes = filtersContainerRes;
     }
 
-    public abstract void init();
-
-    public void restore() {
+    public void restoreFragment() {
         mFragment = (FiltersFragment) mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
     }
 
@@ -40,6 +54,10 @@ public abstract class FiltersFragmentPerformer
                     .remove(mFragment)
                     .commit();
             mFragment = null;
+        }
+
+        if (mFragmentUnloadedCommand != null) {
+            mFragmentUnloadedCommand.onFiltersUnloaded();
         }
     }
 
@@ -53,6 +71,10 @@ public abstract class FiltersFragmentPerformer
                         FiltersFragment.TAG
                 )
                 .commit();
+
+        if (mFragmentLoadedCommand != null) {
+            mFragmentLoadedCommand.onFiltersLoaded();
+        }
     }
 
     public boolean isLoaded() {
@@ -64,5 +86,13 @@ public abstract class FiltersFragmentPerformer
         if (mFragment != null) {
             mFragment.updateTopPadding(topPadding);
         }
+    }
+
+    public void onFragmentLoaded(@Nullable FragmentLoadedCommand command) {
+        mFragmentLoadedCommand = command;
+    }
+
+    public void onFragmentUnloaded(@Nullable FragmentUnloadedCommand command) {
+        mFragmentUnloadedCommand = command;
     }
 }

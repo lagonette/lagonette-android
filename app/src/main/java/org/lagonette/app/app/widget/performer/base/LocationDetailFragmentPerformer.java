@@ -12,21 +12,27 @@ import org.lagonette.app.app.fragment.LocationDetailFragment;
 public class LocationDetailFragmentPerformer
         implements BottomSheetPerformer.Slideable {
 
-    public interface Observer {
+    public interface FragmentLoadedCommand {
 
-        void notifyUnload();
+        void onLocationLoaded(long locationId);
+    }
 
-        void notifyLocationLoaded(long locationId);
+    public interface FragmentUnloadedCommand {
 
+        void onLocationUnloaded();
     }
 
     @Nullable
     private LocationDetailFragment mFragment;
 
-    private Observer mObserver;
-
     @NonNull
     private FragmentManager mFragmentManager;
+
+    @Nullable
+    private FragmentUnloadedCommand mFragmentUnloadedCommand;
+
+    @Nullable
+    private FragmentLoadedCommand mFragmentLoadedCommand;
 
     @IdRes
     private final int mLocationDetailContainerRes;
@@ -38,7 +44,7 @@ public class LocationDetailFragmentPerformer
         mLocationDetailContainerRes = locationDetailContainerRed;
     }
 
-    public void restore() {
+    public void restoreFragment() {
         mFragment = (LocationDetailFragment) mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
     }
 
@@ -50,8 +56,8 @@ public class LocationDetailFragmentPerformer
             mFragment = null;
         }
 
-        if (mObserver != null) {
-            mObserver.notifyUnload();
+        if (mFragmentUnloadedCommand != null) {
+            mFragmentUnloadedCommand.onLocationUnloaded();
         }
     }
 
@@ -59,6 +65,7 @@ public class LocationDetailFragmentPerformer
         return mFragment != null;
     }
 
+    //TODO Remove animation boolean
     public void loadFragment(long locationId, boolean animation) {
         if (mFragmentManager != null) {
             mFragment = LocationDetailFragment.newInstance(locationId);
@@ -79,14 +86,10 @@ public class LocationDetailFragmentPerformer
 
             transaction.commit();
 
-            if (mObserver != null) {
-                mObserver.notifyLocationLoaded(locationId);
+            if (mFragmentLoadedCommand != null) {
+                mFragmentLoadedCommand.onLocationLoaded(locationId);
             }
         }
-    }
-
-    public void observe(Observer observer) {
-        mObserver = observer;
     }
 
     @Override
@@ -94,5 +97,13 @@ public class LocationDetailFragmentPerformer
         if (mFragment != null) {
             mFragment.updateTopPadding(topPadding);
         }
+    }
+
+    public void onFragmentLoaded(@Nullable FragmentLoadedCommand command) {
+        mFragmentLoadedCommand = command;
+    }
+
+    public void onFragmentUnloaded(@Nullable FragmentUnloadedCommand command) {
+        mFragmentUnloadedCommand = command;
     }
 }

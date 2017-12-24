@@ -4,7 +4,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
-import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentType;
+import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -41,14 +41,14 @@ public class MainState {
     public int bottomSheetState;
 
     @NonNull
-    public BottomSheetFragmentType bottomSheetFragmentType;
+    public BottomSheetFragmentState bottomSheetFragmentState;
 
     @Movement
     public int mapMovement;
 
-    public MainState(@NonNull BottomSheetFragmentType type) {
+    public MainState(@NonNull BottomSheetFragmentState type) {
         bottomSheetState = BottomSheetBehavior.STATE_HIDDEN;
-        bottomSheetFragmentType = type;
+        bottomSheetFragmentState = type;
         mapMovement = STATE_MOVEMENT_IDLE;
     }
 }

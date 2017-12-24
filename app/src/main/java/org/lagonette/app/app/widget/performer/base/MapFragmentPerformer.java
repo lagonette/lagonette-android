@@ -31,18 +31,14 @@ public  abstract class MapFragmentPerformer {
 
     public abstract void inject(@NonNull View view);
 
-    public void init() {
-        //TODO Check inject is called before init
-
+    public void loadFragment() {
         mFragment = MapsFragment.newInstance();
         mFragmentManager.beginTransaction()
                 .add(R.id.content, mFragment, MapsFragment.TAG)
                 .commit();
     }
 
-    public void restore() {
-        //TODO Check inject is called before restore
-
+    public void restoreFragment() {
         mFragment = (MapsFragment) mFragmentManager.findFragmentByTag(MapsFragment.TAG);
     }
 

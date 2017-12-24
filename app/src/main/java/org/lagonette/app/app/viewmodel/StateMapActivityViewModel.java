@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
-import org.lagonette.app.app.widget.livedata.BottomSheetFragmentTypeLiveData;
+import org.lagonette.app.app.widget.livedata.BottomSheetFragmentStateLiveData;
 import org.lagonette.app.app.widget.livedata.MainActionLiveData;
 import org.lagonette.app.app.widget.livedata.MainStateLiveData;
 import org.lagonette.app.app.widget.livedata.MainStatefulActionLiveData;
@@ -33,16 +33,16 @@ public class StateMapActivityViewModel extends AndroidViewModel {
     private final MainStatefulActionLiveData mMainStatefulActionLiveData;
 
     @NonNull
-    private final BottomSheetFragmentTypeLiveData mBottomSheetFragmentTypeLiveData;
+    private final BottomSheetFragmentStateLiveData mBottomSheetFragmentStateLiveData;
 
     public StateMapActivityViewModel(Application application) {
         super(application);
 
-        mBottomSheetFragmentTypeLiveData = new BottomSheetFragmentTypeLiveData();
+        mBottomSheetFragmentStateLiveData = new BottomSheetFragmentStateLiveData();
 
         MainStatefulAction statefulAction = new MainStatefulAction(
                 new MainAction(),
-                new MainState(mBottomSheetFragmentTypeLiveData.getNone())
+                new MainState(mBottomSheetFragmentStateLiveData.getValue())
         );
 
         mMainStatefulActionLiveData = new MainStatefulActionLiveData(statefulAction);
@@ -60,7 +60,7 @@ public class StateMapActivityViewModel extends AndroidViewModel {
                 state -> mMainStatefulActionLiveData.setState(state)
         );
         mMainStatefulActionLiveData.addSource(
-                mBottomSheetFragmentTypeLiveData,
+                mBottomSheetFragmentStateLiveData,
                 mMainStateLiveData::notifyBottomSheetFragmentChanged
         );
 
@@ -78,8 +78,8 @@ public class StateMapActivityViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public BottomSheetFragmentTypeLiveData getBottomSheetFragmentType() {
-        return mBottomSheetFragmentTypeLiveData;
+    public BottomSheetFragmentStateLiveData getBottomSheetFragmentState() {
+        return mBottomSheetFragmentStateLiveData;
     }
 
     @NonNull
