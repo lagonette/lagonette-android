@@ -48,7 +48,7 @@ public class PortraitMainCoordinator
                     }
                 }
                 else {
-                    mBottomSheetPerformer.closeBottomSheet();
+                    mBottomSheetPerformer.restoreCloseState();
                 }
                 break;
 

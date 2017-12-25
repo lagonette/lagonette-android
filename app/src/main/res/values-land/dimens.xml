@@ -3,4 +3,6 @@
 
     <dimen name="search_bar_elevation">2dp</dimen>
 
+    <dimen name="filters_peek_height">0dp</dimen>
+
 </resources>

@@ -50,6 +50,20 @@ public class LandscapeMainCoordinator
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
+                if (state.bottomSheetFragmentState.areAllLoaded()) {
+                    wtf();
+                }
+                else if (state.bottomSheetFragmentState.isFiltersLoaded()) {
+                    mBottomSheetPerformer.restoreCloseState();
+                }
+                else if (state.bottomSheetFragmentState.isLocationDetailLoaded()) {
+                    mBottomSheetPerformer.restoreOpenState();
+                }
+                else {
+                    mBottomSheetPerformer.restoreCloseState();
+                }
+                break;
+
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_EXPANDED:
             case BottomSheetBehavior.STATE_SETTLING:
@@ -57,13 +71,13 @@ public class LandscapeMainCoordinator
                     wtf();
                 }
                 else if (state.bottomSheetFragmentState.isFiltersLoaded()) {
-                    mBottomSheetPerformer.closeBottomSheet();
+                    mBottomSheetPerformer.restoreCloseState();
                 }
                 else if (state.bottomSheetFragmentState.isLocationDetailLoaded()) {
                     // Do nothing
                 }
                 else {
-                    mBottomSheetPerformer.closeBottomSheet();
+                    mBottomSheetPerformer.restoreCloseState();
                 }
                 break;
 

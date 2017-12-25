@@ -82,10 +82,19 @@ public abstract class BottomSheetPerformer
         mPadding.bottomSheetTop = 0;
     }
 
+    //TODO Use performer interface for inject()
     public void inject(@NonNull View view) {
         mBottomSheet = view.findViewById(mBottomSheetRes);
         mBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
+    }
+
+    public void restoreOpenState() {
+        mBottomSheet.post(this::openBottomSheet);
+    }
+
+    public void restoreCloseState() {
+        mBottomSheet.post(this::closeBottomSheet);
     }
 
     public void closeBottomSheet() {
