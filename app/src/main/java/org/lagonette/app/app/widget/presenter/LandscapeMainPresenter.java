@@ -24,7 +24,7 @@ public class LandscapeMainPresenter
         mMapFragmentPerformer = new LandscapeMapFragmentPerformer(activity, R.id.content, R.dimen.search_bar_supposed_height);
         mFabButtonsPerformer = new LandscapeFabButtonsPerformer(R.id.my_location_fab);
         mSearchBarPerformer = new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
-        mBottomSheetPerformer = new LandscapeBottomSheetPerformer(activity.getResources(), R.id.bottom_sheet, R.dimen.search_bar_supposed_height);
+        mBottomSheetPerformer = new LandscapeBottomSheetPerformer(activity.getResources(), R.id.bottom_sheet);
 
         mCoordinator = new LandscapeMainCoordinator(
                 mAction::markDone,
@@ -35,4 +35,11 @@ public class LandscapeMainPresenter
         );
     }
 
+    @Override
+    public void onActivityCreated(@NonNull AppCompatActivity activity) {
+        super.onActivityCreated(activity);
+
+        // Performer --> Performer
+        mBottomSheetPerformer.onSlideChanged(mLocationDetailFragmentPerformer::updateTopPadding);
+    }
 }

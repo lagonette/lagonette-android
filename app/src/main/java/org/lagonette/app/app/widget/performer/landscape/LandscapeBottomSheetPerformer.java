@@ -15,9 +15,8 @@ public class LandscapeBottomSheetPerformer
 
     public LandscapeBottomSheetPerformer(
             @NonNull Resources resources,
-            @IdRes int bottomSheetRes,
-            @DimenRes int searchBarHeightRes) {
-        super(resources, bottomSheetRes, searchBarHeightRes);
+            @IdRes int bottomSheetRes) {
+        super(resources, bottomSheetRes);
     }
 
     @Override

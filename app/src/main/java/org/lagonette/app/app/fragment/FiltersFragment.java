@@ -1,6 +1,7 @@
 package org.lagonette.app.app.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,9 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
+import org.lagonette.app.util.UiUtil;
+
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 //TODO Do not show empty fragment when there is no partner.
 public class FiltersFragment
@@ -112,6 +116,14 @@ public class FiltersFragment
         mFilterList.setLayoutManager(layoutManager);
         mFilterList.setAdapter(mFilterAdapter);
         mFilterList.setItemAnimator(null); //TODO Remove
+
+        //TODO Meeeeeh...
+        Resources resources = getResources();
+        if (resources.getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
+            int statusBarHeight = UiUtil.getStatusBarHeight(resources);
+            int searchBarHeight = resources.getDimensionPixelSize(R.dimen.search_bar_supposed_height);
+            updateTopPadding(statusBarHeight + searchBarHeight);
+        }
     }
 
     @Override

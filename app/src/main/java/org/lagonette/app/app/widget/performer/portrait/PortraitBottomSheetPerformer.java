@@ -15,7 +15,8 @@ public class PortraitBottomSheetPerformer
             @NonNull Resources resources,
             @IdRes int bottomSheetRes,
             @DimenRes int searchBarHeightRes) {
-        super(resources, bottomSheetRes, searchBarHeightRes);
+        super(resources, bottomSheetRes);
+        mPadding.searchBarHeight = resources.getDimensionPixelOffset(searchBarHeightRes);
     }
 
     @Override

@@ -19,6 +19,7 @@ public abstract class BottomSheetPerformer
         void onStateChanged(@MainState.State int newState);
     }
 
+    //TODO Commandify
     public interface Slideable {
 
         void updateTopPadding(int topPadding);
@@ -53,7 +54,7 @@ public abstract class BottomSheetPerformer
     }
 
     @Nullable
-    protected Slideable mSlideablePerformer;
+    protected Slideable mSlideableCommand;
 
     @Nullable
     private OnStateChangedCommand mOnStateChangedCommand;
@@ -68,16 +69,15 @@ public abstract class BottomSheetPerformer
     private int mBottomSheetRes;
 
     @NonNull
-    private Padding mPadding;
+    protected Padding mPadding;
 
     public BottomSheetPerformer(
             @NonNull Resources resources,
-            @IdRes int bottomSheetRes,
-            @DimenRes int searchBarHeightRes) {
+            @IdRes int bottomSheetRes) {
         mBottomSheetRes = bottomSheetRes;
         mPadding = new Padding();
         mPadding.statusBarHeight = UiUtil.getStatusBarHeight(resources);
-        mPadding.searchBarHeight = resources.getDimensionPixelOffset(searchBarHeightRes);
+        mPadding.searchBarHeight = 0;
         mPadding.searchBarOffset = 0;
         mPadding.bottomSheetTop = 0;
     }
@@ -127,14 +127,18 @@ public abstract class BottomSheetPerformer
 
     private void updateBottomSheetTopPadding() {
         if (mPadding.updateTop()) {
-            if (mSlideablePerformer != null) {
-                mSlideablePerformer.updateTopPadding(mPadding.getTop());
+            if (mSlideableCommand != null) {
+                mSlideableCommand.updateTopPadding(mPadding.getTop());
             }
         }
     }
 
     public void onStateChanged(@Nullable OnStateChangedCommand onStateChangedCommand) {
         mOnStateChangedCommand = onStateChangedCommand;
+    }
+
+    public void onSlideChanged(@Nullable Slideable command) {
+        mSlideableCommand = command;
     }
 
 }

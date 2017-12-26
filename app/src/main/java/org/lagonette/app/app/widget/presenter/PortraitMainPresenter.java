@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.coordinator.portrait.PortraitMainCoordinator;
-import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitFabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitMapFragmentPerformer;
@@ -59,6 +58,12 @@ public class PortraitMainPresenter
         );
 
         // Performer --> Performer
+        mBottomSheetPerformer.onSlideChanged(
+                topPadding -> {
+                    mFiltersFragmentPerformer.updateTopPadding(topPadding);
+                    mLocationDetailFragmentPerformer.updateTopPadding(topPadding);
+                }
+        );
         mSearchBarPerformer.onOffsetChanged(
                 offset -> {
                     mMapFragmentPerformer.notifySearchBarOffsetChanged(offset);
