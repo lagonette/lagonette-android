@@ -1,6 +1,6 @@
 package org.lagonette.app.util;
 
-public class SharedPreferencesUtil {
+public class SharedPreferencesUtils {
 
     public static final String PREFERENCE_START_LATITUDE = "preference_start_latitude";
 

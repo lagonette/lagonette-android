@@ -2,11 +2,11 @@ package org.lagonette.app.util;
 
 import java.util.HashSet;
 
-public final class AdapterUtil {
+public final class AdapterUtils {
 
     private static final String TAG = "AdapterUtil";
 
-    private AdapterUtil() {
+    private AdapterUtils() {
     }
 
     public static final long createItemId(int rowType, int rowTypeCount, long contentId) {
@@ -27,8 +27,8 @@ public final class AdapterUtil {
         HashSet<Long> ids = new HashSet<>();
         for (int rowType = 0; rowType < rowTypeCount; rowType++) {
             for (int row = 0; row < rowCount; row++) {
-                long adapterId = AdapterUtil.createItemId(rowType, rowTypeCount, row);
-                long contentId = AdapterUtil.getContentId(rowType, rowTypeCount, adapterId);
+                long adapterId = AdapterUtils.createItemId(rowType, rowTypeCount, row);
+                long contentId = AdapterUtils.getContentId(rowType, rowTypeCount, adapterId);
                 String prefix = " \t ";
                 if (row != contentId) {
                     prefix += " - " + false + " - ";

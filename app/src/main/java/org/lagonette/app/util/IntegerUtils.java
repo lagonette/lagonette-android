@@ -2,9 +2,9 @@ package org.lagonette.app.util;
 
 import android.support.annotation.Nullable;
 
-public final class IntegerUtil {
+public final class IntegerUtils {
 
-    private IntegerUtil() {
+    private IntegerUtils() {
     }
 
     public static int intValue(@Nullable Integer integer) {

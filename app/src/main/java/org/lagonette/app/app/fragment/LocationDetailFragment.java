@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +17,9 @@ import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
-import org.lagonette.app.util.IntentUtil;
-import org.lagonette.app.util.PhoneUtil;
-import org.lagonette.app.util.SnackbarUtil;
-
-import java.util.Locale;
+import org.lagonette.app.util.IntentUtils;
+import org.lagonette.app.util.PhoneUtils;
+import org.lagonette.app.util.SnackbarUtils;
 
 public class LocationDetailFragment
         extends SlideableFragment
@@ -210,7 +207,7 @@ public class LocationDetailFragment
             String phone = locationDetail.phone;
             if (!TextUtils.isEmpty(phone)) {
                 mPhoneLayout.setVisibility(View.VISIBLE);
-                mPhoneTextView.setText(PhoneUtil.format(phone));
+                mPhoneTextView.setText(PhoneUtils.format(phone));
             } else {
                 mPhoneLayout.setVisibility(View.GONE);
             }
@@ -252,7 +249,7 @@ public class LocationDetailFragment
     public void errorNoDirectionAppFound() {
         Snackbar
                 .make(
-                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
                         R.string.error_no_direction_app_found,
                         Snackbar.LENGTH_LONG
                 )
@@ -262,7 +259,7 @@ public class LocationDetailFragment
     public void errorNoCallAppFound() {
         Snackbar
                 .make(
-                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
                         R.string.error_no_call_app_found,
                         Snackbar.LENGTH_LONG
                 )
@@ -272,7 +269,7 @@ public class LocationDetailFragment
     public void errorNoBrowserAppFound() {
         Snackbar
                 .make(
-                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
                         R.string.error_no_browser_app_found,
                         Snackbar.LENGTH_LONG
                 )
@@ -282,7 +279,7 @@ public class LocationDetailFragment
     public void errorNoEmailAppFound() {
         Snackbar
                 .make(
-                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
                         R.string.error_no_email_app_found,
                         Snackbar.LENGTH_LONG
                 )
@@ -311,7 +308,7 @@ public class LocationDetailFragment
     }
 
     public void onAddressClick() {
-        boolean success = IntentUtil.startDirection(
+        boolean success = IntentUtils.startDirection(
                 getContext(),
                 mLatitude,
                 mLongitude
@@ -322,7 +319,7 @@ public class LocationDetailFragment
     }
 
     public void onPhoneClick() {
-        boolean success = IntentUtil.makeCall(
+        boolean success = IntentUtils.makeCall(
                 getContext(),
                 mPhoneTextView.getText().toString()
         );
@@ -332,7 +329,7 @@ public class LocationDetailFragment
     }
 
     public void onWebsiteClick() {
-        boolean success = IntentUtil.goToWebsite(
+        boolean success = IntentUtils.goToWebsite(
                 getContext(),
                 mWebsiteTextView.getText().toString()
         );
@@ -342,7 +339,7 @@ public class LocationDetailFragment
     }
 
     public void onEmailClick() {
-        boolean success = IntentUtil.writeEmail(
+        boolean success = IntentUtils.writeEmail(
                 getContext(),
                 mEmailTextView.getText().toString()
         );

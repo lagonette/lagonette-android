@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-public final class IntentUtil {
+public final class IntentUtils {
 
     public static final String SCHEME_TEL = "tel";
 
@@ -16,7 +16,7 @@ public final class IntentUtil {
 
     public static final String SCHEME_HTTPS = "https";
 
-    private IntentUtil() {
+    private IntentUtils() {
     }
 
     //TODO Improve with label and do not start directly the directions

@@ -14,7 +14,7 @@ import org.lagonette.app.room.entity.statement.PartnerItem;
 import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.sql.Tables;
 import org.lagonette.app.room.statement.Statement;
-import org.lagonette.app.util.SearchUtil;
+import org.lagonette.app.util.SearchUtils;
 import org.lagonette.app.worker.DataRefreshWorker;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class MainRepo {
                         search -> DB
                                 .get()
                                 .mainDao()
-                                .getMapLocations(SearchUtil.formatSearch(search))
+                                .getMapLocations(SearchUtils.formatSearch(search))
                 ),
                 () -> new DataRefreshWorker(mContext)
         )
@@ -82,7 +82,7 @@ public class MainRepo {
                                         () -> DB
                                                 .get()
                                                 .mainDao()
-                                                .getFilters(SearchUtil.formatSearch(search))
+                                                .getFilters(SearchUtils.formatSearch(search))
                                 )
                         ),
                         FilterReader::create

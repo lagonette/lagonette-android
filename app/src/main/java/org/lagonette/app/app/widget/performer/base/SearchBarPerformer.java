@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.lagonette.app.repo.Resource;
-import org.lagonette.app.util.UiUtil;
+import org.lagonette.app.util.UiUtils;
 
 public abstract class SearchBarPerformer implements Performer {
 
@@ -106,7 +106,7 @@ public abstract class SearchBarPerformer implements Performer {
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) searchBar.getLayoutParams();
             params.setMargins(
                     params.leftMargin,
-                    params.topMargin + UiUtil.getStatusBarHeight(searchBar.getResources()),
+                    params.topMargin + UiUtils.getStatusBarHeight(searchBar.getResources()),
                     params.rightMargin,
                     params.bottomMargin
             );

@@ -12,7 +12,7 @@ import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.LocationMetadata;
 import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.PartnerSideCategory;
-import org.lagonette.app.util.DatabaseUtil;
+import org.lagonette.app.util.DatabaseUtils;
 
 @Database(
         entities = {
@@ -23,7 +23,7 @@ import org.lagonette.app.util.DatabaseUtil;
                 CategoryMetadata.class,
                 PartnerSideCategory.class,
         },
-        version = DatabaseUtil.DATABASE_NUMBER
+        version = DatabaseUtils.DATABASE_NUMBER
 )
 public abstract class LaGonetteDatabase extends RoomDatabase {
 

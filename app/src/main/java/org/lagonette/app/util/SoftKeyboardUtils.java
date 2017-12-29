@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-public class SoftKeyboardUtil {
+public class SoftKeyboardUtils {
 
     public static void hideSoftKeyboard(@NonNull Activity activity) {
         // Check if no view has focus:

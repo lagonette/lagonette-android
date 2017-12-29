@@ -5,7 +5,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
-public class PhoneUtil {
+public class PhoneUtils {
 
     public final static String COUNTRY_CODE = "FR";
 

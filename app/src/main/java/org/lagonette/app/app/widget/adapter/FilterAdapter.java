@@ -23,7 +23,7 @@ import org.lagonette.app.app.widget.viewholder.LocationViewHolder;
 import org.lagonette.app.app.widget.viewholder.ShortcutViewHolder;
 import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.statement.FilterStatement;
-import org.lagonette.app.util.AdapterUtil;
+import org.lagonette.app.util.AdapterUtils;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -130,13 +130,13 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public long getItemId(int position) {
         if (mFilterReader == null) {
-            return AdapterUtil.createItemId(
+            return AdapterUtils.createItemId(
                     ROW_TYPE_LOADING,
                     ROW_TYPE_COUNT,
                     0
             );
         } else if (position < SHORTCUT_COUNT) {
-            return AdapterUtil.createItemId(
+            return AdapterUtils.createItemId(
                     ROW_TYPE_SHORTCUT,
                     ROW_TYPE_COUNT,
                     0
@@ -150,19 +150,19 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 switch (rowType) {
                     case FilterStatement.VALUE_ROW_CATEGORY:
                     case FilterStatement.VALUE_ROW_FOOTER:
-                        return AdapterUtil.createItemId(
+                        return AdapterUtils.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
                                 mFilterReader.getCategoryKey().getUniqueId()
                         );
                     case FilterStatement.VALUE_ROW_MAIN_PARTNER:
-                        return AdapterUtil.createItemId(
+                        return AdapterUtils.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
                                 mFilterReader.getLocationId()
                         );
                     case FilterStatement.VALUE_ROW_SIDE_PARTNER:
-                        return AdapterUtil.createItemId(
+                        return AdapterUtils.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
                                 mFilterReader.getLocationId()

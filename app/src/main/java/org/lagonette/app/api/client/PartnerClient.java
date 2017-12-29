@@ -12,7 +12,7 @@ import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.LocationMetadata;
 import org.lagonette.app.room.entity.PartnerSideCategory;
-import org.lagonette.app.util.PreferenceUtil;
+import org.lagonette.app.util.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,14 +81,14 @@ public class PartnerClient
     @Nullable
     public String getLocalMd5Sum(@NonNull SharedPreferences preferences) {
         return preferences.getString(
-                PreferenceUtil.KEY_PARTNER_MD5_SUM,
-                PreferenceUtil.DEFAULT_VALUE_PARTNER_MD5_SUM
+                PreferenceUtils.KEY_PARTNER_MD5_SUM,
+                PreferenceUtils.DEFAULT_VALUE_PARTNER_MD5_SUM
         );
     }
 
     public void saveRemoteMd5Sum(@NonNull SharedPreferences preferences) {
         preferences.edit()
-                .putString(PreferenceUtil.KEY_PARTNER_MD5_SUM, mMd5Sum)
+                .putString(PreferenceUtils.KEY_PARTNER_MD5_SUM, mMd5Sum)
                 .apply();
     }
 }

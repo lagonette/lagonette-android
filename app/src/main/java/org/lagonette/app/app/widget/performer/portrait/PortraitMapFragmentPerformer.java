@@ -7,7 +7,7 @@ import android.view.View;
 
 import org.lagonette.app.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
-import org.lagonette.app.util.UiUtil;
+import org.lagonette.app.util.UiUtils;
 
 public class PortraitMapFragmentPerformer
         extends MapFragmentPerformer {
@@ -34,7 +34,7 @@ public class PortraitMapFragmentPerformer
     public PortraitMapFragmentPerformer(@NonNull AppCompatActivity activity, int mapFragmentRes) {
         super(activity, mapFragmentRes);
         mPadding = new Padding();
-        mPadding.statusBarHeight = UiUtil.getStatusBarHeight(activity.getResources());
+        mPadding.statusBarHeight = UiUtils.getStatusBarHeight(activity.getResources());
         mPadding.searchBarBottom = 0;
     }
 

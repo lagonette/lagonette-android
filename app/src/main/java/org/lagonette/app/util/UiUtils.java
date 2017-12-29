@@ -3,7 +3,7 @@ package org.lagonette.app.util;
 import android.content.res.Resources;
 import android.os.Build;
 
-public class UiUtil {
+public class UiUtils {
 
     public static int getStatusBarHeight(Resources resources) {
         int result = 0;

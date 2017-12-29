@@ -42,9 +42,9 @@ import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.PartnerItem;
-import org.lagonette.app.util.SharedPreferencesUtil;
-import org.lagonette.app.util.SnackbarUtil;
-import org.lagonette.app.util.UiUtil;
+import org.lagonette.app.util.SharedPreferencesUtils;
+import org.lagonette.app.util.SnackbarUtils;
+import org.lagonette.app.util.UiUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -145,9 +145,9 @@ public class MapsFragment
         } else {
             mConfChanged = false;
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-            mStartLatitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LATITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LATITUDE);
-            mStartLongitude = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_LONGITUDE, SharedPreferencesUtil.DEFAULT_VALUE_START_LONGITUDE);
-            mStartZoom = sharedPref.getFloat(SharedPreferencesUtil.PREFERENCE_START_ZOOM, SharedPreferencesUtil.DEFAULT_VALUE_START_ZOOM);
+            mStartLatitude = sharedPref.getFloat(SharedPreferencesUtils.PREFERENCE_START_LATITUDE, SharedPreferencesUtils.DEFAULT_VALUE_START_LATITUDE);
+            mStartLongitude = sharedPref.getFloat(SharedPreferencesUtils.PREFERENCE_START_LONGITUDE, SharedPreferencesUtils.DEFAULT_VALUE_START_LONGITUDE);
+            mStartZoom = sharedPref.getFloat(SharedPreferencesUtils.PREFERENCE_START_ZOOM, SharedPreferencesUtils.DEFAULT_VALUE_START_ZOOM);
         }
 
         if (mGoogleApiClient == null) {
@@ -160,7 +160,7 @@ public class MapsFragment
 
         mPartnerItems = new LongSparseArray<>();
 
-        mStatusBarHeight = UiUtil.getStatusBarHeight(getResources());
+        mStatusBarHeight = UiUtils.getStatusBarHeight(getResources());
 
         mViewModel = ViewModelProviders
                 .of(MapsFragment.this)
@@ -215,9 +215,9 @@ public class MapsFragment
             CameraPosition cameraPosition = mMap.getCameraPosition();
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
             sharedPref.edit()
-                    .putFloat(SharedPreferencesUtil.PREFERENCE_START_LATITUDE, (float) cameraPosition.target.latitude)
-                    .putFloat(SharedPreferencesUtil.PREFERENCE_START_LONGITUDE, (float) cameraPosition.target.longitude)
-                    .putFloat(SharedPreferencesUtil.PREFERENCE_START_ZOOM, cameraPosition.zoom)
+                    .putFloat(SharedPreferencesUtils.PREFERENCE_START_LATITUDE, (float) cameraPosition.target.latitude)
+                    .putFloat(SharedPreferencesUtils.PREFERENCE_START_LONGITUDE, (float) cameraPosition.target.longitude)
+                    .putFloat(SharedPreferencesUtils.PREFERENCE_START_ZOOM, cameraPosition.zoom)
                     .apply();
         }
         super.onPause();
@@ -420,10 +420,10 @@ public class MapsFragment
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         new LatLng(
-                                SharedPreferencesUtil.DEFAULT_VALUE_START_LATITUDE,
-                                SharedPreferencesUtil.DEFAULT_VALUE_START_LONGITUDE
+                                SharedPreferencesUtils.DEFAULT_VALUE_START_LATITUDE,
+                                SharedPreferencesUtils.DEFAULT_VALUE_START_LONGITUDE
                         ),
-                        SharedPreferencesUtil.DEFAULT_VALUE_START_ZOOM
+                        SharedPreferencesUtils.DEFAULT_VALUE_START_ZOOM
                 ),
                 ANIMATION_LENGTH_SHORT,
                 null
@@ -528,7 +528,7 @@ public class MapsFragment
     public void errorGettingPartners(boolean noPartnerAtAll) {
         Snackbar
                 .make(
-                        SnackbarUtil.getViewGroup(getActivity()).getChildAt(0),
+                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
                         noPartnerAtAll
                                 ? R.string.error_getting_partners_first
                                 : R.string.error_getting_partners,

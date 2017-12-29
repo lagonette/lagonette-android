@@ -21,8 +21,8 @@ import org.lagonette.app.locator.DB;
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.repo.MainRepo;
 import org.lagonette.app.room.database.LaGonetteDatabase;
-import org.lagonette.app.util.DatabaseUtil;
-import org.lagonette.app.util.StrictModeUtil;
+import org.lagonette.app.util.DatabaseUtils;
+import org.lagonette.app.util.StrictModeUtils;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -42,7 +42,7 @@ public class LaGonetteApplication
         if (BuildConfig.DEBUG) {
             FragmentManager.enableDebugLogging(true);
             LoaderManager.enableDebugLogging(true);
-            StrictModeUtil.enableStrictMode();
+            StrictModeUtils.enableStrictMode();
         }
 
         setUpDb();
@@ -56,7 +56,7 @@ public class LaGonetteApplication
                         .databaseBuilder(
                                 LaGonetteApplication.this,
                                 LaGonetteDatabase.class,
-                                DatabaseUtil.DATABASE_NAME
+                                DatabaseUtils.DATABASE_NAME
                         )
                         .fallbackToDestructiveMigration()
                         .build()

@@ -1,8 +1,8 @@
 package org.lagonette.app.util;
 
-public final class DatabaseUtil {
+public final class DatabaseUtils {
 
-    private DatabaseUtil() {}
+    private DatabaseUtils() {}
 
     public static final String DATABASE_NAME = "la_gonette.db";
 

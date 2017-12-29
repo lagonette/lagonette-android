@@ -4,7 +4,7 @@ import android.os.StrictMode;
 
 import org.lagonette.app.BuildConfig;
 
-public class StrictModeUtil {
+public class StrictModeUtils {
 
     public static void enableStrictMode() {
         if (BuildConfig.DEBUG) {

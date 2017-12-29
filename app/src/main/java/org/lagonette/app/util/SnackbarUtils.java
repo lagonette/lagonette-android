@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 
-public abstract class SnackbarUtil {
+public abstract class SnackbarUtils {
 
     public static ViewGroup getViewGroup(@NonNull Fragment fragment) {
         return (ViewGroup) fragment.getActivity().findViewById(android.R.id.content);

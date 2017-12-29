@@ -8,7 +8,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
 import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.util.UiUtil;
+import org.lagonette.app.util.UiUtils;
 
 public abstract class BottomSheetPerformer
         extends BottomSheetBehavior.BottomSheetCallback
@@ -74,7 +74,7 @@ public abstract class BottomSheetPerformer
             @IdRes int bottomSheetRes) {
         mBottomSheetRes = bottomSheetRes;
         mPadding = new Padding();
-        mPadding.statusBarHeight = UiUtil.getStatusBarHeight(resources);
+        mPadding.statusBarHeight = UiUtils.getStatusBarHeight(resources);
         mPadding.searchBarBottom = 0;
         mPadding.bottomSheetTop = 0;
     }

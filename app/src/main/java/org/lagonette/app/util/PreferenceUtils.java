@@ -1,6 +1,6 @@
 package org.lagonette.app.util;
 
-public class PreferenceUtil {
+public class PreferenceUtils {
 
     public static final String DEFAULT_VALUE_CATEGORY_MD5_SUM = "";
 

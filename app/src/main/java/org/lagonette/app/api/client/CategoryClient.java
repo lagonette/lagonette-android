@@ -10,7 +10,7 @@ import org.lagonette.app.room.database.LaGonetteDatabase;
 import org.lagonette.app.room.entity.Category;
 import org.lagonette.app.room.entity.CategoryMetadata;
 import org.lagonette.app.room.entity.custom.HiddenCategory;
-import org.lagonette.app.util.PreferenceUtil;
+import org.lagonette.app.util.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,14 +63,14 @@ public class CategoryClient extends EntityClient<CategoriesResponse> {
     @Nullable
     public String getLocalMd5Sum(@NonNull SharedPreferences preferences) {
         return preferences.getString(
-                PreferenceUtil.KEY_CATEGORY_MD5_SUM,
-                PreferenceUtil.DEFAULT_VALUE_CATEGORY_MD5_SUM
+                PreferenceUtils.KEY_CATEGORY_MD5_SUM,
+                PreferenceUtils.DEFAULT_VALUE_CATEGORY_MD5_SUM
         );
     }
 
     public void saveRemoteMd5Sum(@NonNull SharedPreferences preferences) {
         preferences.edit()
-                .putString(PreferenceUtil.KEY_CATEGORY_MD5_SUM, mMd5Sum)
+                .putString(PreferenceUtils.KEY_CATEGORY_MD5_SUM, mMd5Sum)
                 .apply();
     }
 }
