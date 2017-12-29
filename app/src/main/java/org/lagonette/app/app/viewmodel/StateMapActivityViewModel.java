@@ -64,7 +64,7 @@ public class StateMapActivityViewModel extends AndroidViewModel {
                 mMainStateLiveData::notifyBottomSheetFragmentChanged
         );
 
-        mSearch.setValue(""); //TODO Maybe this is should be done in performer#init() ?
+        mSearch.setValue("");
     }
 
     @NonNull

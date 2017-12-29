@@ -16,7 +16,6 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
     public interface OnCollapsedClickListener {
 
-        //TODO Use NotNull everywhere !
         void onClick(@NonNull CategoryKey categoryKey, boolean isCollapsed);
 
     }
@@ -26,7 +25,8 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
         void onClick(@NonNull CategoryKey categoryKey, boolean visibility);
     }
 
-    public CategoryKey categoryKey;
+    @NonNull
+    public final CategoryKey categoryKey;
 
     public boolean isVisible;
 
@@ -63,6 +63,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
         categoryTextView = itemView.findViewById(R.id.category_label);
     }
 
+    @NonNull
     public CategoryViewHolder setOnCollapsedClick(@Nullable CategoryViewHolder.OnCollapsedClickListener listener) {
         if (listener != null) {
             collapsedButton.setOnClickListener(
@@ -72,6 +73,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
         return CategoryViewHolder.this;
     }
 
+    @NonNull
     public CategoryViewHolder setOnVisibilityClick(@Nullable CategoryViewHolder.OnVisibilityClickListener listener) {
         if (listener != null) {
             visibilityButton.setOnClickListener(

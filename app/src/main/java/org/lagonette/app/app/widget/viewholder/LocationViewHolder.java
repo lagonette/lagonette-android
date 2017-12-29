@@ -61,6 +61,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder {
         visibilityButton = itemView.findViewById(R.id.location_visibility);
     }
 
+    @NonNull
     public LocationViewHolder setOnLocationClick(@Nullable OnClickListener listener) {
         if (listener != null) {
             itemView.setOnClickListener(
@@ -70,6 +71,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder {
         return LocationViewHolder.this;
     }
 
+    @NonNull
     public LocationViewHolder setOnVisibilityClick(@Nullable OnVisibilityClickListener listener) {
         if (listener != null) {
             visibilityButton.setOnClickListener(

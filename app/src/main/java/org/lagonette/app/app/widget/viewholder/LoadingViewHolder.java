@@ -10,13 +10,14 @@ import org.lagonette.app.R;
 public class LoadingViewHolder extends RecyclerView.ViewHolder {
 
     public LoadingViewHolder(@NonNull ViewGroup parent) {
-        super(LayoutInflater
-                .from(parent.getContext())
-                .inflate(
-                        R.layout.row_loading,
-                        parent,
-                        false
-                )
+        super(
+                LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(
+                                R.layout.row_loading,
+                                parent,
+                                false
+                        )
         );
     }
 }

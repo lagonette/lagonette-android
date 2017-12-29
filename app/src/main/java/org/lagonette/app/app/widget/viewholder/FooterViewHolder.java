@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import org.lagonette.app.R;
 
 public class FooterViewHolder extends RecyclerView.ViewHolder {
+
     public FooterViewHolder(@NonNull ViewGroup parent) {
         super(
                 LayoutInflater

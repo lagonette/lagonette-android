@@ -50,6 +50,7 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
         officeView = itemView.findViewById(R.id.shortcut_office);
     }
 
+    @NonNull
     public ShortcutViewHolder setOnLocationClick(@Nullable OnLocationClickListener listener) {
         if (listener != null) {
             locationView.setOnClickListener(
@@ -59,6 +60,7 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
         return ShortcutViewHolder.this;
     }
 
+    @NonNull
     public ShortcutViewHolder setOnExchangeOfficeClick(@Nullable OnExchangeOfficeClickListener listener) {
         if (listener != null) {
             exchangeOfficeView.setOnClickListener(
@@ -68,6 +70,7 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
         return ShortcutViewHolder.this;
     }
 
+    @NonNull
     public ShortcutViewHolder setOnOfficeClick(@Nullable OnOfficeClickListener listener) {
         if (listener != null) {
             officeView.setOnClickListener(
