@@ -15,14 +15,7 @@ import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerform
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.room.statement.Statement;
 
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_BACK;
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_IDLE;
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_MOVE_TO_CLUSTER;
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_MOVE_TO_FOOTPRINT;
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_MOVE_TO_LOCATION;
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_MOVE_TO_MY_LOCATION;
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_OPEN_FILTERS;
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_SHOW_FULL_MAP;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.BACK;
 
 public abstract class AbstractMainCoordinator implements MainCoordinator {
 
@@ -80,7 +73,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_EXPANDED:
             case BottomSheetBehavior.STATE_SETTLING:
-                statefulAction.action.type = ACTION_BACK;
+                statefulAction.action.type = BACK;
                 computeBack(statefulAction);
                 return true;
 
@@ -96,36 +89,36 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
     public void process(@NonNull MainStatefulAction statefulAction) {
         switch (statefulAction.action.type) {
 
-            case ACTION_BACK:
+            case BACK:
                 computeBack(statefulAction);
                 break;
 
-            case ACTION_OPEN_FILTERS:
+            case OPEN_FILTERS:
                 computeFiltersOpening(statefulAction);
                 break;
 
-            case ACTION_MOVE_TO_MY_LOCATION:
+            case MOVE_TO_MY_LOCATION:
                 computeMovementToMyLocation(statefulAction);
                 break;
 
-            case ACTION_MOVE_TO_FOOTPRINT:
+            case MOVE_TO_FOOTPRINT:
                 computeMovementToFootprint(statefulAction);
                 break;
 
-            case ACTION_MOVE_TO_CLUSTER:
+            case MOVE_TO_CLUSTER:
                 computeMovementToCluster(statefulAction);
                 break;
 
-            case ACTION_MOVE_TO_LOCATION:
+            case MOVE_TO_LOCATION:
                 computeMovementToLocation(statefulAction);
                 break;
 
-            case ACTION_SHOW_FULL_MAP:
+            case SHOW_FULL_MAP:
                 computeFullMapShowing(statefulAction);
                 break;
 
             default:
-            case ACTION_IDLE:
+            case IDLE:
                 computeIdle(statefulAction);
                 break;
         }
@@ -149,11 +142,11 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
             case BottomSheetBehavior.STATE_HIDDEN:
                 switch (statefulAction.state.mapMovement) {
 
-                    case MainState.STATE_MOVEMENT_IDLE:
+                    case IDLE:
                         mMapFragmentPerformer.moveToMyLocation();
                         break;
 
-                    case MainState.STATE_MOVEMENT_MOVE:
+                    case MOVE:
                         mDoneMarker.markPendingActionAsDone();
                         break;
                 }
@@ -230,11 +223,11 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                 case BottomSheetBehavior.STATE_HIDDEN:
                     switch (statefulAction.state.mapMovement) {
 
-                        case MainState.STATE_MOVEMENT_MOVE:
+                        case MOVE:
                             // Well, it's okay. Just wait.
                             break;
 
-                        case MainState.STATE_MOVEMENT_IDLE:
+                        case IDLE:
                             if (statefulAction.action.item != null) {
                                 if (statefulAction.action.shouldMove) { //TODO Use reason to mark action done if the user move something
                                     statefulAction.action.shouldMove = false;
@@ -293,11 +286,11 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
             case BottomSheetBehavior.STATE_HIDDEN:
                 switch (statefulAction.state.mapMovement) {
 
-                    case MainState.STATE_MOVEMENT_MOVE:
+                    case MOVE:
                         // Well, it's okay. Just wait.
                         break;
 
-                    case MainState.STATE_MOVEMENT_IDLE:
+                    case IDLE:
                         if (statefulAction.action.cluster != null && statefulAction.action.shouldMove) {
                             statefulAction.action.shouldMove = false;
                             mMapFragmentPerformer.moveToCluster(statefulAction.action.cluster);
@@ -327,11 +320,11 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
             case BottomSheetBehavior.STATE_HIDDEN:
                 switch (statefulAction.state.mapMovement) {
 
-                    case MainState.STATE_MOVEMENT_IDLE:
+                    case IDLE:
                         mMapFragmentPerformer.moveToFootprint();
                         break;
 
-                    case MainState.STATE_MOVEMENT_MOVE:
+                    case MOVE:
                         mDoneMarker.markPendingActionAsDone();
                         break;
                 }

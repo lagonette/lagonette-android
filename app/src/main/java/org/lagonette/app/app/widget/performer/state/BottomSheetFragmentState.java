@@ -24,7 +24,7 @@ public class BottomSheetFragmentState {
         return mLoadedLocationId;
     }
 
-    public boolean isClear() {
+    public boolean isCleared() {
         return !isFiltersLoaded() && !isLocationDetailLoaded();
     }
 

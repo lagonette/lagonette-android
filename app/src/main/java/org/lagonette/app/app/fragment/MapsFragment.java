@@ -57,7 +57,7 @@ public class MapsFragment
 
     public interface OnMapMovementCommand {
 
-        void onMapMovementStateChanged(@MainState.Movement int newState);
+        void onMapMovementChanged(MainState.MapMovement newMovement);
     }
 
     public interface OnClusterClickCommand {
@@ -317,7 +317,7 @@ public class MapsFragment
         mMap.setOnCameraMoveStartedListener(
                 reason -> {
                     if (mOnMovementCommand != null) {
-                        mOnMovementCommand.onMapMovementStateChanged(MainState.STATE_MOVEMENT_MOVE);
+                        mOnMovementCommand.onMapMovementChanged(MainState.MapMovement.MOVE);
                     }
                 }
         );
@@ -325,7 +325,7 @@ public class MapsFragment
                 () -> {
                     mClusterManager.onCameraIdle();
                     if (mOnMovementCommand != null) {
-                        mOnMovementCommand.onMapMovementStateChanged(MainState.STATE_MOVEMENT_IDLE);
+                        mOnMovementCommand.onMapMovementChanged(MainState.MapMovement.IDLE);
                     }
                 }
         );

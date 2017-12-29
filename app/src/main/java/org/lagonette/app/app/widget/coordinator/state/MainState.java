@@ -7,15 +7,11 @@ import android.support.design.widget.BottomSheetBehavior;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
 
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static org.lagonette.app.app.widget.coordinator.state.MainState.MapMovement.IDLE;
 
 public class MainState {
-
-    public static final int STATE_MOVEMENT_IDLE = 0;
-
-    public static final int STATE_MOVEMENT_MOVE = 1;
 
     @Retention(SOURCE)
     @IntDef({
@@ -29,12 +25,9 @@ public class MainState {
 
     }
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({
-            STATE_MOVEMENT_IDLE,
-            STATE_MOVEMENT_MOVE
-    })
-    public @interface Movement {
+    public enum MapMovement {
+        IDLE,
+        MOVE
     }
 
     @State
@@ -43,13 +36,12 @@ public class MainState {
     @NonNull
     public BottomSheetFragmentState bottomSheetFragmentState;
 
-    @Movement
-    public int mapMovement;
+    public MapMovement mapMovement;
 
     public MainState(@NonNull BottomSheetFragmentState type) {
         bottomSheetState = BottomSheetBehavior.STATE_HIDDEN;
         bottomSheetFragmentState = type;
-        mapMovement = STATE_MOVEMENT_IDLE;
+        mapMovement = IDLE;
     }
 
     @Override
@@ -57,11 +49,11 @@ public class MainState {
         String string = "MainState: [\n";
         string += "\tMap movement: ";
         switch (mapMovement) {
-            case STATE_MOVEMENT_IDLE:
-                string += "STATE_MOVEMENT_IDLE\n";
+            case IDLE:
+                string += "IDLE\n";
                 break;
-            case STATE_MOVEMENT_MOVE:
-                string += "STATE_MOVEMENT_MOVE\n";
+            case MOVE:
+                string += "MOVE\n";
                 break;
         }
         string += "\tBottom sheet state: ";

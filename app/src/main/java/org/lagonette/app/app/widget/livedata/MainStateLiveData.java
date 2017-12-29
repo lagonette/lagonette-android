@@ -29,7 +29,7 @@ public class MainStateLiveData
         return value;
     }
 
-    public void notifyMapMovementChanged(@MainState.Movement int newMovement) {
+    public void notifyMapMovementChanged(MainState.MapMovement newMovement) {
         Log.d(TAG, "State <- Map movement " + newMovement);
         mState.mapMovement = newMovement;
         setValue(mState);

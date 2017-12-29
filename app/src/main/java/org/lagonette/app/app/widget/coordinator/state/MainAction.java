@@ -1,51 +1,27 @@
 package org.lagonette.app.app.widget.coordinator.state;
 
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.room.entity.statement.PartnerItem;
 
-import java.lang.annotation.Retention;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.IDLE;
 
 public class MainAction {
 
-    public static final int ACTION_IDLE = 0;
-
-    public static final int ACTION_BACK = 1;
-
-    public static final int ACTION_OPEN_FILTERS = 2;
-
-    public static final int ACTION_MOVE_TO_MY_LOCATION = 3;
-
-    public static final int ACTION_MOVE_TO_FOOTPRINT = 4;
-
-    public static final int ACTION_MOVE_TO_CLUSTER = 5;
-
-    public static final int ACTION_MOVE_TO_LOCATION = 6;
-
-    public static final int ACTION_SHOW_FULL_MAP = 7;
-
-    @Retention(SOURCE)
-    @IntDef({
-            ACTION_IDLE,
-            ACTION_BACK,
-            ACTION_OPEN_FILTERS,
-            ACTION_MOVE_TO_MY_LOCATION,
-            ACTION_MOVE_TO_FOOTPRINT,
-            ACTION_MOVE_TO_CLUSTER,
-            ACTION_MOVE_TO_LOCATION,
-            ACTION_SHOW_FULL_MAP
-    })
-    public @interface ActionType {
-
+    public enum  ActionType {
+        IDLE,
+        BACK,
+        OPEN_FILTERS,
+        MOVE_TO_MY_LOCATION,
+        MOVE_TO_FOOTPRINT,
+        MOVE_TO_CLUSTER,
+        MOVE_TO_LOCATION,
+        SHOW_FULL_MAP
     }
 
-    @ActionType
-    public int type; //TODO Enum
+    public ActionType type; //TODO Enum
 
     @Nullable
     public Cluster<PartnerItem> cluster;
@@ -56,14 +32,14 @@ public class MainAction {
     public boolean shouldMove;
 
     public MainAction() {
-        type = ACTION_IDLE;
+        type = IDLE;
         cluster = null;
         item = null;
         shouldMove = false;
     }
 
     public void done() {
-        type = ACTION_IDLE;
+        type = IDLE;
         cluster = null;
         item = null;
         shouldMove = false;
