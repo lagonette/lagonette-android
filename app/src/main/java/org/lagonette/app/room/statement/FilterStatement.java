@@ -1,8 +1,11 @@
 package org.lagonette.app.room.statement;
 
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
+import org.lagonette.app.room.embedded.Address;
 import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.statement.base.GonetteStatement;
 
@@ -226,7 +229,7 @@ public abstract class FilterStatement
         long getLocationId();
 
         @NonNull
-        String getLocationAddress();
+        String getLocationAddress(@NonNull Resources resources);
 
         boolean isLocationExchangeOffice();
 
@@ -235,6 +238,14 @@ public abstract class FilterStatement
         @NonNull
         String getPartnerName();
 
+    }
+
+    public static Address from(@NonNull Cursor cursor) {
+        Address address = new Address();
+        address.street = cursor.getString(FilterStatement.LOCATION_STREET);
+        address.zipCode = cursor.getString(FilterStatement.LOCATION_ZIP_CODE);
+        address.city = cursor.getString(FilterStatement.LOCATION_CITY);
+        return address;
     }
 
 }

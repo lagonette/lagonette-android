@@ -277,7 +277,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             holder.nameTextView.setText(mFilterReader.getPartnerName());
             holder.itemView.setClickable(holder.isVisible);
 
-            String address = mFilterReader.getLocationAddress();
+            String address = mFilterReader.getLocationAddress(holder.itemView.getResources());
             if (!TextUtils.isEmpty(address)) {
                 holder.addressTextView.setText(address);
                 holder.addressTextView.setVisibility(View.VISIBLE);

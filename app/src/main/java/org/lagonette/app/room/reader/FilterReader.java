@@ -1,10 +1,11 @@
 package org.lagonette.app.room.reader;
 
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
+import org.lagonette.app.room.embedded.Address;
 import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.reader.base.CursorReader;
 import org.lagonette.app.room.statement.FilterStatement;
@@ -82,21 +83,11 @@ public class FilterReader
         return mCursor.getString(FilterStatement.PARTNER_NAME);
     }
 
+    @NonNull
     @Override
-    public String getLocationAddress() {
-        //TODO use DisplayUtil.formatAddress
-        String street = mCursor.getString(FilterStatement.LOCATION_STREET);
-        String zipCode = mCursor.getString(FilterStatement.LOCATION_ZIP_CODE);
-        String city = mCursor.getString(FilterStatement.LOCATION_CITY);
-        builder.setLength(0);
-        if (!TextUtils.isEmpty(street) && !TextUtils.isEmpty(zipCode) && !TextUtils.isEmpty(city)) {
-            builder.append(street);
-            builder.append(", ");
-            builder.append(zipCode);
-            builder.append(" ");
-            builder.append(city);
-        }
-        return builder.toString();
+    public String getLocationAddress(@NonNull Resources resources) {
+        Address address = FilterStatement.from(mCursor);
+        return address.format(resources);
     }
 
     @Override

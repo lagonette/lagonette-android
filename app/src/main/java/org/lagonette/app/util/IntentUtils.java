@@ -47,7 +47,7 @@ public final class IntentUtils {
 
     public static boolean goToWebsite(@NonNull Context context, @NonNull String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(formatUrl(url))); //TODO Improve
+        intent.setData(Uri.parse(formatUrl(url)));
         if (intent.resolveActivity(context.getPackageManager()) != null) {
             context.startActivity(intent);
             return true;
