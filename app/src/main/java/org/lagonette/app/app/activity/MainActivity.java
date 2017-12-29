@@ -1,6 +1,7 @@
 package org.lagonette.app.app.activity;
 
 import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.presenter.LandscapeMainPresenter;
@@ -10,8 +11,7 @@ import org.lagonette.app.app.widget.presenter.PortraitMainPresenter;
 public class MainActivity
         extends PresenterActivity<MainPresenter> {
 
-    private static final String TAG = "MapsActivity";
-
+    @NonNull
     @Override
     protected MainPresenter getPresenter() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -20,11 +20,6 @@ public class MainActivity
         else {
             return new PortraitMainPresenter();
         }
-    }
-
-    @Override // TODO Maybe layout should be managed by presenter
-    protected void setContentView() {
-        setContentView(R.layout.activity_main);
     }
 
     @Override

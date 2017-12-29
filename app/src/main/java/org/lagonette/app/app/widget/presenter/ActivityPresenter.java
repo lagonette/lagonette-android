@@ -9,6 +9,8 @@ public interface ActivityPresenter {
 
     void construct(@NonNull AppCompatActivity activity);
 
+    void setContentView(@NonNull AppCompatActivity activity);
+
     void onViewCreated(@NonNull View view);
 
     void init(@NonNull AppCompatActivity activity);

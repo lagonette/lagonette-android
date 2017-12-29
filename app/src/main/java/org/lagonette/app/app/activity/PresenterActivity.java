@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import org.lagonette.app.R;
 import org.lagonette.app.app.widget.presenter.ActivityPresenter;
 
 public abstract class PresenterActivity<Presenter extends ActivityPresenter> extends BaseActivity {
@@ -17,7 +18,13 @@ public abstract class PresenterActivity<Presenter extends ActivityPresenter> ext
         mPresenter.construct(PresenterActivity.this);
     }
 
+    @NonNull
     protected abstract Presenter getPresenter();
+
+    @Override
+    protected void setContentView() {
+        mPresenter.setContentView(PresenterActivity.this);
+    }
 
     @Override
     protected void onViewCreated(@NonNull View view) {

@@ -78,6 +78,11 @@ public abstract class MainPresenter<CO extends MainCoordinator,
     }
 
     @Override
+    public void setContentView(@NonNull AppCompatActivity activity) {
+        activity.setContentView(R.layout.activity_main);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view) {
         mMapFragmentPerformer.inject(view);
         mBottomSheetPerformer.inject(view);
