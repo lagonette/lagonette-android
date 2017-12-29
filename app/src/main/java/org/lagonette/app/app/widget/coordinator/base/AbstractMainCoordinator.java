@@ -41,8 +41,6 @@ public abstract class AbstractMainCoordinator<BSP extends BottomSheetPerformer> 
     @NonNull
     protected final MapFragmentPerformer mMapFragmentPerformer;
 
-    // TODO maybe do not use object to store state, just got it from performer ?
-
     public AbstractMainCoordinator(
             @NonNull DoneMarker doneMarker,
             @NonNull BSP bottomSheetPerformer,
@@ -137,14 +135,13 @@ public abstract class AbstractMainCoordinator<BSP extends BottomSheetPerformer> 
         switch (statefulAction.state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
-                mMapFragmentPerformer.stopMoving();
+            case BottomSheetBehavior.STATE_DRAGGING:
+                // Wait.
                 break;
 
             case BottomSheetBehavior.STATE_COLLAPSED:
-            case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_EXPANDED:
-                mMapFragmentPerformer.stopMoving();
-                mBottomSheetPerformer.closeBottomSheet(); //TODO Warn there are 2 actions done.
+                mBottomSheetPerformer.closeBottomSheet();
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
