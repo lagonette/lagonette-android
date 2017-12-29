@@ -21,7 +21,7 @@ public class MainAction {
         SHOW_FULL_MAP
     }
 
-    public ActionType type; //TODO Enum
+    public ActionType type;
 
     @Nullable
     public Cluster<PartnerItem> cluster;
