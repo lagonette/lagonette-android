@@ -13,6 +13,7 @@ import org.lagonette.app.app.widget.livedata.BottomSheetFragmentStateLiveData;
 import org.lagonette.app.app.widget.livedata.MainActionLiveData;
 import org.lagonette.app.app.widget.livedata.MainStateLiveData;
 import org.lagonette.app.app.widget.livedata.MainStatefulActionLiveData;
+import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
 import org.lagonette.app.repo.Resource;
 
 public class StateMapActivityViewModel extends AndroidViewModel {
@@ -38,26 +39,26 @@ public class StateMapActivityViewModel extends AndroidViewModel {
     public StateMapActivityViewModel(Application application) {
         super(application);
 
-        mBottomSheetFragmentStateLiveData = new BottomSheetFragmentStateLiveData();
-
+        BottomSheetFragmentState bottomSheetFragmentState = new BottomSheetFragmentState();
         MainStatefulAction statefulAction = new MainStatefulAction(
                 new MainAction(),
-                new MainState(mBottomSheetFragmentStateLiveData.getValue())
+                new MainState(bottomSheetFragmentState)
         );
 
-        mMainStatefulActionLiveData = new MainStatefulActionLiveData(statefulAction);
-        mMainActionLiveData = new MainActionLiveData(statefulAction.action);
+        mBottomSheetFragmentStateLiveData = new BottomSheetFragmentStateLiveData(bottomSheetFragmentState);
         mMainStateLiveData = new MainStateLiveData(statefulAction.state);
+        mMainActionLiveData = new MainActionLiveData(statefulAction.action);
+        mMainStatefulActionLiveData = new MainStatefulActionLiveData(statefulAction);
         mSearch = new MutableLiveData<>();
         mWorkStatus = new MutableLiveData<>();
 
         mMainStatefulActionLiveData.addSource(
                 mMainActionLiveData,
-                action -> mMainStatefulActionLiveData.setAction(action)
+                mMainStatefulActionLiveData::setAction
         );
         mMainStatefulActionLiveData.addSource(
                 mMainStateLiveData,
-                state -> mMainStatefulActionLiveData.setState(state)
+                mMainStatefulActionLiveData::setState
         );
         mMainStatefulActionLiveData.addSource(
                 mBottomSheetFragmentStateLiveData,

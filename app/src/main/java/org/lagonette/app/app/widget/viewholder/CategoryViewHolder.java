@@ -26,7 +26,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
     }
 
     @NonNull
-    public final CategoryKey categoryKey;
+    public CategoryKey categoryKey;
 
     public boolean isVisible;
 

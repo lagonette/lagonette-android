@@ -27,6 +27,16 @@ public class MainActionLiveData extends LiveData<MainAction> {
         mAction = action;
     }
 
+    @NonNull
+    @Override
+    public MainAction getValue() {
+        MainAction action = super.getValue();
+        if (action == null) {
+            action = mAction;
+        }
+        return action;
+    }
+
     public void openFilters() {
         Log.d(TAG, "Action -> OPEN FILTERS");
         mAction.type = ACTION_OPEN_FILTERS;

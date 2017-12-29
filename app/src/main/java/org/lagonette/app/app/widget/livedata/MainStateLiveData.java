@@ -2,7 +2,6 @@ package org.lagonette.app.app.widget.livedata;
 
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.lagonette.app.app.widget.coordinator.state.MainState;
@@ -11,7 +10,7 @@ import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
 public class MainStateLiveData
         extends LiveData<MainState> {
 
-    private static final String TAG = "MainCoordinatorStateLiv";
+    private static final String TAG = "MainStateLiveData";
 
     @NonNull
     private MainState mState;
@@ -20,8 +19,7 @@ public class MainStateLiveData
         mState = state;
     }
 
-    // TODO Workaround
-    @Nullable
+    @NonNull
     @Override
     public MainState getValue() {
         MainState value = super.getValue();

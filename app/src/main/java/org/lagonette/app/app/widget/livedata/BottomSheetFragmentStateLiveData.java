@@ -2,9 +2,7 @@ package org.lagonette.app.app.widget.livedata;
 
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
 
 public class BottomSheetFragmentStateLiveData
@@ -13,8 +11,8 @@ public class BottomSheetFragmentStateLiveData
     @NonNull
     private final BottomSheetFragmentState mBottomSheetFragmentState;
 
-    public BottomSheetFragmentStateLiveData() {
-        mBottomSheetFragmentState = new BottomSheetFragmentState();
+    public BottomSheetFragmentStateLiveData(@NonNull BottomSheetFragmentState state) {
+        mBottomSheetFragmentState = state;
     }
 
     @NonNull

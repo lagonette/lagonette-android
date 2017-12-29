@@ -14,6 +14,14 @@ public class MainStatefulActionLiveData extends MediatorLiveData<MainStatefulAct
 
     public MainStatefulActionLiveData(@NonNull MainStatefulAction statefulAction) {
         mStatefulAction = statefulAction;
+        setValue(mStatefulAction);
+    }
+
+    @NonNull
+    @Override
+    public MainStatefulAction getValue() {
+        //noinspection ConstantConditions
+        return super.getValue();
     }
 
     public void setAction(MainAction action) {
@@ -24,15 +32,5 @@ public class MainStatefulActionLiveData extends MediatorLiveData<MainStatefulAct
     public void setState(MainState state) {
         mStatefulAction.state = state;
         setValue(mStatefulAction);
-    }
-
-    @NonNull
-    @Override
-    public MainStatefulAction getValue() {
-        MainStatefulAction statefulAction = super.getValue();
-        if (statefulAction == null) {
-            statefulAction = mStatefulAction;
-        }
-        return statefulAction;
     }
 }
