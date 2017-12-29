@@ -14,7 +14,7 @@ import android.widget.TextView;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.util.UiUtil;
 
-public abstract class SearchBarPerformer {
+public abstract class SearchBarPerformer implements Performer {
 
     public interface OnSearchCommand {
 
@@ -59,6 +59,7 @@ public abstract class SearchBarPerformer {
         mSearchTextRes = searchTextRes;
     }
 
+    @Override
     public void inject(@NonNull View view) {
         mSearchBar = view.findViewById(mSearchBarRes);
         mProgressBar = view.findViewById(mProgressBarRes);

@@ -6,10 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import org.lagonette.app.app.fragment.LocationDetailFragment;
 
-public class LocationDetailFragmentPerformer {
+public class LocationDetailFragmentPerformer implements Performer {
 
     public interface FragmentLoadedCommand {
 
@@ -41,6 +42,11 @@ public class LocationDetailFragmentPerformer {
             @IdRes int locationDetailContainerRed) {
         mFragmentManager = activity.getSupportFragmentManager();
         mLocationDetailContainerRes = locationDetailContainerRed;
+    }
+
+    @Override
+    public void inject(@NonNull View view) {
+        // Do nothing.
     }
 
     public void restoreFragment() {

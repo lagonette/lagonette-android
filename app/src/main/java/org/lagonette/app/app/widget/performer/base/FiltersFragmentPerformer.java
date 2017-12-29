@@ -5,10 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import org.lagonette.app.app.fragment.FiltersFragment;
 
-public class FiltersFragmentPerformer {
+public class FiltersFragmentPerformer implements Performer {
 
     public interface FragmentLoadedCommand {
 
@@ -41,6 +42,11 @@ public class FiltersFragmentPerformer {
             @IdRes int filtersContainerRes) {
         mFragmentManager = activity.getSupportFragmentManager();
         mFiltersContainerRes = filtersContainerRes;
+    }
+
+    @Override
+    public void inject(@NonNull View view) {
+        // Do nothing.
     }
 
     public void restoreFragment() {

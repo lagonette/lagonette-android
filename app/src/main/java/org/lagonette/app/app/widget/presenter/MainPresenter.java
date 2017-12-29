@@ -88,6 +88,8 @@ public abstract class MainPresenter<CO extends MainCoordinator,
         mBottomSheetPerformer.inject(view);
         mSearchBarPerformer.inject(view);
         mFabButtonsPerformer.inject(view);
+        mLocationDetailFragmentPerformer.inject(view);
+        mFiltersFragmentPerformer.inject(view);
     }
 
     @Override

@@ -14,7 +14,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.MapsFragment;
 import org.lagonette.app.room.entity.statement.PartnerItem;
 
-public  abstract class MapFragmentPerformer {
+public abstract class MapFragmentPerformer implements Performer {
 
     protected MapsFragment mFragment;
 
@@ -28,8 +28,6 @@ public  abstract class MapFragmentPerformer {
         mFragmentManager = activity.getSupportFragmentManager();
         mMapFragmentRes = mapFragmentRes;
     }
-
-    public abstract void inject(@NonNull View view);
 
     public void loadFragment() {
         mFragment = MapsFragment.newInstance();

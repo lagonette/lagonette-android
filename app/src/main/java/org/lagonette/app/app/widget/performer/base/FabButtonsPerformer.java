@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
-public abstract class FabButtonsPerformer {
+public abstract class FabButtonsPerformer implements Performer {
 
     public interface OnPositionClickCommand {
 
@@ -31,6 +31,7 @@ public abstract class FabButtonsPerformer {
         mPositionButtonRes = positionRes;
     }
 
+    @Override
     public void inject(@NonNull View view) {
         FloatingActionButton positionFab = view.findViewById(mPositionButtonRes);
         positionFab.setOnClickListener(

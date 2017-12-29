@@ -11,7 +11,8 @@ import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.util.UiUtil;
 
 public abstract class BottomSheetPerformer
-        extends BottomSheetBehavior.BottomSheetCallback {
+        extends BottomSheetBehavior.BottomSheetCallback
+        implements Performer {
 
     public interface OnStateChangedCommand {
 
@@ -80,7 +81,7 @@ public abstract class BottomSheetPerformer
         mPadding.bottomSheetTop = 0;
     }
 
-    //TODO Use performer interface for inject()
+    @Override
     public void inject(@NonNull View view) {
         mBottomSheet = view.findViewById(mBottomSheetRes);
         mBehavior = BottomSheetBehavior.from(mBottomSheet);
