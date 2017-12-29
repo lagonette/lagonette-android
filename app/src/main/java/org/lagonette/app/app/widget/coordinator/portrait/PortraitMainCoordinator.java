@@ -33,7 +33,7 @@ public class PortraitMainCoordinator
             case BottomSheetBehavior.STATE_EXPANDED:
             case BottomSheetBehavior.STATE_SETTLING:
                 if (state.bottomSheetFragmentState.areAllLoaded()) {
-                    wtf();
+                    wtf(state);
                 }
                 else if (state.bottomSheetFragmentState.isFiltersLoaded()) {
                     mLocationDetailPerformer.unloadFragment();
@@ -85,7 +85,7 @@ public class PortraitMainCoordinator
                     mDoneMarker.markPendingActionAsDone();
                 }
                 else {
-                    wtf();
+                    wtf(statefulAction.state);
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 break;
@@ -98,14 +98,14 @@ public class PortraitMainCoordinator
                     mDoneMarker.markPendingActionAsDone();
                 }
                 else {
-                    wtf();
+                    wtf(statefulAction.state);
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
                 if (statefulAction.state.bottomSheetFragmentState.areAllLoaded()) {
-                    wtf();
+                    wtf(statefulAction.state);
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 else if (statefulAction.state.bottomSheetFragmentState.isFiltersLoaded()) {
@@ -115,14 +115,14 @@ public class PortraitMainCoordinator
                     mDoneMarker.markPendingActionAsDone();
                 }
                 else {
-                    wtf();
+                    wtf(statefulAction.state);
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_SETTLING:
                 if (statefulAction.state.bottomSheetFragmentState.areAllLoaded()) {
-                    wtf();
+                    wtf(statefulAction.state);
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 else if (statefulAction.state.bottomSheetFragmentState.isFiltersLoaded()) {
@@ -132,7 +132,7 @@ public class PortraitMainCoordinator
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 else {
-                    wtf();
+                    wtf(statefulAction.state);
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 break;

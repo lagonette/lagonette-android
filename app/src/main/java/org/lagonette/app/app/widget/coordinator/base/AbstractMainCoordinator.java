@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
 import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
@@ -356,8 +358,9 @@ public abstract class AbstractMainCoordinator<BSP extends BottomSheetPerformer> 
         }
     }
 
-    protected void wtf() {
-        //TODO log exception, just in case
+    protected void wtf(@NonNull MainState state) {
+        FirebaseCrash.logcat(Log.ERROR, TAG, state.toString());
+        FirebaseCrash.report(new IllegalArgumentException("Coordinator received a weird state"));
     }
 
 }

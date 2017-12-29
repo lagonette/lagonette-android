@@ -51,7 +51,7 @@ public class LandscapeMainCoordinator
 
             case BottomSheetBehavior.STATE_COLLAPSED:
                 if (state.bottomSheetFragmentState.areAllLoaded()) {
-                    wtf();
+                    wtf(state);
                 }
                 else if (state.bottomSheetFragmentState.isFiltersLoaded()) {
                     mBottomSheetPerformer.restoreCloseState();
@@ -68,7 +68,7 @@ public class LandscapeMainCoordinator
             case BottomSheetBehavior.STATE_EXPANDED:
             case BottomSheetBehavior.STATE_SETTLING:
                 if (state.bottomSheetFragmentState.areAllLoaded()) {
-                    wtf();
+                    wtf(state);
                 }
                 else if (state.bottomSheetFragmentState.isFiltersLoaded()) {
                     mBottomSheetPerformer.restoreCloseState();

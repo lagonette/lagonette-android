@@ -51,4 +51,42 @@ public class MainState {
         bottomSheetFragmentState = type;
         mapMovement = STATE_MOVEMENT_IDLE;
     }
+
+    @Override
+    public String toString() {
+        String string = "MainState: [\n";
+        string += "\tMap movement: ";
+        switch (mapMovement) {
+            case STATE_MOVEMENT_IDLE:
+                string += "STATE_MOVEMENT_IDLE\n";
+                break;
+            case STATE_MOVEMENT_MOVE:
+                string += "STATE_MOVEMENT_MOVE\n";
+                break;
+        }
+        string += "\tBottom sheet state: ";
+        switch (bottomSheetState) {
+            case BottomSheetBehavior.STATE_COLLAPSED:
+                string += "STATE_COLLAPSED\n";
+                break;
+            case BottomSheetBehavior.STATE_DRAGGING:
+                string += "STATE_DRAGGING\n";
+                break;
+            case BottomSheetBehavior.STATE_EXPANDED:
+                string += "STATE_EXPANDED\n";
+                break;
+            case BottomSheetBehavior.STATE_HIDDEN:
+                string += "STATE_HIDDEN\n";
+                break;
+            case BottomSheetBehavior.STATE_SETTLING:
+                string += "STATE_SETTLING\n";
+                break;
+        }
+        string += "\tBottom sheet fragment state: [\n";
+        string += "\t\tis filters loaded: " + bottomSheetFragmentState.isFiltersLoaded() + "\n";
+        string += "\t\tis location detail loaded: " + bottomSheetFragmentState.isLocationDetailLoaded() + "\n";
+        string += "\t]\n";
+        string += "]";
+        return string;
+    }
 }
