@@ -15,7 +15,6 @@
 +feature Manage sub category @filters
 +feature Market
 +feature Tutorial
-(A) +feature LANDSCAPE MODE!
 +feature Some partners do not have to be displayed (no address, no coordinates), manage it.
 +feature Import category & partner from a local JSON
 
