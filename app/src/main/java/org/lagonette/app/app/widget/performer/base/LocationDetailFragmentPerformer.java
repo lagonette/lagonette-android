@@ -54,7 +54,7 @@ public class LocationDetailFragmentPerformer implements Performer {
     }
 
     public void unloadFragment() {
-        if (mFragmentManager != null && mFragment != null) {
+        if (mFragment != null) {
             mFragmentManager.beginTransaction()
                     .remove(mFragment)
                     .commit();
@@ -70,30 +70,27 @@ public class LocationDetailFragmentPerformer implements Performer {
         return mFragment != null;
     }
 
-    //TODO Remove animation boolean
-    public void loadFragment(long locationId, boolean animation) {
-        if (mFragmentManager != null) {
-            mFragment = LocationDetailFragment.newInstance(locationId);
-            FragmentTransaction transaction = mFragmentManager.beginTransaction();
+    public void loadFragment(long locationId) {
+        mFragment = LocationDetailFragment.newInstance(locationId);
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
 
-            if (animation) {
-                transaction.setCustomAnimations(
-                        android.R.anim.fade_in,
-                        android.R.anim.fade_out
-                );
-            }
-
-            transaction.replace(
-                    mLocationDetailContainerRes,
-                    mFragment,
-                    LocationDetailFragment.TAG
+        if (isLoaded()) {
+            transaction.setCustomAnimations(
+                    android.R.anim.fade_in,
+                    android.R.anim.fade_out
             );
+        }
 
-            transaction.commit();
+        transaction.replace(
+                mLocationDetailContainerRes,
+                mFragment,
+                LocationDetailFragment.TAG
+        );
 
-            if (mFragmentLoadedCommand != null) {
-                mFragmentLoadedCommand.onLocationLoaded(locationId);
-            }
+        transaction.commit();
+
+        if (mFragmentLoadedCommand != null) {
+            mFragmentLoadedCommand.onLocationLoaded(locationId);
         }
     }
 

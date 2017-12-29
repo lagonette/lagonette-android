@@ -36,6 +36,10 @@ public class BottomSheetFragmentState {
         return mLoadedLocationId > Statement.NO_ID;
     }
 
+    public boolean isLocationDetailLoaded(long locationId) {
+        return mLoadedLocationId == locationId;
+    }
+
     public boolean areAllLoaded() {
         return isLocationDetailLoaded() && isFiltersLoaded();
     }

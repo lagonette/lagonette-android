@@ -44,7 +44,7 @@ public class PortraitMainCoordinator
                 else if (state.bottomSheetFragmentState.isLocationDetailLoaded()) {
                     mFiltersPerformer.unloadFragment();
                     if (!mLocationDetailPerformer.isLoaded()) {
-                        mLocationDetailPerformer.loadFragment(state.bottomSheetFragmentState.getLocationId(), false);
+                        mLocationDetailPerformer.loadFragment(state.bottomSheetFragmentState.getLocationId());
                     }
                 }
                 else {

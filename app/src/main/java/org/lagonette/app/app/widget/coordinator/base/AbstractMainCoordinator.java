@@ -212,8 +212,8 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                     if (statefulAction.action.shouldMove) {
                         statefulAction.action.shouldMove = false;
                         mMapFragmentPerformer.moveToLocation(statefulAction.action.item);
-                    } else if (statefulAction.state.bottomSheetFragmentState.getLocationId() != selectedId) {
-                        mLocationDetailPerformer.loadFragment(statefulAction.action.item.getId(), true);
+                    } else if (!statefulAction.state.bottomSheetFragmentState.isLocationDetailLoaded(selectedId)) {
+                        mLocationDetailPerformer.loadFragment(statefulAction.action.item.getId());
                     } else {
                         mDoneMarker.markPendingActionAsDone();
                     }
@@ -268,7 +268,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
 
                 case BottomSheetBehavior.STATE_HIDDEN:
                     if (statefulAction.action.item != null) {
-                        mLocationDetailPerformer.loadFragment(statefulAction.action.item.getId(), false);
+                        mLocationDetailPerformer.loadFragment(statefulAction.action.item.getId());
                     } else {
                         mDoneMarker.markPendingActionAsDone();
                     }
