@@ -42,9 +42,7 @@ public class PortraitMapFragmentPerformer
     @Override
     public void inject(@NonNull View view) {
         View mapFragmentView = view.findViewById(mMapFragmentRes);
-        //TODO Use inheritance.
         mBehavior = ParallaxBehavior.from(mapFragmentView);
-
         mBehavior.setOnParallaxTranslationListener(this::notifyParallaxOffsetChanged);
     }
 
