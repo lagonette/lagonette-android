@@ -21,10 +21,13 @@ public abstract class SearchBarPerformer implements Performer {
         void notifySearch(@Nullable String search);
     }
 
-    public interface OnOffsetChangedCommand {
+    public interface OnBottomChangedCommand {
 
-        void notifyOffsetChanged(int offset);
+        void notifyBottomChanged(int offset);
     }
+
+    @Nullable
+    private OnBottomChangedCommand mOnBottomChangedCommand;
 
     @Nullable
     private OnSearchCommand mOnSearchCommand;
@@ -67,6 +70,20 @@ public abstract class SearchBarPerformer implements Performer {
 
         setupSearchBarMarginTop(mSearchBar);
         setupSearchTextView(mSearchTextView);
+
+        mSearchBar.addOnLayoutChangeListener(
+                (searchBar, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> onBottomChanged(searchBar)
+        );
+    }
+
+    protected void onBottomChanged(@NonNull View searchBar) {
+        if (mOnBottomChangedCommand != null) {
+            mOnBottomChangedCommand.notifyBottomChanged((int) (searchBar.getBottom() + searchBar.getTranslationY()));
+        }
+    }
+
+    public void onBottomChanged(@NonNull OnBottomChangedCommand command) {
+        mOnBottomChangedCommand = command;
     }
 
     public void setWorkStatus(@Resource.Status int workState) {

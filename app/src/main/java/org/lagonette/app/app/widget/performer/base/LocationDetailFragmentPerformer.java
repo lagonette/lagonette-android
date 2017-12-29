@@ -1,5 +1,6 @@
 package org.lagonette.app.app.widget.performer.base;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,6 +35,9 @@ public class LocationDetailFragmentPerformer implements Performer {
     @Nullable
     private FragmentLoadedCommand mFragmentLoadedCommand;
 
+    @NonNull
+    private final MutableLiveData<Integer> mTopPadding;
+
     @IdRes
     private final int mLocationDetailContainerRes;
 
@@ -42,6 +46,7 @@ public class LocationDetailFragmentPerformer implements Performer {
             @IdRes int locationDetailContainerRed) {
         mFragmentManager = activity.getSupportFragmentManager();
         mLocationDetailContainerRes = locationDetailContainerRed;
+        mTopPadding = new MutableLiveData<>();
     }
 
     @Override
@@ -51,6 +56,12 @@ public class LocationDetailFragmentPerformer implements Performer {
 
     public void restoreFragment() {
         mFragment = (LocationDetailFragment) mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
+        if (mFragment != null) {
+            mTopPadding.observe(
+                    mFragment,
+                    mFragment::updateTopPadding
+            );
+        }
     }
 
     public void unloadFragment() {
@@ -89,15 +100,18 @@ public class LocationDetailFragmentPerformer implements Performer {
 
         transaction.commit();
 
+        mTopPadding.observe(
+                mFragment,
+                mFragment::updateTopPadding
+        );
+
         if (mFragmentLoadedCommand != null) {
             mFragmentLoadedCommand.onLocationLoaded(locationId);
         }
     }
 
     public void updateTopPadding(int topPadding) {
-        if (mFragment != null) {
-            mFragment.updateTopPadding(topPadding);
-        }
+        mTopPadding.setValue(topPadding);
     }
 
     public void onFragmentLoaded(@Nullable FragmentLoadedCommand command) {

@@ -24,7 +24,7 @@ public abstract class MapFragmentPerformer implements Performer {
     @IdRes
     protected int mMapFragmentRes;
 
-    public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes, @DimenRes int searchBarHeightRes) {
+    public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes) {
         mFragmentManager = activity.getSupportFragmentManager();
         mMapFragmentRes = mapFragmentRes;
     }

@@ -3,6 +3,7 @@ package org.lagonette.app.app.widget.performer.portrait;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
@@ -14,9 +15,6 @@ public class PortraitSearchBarPerformer
 
     @Nullable
     private TopEscapeBehavior mBehavior;
-
-    @Nullable
-    private OnOffsetChangedCommand mOnOffsetChangedCommand;
 
     public PortraitSearchBarPerformer(
             @IdRes int searchBarRes,
@@ -31,16 +29,8 @@ public class PortraitSearchBarPerformer
 
         mBehavior = TopEscapeBehavior.from(mSearchBar);
         mBehavior.setOnMoveListener(
-                (child, translationY) -> {
-                    if (mOnOffsetChangedCommand != null) {
-                        mOnOffsetChangedCommand.notifyOffsetChanged(translationY);
-                    }
-                }
+                (child, translationY) -> onBottomChanged(child)
         );
-    }
-
-    public void onOffsetChanged(@NonNull OnOffsetChangedCommand command) {
-        mOnOffsetChangedCommand = command;
     }
 
     public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentState bottomSheetFragmentState) {

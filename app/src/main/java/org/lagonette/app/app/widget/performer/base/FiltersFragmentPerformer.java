@@ -1,5 +1,6 @@
 package org.lagonette.app.app.widget.performer.base;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,6 +35,9 @@ public class FiltersFragmentPerformer implements Performer {
     @Nullable
     private FragmentLoadedCommand mFragmentLoadedCommand;
 
+    @NonNull
+    private final MutableLiveData<Integer> mTopPadding;
+
     @IdRes
     private final int mFiltersContainerRes;
 
@@ -42,6 +46,7 @@ public class FiltersFragmentPerformer implements Performer {
             @IdRes int filtersContainerRes) {
         mFragmentManager = activity.getSupportFragmentManager();
         mFiltersContainerRes = filtersContainerRes;
+        mTopPadding = new MutableLiveData<>();
     }
 
     @Override
@@ -51,6 +56,12 @@ public class FiltersFragmentPerformer implements Performer {
 
     public void restoreFragment() {
         mFragment = (FiltersFragment) mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
+        if (mFragment != null) {
+            mTopPadding.observe(
+                    mFragment,
+                    mFragment::updateTopPadding
+            );
+        }
     }
 
     public void unloadFragment() {
@@ -77,6 +88,11 @@ public class FiltersFragmentPerformer implements Performer {
                 )
                 .commit();
 
+        mTopPadding.observe(
+                mFragment,
+                mFragment::updateTopPadding
+        );
+
         if (mFragmentLoadedCommand != null) {
             mFragmentLoadedCommand.onFiltersLoaded();
         }
@@ -87,9 +103,7 @@ public class FiltersFragmentPerformer implements Performer {
     }
 
     public void updateTopPadding(int topPadding) {
-        if (mFragment != null) {
-            mFragment.updateTopPadding(topPadding);
-        }
+        mTopPadding.setValue(topPadding);
     }
 
     public void onFragmentLoaded(@Nullable FragmentLoadedCommand command) {

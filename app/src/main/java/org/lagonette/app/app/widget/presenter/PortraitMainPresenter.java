@@ -20,13 +20,12 @@ public class PortraitMainPresenter
     public void construct(@NonNull AppCompatActivity activity) {
         super.construct(activity);
 
-        mMapFragmentPerformer = new PortraitMapFragmentPerformer(activity, R.id.content, R.dimen.search_bar_supposed_height);
+        mMapFragmentPerformer = new PortraitMapFragmentPerformer(activity, R.id.content);
         mFabButtonsPerformer = new PortraitFabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
         mSearchBarPerformer = new PortraitSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
         mBottomSheetPerformer = new PortraitBottomSheetPerformer(
                 activity.getResources(),
-                R.id.bottom_sheet,
-                R.dimen.search_bar_supposed_height
+                R.id.bottom_sheet
         );
 
         mCoordinator = new PortraitMainCoordinator(
@@ -63,10 +62,10 @@ public class PortraitMainPresenter
                     mLocationDetailFragmentPerformer.updateTopPadding(topPadding);
                 }
         );
-        mSearchBarPerformer.onOffsetChanged(
+        mSearchBarPerformer.onBottomChanged(
                 offset -> {
-                    mMapFragmentPerformer.notifySearchBarOffsetChanged(offset);
-                    mBottomSheetPerformer.notifySearchBarOffsetChanged(offset);
+                    mMapFragmentPerformer.notifySearchBarBottomChanged(offset);
+                    mBottomSheetPerformer.notifySearchBarBottomChanged(offset);
                 }
         );
     }

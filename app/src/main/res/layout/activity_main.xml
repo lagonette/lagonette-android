@@ -93,8 +93,8 @@
         android:layout_marginTop="@dimen/search_bar_margin_top"
         app:dependency="@id/bottom_sheet"
         app:layout_behavior="org.lagonette.app.app.widget.behavior.TopEscapeBehavior"
-        app:leave_length="@dimen/search_bar_supposed_height"
-        app:move_length="@dimen/search_bar_supposed_height" />
+        app:leave_length="@dimen/search_bar_height"
+        app:move_length="@dimen/search_bar_height" />
 
 
 </android.support.design.widget.CoordinatorLayout>

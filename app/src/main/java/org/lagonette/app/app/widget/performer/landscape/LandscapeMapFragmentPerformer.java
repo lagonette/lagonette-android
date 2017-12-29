@@ -8,8 +8,8 @@ import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 
 public class LandscapeMapFragmentPerformer extends MapFragmentPerformer {
 
-    public LandscapeMapFragmentPerformer(@NonNull AppCompatActivity activity, int mapFragmentRes, int searchBarHeightRes) {
-        super(activity, mapFragmentRes, searchBarHeightRes);
+    public LandscapeMapFragmentPerformer(@NonNull AppCompatActivity activity, int mapFragmentRes) {
+        super(activity, mapFragmentRes);
     }
 
     @Override

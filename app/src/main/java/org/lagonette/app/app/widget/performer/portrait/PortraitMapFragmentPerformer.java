@@ -14,11 +14,10 @@ public class PortraitMapFragmentPerformer
 
     public static class Padding {
 
-        public int parallaxOffset, searchBarOffset, searchBarHeight, statusBarHeight;
+        public int parallaxOffset, searchBarBottom, statusBarHeight;
 
-        // TODO Do not use searchBarHeight, use an inverted offset or something else
         public int getTop() {
-            return statusBarHeight + searchBarHeight + searchBarOffset - parallaxOffset;
+            return Math.max(statusBarHeight, searchBarBottom) - parallaxOffset;
         }
 
         public int getBottom() {
@@ -32,11 +31,11 @@ public class PortraitMapFragmentPerformer
     @Nullable
     private ParallaxBehavior<View> mBehavior;
 
-    public PortraitMapFragmentPerformer(@NonNull AppCompatActivity activity, int mapFragmentRes, int searchBarHeightRes) {
-        super(activity, mapFragmentRes, searchBarHeightRes);
+    public PortraitMapFragmentPerformer(@NonNull AppCompatActivity activity, int mapFragmentRes) {
+        super(activity, mapFragmentRes);
         mPadding = new Padding();
         mPadding.statusBarHeight = UiUtil.getStatusBarHeight(activity.getResources());
-        mPadding.searchBarHeight = activity.getResources().getDimensionPixelOffset(searchBarHeightRes);
+        mPadding.searchBarBottom = 0;
     }
 
     @Override
@@ -46,8 +45,8 @@ public class PortraitMapFragmentPerformer
         mBehavior.setOnParallaxTranslationListener(this::notifyParallaxOffsetChanged);
     }
 
-    public void notifySearchBarOffsetChanged(int searchBarOffset) {
-        mPadding.searchBarOffset = searchBarOffset;
+    public void notifySearchBarBottomChanged(int searchBarBottom) {
+        mPadding.searchBarBottom = searchBarBottom;
         updateMapPadding();
     }
 

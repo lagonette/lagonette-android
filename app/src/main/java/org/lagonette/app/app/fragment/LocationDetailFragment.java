@@ -28,6 +28,7 @@ public class LocationDetailFragment
 
     private static final String ARG_LOCATION_ID = "arg:location_id";
 
+    @NonNull
     public static LocationDetailFragment newInstance(long locationId) {
         Bundle args = new Bundle(1);
         args.putLong(ARG_LOCATION_ID, locationId);

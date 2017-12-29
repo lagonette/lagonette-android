@@ -27,13 +27,12 @@ public abstract class BottomSheetPerformer
 
     public static class Padding {
 
-        public int bottomSheetTop, searchBarHeight, searchBarOffset, statusBarHeight;
+        public int bottomSheetTop, searchBarBottom, statusBarHeight;
 
         private int mTopPadding;
 
-        // TODO Do not use searchBarHeight, use an inverted offset or something else
         public boolean updateTop() {
-            int limit = statusBarHeight + searchBarHeight + searchBarOffset;
+            int limit = Math.max(statusBarHeight, searchBarBottom);
             if (bottomSheetTop <= limit) {
                 mTopPadding = limit - bottomSheetTop;
                 return true;
@@ -76,8 +75,7 @@ public abstract class BottomSheetPerformer
         mBottomSheetRes = bottomSheetRes;
         mPadding = new Padding();
         mPadding.statusBarHeight = UiUtil.getStatusBarHeight(resources);
-        mPadding.searchBarHeight = 0;
-        mPadding.searchBarOffset = 0;
+        mPadding.searchBarBottom = 0;
         mPadding.bottomSheetTop = 0;
     }
 
@@ -124,8 +122,8 @@ public abstract class BottomSheetPerformer
         }
     }
 
-    public void notifySearchBarOffsetChanged(int searchBarOffset) {
-        mPadding.searchBarOffset = searchBarOffset;
+    public void notifySearchBarBottomChanged(int searchBarBottom) {
+        mPadding.searchBarBottom = searchBarBottom;
         updateBottomSheetTopPadding();
     }
 

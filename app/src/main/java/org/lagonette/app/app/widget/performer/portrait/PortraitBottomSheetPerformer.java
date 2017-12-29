@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.performer.portrait;
 
 import android.content.res.Resources;
-import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -13,10 +12,8 @@ public class PortraitBottomSheetPerformer
 
     public PortraitBottomSheetPerformer(
             @NonNull Resources resources,
-            @IdRes int bottomSheetRes,
-            @DimenRes int searchBarHeightRes) {
+            @IdRes int bottomSheetRes) {
         super(resources, bottomSheetRes);
-        mPadding.searchBarHeight = resources.getDimensionPixelOffset(searchBarHeightRes);
     }
 
     @Override
