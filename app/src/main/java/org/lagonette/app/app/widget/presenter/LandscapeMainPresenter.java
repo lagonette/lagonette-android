@@ -11,8 +11,7 @@ import org.lagonette.app.app.widget.performer.landscape.LandscapeMapFragmentPerf
 import org.lagonette.app.app.widget.performer.landscape.LandscapeSearchBarPerformer;
 
 public class LandscapeMainPresenter
-        extends MainPresenter<LandscapeMainCoordinator,
-        LandscapeBottomSheetPerformer,
+        extends MainPresenter<
         LandscapeFabButtonsPerformer,
         LandscapeMapFragmentPerformer,
         LandscapeSearchBarPerformer> {

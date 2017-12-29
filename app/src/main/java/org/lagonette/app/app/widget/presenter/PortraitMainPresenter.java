@@ -11,8 +11,7 @@ import org.lagonette.app.app.widget.performer.portrait.PortraitMapFragmentPerfor
 import org.lagonette.app.app.widget.performer.portrait.PortraitSearchBarPerformer;
 
 public class PortraitMainPresenter
-        extends MainPresenter<PortraitMainCoordinator,
-        PortraitBottomSheetPerformer,
+        extends MainPresenter<
         PortraitFabButtonsPerformer,
         PortraitMapFragmentPerformer,
         PortraitSearchBarPerformer> {
@@ -75,7 +74,6 @@ public class PortraitMainPresenter
     @Override
     public boolean onBackPressed(@NonNull AppCompatActivity activity) {
 
-        //TODO Make getValue() @NonNull
         if (mCoordinator.back(mMainStatefulAction.getValue())) {
             return true;
         }

@@ -24,7 +24,7 @@ import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_M
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_OPEN_FILTERS;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ACTION_SHOW_FULL_MAP;
 
-public abstract class AbstractMainCoordinator<BSP extends BottomSheetPerformer> implements MainCoordinator {
+public abstract class AbstractMainCoordinator implements MainCoordinator {
 
     private static final String TAG = "AbstractMainCoordinator";
 
@@ -32,7 +32,7 @@ public abstract class AbstractMainCoordinator<BSP extends BottomSheetPerformer> 
     protected final DoneMarker mDoneMarker;
 
     @NonNull
-    protected final BSP mBottomSheetPerformer;
+    protected final BottomSheetPerformer mBottomSheetPerformer;
 
     @NonNull
     protected final FiltersFragmentPerformer mFiltersPerformer;
@@ -45,7 +45,7 @@ public abstract class AbstractMainCoordinator<BSP extends BottomSheetPerformer> 
 
     public AbstractMainCoordinator(
             @NonNull DoneMarker doneMarker,
-            @NonNull BSP bottomSheetPerformer,
+            @NonNull BottomSheetPerformer bottomSheetPerformer,
             @NonNull FiltersFragmentPerformer filtersFragmentPerformer,
             @NonNull LocationDetailFragmentPerformer locationDetailFragmentPerformer,
             @NonNull MapFragmentPerformer mapFragmentPerformer) {

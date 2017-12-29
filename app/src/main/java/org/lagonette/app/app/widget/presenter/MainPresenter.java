@@ -23,8 +23,7 @@ import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerform
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
 
-public abstract class MainPresenter<CO extends MainCoordinator,
-        BSP extends BottomSheetPerformer,
+public abstract class MainPresenter<
         FBP extends FabButtonsPerformer,
         MFP extends MapFragmentPerformer,
         SBP extends SearchBarPerformer>
@@ -44,9 +43,9 @@ public abstract class MainPresenter<CO extends MainCoordinator,
 
     protected LiveData<Integer> mWorkStatus;
 
-    protected CO mCoordinator;
+    protected MainCoordinator mCoordinator;
 
-    protected BSP mBottomSheetPerformer;
+    protected BottomSheetPerformer mBottomSheetPerformer;
 
     protected FBP mFabButtonsPerformer;
 
