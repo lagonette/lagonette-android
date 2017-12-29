@@ -9,8 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.app.fragment.LocationDetailFragment;
 
-public class LocationDetailFragmentPerformer
-        implements BottomSheetPerformer.Slideable {
+public class LocationDetailFragmentPerformer {
 
     public interface FragmentLoadedCommand {
 
@@ -92,7 +91,6 @@ public class LocationDetailFragmentPerformer
         }
     }
 
-    @Override
     public void updateTopPadding(int topPadding) {
         if (mFragment != null) {
             mFragment.updateTopPadding(topPadding);

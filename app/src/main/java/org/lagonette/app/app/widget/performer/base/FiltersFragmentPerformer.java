@@ -8,8 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.app.fragment.FiltersFragment;
 
-public class FiltersFragmentPerformer
-        implements BottomSheetPerformer.Slideable {
+public class FiltersFragmentPerformer {
 
     public interface FragmentLoadedCommand {
 
@@ -81,7 +80,6 @@ public class FiltersFragmentPerformer
         return mFragment != null;
     }
 
-    @Override
     public void updateTopPadding(int topPadding) {
         if (mFragment != null) {
             mFragment.updateTopPadding(topPadding);

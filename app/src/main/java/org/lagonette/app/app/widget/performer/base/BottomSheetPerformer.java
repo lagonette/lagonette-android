@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.performer.base;
 
 import android.content.res.Resources;
-import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,8 +18,7 @@ public abstract class BottomSheetPerformer
         void onStateChanged(@MainState.State int newState);
     }
 
-    //TODO Commandify
-    public interface Slideable {
+    public interface OnSlideChangedCommand {
 
         void updateTopPadding(int topPadding);
 
@@ -54,7 +52,7 @@ public abstract class BottomSheetPerformer
     }
 
     @Nullable
-    protected Slideable mSlideableCommand;
+    protected OnSlideChangedCommand mOnSlideChangedCommand;
 
     @Nullable
     private OnStateChangedCommand mOnStateChangedCommand;
@@ -89,6 +87,11 @@ public abstract class BottomSheetPerformer
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
     }
 
+    /**
+     * Because of the view#post() call, bottom sheet state is set after performer is connected to LiveData.
+     * So bottom sheet state initialization is saved into LiveData.
+     * If you do 2 orientation changes, the bottom sheet state is not the same as the started state.
+     */
     public void restoreOpenState() {
         mBottomSheet.post(this::openBottomSheet);
     }
@@ -127,8 +130,8 @@ public abstract class BottomSheetPerformer
 
     private void updateBottomSheetTopPadding() {
         if (mPadding.updateTop()) {
-            if (mSlideableCommand != null) {
-                mSlideableCommand.updateTopPadding(mPadding.getTop());
+            if (mOnSlideChangedCommand != null) {
+                mOnSlideChangedCommand.updateTopPadding(mPadding.getTop());
             }
         }
     }
@@ -137,8 +140,8 @@ public abstract class BottomSheetPerformer
         mOnStateChangedCommand = onStateChangedCommand;
     }
 
-    public void onSlideChanged(@Nullable Slideable command) {
-        mSlideableCommand = command;
+    public void onSlideChanged(@Nullable OnSlideChangedCommand command) {
+        mOnSlideChangedCommand = command;
     }
 
 }
