@@ -66,7 +66,7 @@ public class Partner {
         partner.clientCode = clientCode;
         partner.name = name;
         partner.logo = logo;
-        partner.phone = phone; //TODO Format, use google lib phone
+        partner.phone = phone;
         partner.website = website;
         partner.email = email;
         partner.description = description;
