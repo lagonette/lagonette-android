@@ -32,6 +32,8 @@ public abstract class ResourceAlgorithm<ResultType, Worker extends BackgroundWor
                                 dbSource,
                                 newData -> result.setValue(Resource.loading(newData))
                         );
+                        //TODO Maybe do not add source but just set loading value (then UI will be disconnect form db during worker's work)
+                        //TODO Maybe let it be like this but data could be reloaded before UI receive worker status.
                         updateData(dbSource);
                     } else {
                         result.addSource(
