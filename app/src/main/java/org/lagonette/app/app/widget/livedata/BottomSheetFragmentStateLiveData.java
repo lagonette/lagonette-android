@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
 
+//TODO Separate LiveData from Data
+//TODO retrieve state from performer
 public class BottomSheetFragmentStateLiveData
         extends LiveData<BottomSheetFragmentState> {
 
