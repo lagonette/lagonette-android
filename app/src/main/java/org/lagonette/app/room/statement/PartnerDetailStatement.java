@@ -29,6 +29,6 @@ public interface PartnerDetailStatement
             FROM_PARTNER +
             JOIN_MAIN_CATEGORY_ON_PARTNER +
             JOIN_LOCATION_ON_PARTNER +
-            " WHERE partner.id = :id " +
+            " WHERE location.id = :id " +
             " LIMIT 1";
 }

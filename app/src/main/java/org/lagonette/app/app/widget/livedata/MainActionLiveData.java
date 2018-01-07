@@ -11,7 +11,7 @@ import org.lagonette.app.room.entity.statement.PartnerItem;
 
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_FOOTPRINT;
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_LOCATION;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_AND_OPEN_LOCATION;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_MY_LOCATION;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.OPEN_FILTERS;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.SHOW_FULL_MAP;
@@ -71,10 +71,18 @@ public class MainActionLiveData extends LiveData<MainAction> {
         setValue(mAction);
     }
 
-    public void moveToLocation(@NonNull PartnerItem item) {
-        Log.d(TAG, "Action -> MOVE TO PARTNER ITEM");
-        mAction.type = MOVE_TO_LOCATION;
+    public void moveToAndOpenLocation(@NonNull PartnerItem item) {
+        Log.d(TAG, "Action -> MOVE TO AND OPEN LOCATION ITEM");
+        mAction.type = MOVE_TO_AND_OPEN_LOCATION;
         mAction.item = item;
+        mAction.shouldMove = true;
+        setValue(mAction);
+    }
+
+    public void moveToAndOpenLocation(long locationId) {
+        Log.d(TAG, "Action -> MOVE TO AND OPEN LOCATION ID");
+        mAction.type = MOVE_TO_AND_OPEN_LOCATION;
+        mAction.locationId = locationId;
         mAction.shouldMove = true;
         setValue(mAction);
     }

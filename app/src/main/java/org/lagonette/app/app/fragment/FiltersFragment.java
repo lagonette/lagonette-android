@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.lagonette.app.R;
+import org.lagonette.app.app.viewmodel.ComViewModel;
 import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
@@ -29,6 +30,8 @@ public class FiltersFragment
         return fragment;
     }
 
+    private ComViewModel mComViewModel;
+
     private FiltersViewModel mFiltersViewModel;
 
     private StateMapActivityViewModel mStateViewModel;
@@ -46,6 +49,10 @@ public class FiltersFragment
         mFiltersViewModel = ViewModelProviders
                 .of(FiltersFragment.this)
                 .get(FiltersViewModel.class);
+
+        mComViewModel = ViewModelProviders
+                .of(getActivity())
+                .get(ComViewModel.class);
 
         mFiltersViewModel
                 .getFilters()
@@ -67,6 +74,9 @@ public class FiltersFragment
 
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
         mFilterAdapter.setHasStableIds(true);
+        mFilterAdapter.setOnLocationClickListener(
+                locationId -> mComViewModel.getFiltersLocationClickEvent().setEvent(locationId)
+        );
         mFilterAdapter.setOnLocationVisibilityClickListener(
                 (locationId, visibility) -> mFiltersViewModel.setLocationVisibility(locationId, visibility)
         );

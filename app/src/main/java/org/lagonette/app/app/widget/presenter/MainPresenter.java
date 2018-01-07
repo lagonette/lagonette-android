@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import org.lagonette.app.R;
+import org.lagonette.app.app.arch.LiveEvent;
+import org.lagonette.app.app.viewmodel.ComViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
 import org.lagonette.app.app.widget.livedata.BottomSheetFragmentStateLiveData;
@@ -31,6 +33,8 @@ public abstract class MainPresenter<
 
     protected StateMapActivityViewModel mStateViewModel;
 
+    protected ComViewModel mComViewModel;
+
     protected MainActionLiveData mAction;
 
     protected MainStateLiveData mState;
@@ -42,6 +46,8 @@ public abstract class MainPresenter<
     protected MutableLiveData<String> mSearch;
 
     protected LiveData<Integer> mWorkStatus;
+
+    protected LiveEvent<Long> mFiltersLocationClickEvent;
 
     protected MainCoordinator mCoordinator;
 
@@ -65,12 +71,17 @@ public abstract class MainPresenter<
                 .of(activity)
                 .get(StateMapActivityViewModel.class);
 
+        mComViewModel = ViewModelProviders
+                .of(activity)
+                .get(ComViewModel.class);
+
         mMainStatefulAction = mStateViewModel.getMainStatefulActionLiveData();
         mAction = mStateViewModel.getMainActionLiveData();
         mState = mStateViewModel.getMainStateLiveData();
         mBottomSheetFragmentState = mStateViewModel.getBottomSheetFragmentState();
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
+        mFiltersLocationClickEvent = mComViewModel.getFiltersLocationClickEvent();
 
         mFiltersFragmentPerformer = new FiltersFragmentPerformer(activity, R.id.fragment_filters);
         mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity, R.id.fragment_location_detail);
@@ -108,14 +119,17 @@ public abstract class MainPresenter<
     public void onActivityCreated(@NonNull AppCompatActivity activity) {
         // Performer's action --> LiveData
         mMapFragmentPerformer.onClusterClick(mAction::moveToCluster);
-        mMapFragmentPerformer.onItemClick(mAction::moveToLocation);
+        mMapFragmentPerformer.onItemClick(mAction::moveToAndOpenLocation);
         mMapFragmentPerformer.onMapClick(mAction::showFullMap);
         mFabButtonsPerformer.onPositionClick(mAction::moveToMyLocation);
         mFabButtonsPerformer.onPositionLongClick(mAction::moveToFootprint);
 
         mSearchBarPerformer.onSearch(mSearch::setValue);
 
-        // Performer's state --> LiveData
+        // LiveEvent --> LiveData
+        mFiltersLocationClickEvent.observe(activity, mAction::moveToAndOpenLocation);
+
+        // Performer's state -->
         mLocationDetailFragmentPerformer.onFragmentLoaded(mBottomSheetFragmentState::notifyLocationDetailLoaded);
         mLocationDetailFragmentPerformer.onFragmentUnloaded(mBottomSheetFragmentState::notifyLocationDetailUnloaded);
         mBottomSheetPerformer.onStateChanged(mState::notifyBottomSheetStateChanged);

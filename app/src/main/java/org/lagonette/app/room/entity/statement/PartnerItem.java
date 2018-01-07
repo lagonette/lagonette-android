@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+//TODO Rename to LocationItem
 public class PartnerItem
         implements ClusterItem {
 

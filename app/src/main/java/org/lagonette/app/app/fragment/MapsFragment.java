@@ -481,24 +481,8 @@ public class MapsFragment
     }
 
     public void dispatchPartnersResource(@NonNull Resource<List<PartnerItem>> partnerResource) {
+        showPartners(partnerResource.data);
         mStateViewModel.setWorkStatus(partnerResource.status);
-        switch (partnerResource.status) {
-
-            case Resource.ERROR:
-                //TODO
-                errorGettingPartners(partnerResource.data.size() == 0);
-                showPartners(partnerResource.data);
-                break;
-
-            case Resource.LOADING:
-                //TODO
-                showPartners(partnerResource.data);
-                break;
-
-            case Resource.SUCCESS:
-                showPartners(partnerResource.data);
-                break;
-        }
     }
 
     public void showPartners(@Nullable List<PartnerItem> partnerItems) {
@@ -522,6 +506,11 @@ public class MapsFragment
                     bottom
             );
         }
+    }
+
+    @Nullable
+    public PartnerItem retrieveLocationItem(long locationId) {
+        return mPartnerItems.get(locationId);
     }
 
     //TODO

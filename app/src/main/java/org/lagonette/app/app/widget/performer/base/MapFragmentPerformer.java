@@ -40,6 +40,14 @@ public abstract class MapFragmentPerformer implements Performer {
         mFragment = (MapsFragment) mFragmentManager.findFragmentByTag(MapsFragment.TAG);
     }
 
+    @Nullable
+    public PartnerItem retrieveLocationItem(long locationId) {
+        if (mFragment != null) {
+            return mFragment.retrieveLocationItem(locationId);
+        }
+        return null;
+    }
+
     public void moveToMyLocation() {
         if (mFragment != null) {
             mFragment.moveToMyLocation();

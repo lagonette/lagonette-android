@@ -35,11 +35,11 @@ public class PortraitSearchBarPerformer
 
     public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentState bottomSheetFragmentState) {
         if (mBehavior != null) {
-            if (bottomSheetFragmentState.isFiltersLoaded()) {
-                mBehavior.disable();
+            if (bottomSheetFragmentState.isLocationDetailLoaded()) {
+                mBehavior.enable();
             }
             else {
-                mBehavior.enable();
+                mBehavior.disable();
             }
         }
     }

@@ -109,8 +109,8 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                 computeMovementToCluster(statefulAction);
                 break;
 
-            case MOVE_TO_LOCATION:
-                computeMovementToLocation(statefulAction);
+            case MOVE_TO_AND_OPEN_LOCATION:
+                computeMovementToAndOpeningLocation(statefulAction);
                 break;
 
             case SHOW_FULL_MAP:
@@ -193,7 +193,12 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
         }
     }
 
-    private void computeMovementToLocation(@NonNull MainStatefulAction statefulAction) {
+    private void computeMovementToAndOpeningLocation(@NonNull MainStatefulAction statefulAction) {
+        if (statefulAction.action.locationId > Statement.NO_ID) {
+            statefulAction.action.item = mMapFragmentPerformer.retrieveLocationItem(statefulAction.action.locationId);
+            statefulAction.action.locationId = Statement.NO_ID;
+        }
+
         if (statefulAction.state.bottomSheetFragmentState.isLocationDetailLoaded()) {
             switch (statefulAction.state.bottomSheetState) {
 
@@ -260,7 +265,10 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                     break;
 
                 case BottomSheetBehavior.STATE_HIDDEN:
-                    if (statefulAction.action.item != null) {
+                    if (statefulAction.state.bottomSheetFragmentState.isFiltersLoaded()) {
+                        mFiltersPerformer.unloadFragment();
+                    }
+                    else if (statefulAction.action.item != null) {
                         mLocationDetailPerformer.loadFragment(statefulAction.action.item.getId());
                     } else {
                         mDoneMarker.markPendingActionAsDone();

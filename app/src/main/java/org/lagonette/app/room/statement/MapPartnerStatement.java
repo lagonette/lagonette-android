@@ -7,7 +7,7 @@ public abstract class MapPartnerStatement
         implements GonetteStatement, Sql {
 
     public static final String SQL =
-            "SELECT partner.id, " +
+            "SELECT location.id, " +
                 "partner.main_category_id, " +
                 "partner.is_gonette_headquarter, " +
                 "location.is_exchange_office, " +
