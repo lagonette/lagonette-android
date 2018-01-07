@@ -1,5 +1,6 @@
 package org.lagonette.app.app.fragment;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ public class LocationDetailFragment
     }
 
     private LocationDetailViewModel mViewModel;
+
+    private MutableLiveData<Long> mLocationId;
 
     private View mHeaderView;
 
@@ -90,10 +93,12 @@ public class LocationDetailFragment
                 .of(LocationDetailFragment.this)
                 .get(LocationDetailViewModel.class);
 
+        mLocationId = mViewModel.getLocationId();
+
         //TODO Check
         if (savedInstanceState == null) {
             long locationId = getArguments().getLong(ARG_LOCATION_ID, Statement.NO_ID);
-            mViewModel.setLocationId(locationId);
+            mLocationId.setValue(locationId);
         }
 
         mViewModel.getLocationDetail().observe(

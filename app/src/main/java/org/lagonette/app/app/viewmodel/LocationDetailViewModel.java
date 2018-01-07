@@ -22,8 +22,9 @@ public class LocationDetailViewModel extends ViewModel {
         mLocationDetailResource = Repo.get().getLocationDetail(mLocationId);
     }
 
-    public void setLocationId(long locationId) {
-        mLocationId.postValue(locationId);
+    @NonNull
+    public MutableLiveData<Long> getLocationId() {
+        return mLocationId;
     }
 
     @NonNull
