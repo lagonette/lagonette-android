@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.lagonette.app.helper.Factory;
 import org.lagonette.app.worker.BackgroundWorker;
 
 import java.util.concurrent.Executor;
@@ -32,13 +33,13 @@ public class LambdaResourceAlgorithm<ResultType, Worker extends BackgroundWorker
     private DbLoader<ResultType> mDbLoader;
 
     @NonNull
-    private BackgroundWorker.Factory<Worker> mWorkerFactory;
+    private Factory<Worker> mWorkerFactory;
 
     public LambdaResourceAlgorithm(
             @NonNull Executor executor,
             @NonNull UpdateDecisionMaker updateDecisionMaker,
             @NonNull DbLoader<ResultType> dbLoader,
-            @NonNull BackgroundWorker.Factory<Worker> workerFactory) {
+            @NonNull Factory<Worker> workerFactory) {
         super();
         mExecutor = executor;
         mUpdateDecisionMaker = updateDecisionMaker;

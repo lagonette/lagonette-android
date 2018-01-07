@@ -40,9 +40,4 @@ public abstract class BackgroundWorker
         return mWorkerResponseLiveData;
     }
 
-    public interface Factory<Worker extends BackgroundWorker> {
-
-        Worker create();
-
-    }
 }
