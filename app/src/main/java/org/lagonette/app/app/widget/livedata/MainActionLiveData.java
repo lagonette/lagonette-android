@@ -79,6 +79,7 @@ public class MainActionLiveData extends LiveData<MainAction> {
         setValue(mAction);
     }
 
+    //TODO What if locationId <= NO_ID?
     public void moveToAndOpenLocation(long locationId) {
         Log.d(TAG, "Action -> MOVE TO AND OPEN LOCATION ID");
         mAction.type = MOVE_TO_AND_OPEN_LOCATION;
