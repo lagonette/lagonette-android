@@ -10,7 +10,7 @@ import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
 import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.statement.LocationDetail;
-import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.sql.Tables;
 import org.lagonette.app.room.statement.Statement;
@@ -36,7 +36,7 @@ public class MainRepo {
         mShouldUpdate = true;
     }
 
-    public LiveData<Resource<List<PartnerItem>>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
+    public LiveData<Resource<List<LocationItem>>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
         return new LambdaResourceAlgorithm<>(
                 mExecutor,
                 this::shouldUpdate,

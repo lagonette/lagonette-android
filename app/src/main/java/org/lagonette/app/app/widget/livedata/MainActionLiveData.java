@@ -7,7 +7,7 @@ import android.util.Log;
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
-import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.room.entity.statement.LocationItem;
 
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_FOOTPRINT;
@@ -63,7 +63,7 @@ public class MainActionLiveData extends LiveData<MainAction> {
         setValue(mAction);
     }
 
-    public void moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
+    public void moveToCluster(@NonNull Cluster<LocationItem> cluster) {
         Log.d(TAG, "Action -> MOVE TO CLUSTER");
         mAction.type = MOVE_TO_CLUSTER;
         mAction.cluster = cluster;
@@ -71,7 +71,7 @@ public class MainActionLiveData extends LiveData<MainAction> {
         setValue(mAction);
     }
 
-    public void moveToAndOpenLocation(@NonNull PartnerItem item) {
+    public void moveToAndOpenLocation(@NonNull LocationItem item) {
         Log.d(TAG, "Action -> MOVE TO AND OPEN LOCATION ITEM");
         mAction.type = MOVE_TO_AND_OPEN_LOCATION;
         mAction.item = item;

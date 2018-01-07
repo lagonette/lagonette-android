@@ -6,7 +6,7 @@ import android.arch.persistence.room.Query;
 import android.database.Cursor;
 
 import org.lagonette.app.room.entity.statement.LocationDetail;
-import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.room.statement.MapPartnerStatement;
 import org.lagonette.app.room.statement.PartnerDetailStatement;
@@ -20,7 +20,7 @@ public interface MainDao {
     LiveData<LocationDetail> getLocationsDetail(long id); //TODO Use LiveData to update fragment ?
 
     @Query(MapPartnerStatement.SQL)
-    LiveData<List<PartnerItem>> getMapLocations(String search);
+    LiveData<List<LocationItem>> getMapLocations(String search);
 
     @Query(FilterStatement.SQL)
     Cursor getFilters(String search);

@@ -41,7 +41,7 @@ import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.repo.Resource;
-import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.util.SharedPreferencesUtils;
 import org.lagonette.app.util.SnackbarUtils;
 import org.lagonette.app.util.UiUtils;
@@ -62,12 +62,12 @@ public class MapsFragment
 
     public interface OnClusterClickCommand {
 
-        void onClusterClick(@NonNull Cluster<PartnerItem> cluster);
+        void onClusterClick(@NonNull Cluster<LocationItem> cluster);
     }
 
     public interface OnItemClickCommand {
 
-        void onItemClick(@NonNull PartnerItem item);
+        void onItemClick(@NonNull LocationItem item);
     }
 
     public interface OnMapClickCommand {
@@ -97,7 +97,7 @@ public class MapsFragment
 
     private GoogleMap mMap;
 
-    private ClusterManager<PartnerItem> mClusterManager;
+    private ClusterManager<LocationItem> mClusterManager;
 
     private int mStatusBarHeight;
 
@@ -115,7 +115,7 @@ public class MapsFragment
 
     private boolean mAskFormMyPositionPermission = true;
 
-    private LongSparseArray<PartnerItem> mPartnerItems;
+    private LongSparseArray<LocationItem> mPartnerItems;
 
     @Nullable
     private OnMapMovementCommand mOnMovementCommand;
@@ -375,7 +375,7 @@ public class MapsFragment
         }
     }
 
-    public void moveToLocation(@NonNull PartnerItem item) {
+    public void moveToLocation(@NonNull LocationItem item) {
         LatLng latLng = new LatLng( //TODO Why not just getPosition ?
                 item.getPosition().latitude,
                 item.getPosition().longitude
@@ -387,7 +387,7 @@ public class MapsFragment
         );
     }
 
-    public boolean moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
+    public boolean moveToCluster(@NonNull Cluster<LocationItem> cluster) {
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         cluster.getPosition(),
@@ -480,19 +480,19 @@ public class MapsFragment
         }
     }
 
-    public void dispatchPartnersResource(@NonNull Resource<List<PartnerItem>> partnerResource) {
+    public void dispatchPartnersResource(@NonNull Resource<List<LocationItem>> partnerResource) {
         showPartners(partnerResource.data);
         mStateViewModel.setWorkStatus(partnerResource.status);
     }
 
-    public void showPartners(@Nullable List<PartnerItem> partnerItems) {
+    public void showPartners(@Nullable List<LocationItem> locationItems) {
         mPartnerItems.clear();
         mClusterManager.clearItems();
-        if (partnerItems != null) {
-            for (PartnerItem item : partnerItems) { //TODO Improve -> Pass the item or keep in the ViewModel
+        if (locationItems != null) {
+            for (LocationItem item : locationItems) { //TODO Improve -> Pass the item or keep in the ViewModel
                 mPartnerItems.put(item.getId(), item);
             }
-            mClusterManager.addItems(partnerItems);
+            mClusterManager.addItems(locationItems);
         }
         mClusterManager.cluster();
     }
@@ -509,7 +509,7 @@ public class MapsFragment
     }
 
     @Nullable
-    public PartnerItem retrieveLocationItem(long locationId) {
+    public LocationItem retrieveLocationItem(long locationId) {
         return mPartnerItems.get(locationId);
     }
 

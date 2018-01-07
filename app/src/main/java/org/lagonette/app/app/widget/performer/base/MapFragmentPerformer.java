@@ -1,18 +1,16 @@
 package org.lagonette.app.app.widget.performer.base;
 
-import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.MapsFragment;
-import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.room.entity.statement.LocationItem;
 
 public abstract class MapFragmentPerformer implements Performer {
 
@@ -41,7 +39,7 @@ public abstract class MapFragmentPerformer implements Performer {
     }
 
     @Nullable
-    public PartnerItem retrieveLocationItem(long locationId) {
+    public LocationItem retrieveLocationItem(long locationId) {
         if (mFragment != null) {
             return mFragment.retrieveLocationItem(locationId);
         }
@@ -62,13 +60,13 @@ public abstract class MapFragmentPerformer implements Performer {
         return false;
     }
 
-    public void moveToCluster(@NonNull Cluster<PartnerItem> cluster) {
+    public void moveToCluster(@NonNull Cluster<LocationItem> cluster) {
         if (mFragment != null) {
             mFragment.moveToCluster(cluster);
         }
     }
 
-    public void moveToLocation(@NonNull PartnerItem item) {
+    public void moveToLocation(@NonNull LocationItem item) {
         if (mFragment != null) {
             mFragment.moveToLocation(item);
         }

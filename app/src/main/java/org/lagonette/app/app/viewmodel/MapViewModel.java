@@ -7,13 +7,13 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.repo.Resource;
-import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.room.entity.statement.LocationItem;
 
 import java.util.List;
 
 public class MapViewModel extends ViewModel {
 
-    private final LiveData<Resource<List<PartnerItem>>> mMapPartnersResource;
+    private final LiveData<Resource<List<LocationItem>>> mMapPartnersResource;
 
     private final MutableLiveData<String> mSearch;
 
@@ -23,7 +23,7 @@ public class MapViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<Resource<List<PartnerItem>>> getMapPartners() {
+    public LiveData<Resource<List<LocationItem>>> getMapPartners() {
         return mMapPartnersResource;
     }
 

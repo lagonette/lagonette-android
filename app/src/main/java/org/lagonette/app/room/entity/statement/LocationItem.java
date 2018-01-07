@@ -8,8 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-//TODO Rename to LocationItem
-public class PartnerItem
+public class LocationItem
         implements ClusterItem {
 
     @Ignore //TODO Try to use type converter
@@ -38,7 +37,7 @@ public class PartnerItem
     @ColumnInfo(name = "main_category_id") //TODO Use CategoryKey
     private long mCategoryId;
 
-    public PartnerItem(long id, boolean isGonetteHeadquarter, boolean isExchangeOffice, double latitude, double longitude, long categoryId, @NonNull String iconUrl) {
+    public LocationItem(long id, boolean isGonetteHeadquarter, boolean isExchangeOffice, double latitude, double longitude, long categoryId, @NonNull String iconUrl) {
         mId = id;
         mIsExchangeOffice = isExchangeOffice;
         mIsGonetteHeadquarter = isGonetteHeadquarter;

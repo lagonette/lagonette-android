@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.google.maps.android.clustering.Cluster;
 
-import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.room.statement.Statement;
 
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.IDLE;
@@ -25,12 +25,12 @@ public class MainAction {
     public ActionType type;
 
     @Nullable
-    public Cluster<PartnerItem> cluster;
+    public Cluster<LocationItem> cluster;
 
     public long locationId;
 
     @Nullable
-    public PartnerItem item;
+    public LocationItem item;
 
     public boolean shouldMove;
 

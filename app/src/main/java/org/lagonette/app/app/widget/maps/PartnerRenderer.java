@@ -24,10 +24,10 @@ import com.google.maps.android.ui.IconGenerator;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.glide.PartnerMarkerTarget;
-import org.lagonette.app.room.entity.statement.PartnerItem;
+import org.lagonette.app.room.entity.statement.LocationItem;
 
 public class PartnerRenderer
-        extends DefaultClusterRenderer<PartnerItem> implements PartnerMarkerTarget.Callback {
+        extends DefaultClusterRenderer<LocationItem> implements PartnerMarkerTarget.Callback {
 
     private static final String TAG = "PartnerRenderer";
 
@@ -69,7 +69,7 @@ public class PartnerRenderer
             @NonNull Context context,
             @NonNull LayoutInflater layoutInflater,
             @NonNull GoogleMap map,
-            @NonNull ClusterManager<PartnerItem> clusterManager) {
+            @NonNull ClusterManager<LocationItem> clusterManager) {
         super(context, map, clusterManager);
         mContext = context;
 
@@ -110,10 +110,10 @@ public class PartnerRenderer
 
     @Override
     protected void onBeforeClusterItemRendered(
-            final PartnerItem partnerItem,
+            final LocationItem locationItem,
             final MarkerOptions markerOptions) {
 
-        boolean isExchangeOffice = partnerItem.isExchangeOffice() && !partnerItem.isGonetteHeadquarter();
+        boolean isExchangeOffice = locationItem.isExchangeOffice() && !locationItem.isGonetteHeadquarter();
 
         markerOptions
                 .icon( //TODO Make a correct placeholder
@@ -123,9 +123,9 @@ public class PartnerRenderer
                 )
                 .anchor(0.5f, 0.5f)
                 .flat(true)
-                .title(partnerItem.getTitle());
+                .title(locationItem.getTitle());
 
-        int categoryId = (int) partnerItem.getCategoryId();
+        int categoryId = (int) locationItem.getCategoryId();
         BitmapDescriptor bitmapDescriptor = isExchangeOffice
                 ? mExchangeOfficeBitmapDescriptors.get(categoryId)
                 : mPartnerBitmapDescriptors.get(categoryId);
@@ -135,13 +135,13 @@ public class PartnerRenderer
         } else {
             Glide
                     .with(mContext)
-                    .load(partnerItem.getIconUrl())
+                    .load(locationItem.getIconUrl())
                     .asBitmap()
                     .centerCrop()
                     .into(
                             new PartnerMarkerTarget(
                                     PartnerRenderer.this,
-                                    partnerItem,
+                                    locationItem,
                                     markerOptions,
                                     mItemSize,
                                     mItemSize
@@ -153,7 +153,7 @@ public class PartnerRenderer
 
     @Override
     protected void onBeforeClusterRendered(
-            Cluster<PartnerItem> cluster,
+            Cluster<LocationItem> cluster,
             MarkerOptions markerOptions) {
         Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon))
@@ -165,12 +165,12 @@ public class PartnerRenderer
 
     @Override
     public void onItemBitmapReady(
-            @NonNull PartnerItem partnerItem,
+            @NonNull LocationItem locationItem,
             @NonNull MarkerOptions markerOptions,
             @NonNull Bitmap bitmap) {
 
-        boolean isExchangeOffice = partnerItem.isExchangeOffice();
-        int categoryId = (int) partnerItem.getCategoryId();
+        boolean isExchangeOffice = locationItem.isExchangeOffice();
+        int categoryId = (int) locationItem.getCategoryId();
         SparseArray<BitmapDescriptor> bitmapDescriptors = isExchangeOffice
                 ? mExchangeOfficeBitmapDescriptors
                 : mPartnerBitmapDescriptors;
@@ -179,7 +179,7 @@ public class PartnerRenderer
         if (bitmapDescriptor == null) { //TODO Not tested yet.
             mPartnerIconView.setImageBitmap(bitmap);
             mPartnerView.setBackground(
-                    partnerItem.isExchangeOffice()
+                    locationItem.isExchangeOffice()
                             ? mExchangeOfficeBackgroundDrawable
                             : mPartnerBackgroundDrawable
             );
@@ -189,7 +189,7 @@ public class PartnerRenderer
             bitmapDescriptors.append(categoryId, bitmapDescriptor);
         }
 
-        Marker marker = getMarker(partnerItem);
+        Marker marker = getMarker(locationItem);
         if (marker != null) {
             marker.setIcon(bitmapDescriptor);
         } else {
