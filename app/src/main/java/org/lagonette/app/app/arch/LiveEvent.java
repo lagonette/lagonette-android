@@ -36,4 +36,6 @@ public class LiveEvent<T> extends LiveData<T> {
         super.setValue(value);
     }
 
+    //TODO see https://github.com/googlesamples/android-architecture-components/issues/63
+
 }
