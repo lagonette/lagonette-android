@@ -1,15 +1,12 @@
-package org.lagonette.app.app.viewmodel;
+package org.lagonette.app.app.arch;
 
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 
-import org.lagonette.app.app.arch.MutableLiveEvent;
-
-public class LiveEventBus extends ViewModel {
+public class LiveEventBus {
 
     public static class Event<Payload> {}
 
