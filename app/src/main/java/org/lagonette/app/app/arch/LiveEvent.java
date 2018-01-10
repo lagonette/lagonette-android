@@ -1,6 +1,8 @@
 package org.lagonette.app.app.arch;
 
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
@@ -26,8 +28,15 @@ public class LiveEvent<T> extends LiveData<T> {
     }
 
     @Override
+    public void observeForever(Observer<T> observer) {
+        //TODO
+        super.observeForever(observer);
+    }
+
+    @Override
     public void removeObserver(Observer<T> observer) {
         super.removeObserver(mObservers.get(observer));
+        mObservers.remove(observer);
     }
 
     @Override
@@ -35,6 +44,8 @@ public class LiveEvent<T> extends LiveData<T> {
         mPending.set(true);
         super.setValue(value);
     }
+
+    //TODO Use one mPending by LifecycleOwner
 
     //TODO see https://github.com/googlesamples/android-architecture-components/issues/63
 
