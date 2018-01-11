@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.lagonette.app.R;
-import org.lagonette.app.app.viewmodel.ComViewModel;
 import org.lagonette.app.app.viewmodel.FiltersViewModel;
+import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
 
@@ -30,7 +30,7 @@ public class FiltersFragment
         return fragment;
     }
 
-    private ComViewModel mComViewModel;
+    private MainLiveEventBusViewModel mEventBus;
 
     private FiltersViewModel mFiltersViewModel;
 
@@ -50,9 +50,9 @@ public class FiltersFragment
                 .of(FiltersFragment.this)
                 .get(FiltersViewModel.class);
 
-        mComViewModel = ViewModelProviders
+        mEventBus = ViewModelProviders
                 .of(getActivity())
-                .get(ComViewModel.class);
+                .get(MainLiveEventBusViewModel.class);
 
         mFiltersViewModel
                 .getFilters()
@@ -75,7 +75,7 @@ public class FiltersFragment
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
         mFilterAdapter.setHasStableIds(true);
         mFilterAdapter.setOnLocationClickListener(
-                locationId -> mComViewModel.getFiltersLocationClickEvent().sendEvent(locationId)
+                locationId -> mEventBus.publish(MainLiveEventBusViewModel.OPEN_LOCATION_ID, locationId)
         );
         mFilterAdapter.setOnLocationVisibilityClickListener(
                 (locationId, visibility) -> mFiltersViewModel.setLocationVisibility(locationId, visibility)

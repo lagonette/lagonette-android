@@ -52,7 +52,7 @@ import java.util.List;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.NOTIFY_MAP_MOVEMENT;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION_ITEM;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.SHOW_FULL_MAP;
 
 public class MapsFragment
@@ -308,7 +308,7 @@ public class MapsFragment
         );
         mClusterManager.setOnClusterItemClickListener(
                 item -> {
-                    mEventBus.publish(OPEN_LOCATION, item);
+                    mEventBus.publish(OPEN_LOCATION_ITEM, item);
                     return true;
                 }
         );

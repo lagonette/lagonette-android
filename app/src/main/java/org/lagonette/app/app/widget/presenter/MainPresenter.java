@@ -11,7 +11,6 @@ import android.view.View;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.arch.LiveEvent;
-import org.lagonette.app.app.viewmodel.ComViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
@@ -28,7 +27,8 @@ import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.NOTIFY_MAP_MOVEMENT;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION_ID;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION_ITEM;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.SHOW_FULL_MAP;
 
 public abstract class MainPresenter<
@@ -38,8 +38,6 @@ public abstract class MainPresenter<
         implements ActivityPresenter {
 
     protected StateMapActivityViewModel mStateViewModel;
-
-    protected ComViewModel mComViewModel;
 
     protected MainLiveEventBusViewModel mEventBus;
 
@@ -54,8 +52,6 @@ public abstract class MainPresenter<
     protected MutableLiveData<String> mSearch;
 
     protected LiveData<Integer> mWorkStatus;
-
-    protected LiveEvent<Long> mFiltersLocationClickEvent;
 
     protected MainCoordinator mCoordinator;
 
@@ -79,10 +75,6 @@ public abstract class MainPresenter<
                 .of(activity)
                 .get(StateMapActivityViewModel.class);
 
-        mComViewModel = ViewModelProviders
-                .of(activity)
-                .get(ComViewModel.class);
-
         mEventBus = ViewModelProviders
                 .of(activity)
                 .get(MainLiveEventBusViewModel.class);
@@ -93,7 +85,6 @@ public abstract class MainPresenter<
         mBottomSheetFragmentState = mStateViewModel.getBottomSheetFragmentState();
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
-        mFiltersLocationClickEvent = mComViewModel.getFiltersLocationClickEvent();
 
         mFiltersFragmentPerformer = new FiltersFragmentPerformer(activity, R.id.fragment_filters);
         mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity, R.id.fragment_location_detail);
@@ -132,7 +123,7 @@ public abstract class MainPresenter<
 
         // Event bus --> LiveData
         mEventBus.subscribe(
-                OPEN_LOCATION,
+                OPEN_LOCATION_ITEM,
                 activity,
                 mAction::moveToAndOpenLocation
         );
@@ -146,6 +137,11 @@ public abstract class MainPresenter<
                 activity,
                 mAction::showFullMap
         );
+        mEventBus.subscribe(
+                OPEN_LOCATION_ID,
+                activity,
+                mAction::moveToAndOpenLocation
+        );
 
         // Performer's action --> LiveData
         mFabButtonsPerformer.onPositionClick(mAction::moveToMyLocation);
@@ -153,13 +149,12 @@ public abstract class MainPresenter<
 
         mSearchBarPerformer.onSearch(mSearch::setValue);
 
-        // LiveEvent --> LiveData
-        mFiltersLocationClickEvent.observe(activity, mAction::moveToAndOpenLocation);
-
-        // Performer's state -->
+        // Performer's state --> performers
         mLocationDetailFragmentPerformer.onFragmentLoaded(mBottomSheetFragmentState::notifyLocationDetailLoaded);
         mLocationDetailFragmentPerformer.onFragmentUnloaded(mBottomSheetFragmentState::notifyLocationDetailUnloaded);
         mBottomSheetPerformer.onStateChanged(mState::notifyBottomSheetStateChanged);
+
+        // Event bus --> Performers
         mEventBus.subscribe(
                 NOTIFY_MAP_MOVEMENT,
                 activity,
