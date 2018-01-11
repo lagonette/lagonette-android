@@ -4,12 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
 import org.lagonette.app.app.widget.coordinator.base.AbstractMainCoordinator;
-import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
+import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.FiltersFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
+import org.lagonette.app.room.statement.Statement;
 
 public class PortraitMainCoordinator
         extends AbstractMainCoordinator {
@@ -24,28 +24,16 @@ public class PortraitMainCoordinator
     }
 
     @Override
-    public void restore(@NonNull MainState state) {
-        super.restore(state);
-        switch (state.bottomSheetState) {
+    public void restore() {
+        super.restore();
+        switch (mBottomSheetPerformer.getState()) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_EXPANDED:
             case BottomSheetBehavior.STATE_SETTLING:
-                if (state.bottomSheetFragmentState.areAllLoaded()) {
-                    wtf(state);
-                }
-                else if (state.bottomSheetFragmentState.isFiltersLoaded()) {
+                if (mFiltersPerformer.isLoaded() && mLocationDetailPerformer.isLoaded()) {
                     mLocationDetailPerformer.unloadFragment();
-                    if (!mFiltersPerformer.isLoaded()) {
-                        mFiltersPerformer.loadFragment();
-                    }
-                }
-                else if (state.bottomSheetFragmentState.isLocationDetailLoaded()) {
-                    mFiltersPerformer.unloadFragment();
-                    if (!mLocationDetailPerformer.isLoaded()) {
-                        mLocationDetailPerformer.loadFragment(state.bottomSheetFragmentState.getLocationId());
-                    }
                 }
                 else {
                     mBottomSheetPerformer.restoreCloseState();
@@ -60,16 +48,16 @@ public class PortraitMainCoordinator
     }
 
     @Override
-    protected void computeFiltersOpening(@NonNull MainStatefulAction statefulAction) {
+    protected void computeFiltersOpening(@NonNull MainAction action) {
 
-        switch (statefulAction.state.bottomSheetState) {
+        switch (mBottomSheetPerformer.getState()) {
 
             case BottomSheetBehavior.STATE_HIDDEN:
 
-                if (statefulAction.state.bottomSheetFragmentState.isLocationDetailLoaded()) {
+                if (mLocationDetailPerformer.isLoaded()) {
                     mLocationDetailPerformer.unloadFragment();
                 }
-                else if (statefulAction.state.bottomSheetFragmentState.isFiltersLoaded()) {
+                else if (mFiltersPerformer.isLoaded()) {
                     mBottomSheetPerformer.openBottomSheet();
                 }
                 else {
@@ -78,61 +66,61 @@ public class PortraitMainCoordinator
                 break;
 
             case BottomSheetBehavior.STATE_COLLAPSED:
-                if (statefulAction.state.bottomSheetFragmentState.isLocationDetailLoaded()) {
+                if (mLocationDetailPerformer.isLoaded()) {
                     mBottomSheetPerformer.closeBottomSheet();
                 }
-                else if (statefulAction.state.bottomSheetFragmentState.isFiltersLoaded()) {
+                else if (mFiltersPerformer.isLoaded()) {
                     mDoneMarker.markPendingActionAsDone();
                 }
                 else {
-                    wtf(statefulAction.state);
+                    wtf();
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_EXPANDED:
-                if (statefulAction.state.bottomSheetFragmentState.isLocationDetailLoaded()) {
+                if (mLocationDetailPerformer.isLoaded()) {
                     mBottomSheetPerformer.closeBottomSheet();
                 }
-                else if (statefulAction.state.bottomSheetFragmentState.isFiltersLoaded()) {
+                else if (mFiltersPerformer.isLoaded()) {
                     mDoneMarker.markPendingActionAsDone();
                 }
                 else {
-                    wtf(statefulAction.state);
+                    wtf();
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
-                if (statefulAction.state.bottomSheetFragmentState.areAllLoaded()) {
-                    wtf(statefulAction.state);
+                if (mFiltersPerformer.isLoaded() && mLocationDetailPerformer.isLoaded()) {
+                    wtf();
                     mBottomSheetPerformer.closeBottomSheet();
                 }
-                else if (statefulAction.state.bottomSheetFragmentState.isFiltersLoaded()) {
+                else if (mFiltersPerformer.isLoaded()) {
                     mDoneMarker.markPendingActionAsDone();
                 }
-                else if (statefulAction.state.bottomSheetFragmentState.isLocationDetailLoaded()) {
+                else if (mLocationDetailPerformer.isLoaded()) {
                     mDoneMarker.markPendingActionAsDone();
                 }
                 else {
-                    wtf(statefulAction.state);
+                    wtf();
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_SETTLING:
-                if (statefulAction.state.bottomSheetFragmentState.areAllLoaded()) {
-                    wtf(statefulAction.state);
+                if (mFiltersPerformer.isLoaded() && mLocationDetailPerformer.isLoaded()) {
+                    wtf();
                     mBottomSheetPerformer.closeBottomSheet();
                 }
-                else if (statefulAction.state.bottomSheetFragmentState.isFiltersLoaded()) {
-                    mDoneMarker.markPendingActionAsDone();
+                else if (mFiltersPerformer.isLoaded()) {
+                    // Wait
                 }
-                else if (statefulAction.state.bottomSheetFragmentState.isLocationDetailLoaded()) {
+                else if (mLocationDetailPerformer.isLoaded()) {
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 else {
-                    wtf(statefulAction.state);
+                    wtf();
                     mBottomSheetPerformer.closeBottomSheet();
                 }
                 break;
@@ -140,11 +128,97 @@ public class PortraitMainCoordinator
     }
 
     @Override
-    protected void unloadBottomSheetFragment(@NonNull MainState state) {
-        if (state.bottomSheetFragmentState.isFiltersLoaded()) {
+    protected void computeMovementToAndOpeningLocation(@NonNull MainAction action) {
+        if (action.locationId > Statement.NO_ID) { //TODO Immutability && unidirectional data flow
+            action.item = mMapFragmentPerformer.retrieveLocationItem(action.locationId);
+            action.locationId = Statement.NO_ID;
+        }
+
+        if (mLocationDetailPerformer.isLoaded()) {
+            switch (mBottomSheetPerformer.getState()) {
+
+                case BottomSheetBehavior.STATE_COLLAPSED:
+                case BottomSheetBehavior.STATE_EXPANDED:
+                    long selectedId = action.item != null
+                            ? action.item.getId()
+                            : Statement.NO_ID;
+                    if (action.shouldMove) {
+                        action.shouldMove = false; //TODO Unidirectional Data flow !
+                        mMapFragmentPerformer.moveToLocation(action.item);
+                    } else if (!mLocationDetailPerformer.isLoaded(selectedId)) {
+                        mLocationDetailPerformer.loadFragment(action.item.getId());
+                    } else {
+                        mDoneMarker.markPendingActionAsDone();
+                    }
+                    break;
+
+                case BottomSheetBehavior.STATE_DRAGGING:
+                    mDoneMarker.markPendingActionAsDone();
+                    break;
+
+                case BottomSheetBehavior.STATE_SETTLING:
+                    // Well, it's okay. Just wait.
+                    break;
+
+                case BottomSheetBehavior.STATE_HIDDEN:
+                    switch (mMapFragmentPerformer.getMapMovement()) {
+
+                        case MOVE:
+                            // Well, it's okay. Just wait.
+                            break;
+
+                        case IDLE:
+                            if (action.item != null) {
+                                if (action.shouldMove) { //TODO Use reason to mark action done if the user move something
+                                    action.shouldMove = false;
+                                    mMapFragmentPerformer.moveToLocation(action.item);
+                                } else {
+                                    mBottomSheetPerformer.openBottomSheet();
+                                }
+                            } else {
+                                mDoneMarker.markPendingActionAsDone();
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+        else {
+            switch (mBottomSheetPerformer.getState()) {
+
+                case BottomSheetBehavior.STATE_COLLAPSED:
+                case BottomSheetBehavior.STATE_EXPANDED:
+                    mBottomSheetPerformer.closeBottomSheet();
+                    break;
+
+                case BottomSheetBehavior.STATE_DRAGGING:
+                    mDoneMarker.markPendingActionAsDone();
+                    break;
+
+                case BottomSheetBehavior.STATE_SETTLING:
+                    // Well, it's okay. Just wait.
+                    break;
+
+                case BottomSheetBehavior.STATE_HIDDEN:
+                    if (mFiltersPerformer.isLoaded()) {
+                        mFiltersPerformer.unloadFragment();
+                    }
+                    else if (action.item != null) {
+                        mLocationDetailPerformer.loadFragment(action.item.getId());
+                    } else {
+                        mDoneMarker.markPendingActionAsDone();
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void unloadBottomSheetFragment() {
+        if (mFiltersPerformer.isLoaded()) {
             mFiltersPerformer.unloadFragment();
         }
-        else if (state.bottomSheetFragmentState.isLocationDetailLoaded()) {
+        else if (mLocationDetailPerformer.isLoaded()) {
             mLocationDetailPerformer.unloadFragment();
         }
     }

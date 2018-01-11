@@ -43,17 +43,15 @@ public class PortraitMainPresenter
 
         //TODO Check correctly initialisation and conf change.
         // Performer's state --> LiveData
-        mFiltersFragmentPerformer.onFragmentLoaded(mBottomSheetFragmentState::notifyFiltersLoaded);
-        mFiltersFragmentPerformer.onFragmentUnloaded(mBottomSheetFragmentState::notifyFiltersUnloaded);
+        mFiltersFragmentPerformer.onFragmentLoaded(mAction::exec);
+        mFiltersFragmentPerformer.onFragmentUnloaded(mAction::exec);
 
         // Performer's action --> LiveData
         mFabButtonsPerformer.onFiltersClick(mAction::openFilters);
 
         // LiveData --> Performer, Coordinator
-        mBottomSheetFragmentState.observe(
-                activity,
-                mSearchBarPerformer::notifyBottomSheetFragmentChanged
-        );
+        mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mSearchBarPerformer.enableBehavior(true));
+        mFiltersFragmentPerformer.onFragmentLoaded(() -> mSearchBarPerformer.enableBehavior(false));
 
         // Performer --> Performer
         mBottomSheetPerformer.onSlideChanged(
@@ -68,16 +66,6 @@ public class PortraitMainPresenter
                     mBottomSheetPerformer.notifySearchBarBottomChanged(offset);
                 }
         );
-    }
-
-    @Override
-    public boolean onBackPressed(@NonNull AppCompatActivity activity) {
-
-        if (mCoordinator.back(mMainStatefulAction.getValue())) {
-            return true;
-        }
-
-        return super.onBackPressed(activity);
     }
 
 }

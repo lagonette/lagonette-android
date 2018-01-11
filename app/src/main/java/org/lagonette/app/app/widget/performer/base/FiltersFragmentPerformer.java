@@ -10,6 +10,8 @@ import android.view.View;
 
 import org.lagonette.app.app.fragment.FiltersFragment;
 
+import java.util.ArrayList;
+
 public class FiltersFragmentPerformer implements Performer {
 
     public interface FragmentLoadedCommand {
@@ -29,14 +31,17 @@ public class FiltersFragmentPerformer implements Performer {
     @NonNull
     private FragmentManager mFragmentManager;
 
-    @Nullable
-    private FragmentUnloadedCommand mFragmentUnloadedCommand;
+    @NonNull
+    private final ArrayList<FragmentUnloadedCommand> mFragmentUnloadedCommands;
 
-    @Nullable
-    private FragmentLoadedCommand mFragmentLoadedCommand;
+    @NonNull
+    private final ArrayList<FragmentLoadedCommand> mFragmentLoadedCommands;
 
     @NonNull
     private final MutableLiveData<Integer> mTopPadding;
+
+    @NonNull
+    private final MutableLiveData<Void> mLoadedNotifier;
 
     @IdRes
     private final int mFiltersContainerRes;
@@ -45,6 +50,10 @@ public class FiltersFragmentPerformer implements Performer {
             @NonNull AppCompatActivity activity,
             @IdRes int filtersContainerRes) {
         mFragmentManager = activity.getSupportFragmentManager();
+        mFragmentLoadedCommands = new ArrayList<>();
+        mFragmentUnloadedCommands = new ArrayList<>();
+        mLoadedNotifier = new MutableLiveData<>();
+        mLoadedNotifier.setValue(null);
         mFiltersContainerRes = filtersContainerRes;
         mTopPadding = new MutableLiveData<>();
     }
@@ -72,8 +81,8 @@ public class FiltersFragmentPerformer implements Performer {
             mFragment = null;
         }
 
-        if (mFragmentUnloadedCommand != null) {
-            mFragmentUnloadedCommand.onFiltersUnloaded();
+        for (FragmentUnloadedCommand command : mFragmentUnloadedCommands) {
+            command.onFiltersUnloaded();
         }
     }
 
@@ -93,9 +102,14 @@ public class FiltersFragmentPerformer implements Performer {
                 mFragment::updateTopPadding
         );
 
-        if (mFragmentLoadedCommand != null) {
-            mFragmentLoadedCommand.onFiltersLoaded();
-        }
+        mLoadedNotifier.observe(
+                mFragment,
+                aVoid -> {
+                    for (FragmentLoadedCommand command : mFragmentLoadedCommands) {
+                        command.onFiltersLoaded();
+                    }
+                }
+        );
     }
 
     public boolean isLoaded() {
@@ -107,10 +121,10 @@ public class FiltersFragmentPerformer implements Performer {
     }
 
     public void onFragmentLoaded(@Nullable FragmentLoadedCommand command) {
-        mFragmentLoadedCommand = command;
+        mFragmentLoadedCommands.add(command);
     }
 
     public void onFragmentUnloaded(@Nullable FragmentUnloadedCommand command) {
-        mFragmentUnloadedCommand = command;
+        mFragmentUnloadedCommands.add(command);
     }
 }

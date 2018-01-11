@@ -358,4 +358,14 @@ public class LocationDetailFragment
         mHeaderView.setPadding(0, top, 0, 0);
     }
 
+    public boolean isLoaded(long locationId) {
+        Long loadedId = mLocationId.getValue();
+        if (loadedId != null) {
+            return locationId == loadedId;
+        }
+        else {
+            return false;
+        }
+    }
+
 }

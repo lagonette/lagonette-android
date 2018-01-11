@@ -6,18 +6,15 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import org.lagonette.app.R;
-import org.lagonette.app.app.arch.LiveEvent;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
-import org.lagonette.app.app.widget.livedata.BottomSheetFragmentStateLiveData;
-import org.lagonette.app.app.widget.livedata.MainActionLiveData;
-import org.lagonette.app.app.widget.livedata.MainStateLiveData;
-import org.lagonette.app.app.widget.livedata.MainStatefulActionLiveData;
+import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.base.FiltersFragmentPerformer;
@@ -41,13 +38,7 @@ public abstract class MainPresenter<
 
     protected MainLiveEventBusViewModel mEventBus;
 
-    protected MainActionLiveData mAction;
-
-    protected MainStateLiveData mState;
-
-    protected MainStatefulActionLiveData mMainStatefulAction;
-
-    protected BottomSheetFragmentStateLiveData mBottomSheetFragmentState;
+    protected MainActionViewModel mAction;
 
     protected MutableLiveData<String> mSearch;
 
@@ -79,10 +70,10 @@ public abstract class MainPresenter<
                 .of(activity)
                 .get(MainLiveEventBusViewModel.class);
 
-        mMainStatefulAction = mStateViewModel.getMainStatefulActionLiveData();
-        mAction = mStateViewModel.getMainActionLiveData();
-        mState = mStateViewModel.getMainStateLiveData();
-        mBottomSheetFragmentState = mStateViewModel.getBottomSheetFragmentState();
+        mAction = ViewModelProviders
+                .of(activity)
+                .get(MainActionViewModel.class);
+
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
 
@@ -114,7 +105,7 @@ public abstract class MainPresenter<
     @Override
     @CallSuper
     public void restore(@NonNull AppCompatActivity activity, @NonNull Bundle savedInstanceState) {
-        mCoordinator.restore(mMainStatefulAction.getValue().state);
+        mCoordinator.restore();
     }
 
     @Override
@@ -149,25 +140,33 @@ public abstract class MainPresenter<
 
         mSearchBarPerformer.onSearch(mSearch::setValue);
 
-        // Performer's state --> performers
-        mLocationDetailFragmentPerformer.onFragmentLoaded(mBottomSheetFragmentState::notifyLocationDetailLoaded);
-        mLocationDetailFragmentPerformer.onFragmentUnloaded(mBottomSheetFragmentState::notifyLocationDetailUnloaded);
-        mBottomSheetPerformer.onStateChanged(mState::notifyBottomSheetStateChanged);
+        // Performer's state --> LiveData
+        mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mAction.exec());
+        mLocationDetailFragmentPerformer.onFragmentUnloaded(mAction::exec);
+        mBottomSheetPerformer.onStateChanged(newState -> mAction.exec());
+        mMapFragmentPerformer.onMapMouvementChanged(mapMovement -> mAction.exec());
 
         // Event bus --> Performers
         mEventBus.subscribe(
                 NOTIFY_MAP_MOVEMENT,
                 activity,
-                mState::notifyMapMovementChanged
+                mMapFragmentPerformer::notifyMapMovement
         );
 
         // LiveData --> Performer, Coordinator
         mWorkStatus.observe(activity, mSearchBarPerformer::setWorkStatus);
-        mMainStatefulAction.observe(activity, mCoordinator::process);
+        mAction.getLiveData().observe(activity, mCoordinator::process);
     }
 
-    @CallSuper
     public boolean onBackPressed(@NonNull AppCompatActivity activity) {
-        return false;
+        //TODO Put this in coordinator
+
+        if (mBottomSheetPerformer.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+            return false;
+        }
+
+        mAction.back();
+        return true;
     }
+
 }

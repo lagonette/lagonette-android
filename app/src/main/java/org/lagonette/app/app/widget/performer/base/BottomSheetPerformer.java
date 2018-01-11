@@ -2,21 +2,37 @@ package org.lagonette.app.app.widget.performer.base;
 
 import android.content.res.Resources;
 import android.support.annotation.IdRes;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
-import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.util.UiUtils;
+
+import java.lang.annotation.Retention;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public abstract class BottomSheetPerformer
         extends BottomSheetBehavior.BottomSheetCallback
         implements Performer {
 
+    @Retention(SOURCE)
+    @IntDef({
+            BottomSheetBehavior.STATE_DRAGGING,
+            BottomSheetBehavior.STATE_SETTLING,
+            BottomSheetBehavior.STATE_EXPANDED,
+            BottomSheetBehavior.STATE_COLLAPSED,
+            BottomSheetBehavior.STATE_HIDDEN
+    })
+    public @interface State {
+
+    }
+
     public interface OnStateChangedCommand {
 
-        void onStateChanged(@MainState.State int newState);
+        void notifyStateChanged(@State int newState);
     }
 
     public interface OnSlideChangedCommand {
@@ -108,9 +124,9 @@ public abstract class BottomSheetPerformer
     public abstract void openBottomSheet();
 
     @Override
-    public void onStateChanged(@NonNull View bottomSheet, @MainState.State int newState) {
+    public void onStateChanged(@NonNull View bottomSheet, @State int newState) {
         if (mOnStateChangedCommand != null) {
-            mOnStateChangedCommand.onStateChanged(newState);
+            mOnStateChangedCommand.notifyStateChanged(newState);
         }
     }
 
@@ -141,6 +157,11 @@ public abstract class BottomSheetPerformer
 
     public void onSlideChanged(@Nullable OnSlideChangedCommand command) {
         mOnSlideChangedCommand = command;
+    }
+
+    @State
+    public int getState() {
+        return mBehavior.getState();
     }
 
 }

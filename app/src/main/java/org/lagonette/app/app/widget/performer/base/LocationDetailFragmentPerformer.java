@@ -11,6 +11,8 @@ import android.view.View;
 
 import org.lagonette.app.app.fragment.LocationDetailFragment;
 
+import java.util.ArrayList;
+
 public class LocationDetailFragmentPerformer implements Performer {
 
     public interface FragmentLoadedCommand {
@@ -29,14 +31,17 @@ public class LocationDetailFragmentPerformer implements Performer {
     @NonNull
     private FragmentManager mFragmentManager;
 
-    @Nullable
-    private FragmentUnloadedCommand mFragmentUnloadedCommand;
+    @NonNull
+    private final ArrayList<FragmentUnloadedCommand> mFragmentUnloadedCommands;
 
-    @Nullable
-    private FragmentLoadedCommand mFragmentLoadedCommand;
+    @NonNull
+    private final ArrayList<FragmentLoadedCommand> mFragmentLoadedCommands;
 
     @NonNull
     private final MutableLiveData<Integer> mTopPadding;
+
+    @NonNull
+    private final MutableLiveData<Void> mLoadedNotifier;
 
     @IdRes
     private final int mLocationDetailContainerRes;
@@ -45,8 +50,12 @@ public class LocationDetailFragmentPerformer implements Performer {
             @NonNull AppCompatActivity activity,
             @IdRes int locationDetailContainerRed) {
         mFragmentManager = activity.getSupportFragmentManager();
+        mFragmentLoadedCommands = new ArrayList<>();
+        mFragmentUnloadedCommands = new ArrayList<>();
         mLocationDetailContainerRes = locationDetailContainerRed;
         mTopPadding = new MutableLiveData<>();
+        mLoadedNotifier = new MutableLiveData<>();
+        mLoadedNotifier.setValue(null);
     }
 
     @Override
@@ -72,13 +81,17 @@ public class LocationDetailFragmentPerformer implements Performer {
             mFragment = null;
         }
 
-        if (mFragmentUnloadedCommand != null) {
-            mFragmentUnloadedCommand.onLocationUnloaded();
+        for (FragmentUnloadedCommand command : mFragmentUnloadedCommands) {
+            command.onLocationUnloaded();
         }
     }
 
     public boolean isLoaded() {
         return mFragment != null;
+    }
+
+    public boolean isLoaded(long locationId) {
+        return isLoaded() && mFragment.isLoaded(locationId);
     }
 
     public void loadFragment(long locationId) {
@@ -105,9 +118,15 @@ public class LocationDetailFragmentPerformer implements Performer {
                 mFragment::updateTopPadding
         );
 
-        if (mFragmentLoadedCommand != null) {
-            mFragmentLoadedCommand.onLocationLoaded(locationId);
-        }
+
+        mLoadedNotifier.observe(
+                mFragment,
+                aVoid -> {
+                    for (FragmentLoadedCommand command : mFragmentLoadedCommands) {
+                        command.onLocationLoaded(locationId);
+                    }
+                }
+        );
     }
 
     public void updateTopPadding(int topPadding) {
@@ -115,10 +134,10 @@ public class LocationDetailFragmentPerformer implements Performer {
     }
 
     public void onFragmentLoaded(@Nullable FragmentLoadedCommand command) {
-        mFragmentLoadedCommand = command;
+        mFragmentLoadedCommands.add(command);
     }
 
     public void onFragmentUnloaded(@Nullable FragmentUnloadedCommand command) {
-        mFragmentUnloadedCommand = command;
+        mFragmentUnloadedCommands.add(command);
     }
 }

@@ -3,15 +3,21 @@ package org.lagonette.app.app.widget.performer.portrait;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 
 import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
 import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
-import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
 
 public class PortraitSearchBarPerformer
         extends SearchBarPerformer {
+
+    public interface OnBehaviorEnabledCommand {
+
+        void notifyBehaviorEnabled(boolean enable);
+    }
+
+    @Nullable
+    private OnBehaviorEnabledCommand mOnBehaviorEnabledCommand;
 
     @Nullable
     private TopEscapeBehavior mBehavior;
@@ -33,13 +39,21 @@ public class PortraitSearchBarPerformer
         );
     }
 
-    public void notifyBottomSheetFragmentChanged(@NonNull BottomSheetFragmentState bottomSheetFragmentState) {
+    public void onBehaviorEnabled(@Nullable OnBehaviorEnabledCommand command) {
+        mOnBehaviorEnabledCommand = command;
+    }
+
+    public void enableBehavior(boolean enable) {
         if (mBehavior != null) {
-            if (bottomSheetFragmentState.isLocationDetailLoaded()) {
+            if (enable) {
                 mBehavior.enable();
             }
             else {
                 mBehavior.disable();
+            }
+
+            if (mOnBehaviorEnabledCommand != null) {
+                mOnBehaviorEnabledCommand.notifyBehaviorEnabled(enable);
             }
         }
     }

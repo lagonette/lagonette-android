@@ -10,21 +10,34 @@ import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.MapsFragment;
+import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.room.entity.statement.LocationItem;
 
 public abstract class MapFragmentPerformer implements Performer {
+
+    public interface OnMapMouvementChangedCommand {
+
+        void notifyMapMovementChanged(@NonNull MainState.MapMovement mapMovement);
+    }
 
     protected MapsFragment mFragment;
 
     @NonNull
     private final FragmentManager mFragmentManager;
-    
+
+    @Nullable
+    private OnMapMouvementChangedCommand mMapMouvementChangedCommand;
+
+    @NonNull
+    protected MainState.MapMovement mMapMovement;
+
     @IdRes
     protected int mMapFragmentRes;
 
     public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes) {
         mFragmentManager = activity.getSupportFragmentManager();
         mMapFragmentRes = mapFragmentRes;
+        mMapMovement = MainState.MapMovement.IDLE;
     }
 
     public void loadFragment() {
@@ -46,6 +59,17 @@ public abstract class MapFragmentPerformer implements Performer {
         return null;
     }
 
+    public MainState.MapMovement getMapMovement() {
+        return mMapMovement;
+    }
+
+    public void notifyMapMovement(@NonNull MainState.MapMovement mapMovement) {
+        mMapMovement = mapMovement;
+        if (mMapMouvementChangedCommand != null) {
+            mMapMouvementChangedCommand.notifyMapMovementChanged(mMapMovement);
+        }
+    }
+
     public void moveToMyLocation() {
         if (mFragment != null) {
             mFragment.moveToMyLocation();
@@ -60,6 +84,11 @@ public abstract class MapFragmentPerformer implements Performer {
         return false;
     }
 
+    public void onMapMouvementChanged(@Nullable OnMapMouvementChangedCommand command) {
+        mMapMouvementChangedCommand = command;
+    }
+
+    // TODO Improve fragment communication may be with LiveEvent
     public void moveToCluster(@NonNull Cluster<LocationItem> cluster) {
         if (mFragment != null) {
             mFragment.moveToCluster(cluster);
@@ -77,5 +106,4 @@ public abstract class MapFragmentPerformer implements Performer {
             mFragment.stopMoving();
         }
     }
-
 }

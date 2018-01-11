@@ -2,8 +2,7 @@ package org.lagonette.app.app.widget.coordinator.base;
 
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.app.widget.coordinator.state.MainStatefulAction;
+import org.lagonette.app.app.widget.coordinator.state.MainAction;
 
 public interface MainCoordinator {
 
@@ -15,9 +14,7 @@ public interface MainCoordinator {
 
     void init();
 
-    void restore(@NonNull MainState state);
+    void restore();
 
-    boolean back(@NonNull MainStatefulAction statefulAction);
-
-    void process(@NonNull MainStatefulAction statefulAction);
+    void process(@NonNull MainAction action);
 }
