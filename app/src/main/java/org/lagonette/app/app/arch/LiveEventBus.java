@@ -28,7 +28,7 @@ public class LiveEventBus {
     }
 
     public <Payload> void publish(@NonNull Event<Payload> event, @Nullable Payload payload) {
-        get(event).setEvent(payload);
+        get(event).sendEvent(payload);
     }
 
     public <Payload> void subscribe(@NonNull Event<Payload> event, @NonNull LifecycleOwner owner, @NonNull Observer<Payload> observer) {

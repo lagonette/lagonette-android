@@ -75,7 +75,7 @@ public class FiltersFragment
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
         mFilterAdapter.setHasStableIds(true);
         mFilterAdapter.setOnLocationClickListener(
-                locationId -> mComViewModel.getFiltersLocationClickEvent().setEvent(locationId)
+                locationId -> mComViewModel.getFiltersLocationClickEvent().sendEvent(locationId)
         );
         mFilterAdapter.setOnLocationVisibilityClickListener(
                 (locationId, visibility) -> mFiltersViewModel.setLocationVisibility(locationId, visibility)
