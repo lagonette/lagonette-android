@@ -36,6 +36,7 @@ import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 
 import org.json.JSONException;
 import org.lagonette.app.R;
+import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
@@ -49,31 +50,16 @@ import org.lagonette.app.util.UiUtils;
 import java.io.IOException;
 import java.util.List;
 
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.MOVE_TO_CLUSTER;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.NOTIFY_MAP_MOVEMENT;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.SHOW_FULL_MAP;
+
 public class MapsFragment
         extends Fragment
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback {
-
-    public interface OnMapMovementCommand {
-
-        void onMapMovementChanged(MainState.MapMovement newMovement);
-    }
-
-    public interface OnClusterClickCommand {
-
-        void onClusterClick(@NonNull Cluster<LocationItem> cluster);
-    }
-
-    public interface OnItemClickCommand {
-
-        void onItemClick(@NonNull LocationItem item);
-    }
-
-    public interface OnMapClickCommand {
-
-        void onMapClick();
-    }
 
     public static final String TAG = "MapsFragment";
 
@@ -92,6 +78,8 @@ public class MapsFragment
     private MapViewModel mViewModel;
 
     private StateMapActivityViewModel mStateViewModel;
+
+    private MainLiveEventBusViewModel mEventBus;
 
     private boolean mLocationPermissionGranted = false;
 
@@ -116,18 +104,6 @@ public class MapsFragment
     private boolean mAskFormMyPositionPermission = true;
 
     private LongSparseArray<LocationItem> mPartnerItems;
-
-    @Nullable
-    private OnMapMovementCommand mOnMovementCommand;
-
-    @Nullable
-    private OnClusterClickCommand mOnClusterClickCommand;
-
-    @Nullable
-    private OnItemClickCommand mOnItemClickCommand;
-
-    @Nullable
-    private OnMapClickCommand mOnMapClickCommand;
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -169,6 +145,10 @@ public class MapsFragment
         mStateViewModel = ViewModelProviders
                 .of(getActivity())
                 .get(StateMapActivityViewModel.class);
+
+        mEventBus = ViewModelProviders
+                .of(getActivity())
+                .get(MainLiveEventBusViewModel.class);
 
         mStateViewModel
                 .getSearch()
@@ -308,44 +288,28 @@ public class MapsFragment
                 )
         );
         mMap.setOnMapClickListener(
-                latLng -> {
-                    if (mOnMapClickCommand != null) {
-                        mOnMapClickCommand.onMapClick();
-                    }
-                }
+                latLng -> mEventBus.publish(SHOW_FULL_MAP)
         );
         mMap.setOnCameraMoveStartedListener(
-                reason -> {
-                    if (mOnMovementCommand != null) {
-                        mOnMovementCommand.onMapMovementChanged(MainState.MapMovement.MOVE);
-                    }
-                }
+                reason -> mEventBus.publish(NOTIFY_MAP_MOVEMENT, MainState.MapMovement.MOVE)
         );
         mMap.setOnCameraIdleListener(
                 () -> {
                     mClusterManager.onCameraIdle();
-                    if (mOnMovementCommand != null) {
-                        mOnMovementCommand.onMapMovementChanged(MainState.MapMovement.IDLE);
-                    }
+                    mEventBus.publish(NOTIFY_MAP_MOVEMENT, MainState.MapMovement.IDLE);
                 }
         );
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(
                 cluster -> {
-                    if (mOnClusterClickCommand != null) {
-                        mOnClusterClickCommand.onClusterClick(cluster);
-                        return true;
-                    }
-                    return false;
+                    mEventBus.publish(MOVE_TO_CLUSTER, cluster);
+                    return true;
                 }
         );
         mClusterManager.setOnClusterItemClickListener(
                 item -> {
-                    if (mOnItemClickCommand != null) {
-                        mOnItemClickCommand.onItemClick(item);
-                        return true;
-                    }
-                    return false;
+                    mEventBus.publish(OPEN_LOCATION, item);
+                    return true;
                 }
         );
 
@@ -524,22 +488,6 @@ public class MapsFragment
                         Snackbar.LENGTH_LONG
                 )
                 .show();
-    }
-
-    public void onMovement(@Nullable OnMapMovementCommand command) {
-        mOnMovementCommand = command;
-    }
-
-    public void onClusterClick(@Nullable OnClusterClickCommand command) {
-        mOnClusterClickCommand = command;
-    }
-
-    public void observeItemClick(@Nullable OnItemClickCommand command) {
-        mOnItemClickCommand = command;
-    }
-
-    public void observeMapClick(@Nullable OnMapClickCommand command) {
-        mOnMapClickCommand = command;
     }
 
 }

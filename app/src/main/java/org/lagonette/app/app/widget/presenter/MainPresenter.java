@@ -12,6 +12,7 @@ import android.view.View;
 import org.lagonette.app.R;
 import org.lagonette.app.app.arch.LiveEvent;
 import org.lagonette.app.app.viewmodel.ComViewModel;
+import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
 import org.lagonette.app.app.widget.livedata.BottomSheetFragmentStateLiveData;
@@ -25,6 +26,11 @@ import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerform
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
 
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.MOVE_TO_CLUSTER;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.NOTIFY_MAP_MOVEMENT;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.SHOW_FULL_MAP;
+
 public abstract class MainPresenter<
         FBP extends FabButtonsPerformer,
         MFP extends MapFragmentPerformer,
@@ -34,6 +40,8 @@ public abstract class MainPresenter<
     protected StateMapActivityViewModel mStateViewModel;
 
     protected ComViewModel mComViewModel;
+
+    protected MainLiveEventBusViewModel mEventBus;
 
     protected MainActionLiveData mAction;
 
@@ -74,6 +82,10 @@ public abstract class MainPresenter<
         mComViewModel = ViewModelProviders
                 .of(activity)
                 .get(ComViewModel.class);
+
+        mEventBus = ViewModelProviders
+                .of(activity)
+                .get(MainLiveEventBusViewModel.class);
 
         mMainStatefulAction = mStateViewModel.getMainStatefulActionLiveData();
         mAction = mStateViewModel.getMainActionLiveData();
@@ -117,10 +129,25 @@ public abstract class MainPresenter<
     @Override
     @CallSuper
     public void onActivityCreated(@NonNull AppCompatActivity activity) {
+
+        // Event bus --> LiveData
+        mEventBus.subscribe(
+                OPEN_LOCATION,
+                activity,
+                mAction::moveToAndOpenLocation
+        );
+        mEventBus.subscribe(
+                MOVE_TO_CLUSTER,
+                activity,
+                mAction::moveToCluster
+        );
+        mEventBus.subscribe(
+                SHOW_FULL_MAP,
+                activity,
+                mAction::showFullMap
+        );
+
         // Performer's action --> LiveData
-        mMapFragmentPerformer.onClusterClick(mAction::moveToCluster);
-        mMapFragmentPerformer.onItemClick(mAction::moveToAndOpenLocation);
-        mMapFragmentPerformer.onMapClick(mAction::showFullMap);
         mFabButtonsPerformer.onPositionClick(mAction::moveToMyLocation);
         mFabButtonsPerformer.onPositionLongClick(mAction::moveToFootprint);
 
@@ -133,7 +160,11 @@ public abstract class MainPresenter<
         mLocationDetailFragmentPerformer.onFragmentLoaded(mBottomSheetFragmentState::notifyLocationDetailLoaded);
         mLocationDetailFragmentPerformer.onFragmentUnloaded(mBottomSheetFragmentState::notifyLocationDetailUnloaded);
         mBottomSheetPerformer.onStateChanged(mState::notifyBottomSheetStateChanged);
-        mMapFragmentPerformer.onMovement(mState::notifyMapMovementChanged);
+        mEventBus.subscribe(
+                NOTIFY_MAP_MOVEMENT,
+                activity,
+                mState::notifyMapMovementChanged
+        );
 
         // LiveData --> Performer, Coordinator
         mWorkStatus.observe(activity, mSearchBarPerformer::setWorkStatus);

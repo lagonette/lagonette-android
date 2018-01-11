@@ -78,27 +78,4 @@ public abstract class MapFragmentPerformer implements Performer {
         }
     }
 
-    public void onMovement(@Nullable MapsFragment.OnMapMovementCommand command) {
-        if (mFragment != null) {
-            mFragment.onMovement(command);
-        }
-    }
-
-    public void onClusterClick(@Nullable MapsFragment.OnClusterClickCommand command) {
-        if (mFragment != null) {
-            mFragment.onClusterClick(command);
-        }
-    }
-
-    public void onItemClick(@Nullable MapsFragment.OnItemClickCommand command) {
-        if (mFragment != null) {
-            mFragment.observeItemClick(command);
-        }
-    }
-
-    public void onMapClick(@Nullable MapsFragment.OnMapClickCommand command) {
-        if (mFragment != null) {
-            mFragment.observeMapClick(command);
-        }
-    }
 }

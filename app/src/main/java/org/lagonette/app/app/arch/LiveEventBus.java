@@ -8,6 +8,11 @@ import android.support.v4.util.ArrayMap;
 
 public class LiveEventBus {
 
+    public interface VoidObserver {
+
+        void onChanged();
+    }
+
     public static class Event<Payload> {}
 
     private final ArrayMap<Event<?>, MutableLiveEvent<Object>> mLiveEvents;
@@ -31,11 +36,23 @@ public class LiveEventBus {
         get(event).sendEvent(payload);
     }
 
+    public <Payload> void publish(@NonNull Event<Payload> event) {
+        get(event).sendEvent(null);
+    }
+
     public <Payload> void subscribe(@NonNull Event<Payload> event, @NonNull LifecycleOwner owner, @NonNull Observer<Payload> observer) {
         //TODO What is happening when there are several observers ?
         get(event).observe(
                 owner,
                 payload -> observer.onChanged((Payload) payload)
+        );
+    }
+
+    public void subscribe(@NonNull Event<Void> event, @NonNull LifecycleOwner owner, @NonNull VoidObserver observer) {
+        //TODO What is happening when there are several observers ?
+        get(event).observe(
+                owner,
+                payload -> observer.onChanged()
         );
     }
 
