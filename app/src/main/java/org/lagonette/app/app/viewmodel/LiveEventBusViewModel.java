@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.app.app.arch.LiveEventBus;
+import org.lagonette.app.app.arch.LiveEventBus.Event;
+import org.lagonette.app.app.arch.LiveEventBus.VoidObserver;
 
 public class LiveEventBusViewModel extends ViewModel {
 
@@ -16,23 +18,23 @@ public class LiveEventBusViewModel extends ViewModel {
         mLiveEventBus = new LiveEventBus();
     }
 
-    public <Payload> void publish(@NonNull LiveEventBus.Event<Payload> event, @Nullable Payload payload) {
+    public <Payload> void publish(@NonNull Event<Payload> event, @Nullable Payload payload) {
         mLiveEventBus.publish(event, payload);
     }
 
-    public <Payload> void publish(@NonNull LiveEventBus.Event<Payload> event) {
+    public void publish(@NonNull Event<Void> event) {
         mLiveEventBus.publish(event);
     }
 
-    public <Payload> void subscribe(@NonNull LiveEventBus.Event<Payload> event, @NonNull LifecycleOwner owner, @NonNull Observer<Payload> observer) {
+    public <Payload> void subscribe(@NonNull Event<Payload> event, @NonNull LifecycleOwner owner, @NonNull Observer<Payload> observer) {
         mLiveEventBus.subscribe(event, owner, observer);
     }
 
-    public void subscribe(@NonNull LiveEventBus.Event<Void> event, @NonNull LifecycleOwner owner, @NonNull LiveEventBus.VoidObserver observer) {
+    public void subscribe(@NonNull Event<Void> event, @NonNull LifecycleOwner owner, @NonNull VoidObserver observer) {
         mLiveEventBus.subscribe(event, owner, observer);
     }
 
-    public <T> void unregister(@NonNull LiveEventBus.Event<T> event, @NonNull LifecycleOwner owner) {
+    public <T> void unregister(@NonNull Event<T> event, @NonNull LifecycleOwner owner) {
         mLiveEventBus.unregister(event, owner);
     }
 }

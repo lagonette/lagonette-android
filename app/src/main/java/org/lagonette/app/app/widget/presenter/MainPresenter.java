@@ -11,10 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import org.lagonette.app.R;
+import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
-import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.base.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.base.FiltersFragmentPerformer;
@@ -22,11 +22,10 @@ import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerform
 import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
 
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.MOVE_TO_CLUSTER;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.NOTIFY_MAP_MOVEMENT;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION_ID;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION_ITEM;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.SHOW_FULL_MAP;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.SHOW_FULL_MAP;
 
 public abstract class MainPresenter<
         FBP extends FabButtonsPerformer,
@@ -144,14 +143,7 @@ public abstract class MainPresenter<
         mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mAction.exec());
         mLocationDetailFragmentPerformer.onFragmentUnloaded(mAction::exec);
         mBottomSheetPerformer.onStateChanged(newState -> mAction.exec());
-        mMapFragmentPerformer.onMapMouvementChanged(mapMovement -> mAction.exec());
-
-        // Event bus --> Performers
-        mEventBus.subscribe(
-                NOTIFY_MAP_MOVEMENT,
-                activity,
-                mMapFragmentPerformer::notifyMapMovement
-        );
+        mMapFragmentPerformer.onMapMovementChanged(mapMovement -> mAction.exec());
 
         // LiveData --> Performer, Coordinator
         mWorkStatus.observe(activity, mSearchBarPerformer::setWorkStatus);

@@ -29,7 +29,7 @@ public class PortraitMainPresenter
         );
 
         mCoordinator = new PortraitMainCoordinator(
-                mAction::markDone,
+                mAction,
                 mBottomSheetPerformer,
                 mFiltersFragmentPerformer,
                 mLocationDetailFragmentPerformer,
@@ -41,7 +41,6 @@ public class PortraitMainPresenter
     public void onActivityCreated(@NonNull AppCompatActivity activity) {
         super.onActivityCreated(activity);
 
-        //TODO Check correctly initialisation and conf change.
         // Performer's state --> LiveData
         mFiltersFragmentPerformer.onFragmentLoaded(mAction::exec);
         mFiltersFragmentPerformer.onFragmentUnloaded(mAction::exec);

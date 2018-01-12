@@ -26,7 +26,7 @@ public class LandscapeMainPresenter
         mBottomSheetPerformer = new LandscapeBottomSheetPerformer(activity.getResources(), R.id.bottom_sheet);
 
         mCoordinator = new LandscapeMainCoordinator(
-                mAction::markDone,
+                mAction,
                 mBottomSheetPerformer,
                 mFiltersFragmentPerformer,
                 mLocationDetailFragmentPerformer,

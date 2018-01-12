@@ -16,6 +16,8 @@ import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
 
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
+
 //TODO Do not show empty fragment when there is no partner.
 public class FiltersFragment
         extends SlideableFragment {
@@ -75,7 +77,7 @@ public class FiltersFragment
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
         mFilterAdapter.setHasStableIds(true);
         mFilterAdapter.setOnLocationClickListener(
-                locationId -> mEventBus.publish(MainLiveEventBusViewModel.OPEN_LOCATION_ID, locationId)
+                locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId)
         );
         mFilterAdapter.setOnLocationVisibilityClickListener(
                 (locationId, visibility) -> mFiltersViewModel.setLocationVisibility(locationId, visibility)

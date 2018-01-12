@@ -1,46 +1,33 @@
 package org.lagonette.app.app.widget.coordinator.state;
 
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 
-import org.lagonette.app.app.widget.performer.state.BottomSheetFragmentState;
-
-import java.lang.annotation.Retention;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static org.lagonette.app.app.widget.coordinator.state.MainState.MapMovement.IDLE;
 
 public class MainState {
-
-    @Retention(SOURCE)
-    @IntDef({
-            BottomSheetBehavior.STATE_DRAGGING,
-            BottomSheetBehavior.STATE_SETTLING,
-            BottomSheetBehavior.STATE_EXPANDED,
-            BottomSheetBehavior.STATE_COLLAPSED,
-            BottomSheetBehavior.STATE_HIDDEN
-    })
-    public @interface State {
-
-    }
 
     public enum MapMovement {
         IDLE,
         MOVE
     }
 
-    @State
+    @BottomSheetBehavior.State
     public int bottomSheetState;
 
-    @NonNull
-    public BottomSheetFragmentState bottomSheetFragmentState;
+    public boolean isFiltersLoaded;
 
+    public boolean isLocationDetailLoaded;
+
+    @NonNull
     public MapMovement mapMovement;
 
-    public MainState(@NonNull BottomSheetFragmentState type) {
+    @Nullable
+    public MainAction action;
+
+    public MainState() {
         bottomSheetState = BottomSheetBehavior.STATE_HIDDEN;
-        bottomSheetFragmentState = type;
         mapMovement = IDLE;
     }
 
@@ -75,8 +62,8 @@ public class MainState {
                 break;
         }
         string += "\tBottom sheet fragment state: [\n";
-        string += "\t\tis filters loaded: " + bottomSheetFragmentState.isFiltersLoaded() + "\n";
-        string += "\t\tis location detail loaded: " + bottomSheetFragmentState.isLocationDetailLoaded() + "\n";
+        string += "\t\tis filters loaded: " + isFiltersLoaded + "\n";
+        string += "\t\tis location detail loaded: " + isLocationDetailLoaded + "\n";
         string += "\t]\n";
         string += "]";
         return string;

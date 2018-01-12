@@ -50,10 +50,15 @@ import org.lagonette.app.util.UiUtils;
 import java.io.IOException;
 import java.util.List;
 
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.MOVE_TO_CLUSTER;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.NOTIFY_MAP_MOVEMENT;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.OPEN_LOCATION_ITEM;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.SHOW_FULL_MAP;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.SHOW_FULL_MAP;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_CLUSTER;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_FOOTPRINT;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_LOCATION;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_MY_LOCATION;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.OPEN_LOCATION_ID;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP_MOVING;
 
 public class MapsFragment
         extends Fragment
@@ -176,6 +181,42 @@ public class MapsFragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapsFragment.this);
+
+        mEventBus.subscribe(
+                MOVE_TO_MY_LOCATION,
+                MapsFragment.this,
+                this::moveToMyLocation
+        );
+
+        mEventBus.subscribe(
+                MOVE_TO_FOOTPRINT,
+                MapsFragment.this,
+                this::moveToFootprint
+        );
+
+        mEventBus.subscribe(
+                MOVE_TO_LOCATION,
+                MapsFragment.this,
+                this::moveToLocation
+        );
+
+        mEventBus.subscribe(
+                MOVE_TO_CLUSTER,
+                MapsFragment.this,
+                this::moveToCluster
+        );
+
+        mEventBus.subscribe(
+                STOP_MOVING,
+                MapsFragment.this,
+                this::stopMoving
+        );
+
+        mEventBus.subscribe(
+                OPEN_LOCATION_ID,
+                MapsFragment.this,
+                this::openLocation
+        );
     }
 
     @Override
@@ -339,7 +380,12 @@ public class MapsFragment
         }
     }
 
-    public void moveToLocation(@NonNull LocationItem item) {
+    private void openLocation(long locationId) {
+        LocationItem locationItem = retrieveLocationItem(locationId);
+        mEventBus.publish(OPEN_LOCATION_ITEM, locationItem);
+    }
+
+    private void moveToLocation(@NonNull LocationItem item) {
         LatLng latLng = new LatLng( //TODO Why not just getPosition ?
                 item.getPosition().latitude,
                 item.getPosition().longitude
@@ -351,7 +397,7 @@ public class MapsFragment
         );
     }
 
-    public boolean moveToCluster(@NonNull Cluster<LocationItem> cluster) {
+    private boolean moveToCluster(@NonNull Cluster<LocationItem> cluster) {
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         cluster.getPosition(),
@@ -363,7 +409,7 @@ public class MapsFragment
         return true;
     }
 
-    public void moveToMyLocation() {
+    private void moveToMyLocation() {
         Location lastLocation = getLastLocation();
         if (lastLocation != null) {
             mMap.animateCamera(
@@ -380,7 +426,7 @@ public class MapsFragment
         }
     }
 
-    public void moveToFootprint() {
+    private void moveToFootprint() {
         mMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         new LatLng(
@@ -394,7 +440,7 @@ public class MapsFragment
         );
     }
 
-    public void stopMoving() {
+    private void stopMoving() {
         mMap.stopAnimation();
     }
 
@@ -473,7 +519,7 @@ public class MapsFragment
     }
 
     @Nullable
-    public LocationItem retrieveLocationItem(long locationId) {
+    private LocationItem retrieveLocationItem(long locationId) {
         return mPartnerItems.get(locationId);
     }
 

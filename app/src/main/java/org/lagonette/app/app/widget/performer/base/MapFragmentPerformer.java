@@ -1,5 +1,6 @@
 package org.lagonette.app.app.widget.performer.base;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,15 +11,26 @@ import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.MapsFragment;
+import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.room.entity.statement.LocationItem;
 
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_CLUSTER;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_FOOTPRINT;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_LOCATION;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_MY_LOCATION;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP_MOVING;
+
 public abstract class MapFragmentPerformer implements Performer {
 
-    public interface OnMapMouvementChangedCommand {
+    public interface OnMapMovementChangedCommand {
 
         void notifyMapMovementChanged(@NonNull MainState.MapMovement mapMovement);
     }
+
+    @NonNull
+    protected MainLiveEventBusViewModel mEventBus;
 
     protected MapsFragment mFragment;
 
@@ -26,7 +38,7 @@ public abstract class MapFragmentPerformer implements Performer {
     private final FragmentManager mFragmentManager;
 
     @Nullable
-    private OnMapMouvementChangedCommand mMapMouvementChangedCommand;
+    private OnMapMovementChangedCommand mMapMovementChangedCommand;
 
     @NonNull
     protected MainState.MapMovement mMapMovement;
@@ -35,9 +47,16 @@ public abstract class MapFragmentPerformer implements Performer {
     protected int mMapFragmentRes;
 
     public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes) {
+        mEventBus = ViewModelProviders.of(activity).get(MainLiveEventBusViewModel.class);
         mFragmentManager = activity.getSupportFragmentManager();
         mMapFragmentRes = mapFragmentRes;
         mMapMovement = MainState.MapMovement.IDLE;
+
+        mEventBus.subscribe(
+                NOTIFY_MAP_MOVEMENT,
+                activity,
+                this::notifyMapMovement
+        );
     }
 
     public void loadFragment() {
@@ -51,59 +70,43 @@ public abstract class MapFragmentPerformer implements Performer {
         mFragment = (MapsFragment) mFragmentManager.findFragmentByTag(MapsFragment.TAG);
     }
 
-    @Nullable
-    public LocationItem retrieveLocationItem(long locationId) {
-        if (mFragment != null) {
-            return mFragment.retrieveLocationItem(locationId);
-        }
-        return null;
+    public void openLocation(long locationId) {
+        mEventBus.publish(MainLiveEventBusViewModel.Map.OPEN_LOCATION_ID, locationId);
     }
 
     public MainState.MapMovement getMapMovement() {
         return mMapMovement;
     }
 
-    public void notifyMapMovement(@NonNull MainState.MapMovement mapMovement) {
+    private void notifyMapMovement(@NonNull MainState.MapMovement mapMovement) {
         mMapMovement = mapMovement;
-        if (mMapMouvementChangedCommand != null) {
-            mMapMouvementChangedCommand.notifyMapMovementChanged(mMapMovement);
+        if (mMapMovementChangedCommand != null) {
+            mMapMovementChangedCommand.notifyMapMovementChanged(mMapMovement);
         }
     }
 
     public void moveToMyLocation() {
-        if (mFragment != null) {
-            mFragment.moveToMyLocation();
-        }
+        mEventBus.publish(MOVE_TO_MY_LOCATION);
     }
 
     public boolean moveToFootprint() {
-        if (mFragment != null) {
-            mFragment.moveToFootprint();
-            return true;
-        }
-        return false;
+        mEventBus.publish(MOVE_TO_FOOTPRINT);
+        return true;
     }
 
-    public void onMapMouvementChanged(@Nullable OnMapMouvementChangedCommand command) {
-        mMapMouvementChangedCommand = command;
-    }
-
-    // TODO Improve fragment communication may be with LiveEvent
     public void moveToCluster(@NonNull Cluster<LocationItem> cluster) {
-        if (mFragment != null) {
-            mFragment.moveToCluster(cluster);
-        }
+        mEventBus.publish(MOVE_TO_CLUSTER, cluster);
     }
 
     public void moveToLocation(@NonNull LocationItem item) {
-        if (mFragment != null) {
-            mFragment.moveToLocation(item);
-        }
+        mEventBus.publish(MOVE_TO_LOCATION, item);
     }
 
     public void stopMoving() {
-        if (mFragment != null) {
-            mFragment.stopMoving();
-        }
+        mEventBus.publish(STOP_MOVING);
+    }
+
+    public void onMapMovementChanged(@Nullable OnMapMovementChangedCommand command) {
+        mMapMovementChangedCommand = command;
     }
 }

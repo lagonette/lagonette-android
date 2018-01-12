@@ -3,18 +3,38 @@ package org.lagonette.app.app.viewmodel;
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.app.arch.LiveEventBus;
+import org.lagonette.app.app.arch.LiveEventBus.Event;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.room.entity.statement.LocationItem;
 
 public class MainLiveEventBusViewModel extends LiveEventBusViewModel {
 
-    public static final LiveEventBus.Event<LocationItem> OPEN_LOCATION_ITEM = new LiveEventBus.Event<>();
+    public interface Action {
 
-    public static final LiveEventBus.Event<Cluster<LocationItem>> MOVE_TO_CLUSTER = new LiveEventBus.Event<>();
+        Event<Long> OPEN_LOCATION_ID = new Event<>();
 
-    public static final LiveEventBus.Event<Void> SHOW_FULL_MAP = new LiveEventBus.Event<>();
+        Event<LocationItem> OPEN_LOCATION_ITEM = new Event<>();
 
-    public static final LiveEventBus.Event<Long> OPEN_LOCATION_ID = new LiveEventBus.Event<>();
+        Event<Cluster<LocationItem>> MOVE_TO_CLUSTER = new Event<>();
 
-    public static final LiveEventBus.Event<MainState.MapMovement> NOTIFY_MAP_MOVEMENT = new LiveEventBus.Event<>();
+        Event<Void> SHOW_FULL_MAP = new Event<>();
+
+        Event<MainState.MapMovement> NOTIFY_MAP_MOVEMENT = new Event<>();
+    }
+
+    public interface Map {
+
+        Event<Long> OPEN_LOCATION_ID = new Event<>();
+
+        Event<Void> MOVE_TO_MY_LOCATION = new Event<>();
+
+        Event<Void> MOVE_TO_FOOTPRINT = new Event<>();
+
+        Event<LocationItem> MOVE_TO_LOCATION = new Event<>();
+
+        Event<Cluster<LocationItem>> MOVE_TO_CLUSTER = new Event<>();
+
+        Event<Void> STOP_MOVING = new Event<>();
+
+    }
 }
