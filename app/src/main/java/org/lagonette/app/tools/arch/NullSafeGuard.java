@@ -1,4 +1,4 @@
-package org.lagonette.app.app.arch;
+package org.lagonette.app.tools.arch;
 
 import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;

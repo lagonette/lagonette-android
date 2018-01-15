@@ -6,9 +6,9 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.app.app.arch.LiveEventBus;
-import org.lagonette.app.app.arch.LiveEventBus.Event;
-import org.lagonette.app.app.arch.LiveEventBus.VoidObserver;
+import org.lagonette.app.tools.arch.LiveEventBus;
+import org.lagonette.app.tools.arch.LiveEventBus.Event;
+import org.lagonette.app.tools.arch.LiveEventBus.VoidObserver;
 
 public class LiveEventBusViewModel extends ViewModel {
 

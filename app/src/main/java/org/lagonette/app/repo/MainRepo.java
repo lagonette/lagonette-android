@@ -5,7 +5,7 @@ import android.arch.lifecycle.Transformations;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.app.arch.CursorLiveData;
+import org.lagonette.app.tools.arch.CursorLiveData;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
 import org.lagonette.app.room.embedded.CategoryKey;

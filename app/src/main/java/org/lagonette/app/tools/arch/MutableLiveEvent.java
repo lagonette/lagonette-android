@@ -1,4 +1,4 @@
-package org.lagonette.app.app.arch;
+package org.lagonette.app.tools.arch;
 
 public class MutableLiveEvent<E>
         extends LiveEvent<E> {

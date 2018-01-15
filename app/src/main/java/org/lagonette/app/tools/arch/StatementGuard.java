@@ -1,4 +1,4 @@
-package org.lagonette.app.app.arch;
+package org.lagonette.app.tools.arch;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

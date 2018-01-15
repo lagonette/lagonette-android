@@ -1,4 +1,4 @@
-package org.lagonette.app.app.arch;
+package org.lagonette.app.tools.arch;
 
 import android.database.Cursor;
 import android.support.annotation.MainThread;
