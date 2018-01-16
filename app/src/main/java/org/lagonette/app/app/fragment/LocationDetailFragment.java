@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +14,10 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
 import org.lagonette.app.app.widget.performer.impl.IntentPerformer;
 import org.lagonette.app.app.widget.performer.impl.LocationDetailPerformer;
+import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
-import org.lagonette.app.util.IntentUtils;
-import org.lagonette.app.util.SnackbarUtils;
 
 public class LocationDetailFragment
         extends Fragment {
@@ -45,6 +43,8 @@ public class LocationDetailFragment
 
     private IntentPerformer mIntentPerformer;
 
+    private SnackbarPerformer mSnackbarPerformer;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +55,16 @@ public class LocationDetailFragment
 
         mLocationId = mViewModel.getLocationId();
 
+        mSnackbarPerformer = new SnackbarPerformer(getActivity());
+
         mIntentPerformer = new IntentPerformer(getContext());
+        mIntentPerformer.onError = mSnackbarPerformer::show;
 
         mLocationDetailPerformer = new LocationDetailPerformer();
-        mLocationDetailPerformer.onAddressClick = (latitude, longitude) -> mIntentPerformer.startDirection(latitude, longitude, this::errorNoDirectionAppFound);
-        mLocationDetailPerformer.onEmailClick = email -> mIntentPerformer.writeEmail(email, this::errorNoEmailAppFound);
-        mLocationDetailPerformer.onPhoneClick = phoneNumber -> mIntentPerformer.makeCall(phoneNumber, this::errorNoCallAppFound);
-        mLocationDetailPerformer.onWebsiteClick = website -> mIntentPerformer.goToWebsite(website, this::errorNoBrowserAppFound);
+        mLocationDetailPerformer.onAddressClick = mIntentPerformer::startDirection;
+        mLocationDetailPerformer.onEmailClick = mIntentPerformer::writeEmail;
+        mLocationDetailPerformer.onPhoneClick = mIntentPerformer::makeCall;
+        mLocationDetailPerformer.onWebsiteClick = mIntentPerformer::goToWebsite;
 
         //TODO Check
         if (savedInstanceState == null) {
@@ -105,48 +108,6 @@ public class LocationDetailFragment
                 //TODO
                 break;
         }
-    }
-
-    //TODO factorize with MapsFragment
-    // Maybe it is to the activity to manage that
-    public void errorNoDirectionAppFound() {
-        Snackbar
-                .make(
-                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
-                        R.string.error_no_direction_app_found,
-                        Snackbar.LENGTH_LONG
-                )
-                .show();
-    }
-
-    public void errorNoCallAppFound() {
-        Snackbar
-                .make(
-                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
-                        R.string.error_no_call_app_found,
-                        Snackbar.LENGTH_LONG
-                )
-                .show();
-    }
-
-    public void errorNoBrowserAppFound() {
-        Snackbar
-                .make(
-                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
-                        R.string.error_no_browser_app_found,
-                        Snackbar.LENGTH_LONG
-                )
-                .show();
-    }
-
-    public void errorNoEmailAppFound() {
-        Snackbar
-                .make(
-                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
-                        R.string.error_no_email_app_found,
-                        Snackbar.LENGTH_LONG
-                )
-                .show();
     }
 
     public void updateTopPadding(int top) {
