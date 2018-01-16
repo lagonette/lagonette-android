@@ -2,29 +2,25 @@ package org.lagonette.app.app.fragment;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
+import org.lagonette.app.app.widget.performer.base.LocationDetailPerformer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.IntentUtils;
-import org.lagonette.app.util.PhoneUtils;
 import org.lagonette.app.util.SnackbarUtils;
 
 public class LocationDetailFragment
-        extends SlideableFragment
-        implements View.OnClickListener {
+        extends SlideableFragment {
 
     public static final String TAG = "LocationDetailFragment";
 
@@ -43,47 +39,7 @@ public class LocationDetailFragment
 
     private MutableLiveData<Long> mLocationId;
 
-    private View mHeaderView;
-
-    private TextView mNameTextView;
-
-//    private ImageButton mBackImageButton;
-
-    private TextView mPartnerTypeTextView;
-
-    private TextView mShortDescriptionTextView;
-
-    private TextView mDescriptionTextView;
-
-    private View mAddressLayout;
-
-    private TextView mAddressTextView;
-
-    private View mPhoneLayout;
-
-    private TextView mPhoneTextView;
-
-    private View mWebsiteLayout;
-
-    private TextView mWebsiteTextView;
-
-    private View mEmailLayout;
-
-    private TextView mEmailTextView;
-
-    private View mOpeningHoursLayout;
-
-    private TextView mOpeningHoursTextView;
-
-    private TextView mMainCategoryLabelTextView;
-
-//    private ImageView mLogoImageView;
-
-//    private ImageView mMainCategoryLogoImageView;
-
-    private double mLatitude;
-
-    private double mLongitude;
+    private LocationDetailPerformer mLocationDetailPerformer;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,6 +50,12 @@ public class LocationDetailFragment
                 .get(LocationDetailViewModel.class);
 
         mLocationId = mViewModel.getLocationId();
+
+        mLocationDetailPerformer = new LocationDetailPerformer();
+        mLocationDetailPerformer.onAddressClick = this::startDirection;
+        mLocationDetailPerformer.onEmailClick = this::writeEmail;
+        mLocationDetailPerformer.onPhoneClick = this::makeCall;
+        mLocationDetailPerformer.onWebsiteClick = this::goToWebsite;
 
         //TODO Check
         if (savedInstanceState == null) {
@@ -118,134 +80,24 @@ public class LocationDetailFragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-//        mBackImageButton = view.findViewById(R.id.back);
-
-        mHeaderView = view.findViewById(R.id.fragment_header);
-
-        mPartnerTypeTextView = view.findViewById(R.id.type_partner);
-
-        mNameTextView = view.findViewById(R.id.name);
-        mShortDescriptionTextView = view.findViewById(R.id.short_description);
-        mDescriptionTextView = view.findViewById(R.id.description);
-
-        mAddressTextView = view.findViewById(R.id.address);
-        mAddressLayout = view.findViewById(R.id.container_address);
-
-        mPhoneTextView = view.findViewById(R.id.phone);
-        mPhoneLayout = view.findViewById(R.id.container_phone);
-
-        mWebsiteTextView = view.findViewById(R.id.website);
-        mWebsiteLayout = view.findViewById(R.id.container_website);
-
-        mEmailTextView = view.findViewById(R.id.email);
-        mEmailLayout = view.findViewById(R.id.container_email);
-
-        mOpeningHoursTextView = view.findViewById(R.id.opening_hours);
-        mOpeningHoursLayout = view.findViewById(R.id.container_opening_hours);
-
-        mMainCategoryLabelTextView = view.findViewById(R.id.main_category_label);
-//        mLogoImageView = view.findViewById(R.id.logo);
-//        mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
-
-//        mBackImageButton.setOnClickListener(LocationDetailFragment.this);
-        mAddressLayout.setOnClickListener(LocationDetailFragment.this);
-        mPhoneLayout.setOnClickListener(LocationDetailFragment.this);
-        mWebsiteLayout.setOnClickListener(LocationDetailFragment.this);
-        mEmailLayout.setOnClickListener(LocationDetailFragment.this);
+        mLocationDetailPerformer.inject(view);
     }
 
     private void dispatchLocationDetailResource(@NonNull Resource<LocationDetail> resource) {
+        mLocationDetailPerformer.displayLocation(getContext(), resource.data);
+
         switch (resource.status) {
 
             case Resource.LOADING:
-                displayLocation(resource.data);
                 //TODO
                 break;
 
             case Resource.SUCCESS:
-                displayLocation(resource.data);
                 break;
 
             case Resource.ERROR:
-                displayLocation(resource.data);
                 //TODO
                 break;
-        }
-    }
-
-    private void displayLocation(@Nullable LocationDetail locationDetail) {
-        if (locationDetail != null) {
-            Resources resources = getResources();
-
-            mLatitude = locationDetail.latitude;
-            mLongitude = locationDetail.longitude;
-
-            mPartnerTypeTextView.setText(
-                    locationDetail.isExchangeOffice
-                            ? resources.getString(R.string.partner_type_exchange_office)
-                            : resources.getString(R.string.partner_type_partner)
-            );
-
-            mNameTextView.setText(locationDetail.name);
-            mShortDescriptionTextView.setText(locationDetail.shortDescription);
-            mDescriptionTextView.setText(locationDetail.description);
-
-            // OPENING HOURS
-            String openingHours = locationDetail.openingHours;
-            if (!TextUtils.isEmpty(openingHours)) {
-                mOpeningHoursLayout.setVisibility(View.VISIBLE);
-                mOpeningHoursTextView.setText(openingHours);
-            } else {
-                mOpeningHoursLayout.setVisibility(View.GONE);
-            }
-
-            // ADDRESS
-            String address = locationDetail.address.format(resources);
-            if (!TextUtils.isEmpty(address)) {
-                mAddressLayout.setVisibility(View.VISIBLE);
-                mAddressTextView.setText(address);
-            } else {
-                mAddressLayout.setVisibility(View.GONE);
-            }
-
-            // PHONE
-            String phone = locationDetail.phone;
-            if (!TextUtils.isEmpty(phone)) {
-                mPhoneLayout.setVisibility(View.VISIBLE);
-                mPhoneTextView.setText(PhoneUtils.format(phone));
-            } else {
-                mPhoneLayout.setVisibility(View.GONE);
-            }
-
-            // WEBSITE
-            String website = locationDetail.website;
-            if (!TextUtils.isEmpty(website)) {
-                mWebsiteLayout.setVisibility(View.VISIBLE);
-                mWebsiteTextView.setText(website);
-            } else {
-                mWebsiteLayout.setVisibility(View.GONE);
-            }
-
-            // WEBSITE
-            String email = locationDetail.email;
-            if (!TextUtils.isEmpty(email)) {
-                mEmailLayout.setVisibility(View.VISIBLE);
-                mEmailTextView.setText(email);
-            } else {
-                mEmailLayout.setVisibility(View.GONE);
-            }
-
-            mMainCategoryLabelTextView.setText(locationDetail.label);
-
-//            Glide.with(getContext())
-//                    .load(reader.getLogo())
-//                    .asBitmap()
-//                    .into(mLogoImageView);
-
-//            Glide.with(getContext())
-//                    .load(reader.getCategoryIcon())
-//                    .asBitmap()
-//                    .into(mMainCategoryLogoImageView);
         }
     }
 
@@ -291,62 +143,41 @@ public class LocationDetailFragment
                 .show();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.container_address:
-                onAddressClick();
-                break;
-            case R.id.container_phone:
-                onPhoneClick();
-                break;
-            case R.id.container_website:
-                onWebsiteClick();
-                break;
-            case R.id.container_email:
-                onEmailClick();
-                break;
-//            case R.id.back:
-//                getActivity().onBackPressed();
-//                break;
-        }
-    }
-
-    public void onAddressClick() {
+    public void startDirection(double latitude, double longitude) {
         boolean success = IntentUtils.startDirection(
                 getContext(),
-                mLatitude,
-                mLongitude
+                latitude,
+                longitude
         );
         if (!success) {
             errorNoDirectionAppFound();
         }
     }
 
-    public void onPhoneClick() {
+    public void makeCall(@NonNull String phoneNumber) {
         boolean success = IntentUtils.makeCall(
                 getContext(),
-                mPhoneTextView.getText().toString()
+                phoneNumber
         );
         if (!success) {
             errorNoCallAppFound();
         }
     }
 
-    public void onWebsiteClick() {
+    public void goToWebsite(@NonNull String url) {
         boolean success = IntentUtils.goToWebsite(
                 getContext(),
-                mWebsiteTextView.getText().toString()
+                url
         );
         if (!success) {
             errorNoBrowserAppFound();
         }
     }
 
-    public void onEmailClick() {
+    public void writeEmail(@NonNull String email) {
         boolean success = IntentUtils.writeEmail(
                 getContext(),
-                mEmailTextView.getText().toString()
+                email
         );
         if (!success) {
             errorNoEmailAppFound();
@@ -355,7 +186,7 @@ public class LocationDetailFragment
 
     @Override
     public void updateTopPadding(int top) {
-        mHeaderView.setPadding(0, top, 0, 0);
+        mLocationDetailPerformer.updateTopPadding(top);
     }
 
     public boolean isLoaded(long locationId) {

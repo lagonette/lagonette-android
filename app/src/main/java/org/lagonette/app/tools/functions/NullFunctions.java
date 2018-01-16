@@ -10,5 +10,9 @@ public interface NullFunctions {
 
     static void accept(long param) {}
 
+    static void accept(double param) {}
+
+    static void accept(double param1, double param2) {}
+
     static void run() {}
 }
