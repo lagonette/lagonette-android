@@ -1,4 +1,4 @@
-package org.lagonette.app.app.widget.performer.base;
+package org.lagonette.app.app.widget.performer.impl;
 
 import android.os.Build;
 import android.support.annotation.IdRes;
@@ -11,10 +11,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.util.UiUtils;
 
-public abstract class SearchBarPerformer implements Performer {
+public abstract class SearchBarPerformer implements ViewPerformer {
 
     public interface OnSearchCommand {
 

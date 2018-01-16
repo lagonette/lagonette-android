@@ -1,4 +1,4 @@
-package org.lagonette.app.app.widget.performer.base;
+package org.lagonette.app.app.widget.performer.impl;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
-public abstract class FabButtonsPerformer implements Performer {
+import org.lagonette.app.app.widget.performer.base.ViewPerformer;
+
+public abstract class FabButtonsPerformer implements ViewPerformer {
 
     public interface OnPositionClickCommand {
 

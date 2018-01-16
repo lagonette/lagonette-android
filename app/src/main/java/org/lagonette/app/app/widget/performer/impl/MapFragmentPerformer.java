@@ -1,4 +1,4 @@
-package org.lagonette.app.app.widget.performer.base;
+package org.lagonette.app.app.widget.performer.impl;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.IdRes;
@@ -13,6 +13,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.MapsFragment;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.room.entity.statement.LocationItem;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
@@ -22,7 +23,7 @@ import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_MY_LOCATION;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP_MOVING;
 
-public abstract class MapFragmentPerformer implements Performer {
+public abstract class MapFragmentPerformer implements ViewPerformer {
 
     public interface OnMapMovementChangedCommand {
 

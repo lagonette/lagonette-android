@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
-import org.lagonette.app.app.widget.performer.base.LocationDetailPerformer;
+import org.lagonette.app.app.widget.performer.impl.LocationDetailPerformer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
@@ -20,7 +21,7 @@ import org.lagonette.app.util.IntentUtils;
 import org.lagonette.app.util.SnackbarUtils;
 
 public class LocationDetailFragment
-        extends SlideableFragment {
+        extends Fragment {
 
     public static final String TAG = "LocationDetailFragment";
 
@@ -184,7 +185,6 @@ public class LocationDetailFragment
         }
     }
 
-    @Override
     public void updateTopPadding(int top) {
         mLocationDetailPerformer.updateTopPadding(top);
     }

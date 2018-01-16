@@ -1,32 +1,33 @@
-package org.lagonette.app.app.widget.performer.base;
+package org.lagonette.app.app.widget.performer.impl;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import org.lagonette.app.app.fragment.LocationDetailFragment;
+import org.lagonette.app.app.fragment.FiltersFragment;
+import org.lagonette.app.app.widget.performer.base.FragmentPerformer;
 
 import java.util.ArrayList;
 
-public class LocationDetailFragmentPerformer implements Performer {
+public class FiltersFragmentPerformer implements FragmentPerformer {
 
     public interface FragmentLoadedCommand {
 
-        void onLocationLoaded(long locationId);
+        void onFiltersLoaded();
     }
 
     public interface FragmentUnloadedCommand {
 
-        void onLocationUnloaded();
+        void onFiltersUnloaded();
     }
 
+
     @Nullable
-    private LocationDetailFragment mFragment;
+    private FiltersFragment mFragment;
 
     @NonNull
     private FragmentManager mFragmentManager;
@@ -44,27 +45,23 @@ public class LocationDetailFragmentPerformer implements Performer {
     private final MutableLiveData<Void> mLoadedNotifier;
 
     @IdRes
-    private final int mLocationDetailContainerRes;
+    private final int mFiltersContainerRes;
 
-    public LocationDetailFragmentPerformer(
+    public FiltersFragmentPerformer(
             @NonNull AppCompatActivity activity,
-            @IdRes int locationDetailContainerRed) {
+            @IdRes int filtersContainerRes) {
         mFragmentManager = activity.getSupportFragmentManager();
         mFragmentLoadedCommands = new ArrayList<>();
         mFragmentUnloadedCommands = new ArrayList<>();
-        mLocationDetailContainerRes = locationDetailContainerRed;
-        mTopPadding = new MutableLiveData<>();
         mLoadedNotifier = new MutableLiveData<>();
         mLoadedNotifier.setValue(null);
+        mFiltersContainerRes = filtersContainerRes;
+        mTopPadding = new MutableLiveData<>();
     }
 
     @Override
-    public void inject(@NonNull View view) {
-        // Do nothing.
-    }
-
     public void restoreFragment() {
-        mFragment = (LocationDetailFragment) mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
+        mFragment = (FiltersFragment) mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
         if (mFragment != null) {
             mTopPadding.observe(
                     mFragment,
@@ -73,6 +70,7 @@ public class LocationDetailFragmentPerformer implements Performer {
         }
     }
 
+    @Override
     public void unloadFragment() {
         if (mFragment != null) {
             mFragmentManager.beginTransaction()
@@ -82,51 +80,38 @@ public class LocationDetailFragmentPerformer implements Performer {
         }
 
         for (FragmentUnloadedCommand command : mFragmentUnloadedCommands) {
-            command.onLocationUnloaded();
+            command.onFiltersUnloaded();
         }
     }
 
-    public boolean isLoaded() {
-        return mFragment != null;
-    }
-
-    public boolean isLoaded(long locationId) {
-        return isLoaded() && mFragment.isLoaded(locationId);
-    }
-
-    public void loadFragment(long locationId) {
-        mFragment = LocationDetailFragment.newInstance(locationId);
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-
-        if (isLoaded()) {
-            transaction.setCustomAnimations(
-                    android.R.anim.fade_in,
-                    android.R.anim.fade_out
-            );
-        }
-
-        transaction.replace(
-                mLocationDetailContainerRes,
-                mFragment,
-                LocationDetailFragment.TAG
-        );
-
-        transaction.commit();
+    public void loadFragment() {
+        mFragment = FiltersFragment.newInstance();
+        mFragmentManager
+                .beginTransaction()
+                .add(
+                        mFiltersContainerRes,
+                        mFragment,
+                        FiltersFragment.TAG
+                )
+                .commit();
 
         mTopPadding.observe(
                 mFragment,
                 mFragment::updateTopPadding
         );
 
-
         mLoadedNotifier.observe(
                 mFragment,
                 aVoid -> {
                     for (FragmentLoadedCommand command : mFragmentLoadedCommands) {
-                        command.onLocationLoaded(locationId);
+                        command.onFiltersLoaded();
                     }
                 }
         );
+    }
+
+    public boolean isLoaded() {
+        return mFragment != null;
     }
 
     public void updateTopPadding(int topPadding) {

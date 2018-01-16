@@ -1,14 +1,12 @@
 package org.lagonette.app.app.widget.performer.landscape;
 
 import android.content.res.Resources;
-import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
-import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 
 public class LandscapeBottomSheetPerformer
         extends BottomSheetPerformer {
@@ -27,7 +25,7 @@ public class LandscapeBottomSheetPerformer
     }
 
     @Override
-    public void onStateChanged(@NonNull View bottomSheet, @MainState.State int newState) {
+    public void onStateChanged(@NonNull View bottomSheet, @State int newState) {
         if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
             closeBottomSheet();
         }

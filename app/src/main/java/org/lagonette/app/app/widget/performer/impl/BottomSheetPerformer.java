@@ -1,4 +1,4 @@
-package org.lagonette.app.app.widget.performer.base;
+package org.lagonette.app.app.widget.performer.impl;
 
 import android.content.res.Resources;
 import android.support.annotation.IdRes;
@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
+import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.util.UiUtils;
 
 import java.lang.annotation.Retention;
@@ -16,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public abstract class BottomSheetPerformer
         extends BottomSheetBehavior.BottomSheetCallback
-        implements Performer {
+        implements ViewPerformer {
 
     @Retention(SOURCE)
     @IntDef({

@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import org.lagonette.app.app.widget.behavior.ParallaxBehavior;
-import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.util.UiUtils;
 
 public class PortraitMapFragmentPerformer

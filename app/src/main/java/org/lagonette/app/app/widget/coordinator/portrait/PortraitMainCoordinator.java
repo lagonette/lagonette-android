@@ -6,10 +6,10 @@ import android.support.design.widget.BottomSheetBehavior;
 import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.widget.coordinator.base.AbstractMainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
-import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
-import org.lagonette.app.app.widget.performer.base.FiltersFragmentPerformer;
-import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerformer;
-import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
+import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerformer;
+import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.room.statement.Statement;
 
 public class PortraitMainCoordinator

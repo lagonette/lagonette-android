@@ -15,12 +15,12 @@ import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
-import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
-import org.lagonette.app.app.widget.performer.base.FabButtonsPerformer;
-import org.lagonette.app.app.widget.performer.base.FiltersFragmentPerformer;
-import org.lagonette.app.app.widget.performer.base.LocationDetailFragmentPerformer;
-import org.lagonette.app.app.widget.performer.base.MapFragmentPerformer;
-import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
+import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
+import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
+import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerformer;
+import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
@@ -87,23 +87,22 @@ public abstract class MainPresenter<
 
     @Override
     public void onViewCreated(@NonNull View view) {
-        mMapFragmentPerformer.inject(view);
         mBottomSheetPerformer.inject(view);
         mSearchBarPerformer.inject(view);
         mFabButtonsPerformer.inject(view);
-        mLocationDetailFragmentPerformer.inject(view);
-        mFiltersFragmentPerformer.inject(view);
     }
 
     @Override
     @CallSuper
     public void init(@NonNull AppCompatActivity activity) {
+        //TODO FragmentPerformer#init should be here ?
         mCoordinator.init();
     }
 
     @Override
     @CallSuper
     public void restore(@NonNull AppCompatActivity activity, @NonNull Bundle savedInstanceState) {
+        //TODO FragmentPerformer#restore should be here ?
         mCoordinator.restore();
     }
 

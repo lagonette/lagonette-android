@@ -1,4 +1,4 @@
-package org.lagonette.app.app.widget.performer.base;
+package org.lagonette.app.app.widget.performer.impl;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -9,13 +9,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.lagonette.app.R;
+import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.tools.functions.BiDoubleConsumer;
 import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.NullFunctions;
 import org.lagonette.app.util.PhoneUtils;
 
-public class LocationDetailPerformer implements Performer {
+public class LocationDetailPerformer implements ViewPerformer {
 
     @NonNull
     public BiDoubleConsumer onAddressClick = NullFunctions::accept;

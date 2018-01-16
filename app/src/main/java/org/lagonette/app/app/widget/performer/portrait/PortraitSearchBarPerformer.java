@@ -6,7 +6,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
-import org.lagonette.app.app.widget.performer.base.SearchBarPerformer;
+import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 
 public class PortraitSearchBarPerformer
         extends SearchBarPerformer {

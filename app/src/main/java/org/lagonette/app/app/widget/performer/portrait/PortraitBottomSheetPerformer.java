@@ -5,7 +5,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
-import org.lagonette.app.app.widget.performer.base.BottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 
 public class PortraitBottomSheetPerformer
         extends BottomSheetPerformer {

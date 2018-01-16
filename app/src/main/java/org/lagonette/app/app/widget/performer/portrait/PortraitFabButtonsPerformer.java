@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
-import org.lagonette.app.app.widget.performer.base.FabButtonsPerformer;
+import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 
 public class PortraitFabButtonsPerformer extends FabButtonsPerformer {
 
