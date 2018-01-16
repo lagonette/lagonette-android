@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
+import org.lagonette.app.app.widget.performer.impl.IntentPerformer;
 import org.lagonette.app.app.widget.performer.impl.LocationDetailPerformer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationDetail;
@@ -42,6 +43,8 @@ public class LocationDetailFragment
 
     private LocationDetailPerformer mLocationDetailPerformer;
 
+    private IntentPerformer mIntentPerformer;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,11 +55,13 @@ public class LocationDetailFragment
 
         mLocationId = mViewModel.getLocationId();
 
+        mIntentPerformer = new IntentPerformer(getContext());
+
         mLocationDetailPerformer = new LocationDetailPerformer();
-        mLocationDetailPerformer.onAddressClick = this::startDirection;
-        mLocationDetailPerformer.onEmailClick = this::writeEmail;
-        mLocationDetailPerformer.onPhoneClick = this::makeCall;
-        mLocationDetailPerformer.onWebsiteClick = this::goToWebsite;
+        mLocationDetailPerformer.onAddressClick = (latitude, longitude) -> mIntentPerformer.startDirection(latitude, longitude, this::errorNoDirectionAppFound);
+        mLocationDetailPerformer.onEmailClick = email -> mIntentPerformer.writeEmail(email, this::errorNoEmailAppFound);
+        mLocationDetailPerformer.onPhoneClick = phoneNumber -> mIntentPerformer.makeCall(phoneNumber, this::errorNoCallAppFound);
+        mLocationDetailPerformer.onWebsiteClick = website -> mIntentPerformer.goToWebsite(website, this::errorNoBrowserAppFound);
 
         //TODO Check
         if (savedInstanceState == null) {
@@ -142,47 +147,6 @@ public class LocationDetailFragment
                         Snackbar.LENGTH_LONG
                 )
                 .show();
-    }
-
-    public void startDirection(double latitude, double longitude) {
-        boolean success = IntentUtils.startDirection(
-                getContext(),
-                latitude,
-                longitude
-        );
-        if (!success) {
-            errorNoDirectionAppFound();
-        }
-    }
-
-    public void makeCall(@NonNull String phoneNumber) {
-        boolean success = IntentUtils.makeCall(
-                getContext(),
-                phoneNumber
-        );
-        if (!success) {
-            errorNoCallAppFound();
-        }
-    }
-
-    public void goToWebsite(@NonNull String url) {
-        boolean success = IntentUtils.goToWebsite(
-                getContext(),
-                url
-        );
-        if (!success) {
-            errorNoBrowserAppFound();
-        }
-    }
-
-    public void writeEmail(@NonNull String email) {
-        boolean success = IntentUtils.writeEmail(
-                getContext(),
-                email
-        );
-        if (!success) {
-            errorNoEmailAppFound();
-        }
     }
 
     public void updateTopPadding(int top) {
