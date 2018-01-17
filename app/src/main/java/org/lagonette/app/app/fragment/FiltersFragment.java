@@ -1,10 +1,13 @@
 package org.lagonette.app.app.fragment;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,12 +19,13 @@ import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
+import org.lagonette.app.room.reader.FilterReader;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
 
 //TODO Do not show empty fragment when there is no partner.
 public class FiltersFragment
-        extends Fragment {
+        extends BaseFragment {
 
     public static final String TAG = "FiltersFragment";
 
@@ -39,85 +43,53 @@ public class FiltersFragment
 
     private StateMapActivityViewModel mStateViewModel;
 
+    private LiveData<FilterReader> mFilters;
+
+    private MutableLiveData<String> mSearch;
+
     private View mFilterContainer;
 
     private RecyclerView mRecyclerView;
 
     private FilterAdapter mFilterAdapter;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    //TODO Fix category visibility
 
-        mFiltersViewModel = ViewModelProviders
-                .of(FiltersFragment.this)
-                .get(FiltersViewModel.class);
+    @Override
+    protected void construct() {
 
         mEventBus = ViewModelProviders
                 .of(getActivity()) // TODO maybe activity is not created
                 .get(MainLiveEventBusViewModel.class);
 
-        mFiltersViewModel
-                .getFilters()
-                .observe(
-                        FiltersFragment.this,
-                        filtersResource -> mFilterAdapter.setFilterReader(filtersResource.data) //TODO manage loading & error
-                );
+        mFiltersViewModel = ViewModelProviders
+                .of(FiltersFragment.this)
+                .get(FiltersViewModel.class);
 
         mStateViewModel = ViewModelProviders
                 .of(getActivity())
                 .get(StateMapActivityViewModel.class);
 
-        mStateViewModel
-                .getSearch()
-                .observe(
-                        FiltersFragment.this,
-                        mFiltersViewModel.getSearch()::setValue
-                );
+        mFilters = mFiltersViewModel.getFilters();
+        mSearch = mStateViewModel.getSearch();
 
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
         mFilterAdapter.setHasStableIds(true);
-        mFilterAdapter.setOnLocationClickListener(
-                locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId)
-        );
-        mFilterAdapter.setOnLocationVisibilityClickListener(
-                (locationId, visibility) -> mFiltersViewModel.setLocationVisibility(locationId, visibility)
-        );
-        mFilterAdapter.setOnCategoryVisibilityClickListener(
-                (categoryKey, visibility) -> mFiltersViewModel.setCategoryVisibility(categoryKey, visibility)
-        );
-        mFilterAdapter.setOnCategoryCollapsedClickListener(
-                (categoryKey, isCollapsed) -> mFiltersViewModel.setCategoryCollapsed(categoryKey, isCollapsed)
-        );
-        mFilterAdapter.setOnLocationShortcutClickListener(
-                () -> mFiltersViewModel.showAllLocations()
-        );
-        mFilterAdapter.setOnExchangeOfficeShortcutClickListener(
-                () -> mFiltersViewModel.showAllExchangeOffices()
-        );
-        mFilterAdapter.setOnOfficeShortcutClickListener(
-                () -> {/* YOLO */}
-        );
-    }
-
-    //TODO Fix category visibility
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_filters, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    protected int getContentView() {
+        return R.layout.fragment_filters;
+    }
+
+    @Override
+    protected void inject(@NonNull View view) {
         mFilterContainer = view.findViewById(R.id.filter_container);
         mRecyclerView = view.findViewById(R.id.filter_list);
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    protected void construct(@NonNull FragmentActivity activity) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getContext(),
                 LinearLayoutManager.VERTICAL,
@@ -127,6 +99,51 @@ public class FiltersFragment
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mFilterAdapter);
         mRecyclerView.setItemAnimator(null); //TODO Remove
+    }
+
+    @Override
+    protected void init() {
+        // Do nothing
+    }
+
+    @Override
+    protected void restore(@NonNull Bundle savedInstanceState) {
+        // Do nothing
+    }
+
+    @Override
+    protected void connect() {
+        mFilters.observe(
+                FiltersFragment.this,
+                mFilterAdapter::setFilterReader //TODO manage loading & error
+        );
+
+        mSearch.observe(
+                FiltersFragment.this,
+                mFiltersViewModel.getSearch()::setValue //TODO Weird
+        );
+
+        mFilterAdapter.setOnLocationClickListener(
+                locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId)
+        );
+        mFilterAdapter.setOnLocationVisibilityClickListener(
+                mFiltersViewModel::setLocationVisibility
+        );
+        mFilterAdapter.setOnCategoryVisibilityClickListener(
+                mFiltersViewModel::setCategoryVisibility
+        );
+        mFilterAdapter.setOnCategoryCollapsedClickListener(
+                mFiltersViewModel::setCategoryCollapsed
+        );
+        mFilterAdapter.setOnLocationShortcutClickListener(
+                mFiltersViewModel::showAllLocations
+        );
+        mFilterAdapter.setOnExchangeOfficeShortcutClickListener(
+                mFiltersViewModel::showAllExchangeOffices
+        );
+        mFilterAdapter.setOnOfficeShortcutClickListener(
+                () -> {/* YOLO */}
+        );
     }
 
     public void updateTopPadding(int top) {

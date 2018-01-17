@@ -16,11 +16,11 @@ public class FiltersViewModel extends ViewModel {
     private final MutableLiveData<String> mSearch;
 
     @NonNull
-    private final LiveData<Resource<FilterReader>> mFiltersResource;
+    private final LiveData<FilterReader> mFilters;
 
     public FiltersViewModel() {
         mSearch = new MutableLiveData<>();
-        mFiltersResource = Repo.get().getFilters(mSearch);
+        mFilters = Repo.get().getFilters(mSearch);
     }
 
     @NonNull
@@ -29,8 +29,8 @@ public class FiltersViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<Resource<FilterReader>> getFilters() {
-        return mFiltersResource;
+    public LiveData<FilterReader> getFilters() {
+        return mFilters;
     }
 
     public void setLocationVisibility(long locationId, boolean isVisible) {

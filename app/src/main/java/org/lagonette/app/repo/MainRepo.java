@@ -62,28 +62,21 @@ public class MainRepo {
         );
     }
 
-    public LiveData<Resource<FilterReader>> getFilters(@NonNull LiveData<String> searchLiveData) {
-        return new LambdaResourceAlgorithm<>(
-                mExecutor,
-                this::shouldUpdate,
-                () -> Transformations.map(
-                        Transformations.switchMap(
-                                searchLiveData,
-                                search -> new CursorLiveData(
-                                        Tables.TABLES,
-                                        mExecutor,
-                                        () -> DB
-                                                .get()
-                                                .mainDao()
-                                                .getFilters(SearchUtils.formatSearch(search))
-                                )
-                        ),
-                        FilterReader::create
+    public LiveData<FilterReader> getFilters(@NonNull LiveData<String> searchLiveData) {
+        return Transformations.map(
+                Transformations.switchMap(
+                        searchLiveData,
+                        search -> new CursorLiveData(
+                                Tables.TABLES,
+                                mExecutor,
+                                () -> DB
+                                        .get()
+                                        .mainDao()
+                                        .getFilters(SearchUtils.formatSearch(search))
+                        )
                 ),
-                () -> new DataRefreshWorker(mContext)
-        )
-                .start()
-                .getAsLiveData();
+                FilterReader::create
+        );
     }
 
     public void setLocationVisibility(long locationId, boolean isVisible) {
