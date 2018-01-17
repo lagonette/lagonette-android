@@ -38,8 +38,8 @@ public class PortraitMainPresenter
     }
 
     @Override
-    public void onActivityCreated(@NonNull AppCompatActivity activity) {
-        super.onActivityCreated(activity);
+    public void connect(@NonNull AppCompatActivity activity) {
+        super.connect(activity);
 
         // Performer's state --> LiveData
         mFiltersFragmentPerformer.onFragmentLoaded(mAction::exec);

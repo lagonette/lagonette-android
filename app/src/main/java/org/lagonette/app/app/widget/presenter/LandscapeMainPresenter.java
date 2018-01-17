@@ -35,8 +35,8 @@ public class LandscapeMainPresenter
     }
 
     @Override
-    public void onActivityCreated(@NonNull AppCompatActivity activity) {
-        super.onActivityCreated(activity);
+    public void connect(@NonNull AppCompatActivity activity) {
+        super.connect(activity);
 
         // Performer --> Performer
         mBottomSheetPerformer.onSlideChanged(mLocationDetailFragmentPerformer::updateTopPadding);

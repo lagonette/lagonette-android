@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
+import org.lagonette.app.app.widget.lifecycle.ActivityLifecycle;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
@@ -31,7 +33,7 @@ public abstract class MainPresenter<
         FBP extends FabButtonsPerformer,
         MFP extends MapFragmentPerformer,
         SBP extends SearchBarPerformer>
-        implements ActivityPresenter {
+        implements ActivityLifecycle {
 
     protected StateMapActivityViewModel mStateViewModel;
 
@@ -81,12 +83,13 @@ public abstract class MainPresenter<
     }
 
     @Override
-    public void setContentView(@NonNull AppCompatActivity activity) {
-        activity.setContentView(R.layout.activity_main);
+    @LayoutRes
+    public int getContentView() {
+        return R.layout.activity_main;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view) {
+    public void inject(@NonNull View view) {
         mBottomSheetPerformer.inject(view);
         mSearchBarPerformer.inject(view);
         mFabButtonsPerformer.inject(view);
@@ -108,7 +111,7 @@ public abstract class MainPresenter<
 
     @Override
     @CallSuper
-    public void onActivityCreated(@NonNull AppCompatActivity activity) {
+    public void connect(@NonNull AppCompatActivity activity) {
 
         // Event bus --> LiveData
         mEventBus.subscribe(

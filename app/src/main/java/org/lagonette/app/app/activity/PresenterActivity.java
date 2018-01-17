@@ -1,15 +1,14 @@
 package org.lagonette.app.app.activity;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import org.lagonette.app.R;
-import org.lagonette.app.app.widget.presenter.ActivityPresenter;
+import org.lagonette.app.app.widget.lifecycle.ActivityLifecycle;
 
-public abstract class PresenterActivity<Presenter extends ActivityPresenter> extends BaseActivity {
+public abstract class PresenterActivity<Presenter extends ActivityLifecycle> extends BaseActivity {
 
-    @NonNull
     protected Presenter mPresenter;
 
     @Override
@@ -22,13 +21,14 @@ public abstract class PresenterActivity<Presenter extends ActivityPresenter> ext
     protected abstract Presenter getPresenter();
 
     @Override
-    protected void setContentView() {
-        mPresenter.setContentView(PresenterActivity.this);
+    @LayoutRes
+    protected int getContentView() {
+        return mPresenter.getContentView();
     }
 
     @Override
-    protected void onViewCreated(@NonNull View view) {
-        mPresenter.onViewCreated(view);
+    protected void inject(@NonNull View view) {
+        mPresenter.inject(view);
     }
 
     @Override
@@ -42,7 +42,7 @@ public abstract class PresenterActivity<Presenter extends ActivityPresenter> ext
     }
 
     @Override
-    protected void onActivityCreated() {
-        mPresenter.onActivityCreated(PresenterActivity.this);
+    protected void connect() {
+        mPresenter.connect(PresenterActivity.this);
     }
 }

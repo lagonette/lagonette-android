@@ -7,5 +7,5 @@ import android.support.v7.app.AppCompatActivity;
 public interface ActivityLifecycle extends Lifecycle<AppCompatActivity> {
 
     @LayoutRes
-    int getContentView(@NonNull AppCompatActivity owner);
+    int getContentView();
 }

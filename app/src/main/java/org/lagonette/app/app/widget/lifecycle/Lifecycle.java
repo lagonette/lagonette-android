@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.lifecycle;
 
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
 
