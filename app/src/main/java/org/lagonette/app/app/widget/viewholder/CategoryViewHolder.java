@@ -11,19 +11,10 @@ import android.widget.TextView;
 
 import org.lagonette.app.R;
 import org.lagonette.app.room.embedded.CategoryKey;
+import org.lagonette.app.tools.functions.LongBooleanConsumer;
+import org.lagonette.app.tools.functions.ObjBooleanConsumer;
 
 public class CategoryViewHolder extends RecyclerView.ViewHolder {
-
-    public interface OnCollapsedClickListener {
-
-        void onClick(@NonNull CategoryKey categoryKey, boolean isCollapsed);
-
-    }
-
-    public interface OnVisibilityClickListener {
-
-        void onClick(@NonNull CategoryKey categoryKey, boolean visibility);
-    }
 
     @NonNull
     public CategoryKey categoryKey;
@@ -46,7 +37,10 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     public final TextView categoryTextView;
 
-    public CategoryViewHolder(@NonNull ViewGroup parent) {
+    public CategoryViewHolder(
+            @NonNull ViewGroup parent,
+            @Nullable ObjBooleanConsumer<CategoryKey> onCollapsedClick,
+            @Nullable ObjBooleanConsumer<CategoryKey> onVisibilityClick) {
         super(
                 LayoutInflater
                         .from(parent.getContext())
@@ -61,25 +55,13 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
         visibilityButton = itemView.findViewById(R.id.category_visibility);
         collapsedButton = itemView.findViewById(R.id.category_collapsed);
         categoryTextView = itemView.findViewById(R.id.category_label);
-    }
 
-    @NonNull
-    public CategoryViewHolder setOnCollapsedClick(@Nullable CategoryViewHolder.OnCollapsedClickListener listener) {
-        if (listener != null) {
-            collapsedButton.setOnClickListener(
-                    v -> listener.onClick(categoryKey, !isCollapsed)
-            );
+        if (onCollapsedClick != null) {
+            collapsedButton.setOnClickListener(view -> onCollapsedClick.accept(categoryKey, !isCollapsed));
         }
-        return CategoryViewHolder.this;
-    }
 
-    @NonNull
-    public CategoryViewHolder setOnVisibilityClick(@Nullable CategoryViewHolder.OnVisibilityClickListener listener) {
-        if (listener != null) {
-            visibilityButton.setOnClickListener(
-                    v -> listener.onClick(categoryKey, !isVisible)
-            );
+        if (onVisibilityClick != null) {
+            visibilityButton.setOnClickListener(view -> onVisibilityClick.accept(categoryKey, !isVisible));
         }
-        return CategoryViewHolder.this;
     }
 }

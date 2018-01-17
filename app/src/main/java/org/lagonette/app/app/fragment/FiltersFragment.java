@@ -5,14 +5,10 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.FiltersViewModel;
@@ -123,27 +119,13 @@ public class FiltersFragment
                 mFiltersViewModel.getSearch()::setValue //TODO Weird
         );
 
-        mFilterAdapter.setOnLocationClickListener(
-                locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId)
-        );
-        mFilterAdapter.setOnLocationVisibilityClickListener(
-                mFiltersViewModel::setLocationVisibility
-        );
-        mFilterAdapter.setOnCategoryVisibilityClickListener(
-                mFiltersViewModel::setCategoryVisibility
-        );
-        mFilterAdapter.setOnCategoryCollapsedClickListener(
-                mFiltersViewModel::setCategoryCollapsed
-        );
-        mFilterAdapter.setOnLocationShortcutClickListener(
-                mFiltersViewModel::showAllLocations
-        );
-        mFilterAdapter.setOnExchangeOfficeShortcutClickListener(
-                mFiltersViewModel::showAllExchangeOffices
-        );
-        mFilterAdapter.setOnOfficeShortcutClickListener(
-                () -> {/* YOLO */}
-        );
+        mFilterAdapter.onLocationClick = locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
+        mFilterAdapter.onLocationVisibilityClick = mFiltersViewModel::changeLocationVisibility;
+        mFilterAdapter.onCategoryVisibilityClick = mFiltersViewModel::changeCategoryVisibility;
+        mFilterAdapter.onCategoryCollapsedClick = mFiltersViewModel::changeCategoryCollapsed;
+        mFilterAdapter.onLocationShortcutClick = mFiltersViewModel::showAllLocations;
+        mFilterAdapter.onExchangeOfficeShortcutClick = mFiltersViewModel::showAllExchangeOffices;
+        mFilterAdapter.onOfficeShortcutClick = () -> {/* YOLO */};
     }
 
     public void updateTopPadding(int top) {

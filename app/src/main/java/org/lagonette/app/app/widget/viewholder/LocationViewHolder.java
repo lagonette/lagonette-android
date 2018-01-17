@@ -10,18 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.lagonette.app.R;
+import org.lagonette.app.tools.functions.LongBooleanConsumer;
+import org.lagonette.app.tools.functions.LongConsumer;
 
 public class LocationViewHolder extends RecyclerView.ViewHolder {
-
-    public interface OnClickListener {
-
-        void onClick(long locationId);
-    }
-
-    public interface OnVisibilityClickListener {
-
-        void onClick(long locationId, boolean visibility);
-    }
 
     public long locationId;
 
@@ -45,7 +37,10 @@ public class LocationViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     public final ImageButton visibilityButton;
 
-    public LocationViewHolder(@NonNull ViewGroup parent) {
+    public LocationViewHolder(
+            @NonNull ViewGroup parent,
+            @Nullable LongConsumer onLocationClick,
+            @Nullable LongBooleanConsumer onVisibilityClick) {
         super(
                 LayoutInflater
                         .from(parent.getContext())
@@ -59,25 +54,13 @@ public class LocationViewHolder extends RecyclerView.ViewHolder {
         addressTextView = itemView.findViewById(R.id.location_address);
         exchangeOfficeIndicatorImage = itemView.findViewById(R.id.location_exchange_office_indicator);
         visibilityButton = itemView.findViewById(R.id.location_visibility);
-    }
 
-    @NonNull
-    public LocationViewHolder setOnLocationClick(@Nullable OnClickListener listener) {
-        if (listener != null) {
-            itemView.setOnClickListener(
-                    v -> listener.onClick(locationId)
-            );
+        if (onLocationClick != null) {
+            itemView.setOnClickListener(view -> onLocationClick.accept(locationId));
         }
-        return LocationViewHolder.this;
-    }
 
-    @NonNull
-    public LocationViewHolder setOnVisibilityClick(@Nullable OnVisibilityClickListener listener) {
-        if (listener != null) {
-            visibilityButton.setOnClickListener(
-                    v -> listener.onClick(locationId, !isVisible)
-            );
+        if (onVisibilityClick != null) {
+            visibilityButton.setOnClickListener(view -> onVisibilityClick.accept(locationId, !isVisible));
         }
-        return LocationViewHolder.this;
     }
 }

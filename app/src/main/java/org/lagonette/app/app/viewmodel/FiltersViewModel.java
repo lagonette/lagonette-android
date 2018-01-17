@@ -33,19 +33,19 @@ public class FiltersViewModel extends ViewModel {
         return mFilters;
     }
 
-    public void setLocationVisibility(long locationId, boolean isVisible) {
+    public void changeLocationVisibility(long locationId, boolean isVisible) {
         Repo
                 .get()
                 .setLocationVisibility(locationId, isVisible);
     }
 
-    public void setCategoryVisibility(@NonNull CategoryKey categoryKey, boolean isVisible) {
+    public void changeCategoryVisibility(@NonNull CategoryKey categoryKey, boolean isVisible) {
         Repo
                 .get()
                 .setCategoryVisibility(categoryKey, isVisible);
     }
 
-    public void setCategoryCollapsed(@NonNull CategoryKey categoryKey, boolean isCollapsed) {
+    public void changeCategoryCollapsed(@NonNull CategoryKey categoryKey, boolean isCollapsed) {
         Repo
                 .get()
                 .setCategoryCollapsed(categoryKey, isCollapsed);

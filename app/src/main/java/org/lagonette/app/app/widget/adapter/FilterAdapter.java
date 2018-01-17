@@ -21,8 +21,12 @@ import org.lagonette.app.app.widget.viewholder.FooterViewHolder;
 import org.lagonette.app.app.widget.viewholder.LoadingViewHolder;
 import org.lagonette.app.app.widget.viewholder.LocationViewHolder;
 import org.lagonette.app.app.widget.viewholder.ShortcutViewHolder;
+import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.statement.FilterStatement;
+import org.lagonette.app.tools.functions.LongBooleanConsumer;
+import org.lagonette.app.tools.functions.LongConsumer;
+import org.lagonette.app.tools.functions.ObjBooleanConsumer;
 import org.lagonette.app.util.AdapterUtils;
 
 public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -57,25 +61,25 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private FilterReader mFilterReader;
 
     @Nullable
-    private LocationViewHolder.OnClickListener mOnLocationClickListener;
+    public LongConsumer onLocationClick;
 
     @Nullable
-    private LocationViewHolder.OnVisibilityClickListener mOnLocationVisibilityClickListener;
+    public LongBooleanConsumer onLocationVisibilityClick;
 
     @Nullable
-    private CategoryViewHolder.OnCollapsedClickListener mOnCategoryCollapsedClickListener;
+    public ObjBooleanConsumer<CategoryKey> onCategoryCollapsedClick;
 
     @Nullable
-    private CategoryViewHolder.OnVisibilityClickListener mOnCategoryVisibilityClickListener;
+    public ObjBooleanConsumer<CategoryKey> onCategoryVisibilityClick;
 
     @Nullable
-    private ShortcutViewHolder.OnLocationClickListener mOnLocationShortcutClickListener;
+    public Runnable onLocationShortcutClick;
 
     @Nullable
-    private ShortcutViewHolder.OnExchangeOfficeClickListener mOnExchangeOfficeShortcutClickListener;
+    public Runnable onExchangeOfficeShortcutClick;
 
     @Nullable
-    private ShortcutViewHolder.OnOfficeClickListener mOfficeShortcutClickListener;
+    public Runnable onOfficeShortcutClick;
 
     public FilterAdapter(@NonNull Context context, @NonNull Resources resources) {
         mCategoryIconSize = resources.getDimensionPixelSize(R.dimen.filters_category_icon_size);
@@ -183,20 +187,13 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         switch (viewType) {
 
             case R.id.view_type_shortcut:
-                return new ShortcutViewHolder(parent)
-                        .setOnLocationClick(mOnLocationShortcutClickListener)
-                        .setOnExchangeOfficeClick(mOnExchangeOfficeShortcutClickListener)
-                        .setOnOfficeClick(mOfficeShortcutClickListener);
+                return new ShortcutViewHolder(parent, onLocationShortcutClick, onExchangeOfficeShortcutClick, onOfficeShortcutClick);
 
             case R.id.view_type_category:
-                return new CategoryViewHolder(parent)
-                        .setOnCollapsedClick(mOnCategoryCollapsedClickListener)
-                        .setOnVisibilityClick(mOnCategoryVisibilityClickListener);
+                return new CategoryViewHolder(parent, onCategoryCollapsedClick, onCategoryVisibilityClick);
 
             case R.id.view_type_location:
-                return new LocationViewHolder(parent)
-                        .setOnLocationClick(mOnLocationClickListener)
-                        .setOnVisibilityClick(mOnLocationVisibilityClickListener);
+                return new LocationViewHolder(parent, onLocationClick, onLocationVisibilityClick);
 
             case R.id.view_type_footer:
                 return new FooterViewHolder(parent);
@@ -313,34 +310,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         mFilterReader = filterReader;
         notifyDataSetChanged();
-    }
-
-    public void setOnLocationClickListener(@Nullable LocationViewHolder.OnClickListener onLocationClickListener) {
-        mOnLocationClickListener = onLocationClickListener;
-    }
-
-    public void setOnLocationVisibilityClickListener(@Nullable LocationViewHolder.OnVisibilityClickListener onLocationVisibilityClickListener) {
-        this.mOnLocationVisibilityClickListener = onLocationVisibilityClickListener;
-    }
-
-    public void setOnCategoryCollapsedClickListener(@Nullable CategoryViewHolder.OnCollapsedClickListener onCategoryCollapsedClickListener) {
-        this.mOnCategoryCollapsedClickListener = onCategoryCollapsedClickListener;
-    }
-
-    public void setOnCategoryVisibilityClickListener(@Nullable CategoryViewHolder.OnVisibilityClickListener onCategoryVisibilityClickListener) {
-        this.mOnCategoryVisibilityClickListener = onCategoryVisibilityClickListener;
-    }
-
-    public void setOnLocationShortcutClickListener(@Nullable ShortcutViewHolder.OnLocationClickListener locationShortcutClickListener) {
-        mOnLocationShortcutClickListener = locationShortcutClickListener;
-    }
-
-    public void setOnExchangeOfficeShortcutClickListener(@Nullable ShortcutViewHolder.OnExchangeOfficeClickListener exchangeOfficeShortcutClickListener) {
-        mOnExchangeOfficeShortcutClickListener = exchangeOfficeShortcutClickListener;
-    }
-
-    public void setOnOfficeShortcutClickListener(@Nullable ShortcutViewHolder.OnOfficeClickListener officeShortcutClickListener) {
-        mOfficeShortcutClickListener = officeShortcutClickListener;
     }
 
 }

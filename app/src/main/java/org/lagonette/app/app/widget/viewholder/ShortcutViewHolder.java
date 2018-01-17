@@ -11,21 +11,6 @@ import org.lagonette.app.R;
 
 public class ShortcutViewHolder extends RecyclerView.ViewHolder {
 
-    public interface OnLocationClickListener {
-
-        void onClick();
-    }
-
-    public interface OnExchangeOfficeClickListener {
-
-        void onClick();
-    }
-
-    public interface OnOfficeClickListener {
-
-        void onClick();
-    }
-
     @NonNull
     public final View locationView;
 
@@ -35,7 +20,11 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     public final View officeView;
 
-    public ShortcutViewHolder(@NonNull ViewGroup parent) {
+    public ShortcutViewHolder(
+            @NonNull ViewGroup parent,
+            @Nullable Runnable onLocationClick,
+            @Nullable Runnable onExchangeOfficeClick,
+            @Nullable Runnable onOfficeClick) {
         super(
                 LayoutInflater
                         .from(parent.getContext())
@@ -48,35 +37,17 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
         locationView = itemView.findViewById(R.id.shortcut_location);
         exchangeOfficeView = itemView.findViewById(R.id.shortcut_exchange_office);
         officeView = itemView.findViewById(R.id.shortcut_office);
-    }
 
-    @NonNull
-    public ShortcutViewHolder setOnLocationClick(@Nullable OnLocationClickListener listener) {
-        if (listener != null) {
-            locationView.setOnClickListener(
-                    v -> listener.onClick()
-            );
+        if (onLocationClick != null) {
+            locationView.setOnClickListener(view -> onLocationClick.run());
         }
-        return ShortcutViewHolder.this;
-    }
 
-    @NonNull
-    public ShortcutViewHolder setOnExchangeOfficeClick(@Nullable OnExchangeOfficeClickListener listener) {
-        if (listener != null) {
-            exchangeOfficeView.setOnClickListener(
-                    v -> listener.onClick()
-            );
+        if (onExchangeOfficeClick != null) {
+            exchangeOfficeView.setOnClickListener(view -> onExchangeOfficeClick.run());
         }
-        return ShortcutViewHolder.this;
-    }
 
-    @NonNull
-    public ShortcutViewHolder setOnOfficeClick(@Nullable OnOfficeClickListener listener) {
-        if (listener != null) {
-            officeView.setOnClickListener(
-                    v -> listener.onClick()
-            );
+        if (onOfficeClick != null) {
+            officeView.setOnClickListener(view -> onOfficeClick.run());
         }
-        return ShortcutViewHolder.this;
     }
 }
