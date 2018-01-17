@@ -41,7 +41,7 @@ public class FiltersFragment
 
     private View mFilterContainer;
 
-    private RecyclerView mFilterList;
+    private RecyclerView mRecyclerView;
 
     private FilterAdapter mFilterAdapter;
 
@@ -54,7 +54,7 @@ public class FiltersFragment
                 .get(FiltersViewModel.class);
 
         mEventBus = ViewModelProviders
-                .of(getActivity())
+                .of(getActivity()) // TODO maybe activity is not created
                 .get(MainLiveEventBusViewModel.class);
 
         mFiltersViewModel
@@ -111,7 +111,7 @@ public class FiltersFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mFilterContainer = view.findViewById(R.id.filter_container);
-        mFilterList = view.findViewById(R.id.filter_list);
+        mRecyclerView = view.findViewById(R.id.filter_list);
     }
 
     @Override
@@ -124,9 +124,9 @@ public class FiltersFragment
                 false
         );
 
-        mFilterList.setLayoutManager(layoutManager);
-        mFilterList.setAdapter(mFilterAdapter);
-        mFilterList.setItemAnimator(null); //TODO Remove
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mFilterAdapter);
+        mRecyclerView.setItemAnimator(null); //TODO Remove
     }
 
     public void updateTopPadding(int top) {

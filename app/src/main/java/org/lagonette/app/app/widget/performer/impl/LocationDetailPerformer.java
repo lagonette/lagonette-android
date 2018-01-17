@@ -111,9 +111,9 @@ public class LocationDetailPerformer implements ViewPerformer {
         mEmailLayout.setOnClickListener(v -> onEmailClick.accept(mEmailTextView.getText().toString()));
     }
 
-    public void displayLocation(@NonNull Context context, @Nullable LocationDetail locationDetail) {
+    public void displayLocation(@Nullable LocationDetail locationDetail) {
         if (locationDetail != null) {
-            Resources resources = context.getResources();
+            Resources resources = mHeaderView.getResources();
 
             mLatitude = locationDetail.latitude;
             mLongitude = locationDetail.longitude;

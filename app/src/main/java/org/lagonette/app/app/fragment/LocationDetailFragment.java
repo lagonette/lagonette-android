@@ -1,14 +1,12 @@
 package org.lagonette.app.app.fragment;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
@@ -20,7 +18,7 @@ import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
 
 public class LocationDetailFragment
-        extends Fragment {
+        extends BaseFragment {
 
     public static final String TAG = "LocationDetailFragment";
 
@@ -35,83 +33,73 @@ public class LocationDetailFragment
         return locationDetailFragment;
     }
 
-    private LocationDetailViewModel mViewModel;
-
     private MutableLiveData<Long> mLocationId;
 
-    private LocationDetailPerformer mLocationDetailPerformer;
+    private LiveData<LocationDetail> mLocationDetail;
+
+    private LocationDetailPerformer mLocationPerformer;
 
     private IntentPerformer mIntentPerformer;
 
     private SnackbarPerformer mSnackbarPerformer;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mViewModel = ViewModelProviders
+    protected void construct() {
+        LocationDetailViewModel viewModel = ViewModelProviders
                 .of(LocationDetailFragment.this)
                 .get(LocationDetailViewModel.class);
 
-        mLocationId = mViewModel.getLocationId();
-
-        mSnackbarPerformer = new SnackbarPerformer(getActivity());
+        mLocationId = viewModel.getLocationId();
+        mLocationDetail = viewModel.getLocationDetail();
 
         mIntentPerformer = new IntentPerformer(getContext());
+        mLocationPerformer = new LocationDetailPerformer();
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.fragment_location_detail;
+    }
+
+    @Override
+    protected void inject(@NonNull View view) {
+        mLocationPerformer.inject(view);
+    }
+
+    @Override
+    protected void construct(@NonNull FragmentActivity activity) {
+        mSnackbarPerformer = new SnackbarPerformer(activity);
+    }
+
+    @Override
+    protected void init() {
+        //TODO Check
+        long locationId = getArguments().getLong(ARG_LOCATION_ID, Statement.NO_ID);
+        mLocationId.setValue(locationId);
+    }
+
+    @Override
+    protected void restore(@NonNull Bundle savedInstanceState) {
+        // Do nothing
+    }
+
+    @Override
+    protected void connect() {
         mIntentPerformer.onError = mSnackbarPerformer::show;
 
-        mLocationDetailPerformer = new LocationDetailPerformer();
-        mLocationDetailPerformer.onAddressClick = mIntentPerformer::startDirection;
-        mLocationDetailPerformer.onEmailClick = mIntentPerformer::writeEmail;
-        mLocationDetailPerformer.onPhoneClick = mIntentPerformer::makeCall;
-        mLocationDetailPerformer.onWebsiteClick = mIntentPerformer::goToWebsite;
+        mLocationPerformer.onAddressClick = mIntentPerformer::startDirection;
+        mLocationPerformer.onEmailClick = mIntentPerformer::writeEmail;
+        mLocationPerformer.onPhoneClick = mIntentPerformer::makeCall;
+        mLocationPerformer.onWebsiteClick = mIntentPerformer::goToWebsite;
 
-        //TODO Check
-        if (savedInstanceState == null) {
-            long locationId = getArguments().getLong(ARG_LOCATION_ID, Statement.NO_ID);
-            mLocationId.setValue(locationId);
-        }
-
-        mViewModel.getLocationDetail().observe(
+        mLocationDetail.observe(
                 LocationDetailFragment.this,
-                this::dispatchLocationDetailResource
+                mLocationPerformer::displayLocation
         );
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(
-            LayoutInflater inflater,
-            @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_location_detail, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mLocationDetailPerformer.inject(view);
-    }
-
-    private void dispatchLocationDetailResource(@NonNull Resource<LocationDetail> resource) {
-        mLocationDetailPerformer.displayLocation(getContext(), resource.data);
-
-        switch (resource.status) {
-
-            case Resource.LOADING:
-                //TODO
-                break;
-
-            case Resource.SUCCESS:
-                break;
-
-            case Resource.ERROR:
-                //TODO
-                break;
-        }
-    }
-
     public void updateTopPadding(int top) {
-        mLocationDetailPerformer.updateTopPadding(top);
+        mLocationPerformer.updateTopPadding(top);
     }
 
     public boolean isLoaded(long locationId) {

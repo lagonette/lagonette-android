@@ -12,14 +12,14 @@ import org.lagonette.app.room.entity.statement.LocationDetail;
 public class LocationDetailViewModel extends ViewModel {
 
     @NonNull
-    private LiveData<Resource<LocationDetail>> mLocationDetailResource;
+    private LiveData<LocationDetail> mLocationDetail;
 
     @NonNull
     private MutableLiveData<Long> mLocationId;
 
     public LocationDetailViewModel() {
         mLocationId = new MutableLiveData<>();
-        mLocationDetailResource = Repo.get().getLocationDetail(mLocationId);
+        mLocationDetail = Repo.get().getLocationDetail(mLocationId);
     }
 
     @NonNull
@@ -28,7 +28,7 @@ public class LocationDetailViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<Resource<LocationDetail>> getLocationDetail() {
-        return mLocationDetailResource;
+    public LiveData<LocationDetail> getLocationDetail() {
+        return mLocationDetail;
     }
 }
