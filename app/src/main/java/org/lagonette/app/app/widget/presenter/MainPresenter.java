@@ -8,15 +8,14 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import org.lagonette.app.R;
+import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
-import org.lagonette.app.app.widget.lifecycle.ActivityLifecycle;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
@@ -24,8 +23,8 @@ import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerform
 import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.SHOW_FULL_MAP;
 
@@ -33,7 +32,7 @@ public abstract class MainPresenter<
         FBP extends FabButtonsPerformer,
         MFP extends MapFragmentPerformer,
         SBP extends SearchBarPerformer>
-        implements ActivityLifecycle {
+        implements PresenterActivity.Lifecycle {
 
     protected StateMapActivityViewModel mStateViewModel;
 
@@ -61,7 +60,7 @@ public abstract class MainPresenter<
 
     @Override
     @CallSuper
-    public void construct(@NonNull AppCompatActivity activity) {
+    public void construct(@NonNull PresenterActivity activity) {
 
         mStateViewModel = ViewModelProviders
                 .of(activity)
@@ -97,21 +96,21 @@ public abstract class MainPresenter<
 
     @Override
     @CallSuper
-    public void init(@NonNull AppCompatActivity activity) {
+    public void init(@NonNull PresenterActivity activity) {
         //TODO FragmentPerformer#init should be here ?
         mCoordinator.init();
     }
 
     @Override
     @CallSuper
-    public void restore(@NonNull AppCompatActivity activity, @NonNull Bundle savedInstanceState) {
+    public void restore(@NonNull PresenterActivity activity, @NonNull Bundle savedInstanceState) {
         //TODO FragmentPerformer#restore should be here ?
         mCoordinator.restore();
     }
 
     @Override
     @CallSuper
-    public void connect(@NonNull AppCompatActivity activity) {
+    public void connect(@NonNull PresenterActivity activity) {
 
         // Event bus --> LiveData
         mEventBus.subscribe(
@@ -152,7 +151,7 @@ public abstract class MainPresenter<
         mAction.getLiveData().observe(activity, mCoordinator::process);
     }
 
-    public boolean onBackPressed(@NonNull AppCompatActivity activity) {
+    public boolean onBackPressed(@NonNull PresenterActivity activity) {
         //TODO Put this in coordinator
 
         if (mBottomSheetPerformer.getState() == BottomSheetBehavior.STATE_HIDDEN) {

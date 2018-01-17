@@ -5,9 +5,23 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import org.lagonette.app.app.widget.lifecycle.ActivityLifecycle;
+public abstract class PresenterActivity<Presenter extends PresenterActivity.Lifecycle> extends BaseActivity {
 
-public abstract class PresenterActivity<Presenter extends ActivityLifecycle> extends BaseActivity {
+    public interface Lifecycle {
+
+        void construct(@NonNull PresenterActivity owner);
+
+        @LayoutRes
+        int getContentView();
+
+        void inject(@NonNull View view);
+
+        void init(@NonNull PresenterActivity owner);
+
+        void restore(@NonNull PresenterActivity owner, @NonNull Bundle savedInstanceState);
+
+        void connect(@NonNull PresenterActivity owner);
+    }
 
     protected Presenter mPresenter;
 
