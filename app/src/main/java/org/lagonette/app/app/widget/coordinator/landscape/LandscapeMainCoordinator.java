@@ -6,6 +6,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.widget.coordinator.base.AbstractMainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
+import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerformer;
@@ -25,13 +26,13 @@ public class LandscapeMainCoordinator
     }
 
     @Override
-    protected void computeFiltersOpening(@NonNull MainAction action) {
-        mAction.markDone();
+    protected void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state) {
+        mAction.finish(action);
     }
 
     @Override
-    protected void unloadBottomSheetFragment() {
-        if (mLocationDetail.isLoaded()) {
+    protected void unloadBottomSheetFragment(@NonNull MainState state) {
+        if (state.isLocationDetailLoaded) {
             mLocationDetail.unloadFragment();
         }
     }
@@ -42,72 +43,73 @@ public class LandscapeMainCoordinator
         mFilters.loadFragment();
     }
 
+    /**
+     * Because of the view#post() call, bottom sheet state is set after performer is connected to LiveData.
+     * So bottom sheet state initialization is saved into LiveData.
+     * If you do 2 orientation changes, the bottom sheet state is not the same as the started state.
+     */
     @Override
-    public void restore() {
-        super.restore();
-        if (!mFilters.isLoaded()) {
+    protected void computeRestore(@NonNull MainAction action, @NonNull MainState state) {
+        if (!state.isFiltersLoaded) {
             mFilters.loadFragment();
         }
-        switch (mBottomSheet.getState()) {
-
-            case BottomSheetBehavior.STATE_COLLAPSED:
-                if (mFilters.isLoaded() && mLocationDetail.isLoaded()) {
-                    wtf();
-                } else if (mFilters.isLoaded()) {
-                    mBottomSheet.restoreCloseState();
-                } else if (mLocationDetail.isLoaded()) {
-                    mBottomSheet.restoreOpenState();
-                } else {
-                    mBottomSheet.restoreCloseState();
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_DRAGGING:
-            case BottomSheetBehavior.STATE_EXPANDED:
-            case BottomSheetBehavior.STATE_SETTLING:
-                if (mFilters.isLoaded() && mLocationDetail.isLoaded()) {
-                    wtf();
-                } else if (mFilters.isLoaded()) {
-                    mBottomSheet.restoreCloseState();
-                } else if (mLocationDetail.isLoaded()) {
-                    // Do nothing
-                } else {
-                    mBottomSheet.restoreCloseState();
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_HIDDEN:
-                mLocationDetail.unloadFragment();
-                break;
-        }
-    }
-
-    @Override
-    protected void computeMovementToAndOpeningLocation(@NonNull MainAction action) {
-        if (action.locationId > Statement.NO_ID) {
-            mMap.openLocation(action.locationId);
-        } else if (action.item == null) {
-            mAction.markDone();
-        } else if (mLocationDetail.isLoaded()) {
-            switch (mBottomSheet.getState()) {
+        else {
+            switch (state.bottomSheetState) {
 
                 case BottomSheetBehavior.STATE_COLLAPSED:
-                case BottomSheetBehavior.STATE_EXPANDED:
-                    long selectedId = action.item != null
-                            ? action.item.getId()
-                            : Statement.NO_ID;
-                    if (action.shouldMove) {
-                        action.shouldMove = false; //TODO Unidirectional Data flow !
-                        mMap.moveToLocation(action.item);
-                    } else if (!mLocationDetail.isLoaded(selectedId)) {
-                        mLocationDetail.loadFragment(action.item.getId());
+                    if (state.isLocationDetailLoaded) {
+                        mBottomSheet.openBottomSheet();
                     } else {
-                        mAction.markDone();
+                        mBottomSheet.closeBottomSheet();
                     }
                     break;
 
                 case BottomSheetBehavior.STATE_DRAGGING:
-                    mAction.markDone();
+                case BottomSheetBehavior.STATE_EXPANDED:
+                case BottomSheetBehavior.STATE_SETTLING:
+                    if (state.isLocationDetailLoaded) {
+                        mAction.finish(action);
+                    } else {
+                        mBottomSheet.closeBottomSheet();
+                    }
+                    break;
+
+                case BottomSheetBehavior.STATE_HIDDEN:
+                    if (state.isLocationDetailLoaded) {
+                        mLocationDetail.unloadFragment();
+                    }
+                    else {
+                        mAction.finish(action);
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void computeMovementToAndOpeningLocation(@NonNull MainAction action, @NonNull MainState state) {
+        if (action.locationId > Statement.NO_ID) {
+            mMap.openLocation(action.locationId);
+        } else if (action.item == null) {
+            mAction.finish(action);
+        } else if (state.isLocationDetailLoaded) {
+            switch (state.bottomSheetState) {
+
+                case BottomSheetBehavior.STATE_COLLAPSED:
+                case BottomSheetBehavior.STATE_EXPANDED:
+                    long selectedId = action.item.getId();
+                    if (action.shouldMove) {
+                        action.shouldMove = false; //TODO Unidirectional Data flow !
+                        mMap.moveToLocation(action.item);
+                    } else if (state.loadedLocationId != selectedId) {
+                        mLocationDetail.loadFragment(action.item.getId());
+                    } else {
+                        mAction.finish(action);
+                    }
+                    break;
+
+                case BottomSheetBehavior.STATE_DRAGGING:
+                    mAction.finish(action);
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
@@ -115,7 +117,7 @@ public class LandscapeMainCoordinator
                     break;
 
                 case BottomSheetBehavior.STATE_HIDDEN:
-                    switch (mMap.getMapMovement()) {
+                    switch (state.mapMovement) {
 
                         case MOVE:
                             // Well, it's okay. Just wait.
@@ -130,14 +132,14 @@ public class LandscapeMainCoordinator
                                     mBottomSheet.openBottomSheet();
                                 }
                             } else {
-                                mAction.markDone();
+                                mAction.finish(action);
                             }
                             break;
                     }
                     break;
             }
         } else {
-            switch (mBottomSheet.getState()) {
+            switch (state.bottomSheetState) {
 
                 case BottomSheetBehavior.STATE_COLLAPSED:
                 case BottomSheetBehavior.STATE_EXPANDED:
@@ -145,7 +147,7 @@ public class LandscapeMainCoordinator
                     break;
 
                 case BottomSheetBehavior.STATE_DRAGGING:
-                    mAction.markDone();
+                    mAction.finish(action);
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
@@ -153,11 +155,7 @@ public class LandscapeMainCoordinator
                     break;
 
                 case BottomSheetBehavior.STATE_HIDDEN:
-                    if (action.item != null) {
-                        mLocationDetail.loadFragment(action.item.getId());
-                    } else {
-                        mAction.markDone();
-                    }
+                    mLocationDetail.loadFragment(action.item.getId());
                     break;
             }
         }

@@ -9,6 +9,7 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
+import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerformer;
@@ -63,48 +64,57 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
 
     @Override
     @CallSuper
-    public void process(@NonNull MainAction action) {
-        switch (action.type) {
+    public void process(@NonNull MainState state) {
+        if (state.action != null) {
+            Log.d(TAG, "Action -> " + state.action.type.name());
+            switch (state.action.type) {
 
-            case BACK:
-                computeBack(action);
-                break;
+                case RESTORE:
+                    computeRestore(state.action, state);
+                    break;
 
-            case OPEN_FILTERS:
-                computeFiltersOpening(action);
-                break;
+                case BACK:
+                    computeBack(state.action, state);
+                    break;
 
-            case MOVE_TO_MY_LOCATION:
-                computeMovementToMyLocation(action);
-                break;
+                case OPEN_FILTERS:
+                    computeFiltersOpening(state.action, state);
+                    break;
 
-            case MOVE_TO_FOOTPRINT:
-                computeMovementToFootprint(action);
-                break;
+                case MOVE_TO_MY_LOCATION:
+                    computeMovementToMyLocation(state.action, state);
+                    break;
 
-            case MOVE_TO_CLUSTER:
-                computeMovementToCluster(action);
-                break;
+                case MOVE_TO_FOOTPRINT:
+                    computeMovementToFootprint(state.action, state);
+                    break;
 
-            case MOVE_TO_AND_OPEN_LOCATION:
-                computeMovementToAndOpeningLocation(action);
-                break;
+                case MOVE_TO_CLUSTER:
+                    computeMovementToCluster(state.action, state);
+                    break;
 
-            case SHOW_FULL_MAP:
-                computeFullMapShowing(action);
-                break;
+                case MOVE_TO_AND_OPEN_LOCATION:
+                    computeMovementToAndOpeningLocation(state.action, state);
+                    break;
 
-            default:
-            case IDLE:
-                computeIdle(action);
-                break;
+                case SHOW_FULL_MAP:
+                    computeFullMapShowing(state.action, state);
+                    break;
+
+                default:
+                case IDLE:
+                    computeIdle(state.action, state);
+                    break;
+            }
         }
     }
 
-    protected abstract void computeFiltersOpening(@NonNull MainAction action);
+    protected abstract void computeRestore(@NonNull MainAction action, @NonNull MainState state);
 
-    private void computeMovementToMyLocation(@NonNull MainAction action) {
-        switch (mBottomSheet.getState()) {
+    protected abstract void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state);
+
+    private void computeMovementToMyLocation(@NonNull MainAction action, @NonNull MainState state) {
+        switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
             case BottomSheetBehavior.STATE_DRAGGING:
@@ -117,22 +127,22 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                switch (mMap.getMapMovement()) {
+                switch (state.mapMovement) {
 
                     case IDLE:
                         mMap.moveToMyLocation();
                         break;
 
                     case MOVE:
-                        mAction.markDone();
+                        mAction.finish(action);
                         break;
                 }
                 break;
         }
     }
 
-    private void computeIdle(@NonNull MainAction action) {
-        switch (mBottomSheet.getState()) {
+    private void computeIdle(@NonNull MainAction action, @NonNull MainState state) {
+        switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
             case BottomSheetBehavior.STATE_DRAGGING:
@@ -141,15 +151,15 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                unloadBottomSheetFragment();
+                unloadBottomSheetFragment(state);
                 break;
         }
     }
 
-    protected abstract void unloadBottomSheetFragment();
+    protected abstract void unloadBottomSheetFragment(@NonNull MainState state);
 
-    private void computeFullMapShowing(@NonNull MainAction action) {
-        switch (mBottomSheet.getState()) {
+    private void computeFullMapShowing(@NonNull MainAction action, @NonNull MainState state) {
+        switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
             case BottomSheetBehavior.STATE_EXPANDED:
@@ -161,19 +171,19 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
-                        mAction.markDone();
+                        mAction.finish(action);
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                        mAction.markDone();
+                        mAction.finish(action);
                 break;
         }
     }
 
-    protected abstract void computeMovementToAndOpeningLocation(@NonNull MainAction action);
+    protected abstract void computeMovementToAndOpeningLocation(@NonNull MainAction action, @NonNull MainState state);
 
-    private void computeMovementToCluster(@NonNull MainAction action) {
-        switch (mBottomSheet.getState()) {
+    private void computeMovementToCluster(@NonNull MainAction action, @NonNull MainState state) {
+        switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
             case BottomSheetBehavior.STATE_EXPANDED:
@@ -186,7 +196,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                switch (mMap.getMapMovement()) {
+                switch (state.mapMovement) {
 
                     case MOVE:
                         // Well, it's okay. Just wait.
@@ -197,7 +207,7 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                             action.shouldMove = false;
                             mMap.moveToCluster(action.cluster);
                         } else {
-                        mAction.markDone();
+                            mAction.finish(action);
                         }
                         break;
                 }
@@ -205,8 +215,8 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
         }
     }
 
-    private void computeMovementToFootprint(@NonNull MainAction action) {
-        switch (mBottomSheet.getState()) {
+    private void computeMovementToFootprint(@NonNull MainAction action, @NonNull MainState state) {
+        switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
                 mMap.stopMoving();
@@ -220,22 +230,22 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                switch (mMap.getMapMovement()) {
+                switch (state.mapMovement) {
 
                     case IDLE:
                         mMap.moveToFootprint();
                         break;
 
                     case MOVE:
-                        mAction.markDone();
+                        mAction.finish(action);
                         break;
                 }
                 break;
         }
     }
 
-    private void computeBack(@NonNull MainAction action) {
-        switch (mBottomSheet.getState()) {
+    private void computeBack(@NonNull MainAction action, @NonNull MainState state) {
+        switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
                 // Do nothing
@@ -248,51 +258,14 @@ public abstract class AbstractMainCoordinator implements MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                        mAction.markDone();
+                        mAction.finish(action);
                 break;
         }
     }
 
-    protected void wtf() {
-        FirebaseCrash.logcat(Log.ERROR, TAG, getStateLog());
+    protected void wtf(@NonNull MainState state) {
+        FirebaseCrash.logcat(Log.ERROR, TAG, state.toString());
         FirebaseCrash.report(new IllegalArgumentException("Coordinator received a weird state"));
-    }
-
-    public String getStateLog() {
-        String string = "MainState: [\n";
-        string += "\tMap movement: ";
-        switch (mMap.getMapMovement()) {
-            case IDLE:
-                string += "IDLE\n";
-                break;
-            case MOVE:
-                string += "MOVE\n";
-                break;
-        }
-        string += "\tBottom sheet state: ";
-        switch (mBottomSheet.getState()) {
-            case BottomSheetBehavior.STATE_COLLAPSED:
-                string += "STATE_COLLAPSED\n";
-                break;
-            case BottomSheetBehavior.STATE_DRAGGING:
-                string += "STATE_DRAGGING\n";
-                break;
-            case BottomSheetBehavior.STATE_EXPANDED:
-                string += "STATE_EXPANDED\n";
-                break;
-            case BottomSheetBehavior.STATE_HIDDEN:
-                string += "STATE_HIDDEN\n";
-                break;
-            case BottomSheetBehavior.STATE_SETTLING:
-                string += "STATE_SETTLING\n";
-                break;
-        }
-        string += "\tBottom sheet fragment state: [\n";
-        string += "\t\tis filters loaded: " + mFilters.isLoaded() + "\n";
-        string += "\t\tis location detail loaded: " + mLocationDetail.isLoaded() + "\n";
-        string += "\t]\n";
-        string += "]";
-        return string;
     }
 
 }

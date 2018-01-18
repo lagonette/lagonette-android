@@ -1,5 +1,6 @@
 package org.lagonette.app.app.widget.coordinator.state;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.maps.android.clustering.Cluster;
@@ -7,12 +8,22 @@ import com.google.maps.android.clustering.Cluster;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.room.statement.Statement;
 
-import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.IDLE;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.BACK;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_AND_OPEN_LOCATION;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_CLUSTER;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_FOOTPRINT;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_MY_LOCATION;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.OPEN_FILTERS;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.RESTORE;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.SHOW_FULL_MAP;
 
 public class MainAction {
 
+    //TODO Make MainAction an enum not just action type
+
     public enum  ActionType {
         IDLE,
+        RESTORE,
         BACK,
         OPEN_FILTERS,
         MOVE_TO_MY_LOCATION,
@@ -22,27 +33,156 @@ public class MainAction {
         SHOW_FULL_MAP
     }
 
-    public ActionType type;
+    @NonNull
+    public final ActionType type;
 
     @Nullable
-    public Cluster<LocationItem> cluster;
+    public final Cluster<LocationItem> cluster;
 
-    public long locationId;
+    public final long locationId;
 
     @Nullable
-    public LocationItem item;
+    public final LocationItem item;
+
+    @Nullable
+    public final MainAction pendingAction;
 
     public boolean shouldMove;
 
-    public MainAction() {
-        done();
+    public MainAction(
+            @NonNull ActionType type,
+            @Nullable Cluster<LocationItem> cluster,
+            @Nullable LocationItem item,
+            long locationId,
+            @Nullable MainAction action) {
+        this.type = type;
+        this.cluster = cluster;
+        this.item = item;
+        this.locationId = locationId;
+        this.shouldMove = false;
+        this.pendingAction = action;
     }
 
-    public void done() {
-        type = IDLE;
-        locationId = Statement.NO_ID;
-        cluster = null;
-        item = null;
-        shouldMove = false;
+    public MainAction(
+            @NonNull ActionType type,
+            @Nullable Cluster<LocationItem> cluster,
+            @Nullable LocationItem item,
+            long locationId) {
+        this.type = type;
+        this.cluster = cluster;
+        this.item = item;
+        this.locationId = locationId;
+        this.shouldMove = false;
+        pendingAction = null;
+    }
+
+    public MainAction(
+            @NonNull ActionType type,
+            @Nullable Cluster<LocationItem> cluster,
+            @Nullable LocationItem item,
+            long locationId,
+            boolean shouldMove) {
+        this.type = type;
+        this.cluster = cluster;
+        this.item = item;
+        this.locationId = locationId;
+        this.shouldMove = shouldMove;
+        pendingAction = null;
+    }
+
+    public MainAction(
+            @NonNull ActionType type,
+            @Nullable MainAction action) {
+        this.type = type;
+        this.cluster = null;
+        this.item = null;
+        this.locationId = Statement.NO_ID;
+        this.shouldMove = false;
+        pendingAction = action;
+    }
+
+    public static MainAction openFilters() {
+        return new MainAction(
+                OPEN_FILTERS,
+                null,
+                null,
+                Statement.NO_ID
+        );
+    }
+
+    public static MainAction showFullMap() {
+        return new MainAction(
+                SHOW_FULL_MAP,
+                null,
+                null,
+                Statement.NO_ID
+        );
+    }
+
+    public static MainAction moveToMyLocation() {
+        return new MainAction(
+                MOVE_TO_MY_LOCATION,
+                null,
+                null,
+                Statement.NO_ID,
+                true
+        );
+    }
+
+    public static MainAction moveToFootprint() {
+        return new MainAction(
+                MOVE_TO_FOOTPRINT,
+                null,
+                null,
+                Statement.NO_ID,
+                true
+        );
+    }
+
+    public static MainAction moveToCluster(@Nullable Cluster<LocationItem> cluster) {
+        return new MainAction(
+                MOVE_TO_CLUSTER,
+                cluster,
+                null,
+                Statement.NO_ID,
+                true
+        );
+    }
+
+    public static MainAction moveToAndOpenLocation(@Nullable LocationItem item) {
+        return new MainAction(
+                MOVE_TO_AND_OPEN_LOCATION,
+                null,
+                item,
+                Statement.NO_ID,
+                true
+        );
+    }
+
+    //TODO What if locationId <= NO_ID?
+    public static MainAction moveToAndOpenLocation(long locationId) {
+        return new MainAction(
+                MOVE_TO_AND_OPEN_LOCATION,
+                null,
+                null,
+                locationId,
+                true
+        );
+    }
+
+    public static MainAction restore(@Nullable MainAction action) {
+        return new MainAction(
+                RESTORE,
+                action
+        );
+    }
+
+    public static MainAction back() {
+        return new MainAction(
+                BACK,
+                null,
+                null,
+                Statement.NO_ID
+        );
     }
 }

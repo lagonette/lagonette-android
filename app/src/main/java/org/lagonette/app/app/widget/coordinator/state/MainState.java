@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 
-import static org.lagonette.app.app.widget.coordinator.state.MainState.MapMovement.IDLE;
+import org.lagonette.app.room.statement.Statement;
 
 public class MainState {
 
@@ -13,22 +13,118 @@ public class MainState {
         MOVE
     }
 
-    @BottomSheetBehavior.State
-    public int bottomSheetState;
-
-    public boolean isFiltersLoaded;
-
-    public boolean isLocationDetailLoaded;
+    @Nullable
+    public final MainAction action;
 
     @NonNull
-    public MapMovement mapMovement;
+    public final MapMovement mapMovement;
 
-    @Nullable
-    public MainAction action;
+    @BottomSheetBehavior.State
+    public final int bottomSheetState;
 
-    public MainState() {
-        bottomSheetState = BottomSheetBehavior.STATE_HIDDEN;
-        mapMovement = IDLE;
+    public final boolean isFiltersLoaded;
+
+    public final long loadedLocationId;
+
+    public final boolean isLocationDetailLoaded;
+
+    public MainState(
+            @Nullable MainAction action,
+            @NonNull MapMovement mapMovement,
+            @BottomSheetBehavior.State int bottomSheetState,
+            boolean isFiltersLoaded,
+            boolean isLocationDetailLoaded,
+            long loadedLocationId) {
+        this.action = action;
+        this.mapMovement = mapMovement;
+        this.bottomSheetState = bottomSheetState;
+        this.isFiltersLoaded = isFiltersLoaded;
+        this.isLocationDetailLoaded = isLocationDetailLoaded;
+        this.loadedLocationId = loadedLocationId;
+    }
+
+    @NonNull
+    public MainState action(@NonNull MainAction action) {
+        return new MainState(
+                action,
+                mapMovement,
+                bottomSheetState,
+                isFiltersLoaded,
+                isLocationDetailLoaded,
+                loadedLocationId
+        );
+    }
+
+    @NonNull
+    public MainState mapMovement(@NonNull MapMovement mapMovement) {
+        return new MainState(
+                action,
+                mapMovement,
+                bottomSheetState,
+                isFiltersLoaded,
+                isLocationDetailLoaded,
+                loadedLocationId
+        );
+    }
+
+    @NonNull
+    public MainState bottomSheetState(@BottomSheetBehavior.State int bottomSheetState) {
+        return new MainState(
+                action,
+                mapMovement,
+                bottomSheetState,
+                isFiltersLoaded,
+                isLocationDetailLoaded,
+                loadedLocationId
+        );
+    }
+
+    @NonNull
+    public MainState filtersLoading(boolean isFiltersLoaded) {
+        return new MainState(
+                action,
+                mapMovement,
+                bottomSheetState,
+                isFiltersLoaded,
+                isLocationDetailLoaded,
+                loadedLocationId
+        );
+    }
+
+    @NonNull
+    public MainState locationDetailLoading(boolean isLocationDetailLoaded, long loadedLocationId) {
+        return new MainState(
+                action,
+                mapMovement,
+                bottomSheetState,
+                isFiltersLoaded,
+                isLocationDetailLoaded,
+                loadedLocationId
+        );
+    }
+
+    @NonNull
+    public MainState locationDetailLoading(boolean isLocationDetailLoaded) {
+        return new MainState(
+                action,
+                mapMovement,
+                bottomSheetState,
+                isFiltersLoaded,
+                isLocationDetailLoaded,
+                Statement.NO_ID
+        );
+    }
+
+    @NonNull
+    public MainState loadedLocationId(long loadedLocationId) {
+        return new MainState(
+                action,
+                mapMovement,
+                bottomSheetState,
+                isFiltersLoaded,
+                true,
+                loadedLocationId
+        );
     }
 
     @Override

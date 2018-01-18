@@ -112,4 +112,13 @@ public class LocationDetailFragment
         }
     }
 
+    public long getLocationId() {
+        Long id = mLocationId.getValue();
+        if (id != null) {
+            return id;
+        }
+        else {
+            return Statement.NO_ID;
+        }
+    }
 }

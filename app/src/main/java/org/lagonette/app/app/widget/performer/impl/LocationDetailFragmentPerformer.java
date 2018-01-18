@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.app.fragment.LocationDetailFragment;
+import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.app.widget.performer.base.FragmentPerformer;
 
 import java.util.ArrayList;
@@ -90,6 +91,10 @@ public class LocationDetailFragmentPerformer implements FragmentPerformer {
         return isLoaded() && mFragment.isLoaded(locationId);
     }
 
+    public long getLoadedId() {
+        return isLoaded() ? mFragment.getLocationId() : Statement.NO_ID;
+    }
+
     public void loadFragment(long locationId) {
         mFragment = LocationDetailFragment.newInstance(locationId);
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
@@ -133,6 +138,7 @@ public class LocationDetailFragmentPerformer implements FragmentPerformer {
         mFragmentLoadedCommands.add(command);
     }
 
+    //TODO make one single command for loaded & unloaded notif'
     public void onFragmentUnloaded(@Nullable FragmentUnloadedCommand command) {
         mFragmentUnloadedCommands.add(command);
     }

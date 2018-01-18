@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.coordinator.portrait.PortraitMainCoordinator;
+import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitFabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitMapFragmentPerformer;
@@ -42,11 +43,11 @@ public class PortraitMainPresenter
         super.connect(activity);
 
         // Performer's state --> LiveData
-        mFiltersFragmentPerformer.onFragmentLoaded(mAction::exec);
-        mFiltersFragmentPerformer.onFragmentUnloaded(mAction::exec);
+        mFiltersFragmentPerformer.onFragmentLoaded(() -> mMainState.notifyFiltersLoading(true));
+        mFiltersFragmentPerformer.onFragmentUnloaded(() -> mMainState.notifyFiltersLoading(false));
 
         // Performer's action --> LiveData
-        mFabButtonsPerformer.onFiltersClick(mAction::openFilters);
+        mFabButtonsPerformer.onFiltersClick(() -> mAction.start(MainAction.openFilters()));
 
         // LiveData --> Performer, Coordinator
         mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mSearchBarPerformer.enableBehavior(true));

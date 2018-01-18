@@ -38,6 +38,7 @@ public class FiltersFragmentPerformer implements FragmentPerformer {
     @NonNull
     private final ArrayList<FragmentLoadedCommand> mFragmentLoadedCommands;
 
+    //TODO Use EventBus ? Or maybe all performer>fragment com' should be done with public method ?
     @NonNull
     private final MutableLiveData<Integer> mTopPadding;
 

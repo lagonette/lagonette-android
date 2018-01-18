@@ -103,19 +103,6 @@ public abstract class BottomSheetPerformer
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
     }
 
-    /**
-     * Because of the view#post() call, bottom sheet state is set after performer is connected to LiveData.
-     * So bottom sheet state initialization is saved into LiveData.
-     * If you do 2 orientation changes, the bottom sheet state is not the same as the started state.
-     */
-    public void restoreOpenState() {
-        mBottomSheet.post(this::openBottomSheet);
-    }
-
-    public void restoreCloseState() {
-        mBottomSheet.post(this::closeBottomSheet);
-    }
-
     public void closeBottomSheet() {
         if (mBehavior != null) {
             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);

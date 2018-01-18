@@ -25,7 +25,7 @@ public class LandscapeBottomSheetPerformer
     }
 
     @Override
-    public void onStateChanged(@NonNull View bottomSheet, @State int newState) {
+    public void onStateChanged(@NonNull View bottomSheet, @BottomSheetBehavior.State int newState) {
         if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
             closeBottomSheet();
         }
