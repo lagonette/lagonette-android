@@ -11,7 +11,7 @@ public class SnackbarPerformer {
 
     private final Activity mActivity;
 
-    //TODO factorize with MapsFragment
+    //TODO do not use activity
     public SnackbarPerformer(Activity activity) {
         mActivity = activity;
     }

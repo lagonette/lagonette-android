@@ -40,7 +40,9 @@ import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.error.Error;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
+import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.util.SharedPreferencesUtils;
@@ -85,6 +87,8 @@ public class MapsFragment
     private StateMapActivityViewModel mStateViewModel;
 
     private MainLiveEventBusViewModel mEventBus;
+
+    private SnackbarPerformer mSnackbarPerformer;
 
     private boolean mLocationPermissionGranted = false;
 
@@ -217,6 +221,8 @@ public class MapsFragment
                 MapsFragment.this,
                 this::openLocation
         );
+
+        mSnackbarPerformer = new SnackbarPerformer(getActivity());
     }
 
     @Override
@@ -493,6 +499,14 @@ public class MapsFragment
     public void dispatchPartnersResource(@NonNull Resource<List<LocationItem>> partnerResource) {
         showPartners(partnerResource.data);
         mStateViewModel.setWorkStatus(partnerResource.status);
+
+        if (partnerResource.status == Resource.ERROR) {
+            mSnackbarPerformer.show(
+                    partnerResource.data.isEmpty()
+                            ? Error.PARTNER_NOT_LOADED
+                            : Error.PARTNER_NOT_UPDATED
+            );
+        }
     }
 
     public void showPartners(@Nullable List<LocationItem> locationItems) {
@@ -521,19 +535,6 @@ public class MapsFragment
     @Nullable
     private LocationItem retrieveLocationItem(long locationId) {
         return mPartnerItems.get(locationId);
-    }
-
-    //TODO
-    public void errorGettingPartners(boolean noPartnerAtAll) {
-        Snackbar
-                .make(
-                        SnackbarUtils.getViewGroup(getActivity()).getChildAt(0),
-                        noPartnerAtAll
-                                ? R.string.error_getting_partners_first
-                                : R.string.error_getting_partners,
-                        Snackbar.LENGTH_LONG
-                )
-                .show();
     }
 
 }

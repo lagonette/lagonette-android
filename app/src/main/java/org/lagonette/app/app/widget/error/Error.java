@@ -7,10 +7,17 @@ import org.lagonette.app.R;
 
 public enum Error {
 
-    NoDirectionAppFound(R.string.error_no_direction_app_found),
-    NoCallAppFound(R.string.error_no_call_app_found),
-    NoEmailAppFound(R.string.error_no_email_app_found),
-    NoBrowserAppFound(R.string.error_no_browser_app_found);
+    NO_DIRECTION_APP_FOUND(R.string.error_no_direction_app_found),
+
+    NO_CALL_APP_FOUND(R.string.error_no_call_app_found),
+
+    NO_EMAIL_APP_FOUND(R.string.error_no_email_app_found),
+
+    NO_BROWSER_APP_FOUND(R.string.error_no_browser_app_found),
+
+    PARTNER_NOT_LOADED(R.string.error_getting_partners_first),
+
+    PARTNER_NOT_UPDATED(R.string.error_getting_partners);
 
     @StringRes
     public final int stringRes;

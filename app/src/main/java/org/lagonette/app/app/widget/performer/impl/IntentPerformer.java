@@ -27,7 +27,7 @@ public class IntentPerformer {
                 longitude
         );
         if (!success) {
-            onError.accept(Error.NoDirectionAppFound);
+            onError.accept(Error.NO_DIRECTION_APP_FOUND);
         }
     }
 
@@ -37,7 +37,7 @@ public class IntentPerformer {
                 phoneNumber
         );
         if (!success) {
-            onError.accept(Error.NoCallAppFound);
+            onError.accept(Error.NO_CALL_APP_FOUND);
         }
     }
 
@@ -47,7 +47,7 @@ public class IntentPerformer {
                 url
         );
         if (!success) {
-            onError.accept(Error.NoBrowserAppFound);
+            onError.accept(Error.NO_BROWSER_APP_FOUND);
         }
     }
 
@@ -57,7 +57,7 @@ public class IntentPerformer {
                 email
         );
         if (!success) {
-            onError.accept(Error.NoEmailAppFound);
+            onError.accept(Error.NO_EMAIL_APP_FOUND);
         }
     }
 }

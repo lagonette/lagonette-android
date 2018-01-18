@@ -1,4 +1,4 @@
-package org.lagonette.app.app.widget.coordinator.base;
+package org.lagonette.app.app.widget.coordinator;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;

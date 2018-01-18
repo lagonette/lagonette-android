@@ -3,7 +3,7 @@ package org.lagonette.app.app.widget.coordinator.portrait;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
-import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
+import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.room.statement.Statement;

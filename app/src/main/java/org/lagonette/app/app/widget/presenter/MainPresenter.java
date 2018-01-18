@@ -8,7 +8,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.util.Log;
 import android.view.View;
 
 import org.lagonette.app.R;
@@ -16,7 +15,7 @@ import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
-import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
+import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;

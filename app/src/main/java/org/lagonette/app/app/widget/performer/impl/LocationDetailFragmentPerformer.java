@@ -129,7 +129,6 @@ public class LocationDetailFragmentPerformer implements FragmentPerformer {
         mFragmentLoadedCommands.add(command);
     }
 
-    //TODO make one single command for loaded & unloaded notif'
     public void onFragmentUnloaded(@NonNull Runnable command) {
         mFragmentUnloadedCommands.add(command);
     }
