@@ -78,7 +78,7 @@ public abstract class BottomSheetPerformer
     protected BottomSheetBehavior<View> mBehavior;
 
     @Nullable
-    private View mBottomSheet;
+    protected View mBottomSheet;
 
     @IdRes
     private int mBottomSheetRes;
@@ -105,7 +105,7 @@ public abstract class BottomSheetPerformer
 
     public void closeBottomSheet() {
         if (mBehavior != null) {
-            mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            mBottomSheet.post(() -> mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
         }
     }
 

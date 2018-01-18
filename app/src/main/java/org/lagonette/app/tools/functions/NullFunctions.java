@@ -4,15 +4,15 @@ import android.support.annotation.NonNull;
 
 public interface NullFunctions {
 
-    static <P> void accept(@NonNull P param) {}
+    static <P> void doNothing(@NonNull P param) {}
 
-    static void accept(int param) {}
+    static void doNothing(int param) {}
 
-    static void accept(long param) {}
+    static void doNothing(long param) {}
 
-    static void accept(double param) {}
+    static void doNothing(double param) {}
 
-    static void accept(double param1, double param2) {}
+    static void doNothing(double param1, double param2) {}
 
-    static void run() {}
+    static void doNothing() {}
 }

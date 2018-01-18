@@ -1,9 +1,9 @@
 package org.lagonette.app.app.widget.presenter;
 
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.R;
+import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.widget.coordinator.landscape.LandscapeMainCoordinator;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeFabButtonsPerformer;
@@ -17,7 +17,7 @@ public class LandscapeMainPresenter
         LandscapeSearchBarPerformer> {
 
     @Override
-    public void construct(@NonNull AppCompatActivity activity) {
+    public void construct(@NonNull PresenterActivity activity) {
         super.construct(activity);
 
         mMapFragmentPerformer = new LandscapeMapFragmentPerformer(activity, R.id.content);
@@ -25,17 +25,17 @@ public class LandscapeMainPresenter
         mSearchBarPerformer = new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
         mBottomSheetPerformer = new LandscapeBottomSheetPerformer(activity.getResources(), R.id.bottom_sheet);
 
-        mCoordinator = new LandscapeMainCoordinator(
-                mAction,
-                mBottomSheetPerformer,
-                mFiltersFragmentPerformer,
-                mLocationDetailFragmentPerformer,
-                mMapFragmentPerformer
-        );
+        mCoordinator = new LandscapeMainCoordinator();
     }
 
     @Override
-    public void connect(@NonNull AppCompatActivity activity) {
+    public void init(@NonNull PresenterActivity activity) {
+        mFiltersFragmentPerformer.loadFragment();
+        super.init(activity);
+    }
+
+    @Override
+    public void connect(@NonNull PresenterActivity activity) {
         super.connect(activity);
 
         // Performer --> Performer

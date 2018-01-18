@@ -19,7 +19,7 @@ public class PortraitBottomSheetPerformer
     @Override
     public void openBottomSheet() {
         if (mBehavior != null) {
-            mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            mBottomSheet.post(() -> mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED));
         }
     }
 

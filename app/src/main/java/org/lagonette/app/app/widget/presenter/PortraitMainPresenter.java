@@ -1,9 +1,9 @@
 package org.lagonette.app.app.widget.presenter;
 
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.R;
+import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.widget.coordinator.portrait.PortraitMainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
@@ -18,7 +18,7 @@ public class PortraitMainPresenter
         PortraitSearchBarPerformer> {
 
     @Override
-    public void construct(@NonNull AppCompatActivity activity) {
+    public void construct(@NonNull PresenterActivity activity) {
         super.construct(activity);
 
         mMapFragmentPerformer = new PortraitMapFragmentPerformer(activity, R.id.content);
@@ -29,17 +29,11 @@ public class PortraitMainPresenter
                 R.id.bottom_sheet
         );
 
-        mCoordinator = new PortraitMainCoordinator(
-                mAction,
-                mBottomSheetPerformer,
-                mFiltersFragmentPerformer,
-                mLocationDetailFragmentPerformer,
-                mMapFragmentPerformer
-        );
+        mCoordinator = new PortraitMainCoordinator();
     }
 
     @Override
-    public void connect(@NonNull AppCompatActivity activity) {
+    public void connect(@NonNull PresenterActivity activity) {
         super.connect(activity);
 
         // Performer's state --> LiveData

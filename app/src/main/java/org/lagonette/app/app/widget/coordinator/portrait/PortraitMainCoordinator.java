@@ -3,53 +3,42 @@ package org.lagonette.app.app.widget.coordinator.portrait;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
-import org.lagonette.app.app.viewmodel.MainActionViewModel;
-import org.lagonette.app.app.widget.coordinator.base.AbstractMainCoordinator;
+import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
-import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
-import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerformer;
-import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.room.statement.Statement;
 
 public class PortraitMainCoordinator
-        extends AbstractMainCoordinator {
-
-    public PortraitMainCoordinator(
-            @NonNull MainActionViewModel mainActionViewModel,
-            @NonNull BottomSheetPerformer bottomSheetPerformer,
-            @NonNull FiltersFragmentPerformer filtersFragmentPerformer,
-            @NonNull LocationDetailFragmentPerformer locationDetailFragmentPerformer,
-            @NonNull MapFragmentPerformer mapFragmentPerformer) {
-        super(mainActionViewModel, bottomSheetPerformer, filtersFragmentPerformer, locationDetailFragmentPerformer, mapFragmentPerformer);
-    }
+        extends MainCoordinator {
 
     @Override
     public void computeRestore(@NonNull MainAction action, @NonNull MainState state) {
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
+                closeBottomSheet.run();
+                break;
+
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_EXPANDED:
             case BottomSheetBehavior.STATE_SETTLING:
                 if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
-                    mLocationDetail.unloadFragment();
+                    unloadLocationDetail.run();
                 }
                 else {
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
                 if (state.isFiltersLoaded) {
-                    mFilters.unloadFragment();
+                    unloadFilters.run();
                 }
                 else if (state.isLocationDetailLoaded) {
-                    mLocationDetail.unloadFragment();
+                    unloadLocationDetail.run();
                 }
                 else {
-                    mAction.finish(action);
+                    finishAction.accept(action);
                 }
                 break;
         }
@@ -63,73 +52,73 @@ public class PortraitMainCoordinator
             case BottomSheetBehavior.STATE_HIDDEN:
 
                 if (state.isLocationDetailLoaded) {
-                    mLocationDetail.unloadFragment();
+                    unloadLocationDetail.run();
                 }
                 else if (state.isFiltersLoaded) {
-                    mBottomSheet.openBottomSheet();
+                    openBottomSheet.run();
                 }
                 else {
-                    mFilters.loadFragment();
+                    loadFilters.run();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_COLLAPSED:
                 if (state.isLocationDetailLoaded) {
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 else if (state.isFiltersLoaded) {
-                    mAction.finish(action);
+                    finishAction.accept(action);
                 }
                 else {
                     wtf(state);
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_EXPANDED:
                 if (state.isLocationDetailLoaded) {
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 else if (state.isFiltersLoaded) {
-                    mAction.finish(action);
+                    finishAction.accept(action);
                 }
                 else {
                     wtf(state);
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
                 if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
                     wtf(state);
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 else if (state.isFiltersLoaded) {
-                    mAction.finish(action);
+                    finishAction.accept(action);
                 }
                 else if (state.isLocationDetailLoaded) {
-                    mAction.finish(action);
+                    finishAction.accept(action);
                 }
                 else {
                     wtf(state);
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 break;
 
             case BottomSheetBehavior.STATE_SETTLING:
                 if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
                     wtf(state);
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 else if (state.isFiltersLoaded) {
                     // Wait
                 }
                 else if (state.isLocationDetailLoaded) {
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 else {
                     wtf(state);
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                 }
                 break;
         }
@@ -138,10 +127,10 @@ public class PortraitMainCoordinator
     @Override
     protected void computeMovementToAndOpeningLocation(@NonNull MainAction action, @NonNull MainState state) {
         if (action.locationId > Statement.NO_ID) {
-            mMap.openLocation(action.locationId);
+            openLocation.accept(action.locationId);
         }
         else if (action.item == null) {
-            mAction.finish(action);
+            finishAction.accept(action);
         }
         else if (state.isLocationDetailLoaded) {
             switch (state.bottomSheetState) {
@@ -151,16 +140,16 @@ public class PortraitMainCoordinator
                     long selectedId = action.item.getId();
                     if (action.shouldMove) {
                         action.shouldMove = false; //TODO Unidirectional Data flow !
-                        mMap.moveToLocation(action.item);
+                        moveMapToLocation.accept(action.item);
                     } else if (state.loadedLocationId != selectedId) {
-                        mLocationDetail.loadFragment(action.item.getId());
+                        loadLocationDetail.accept(action.item.getId());
                     } else {
-                        mAction.finish(action);
+                        finishAction.accept(action);
                     }
                     break;
 
                 case BottomSheetBehavior.STATE_DRAGGING:
-                    mAction.finish(action);
+                    finishAction.accept(action);
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
@@ -175,15 +164,11 @@ public class PortraitMainCoordinator
                             break;
 
                         case IDLE:
-                            if (action.item != null) {
-                                if (action.shouldMove) { //TODO Use reason to mark action done if the user move something
-                                    action.shouldMove = false;
-                                    mMap.moveToLocation(action.item);
-                                } else {
-                                    mBottomSheet.openBottomSheet();
-                                }
+                            if (action.shouldMove) { //TODO Use reason to mark action done if the user move something
+                                action.shouldMove = false;
+                                moveMapToLocation.accept(action.item);
                             } else {
-                                mAction.finish(action);
+                                openBottomSheet.run();
                             }
                             break;
                     }
@@ -195,11 +180,11 @@ public class PortraitMainCoordinator
 
                 case BottomSheetBehavior.STATE_COLLAPSED:
                 case BottomSheetBehavior.STATE_EXPANDED:
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                     break;
 
                 case BottomSheetBehavior.STATE_DRAGGING:
-                    mAction.finish(action);
+                    finishAction.accept(action);
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
@@ -208,12 +193,10 @@ public class PortraitMainCoordinator
 
                 case BottomSheetBehavior.STATE_HIDDEN:
                     if (state.isFiltersLoaded) {
-                        mFilters.unloadFragment();
+                        unloadFilters.run();
                     }
-                    else if (action.item != null) { //TODO
-                        mLocationDetail.loadFragment(action.item.getId());
-                    } else {
-                        mAction.finish(action);
+                    else {
+                        loadLocationDetail.accept(action.item.getId());
                     }
                     break;
             }
@@ -223,10 +206,10 @@ public class PortraitMainCoordinator
     @Override
     protected void unloadBottomSheetFragment(@NonNull MainState state) {
         if (state.isFiltersLoaded) {
-            mFilters.unloadFragment();
+            unloadFilters.run();
         }
         else if (state.isLocationDetailLoaded) {
-            mLocationDetail.unloadFragment();
+            unloadLocationDetail.run();
         }
     }
 

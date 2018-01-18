@@ -3,72 +3,75 @@ package org.lagonette.app.app.widget.performer.base;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.util.Log;
 
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.tools.functions.Consumer;
+import org.lagonette.app.tools.functions.NullFunctions;
+import org.lagonette.app.tools.functions.Producer;
 
 public class MainStateModel {
 
-    public interface OnStateChangedCommand {
+    private static final String TAG = "MainStateModel";
 
-        void notifyStateChanged(@NonNull MainState state);
-    }
+    @NonNull
+    public Consumer<MainState> onStateChanged = NullFunctions::doNothing;
 
-    @Nullable
-    private OnStateChangedCommand mOnStateChangedCommand;
+    public Producer<MainState> initState;
 
     private MainState mState;
 
-    public void initState(@NonNull MainState state) {
-        mState = state;
-    }
-
     public MainState getState() {
+        if (mState == null) {
+            mState = initState.get();
+        }
         return mState;
     }
 
-    public void notifyAction(@NonNull MainAction action) {
-        mState = mState.action(action);
+    public void notifyAction(@Nullable MainAction action) {
+        Log.d(TAG, "STATE <-- Action: " + (action != null ? action.type : null));
+        mState = getState().action(action);
         notifyStateChanged();
     }
 
     public void notifyMapMovement(@NonNull MainState.MapMovement mapMovement) {
-        mState = mState.mapMovement(mapMovement);
+        Log.d(TAG, "STATE <-- MapMovement: " + mapMovement);
+        mState = getState().mapMovement(mapMovement);
         notifyStateChanged();
     }
 
     public void notifyBottomSheetState(@BottomSheetBehavior.State int bottomSheetState) {
-        mState = mState.bottomSheetState(bottomSheetState);
+        Log.d(TAG, "STATE <-- BottomSheetState: " + bottomSheetState);
+        mState = getState().bottomSheetState(bottomSheetState);
         notifyStateChanged();
     }
 
     public void notifyFiltersLoading(boolean isFiltersLoaded) {
-        mState = mState.filtersLoading(isFiltersLoaded);
+        Log.d(TAG, "STATE <-- FiltersLoading: "+ isFiltersLoaded);
+        mState = getState().filtersLoading(isFiltersLoaded);
         notifyStateChanged();
     }
 
     public void notifyLocationDetailLoading(boolean isLocationDetailLoaded, long loadedLocationId) {
-        mState = mState.locationDetailLoading(isLocationDetailLoaded, loadedLocationId);
+        Log.d(TAG, "STATE <-- LocationDetailLoading: " + isLocationDetailLoaded + " id: " + loadedLocationId);
+        mState = getState().locationDetailLoading(isLocationDetailLoaded, loadedLocationId);
         notifyStateChanged();
     }
 
     public void notifyLocationDetailLoading(boolean isLocationDetailLoaded) {
-        mState = mState.locationDetailLoading(isLocationDetailLoaded);
+        Log.d(TAG, "STATE <-- LocationDetailLoading: ");
+        mState = getState().locationDetailLoading(isLocationDetailLoaded);
         notifyStateChanged();
     }
 
     public void notifyLoadedLocationId(long loadedLocationId) {
-        mState = mState.loadedLocationId(loadedLocationId);
+        Log.d(TAG, "STATE <-- LoadedLocationId: " + loadedLocationId);
+        mState = getState().loadedLocationId(loadedLocationId);
         notifyStateChanged();
     }
 
-    public void onStateChanged(@NonNull OnStateChangedCommand command) {
-        mOnStateChangedCommand = command;
-    }
-
     private void notifyStateChanged() {
-        if (mOnStateChangedCommand != null) {
-            mOnStateChangedCommand.notifyStateChanged(mState);
-        }
+        onStateChanged.accept(mState);
     }
 }

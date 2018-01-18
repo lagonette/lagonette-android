@@ -14,7 +14,7 @@ public class IntentPerformer {
     private final Context mContext;
 
     @NonNull
-    public Consumer<Error> onError = NullFunctions::accept;
+    public Consumer<Error> onError = NullFunctions::doNothing;
 
     public IntentPerformer(@NonNull Context context) {
         mContext = context;

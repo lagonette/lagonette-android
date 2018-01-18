@@ -3,44 +3,24 @@ package org.lagonette.app.app.widget.coordinator.landscape;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
-import org.lagonette.app.app.viewmodel.MainActionViewModel;
-import org.lagonette.app.app.widget.coordinator.base.AbstractMainCoordinator;
+import org.lagonette.app.app.widget.coordinator.base.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
-import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
-import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerformer;
-import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.room.statement.Statement;
 
 public class LandscapeMainCoordinator
-        extends AbstractMainCoordinator {
-
-    public LandscapeMainCoordinator(
-            @NonNull MainActionViewModel mainActionViewModel,
-            @NonNull BottomSheetPerformer bottomSheetPerformer,
-            @NonNull FiltersFragmentPerformer filtersPerformer,
-            @NonNull LocationDetailFragmentPerformer locationDetailPerformer,
-            @NonNull MapFragmentPerformer mapPerformer) {
-        super(mainActionViewModel, bottomSheetPerformer, filtersPerformer, locationDetailPerformer, mapPerformer);
-    }
+        extends MainCoordinator {
 
     @Override
     protected void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state) {
-        mAction.finish(action);
+        finishAction.accept(action);
     }
 
     @Override
     protected void unloadBottomSheetFragment(@NonNull MainState state) {
         if (state.isLocationDetailLoaded) {
-            mLocationDetail.unloadFragment();
+            unloadLocationDetail.run();
         }
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        mFilters.loadFragment();
     }
 
     /**
@@ -51,16 +31,16 @@ public class LandscapeMainCoordinator
     @Override
     protected void computeRestore(@NonNull MainAction action, @NonNull MainState state) {
         if (!state.isFiltersLoaded) {
-            mFilters.loadFragment();
+            loadFilters.run();
         }
         else {
             switch (state.bottomSheetState) {
 
                 case BottomSheetBehavior.STATE_COLLAPSED:
                     if (state.isLocationDetailLoaded) {
-                        mBottomSheet.openBottomSheet();
+                        openBottomSheet.run();
                     } else {
-                        mBottomSheet.closeBottomSheet();
+                        closeBottomSheet.run();
                     }
                     break;
 
@@ -68,18 +48,18 @@ public class LandscapeMainCoordinator
                 case BottomSheetBehavior.STATE_EXPANDED:
                 case BottomSheetBehavior.STATE_SETTLING:
                     if (state.isLocationDetailLoaded) {
-                        mAction.finish(action);
+                        finishAction.accept(action);
                     } else {
-                        mBottomSheet.closeBottomSheet();
+                        closeBottomSheet.run();
                     }
                     break;
 
                 case BottomSheetBehavior.STATE_HIDDEN:
                     if (state.isLocationDetailLoaded) {
-                        mLocationDetail.unloadFragment();
+                        unloadLocationDetail.run();
                     }
                     else {
-                        mAction.finish(action);
+                        finishAction.accept(action);
                     }
                     break;
             }
@@ -89,9 +69,9 @@ public class LandscapeMainCoordinator
     @Override
     protected void computeMovementToAndOpeningLocation(@NonNull MainAction action, @NonNull MainState state) {
         if (action.locationId > Statement.NO_ID) {
-            mMap.openLocation(action.locationId);
+            openLocation.accept(action.locationId);
         } else if (action.item == null) {
-            mAction.finish(action);
+            finishAction.accept(action);
         } else if (state.isLocationDetailLoaded) {
             switch (state.bottomSheetState) {
 
@@ -100,16 +80,16 @@ public class LandscapeMainCoordinator
                     long selectedId = action.item.getId();
                     if (action.shouldMove) {
                         action.shouldMove = false; //TODO Unidirectional Data flow !
-                        mMap.moveToLocation(action.item);
+                        moveMapToLocation.accept(action.item);
                     } else if (state.loadedLocationId != selectedId) {
-                        mLocationDetail.loadFragment(action.item.getId());
+                        loadLocationDetail.accept(action.item.getId());
                     } else {
-                        mAction.finish(action);
+                        finishAction.accept(action);
                     }
                     break;
 
                 case BottomSheetBehavior.STATE_DRAGGING:
-                    mAction.finish(action);
+                    finishAction.accept(action);
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
@@ -127,12 +107,12 @@ public class LandscapeMainCoordinator
                             if (action.item != null) {
                                 if (action.shouldMove) { //TODO Use reason to mark action done if the user move something
                                     action.shouldMove = false; //TODO Unidirectional Data flow !
-                                    mMap.moveToLocation(action.item);
+                                    moveMapToLocation.accept(action.item);
                                 } else {
-                                    mBottomSheet.openBottomSheet();
+                                    openBottomSheet.run();
                                 }
                             } else {
-                                mAction.finish(action);
+                                finishAction.accept(action);
                             }
                             break;
                     }
@@ -143,11 +123,11 @@ public class LandscapeMainCoordinator
 
                 case BottomSheetBehavior.STATE_COLLAPSED:
                 case BottomSheetBehavior.STATE_EXPANDED:
-                    mBottomSheet.closeBottomSheet();
+                    closeBottomSheet.run();
                     break;
 
                 case BottomSheetBehavior.STATE_DRAGGING:
-                    mAction.finish(action);
+                    finishAction.accept(action);
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
@@ -155,7 +135,7 @@ public class LandscapeMainCoordinator
                     break;
 
                 case BottomSheetBehavior.STATE_HIDDEN:
-                    mLocationDetail.loadFragment(action.item.getId());
+                    loadLocationDetail.accept(action.item.getId());
                     break;
             }
         }

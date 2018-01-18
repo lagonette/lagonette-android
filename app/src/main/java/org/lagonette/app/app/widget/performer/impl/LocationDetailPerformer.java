@@ -1,6 +1,5 @@
 package org.lagonette.app.app.widget.performer.impl;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,16 +18,16 @@ import org.lagonette.app.util.PhoneUtils;
 public class LocationDetailPerformer implements ViewPerformer {
 
     @NonNull
-    public BiDoubleConsumer onAddressClick = NullFunctions::accept;
+    public BiDoubleConsumer onAddressClick = NullFunctions::doNothing;
 
     @NonNull
-    public Consumer<String> onPhoneClick = NullFunctions::accept;
+    public Consumer<String> onPhoneClick = NullFunctions::doNothing;
 
     @NonNull
-    public Consumer<String> onWebsiteClick = NullFunctions::accept;
+    public Consumer<String> onWebsiteClick = NullFunctions::doNothing;
 
     @NonNull
-    public Consumer<String> onEmailClick = NullFunctions::accept;
+    public Consumer<String> onEmailClick = NullFunctions::doNothing;
 
     private View mHeaderView;
 

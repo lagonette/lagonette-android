@@ -20,7 +20,7 @@ public class LandscapeBottomSheetPerformer
     @Override
     public void openBottomSheet() {
         if (mBehavior != null) {
-            mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            mBottomSheet.post(() -> mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
         }
     }
 

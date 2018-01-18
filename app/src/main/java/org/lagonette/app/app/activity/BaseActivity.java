@@ -6,9 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import org.lagonette.app.R;
-import org.lagonette.app.app.widget.lifecycle.ActivityLifecycle;
-
 public abstract class BaseActivity
         extends AppCompatActivity {
 

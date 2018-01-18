@@ -8,7 +8,7 @@ import org.lagonette.app.tools.functions.LongConsumer;
 
 public class LongObserver implements Observer<Long> {
 
-    public static LongObserver observe(long defaultValue, @NonNull LongConsumer observer) {
+    public static LongObserver unbox(long defaultValue, @NonNull LongConsumer observer) {
         return new LongObserver(defaultValue, observer);
     }
 
