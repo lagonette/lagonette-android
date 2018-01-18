@@ -41,7 +41,6 @@ public class LiveEventBus {
     }
 
     public <Payload> void subscribe(@NonNull Event<Payload> event, @NonNull LifecycleOwner owner, @NonNull Observer<Payload> observer) {
-        //TODO What is happening when there are several observers ?
         get(event).observe(
                 owner,
                 payload -> observer.onChanged((Payload) payload)
@@ -49,7 +48,6 @@ public class LiveEventBus {
     }
 
     public void subscribe(@NonNull Event<Void> event, @NonNull LifecycleOwner owner, @NonNull VoidObserver observer) {
-        //TODO What is happening when there are several observers ?
         get(event).observe(
                 owner,
                 payload -> observer.onChanged()
