@@ -16,13 +16,6 @@ public class LandscapeMainCoordinator
         finishAction.accept(action);
     }
 
-    @Override
-    protected void unloadBottomSheetFragment(@NonNull MainState state) {
-        if (state.isLocationDetailLoaded) {
-            unloadLocationDetail.run();
-        }
-    }
-
     /**
      * Because of the view#post() call, bottom sheet state is set after performer is connected to LiveData.
      * So bottom sheet state initialization is saved into LiveData.
@@ -138,6 +131,33 @@ public class LandscapeMainCoordinator
                     loadLocationDetail.accept(action.item.getId());
                     break;
             }
+        }
+    }
+
+    @Override
+    protected void computeIdle(@NonNull MainAction action, @NonNull MainState state)  {
+        switch (state.bottomSheetState) {
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+                closeBottomSheet.run();
+                break;
+
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_SETTLING:
+                // Wait.
+                break;
+
+            case BottomSheetBehavior.STATE_EXPANDED:
+                if (!state.isLocationDetailLoaded) {
+                    closeBottomSheet.run();
+                }
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+                if (state.isLocationDetailLoaded) {
+                    unloadLocationDetail.run();
+                }
+                break;
         }
     }
 }

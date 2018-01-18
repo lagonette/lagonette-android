@@ -204,12 +204,26 @@ public class PortraitMainCoordinator
     }
 
     @Override
-    protected void unloadBottomSheetFragment(@NonNull MainState state) {
-        if (state.isFiltersLoaded) {
-            unloadFilters.run();
-        }
-        else if (state.isLocationDetailLoaded) {
-            unloadLocationDetail.run();
+    protected void computeIdle(@NonNull MainAction action, @NonNull MainState state)  {
+        switch (state.bottomSheetState) {
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_EXPANDED:
+            case BottomSheetBehavior.STATE_SETTLING:
+                if (!state.isLocationDetailLoaded && !state.isFiltersLoaded) {
+                    closeBottomSheet.run();
+                }
+                break;
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+                if (state.isFiltersLoaded) {
+                    unloadFilters.run();
+                }
+                else if (state.isLocationDetailLoaded) {
+                    unloadLocationDetail.run();
+                }
+                break;
         }
     }
 

@@ -136,22 +136,7 @@ public abstract class MainCoordinator {
         }
     }
 
-    private void computeIdle(@NonNull MainAction action, @NonNull MainState state) {
-        switch (state.bottomSheetState) {
-
-            case BottomSheetBehavior.STATE_COLLAPSED:
-            case BottomSheetBehavior.STATE_DRAGGING:
-            case BottomSheetBehavior.STATE_EXPANDED:
-            case BottomSheetBehavior.STATE_SETTLING:
-                break;
-
-            case BottomSheetBehavior.STATE_HIDDEN:
-                unloadBottomSheetFragment(state);
-                break;
-        }
-    }
-
-    protected abstract void unloadBottomSheetFragment(@NonNull MainState state);
+    protected abstract void computeIdle(@NonNull MainAction action, @NonNull MainState state);
 
     private void computeFullMapShowing(@NonNull MainAction action, @NonNull MainState state) {
         switch (state.bottomSheetState) {

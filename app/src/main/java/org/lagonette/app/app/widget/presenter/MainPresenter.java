@@ -18,15 +18,16 @@ import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.performer.base.MainStateModel;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
-import org.lagonette.app.app.widget.performer.base.MainStateModel;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.arch.LongObserver;
+import org.lagonette.app.tools.functions.Logger;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
@@ -38,6 +39,8 @@ public abstract class MainPresenter<
         MFP extends MapFragmentPerformer,
         SBP extends SearchBarPerformer>
         implements PresenterActivity.Lifecycle {
+
+    private static final String TAG = "MainPresenter";
 
     protected StateMapActivityViewModel mStateViewModel;
 
@@ -147,23 +150,23 @@ public abstract class MainPresenter<
         // ========================================== //
 
         // Coordinator > Performer
-        mCoordinator.finishAction = mAction::finish;
+        mCoordinator.finishAction = Logger.log(TAG, "INTENT --> finishAction", mAction::finish);
 
-        mCoordinator.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
-        mCoordinator.closeBottomSheet = mBottomSheetPerformer::closeBottomSheet;
+        mCoordinator.openBottomSheet = Logger.log(TAG, "INTENT --> openBottomSheet", mBottomSheetPerformer::openBottomSheet);
+        mCoordinator.closeBottomSheet = Logger.log(TAG, "INTENT --> closeBottomSheet", mBottomSheetPerformer::closeBottomSheet);
 
-        mCoordinator.moveMapToCluster = mMapFragmentPerformer::moveToCluster;
-        mCoordinator.moveMapToLocation = mMapFragmentPerformer::moveToLocation;
-        mCoordinator.moveMapToMyLocation = mMapFragmentPerformer::moveToMyLocation;
-        mCoordinator.stopMapMoving = mMapFragmentPerformer::stopMoving;
-        mCoordinator.moveMapToFootprint = mMapFragmentPerformer::moveToFootprint;
-        mCoordinator.openLocation = mMapFragmentPerformer::openLocation;
+        mCoordinator.moveMapToCluster = Logger.log(TAG, "INTENT --> moveMapToCluster", mMapFragmentPerformer::moveToCluster);
+        mCoordinator.moveMapToLocation = Logger.log(TAG, "INTENT --> moveMapToLocation", mMapFragmentPerformer::moveToLocation);
+        mCoordinator.moveMapToMyLocation = Logger.log(TAG, "INTENT --> moveMapToMyLocation", mMapFragmentPerformer::moveToMyLocation);
+        mCoordinator.stopMapMoving = Logger.log(TAG, "INTENT --> stopMapMoving", mMapFragmentPerformer::stopMoving);
+        mCoordinator.moveMapToFootprint = Logger.log(TAG, "INTENT --> moveMapToFootprint", mMapFragmentPerformer::moveToFootprint);
+        mCoordinator.openLocation = Logger.log2(TAG, "INTENT --> openLocation", mMapFragmentPerformer::openLocation);
 
-        mCoordinator.loadFilters = mFiltersFragmentPerformer::loadFragment;
-        mCoordinator.unloadFilters = mFiltersFragmentPerformer::unloadFragment;
+        mCoordinator.loadFilters = Logger.log(TAG, "INTENT --> loadFilters", mFiltersFragmentPerformer::loadFragment);
+        mCoordinator.unloadFilters = Logger.log(TAG, "INTENT --> unloadFilters", mFiltersFragmentPerformer::unloadFragment);
 
-        mCoordinator.loadLocationDetail = mLocationDetailFragmentPerformer::loadFragment;
-        mCoordinator.unloadLocationDetail = mLocationDetailFragmentPerformer::unloadFragment;
+        mCoordinator.loadLocationDetail = Logger.log2(TAG, "INTENT --> loadLocationDetail", mLocationDetailFragmentPerformer::loadFragment);
+        mCoordinator.unloadLocationDetail = Logger.log(TAG, "INTENT --> unloadLocationDetail", mLocationDetailFragmentPerformer::unloadFragment);
 
         // Event bus > action
         mEventBus.subscribe(
