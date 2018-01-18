@@ -192,14 +192,14 @@ public abstract class MainPresenter<
         );
 
         // Performer > action
-        mFabButtonsPerformer.onPositionClick(() -> mAction.start(MainAction.moveToMyLocation()));
-        mFabButtonsPerformer.onPositionLongClick(() -> mAction.start(MainAction.moveToFootprint()));
+        mFabButtonsPerformer.onPositionClick = () -> mAction.start(MainAction.moveToMyLocation());
+        mFabButtonsPerformer.onPositionLongClick = () -> mAction.start(MainAction.moveToFootprint());
 
         // Performer > model
         mLocationDetailFragmentPerformer.onFragmentLoaded(mMainState::notifyLoadedLocationId);
         mLocationDetailFragmentPerformer.onFragmentUnloaded(() -> mMainState.notifyLocationDetailLoading(false));
-        mBottomSheetPerformer.onStateChanged(mMainState::notifyBottomSheetState);
-        mMapFragmentPerformer.onMapMovementChanged(mMainState::notifyMapMovement);
+        mBottomSheetPerformer.onStateChanged = mMainState::notifyBottomSheetState;
+        mMapFragmentPerformer.onMapMovementChanged = mMainState::notifyMapMovement;
 
         // Action > State
         mAction.getLiveData().observe(activity, mMainState::notifyAction);
@@ -214,7 +214,7 @@ public abstract class MainPresenter<
         // ------------------------------- //
 
         // User > ViewModels
-        mSearchBarPerformer.onSearch(mSearch::setValue);
+        mSearchBarPerformer.onSearch = mSearch::setValue;
 
         // ViewModels > View
         mWorkStatus.observe(activity, mSearchBarPerformer::setWorkStatus);

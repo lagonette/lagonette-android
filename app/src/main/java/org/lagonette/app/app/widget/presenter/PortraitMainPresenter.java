@@ -48,18 +48,14 @@ public class PortraitMainPresenter
         mFiltersFragmentPerformer.onFragmentLoaded(() -> mSearchBarPerformer.enableBehavior(false));
 
         // Performer --> Performer
-        mBottomSheetPerformer.onSlideChanged(
-                topPadding -> {
-                    mFiltersFragmentPerformer.updateTopPadding(topPadding);
-                    mLocationDetailFragmentPerformer.updateTopPadding(topPadding);
-                }
-        );
-        mSearchBarPerformer.onBottomChanged(
-                offset -> {
-                    mMapFragmentPerformer.notifySearchBarBottomChanged(offset);
-                    mBottomSheetPerformer.notifySearchBarBottomChanged(offset);
-                }
-        );
+        mBottomSheetPerformer.onSlideChanged = topPadding -> {
+            mFiltersFragmentPerformer.updateTopPadding(topPadding);
+            mLocationDetailFragmentPerformer.updateTopPadding(topPadding);
+        };
+        mSearchBarPerformer.onBottomChanged = offset -> {
+            mMapFragmentPerformer.notifySearchBarBottomChanged(offset);
+            mBottomSheetPerformer.notifySearchBarBottomChanged(offset);
+        };
     }
 
 }

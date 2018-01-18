@@ -2,29 +2,19 @@ package org.lagonette.app.app.widget.performer.impl;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
+import org.lagonette.app.tools.functions.NullFunctions;
 
 public abstract class FabButtonsPerformer implements ViewPerformer {
 
-    public interface OnPositionClickCommand {
+    @NonNull
+    public Runnable onPositionClick = NullFunctions::doNothing;
 
-        void notifyPositionButtonClick();
-    }
-
-    public interface OnPositionLongClickCommand {
-
-        void notifyPositionButtonLongClick();
-    }
-
-    @Nullable
-    private OnPositionClickCommand mOnPositionClickCommand;
-
-    @Nullable
-    private OnPositionLongClickCommand mOnPositionLongClickCommand;
+    @NonNull
+    public Runnable onPositionLongClick = NullFunctions::doNothing;
 
     @IdRes
     private int mPositionButtonRes;
@@ -37,28 +27,14 @@ public abstract class FabButtonsPerformer implements ViewPerformer {
     public void inject(@NonNull View view) {
         FloatingActionButton positionFab = view.findViewById(mPositionButtonRes);
         positionFab.setOnClickListener(
-                button -> {
-                    if (mOnPositionClickCommand != null) {
-                        mOnPositionClickCommand.notifyPositionButtonClick();
-                    }
-                }
+                button -> onPositionClick.run()
         );
         positionFab.setOnLongClickListener(
                 button -> {
-                    if (mOnPositionLongClickCommand != null) {
-                        mOnPositionLongClickCommand.notifyPositionButtonLongClick();
-                        return true;
-                    }
-                    return false;
+                    onPositionLongClick.run();
+                    return true;
                 }
         );
     }
 
-    public void onPositionClick(@Nullable OnPositionClickCommand command) {
-        mOnPositionClickCommand = command;
-    }
-
-    public void onPositionLongClick(@Nullable OnPositionLongClickCommand command) {
-        mOnPositionLongClickCommand = command;
-    }
 }

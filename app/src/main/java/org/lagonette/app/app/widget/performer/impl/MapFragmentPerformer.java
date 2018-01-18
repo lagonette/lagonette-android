@@ -3,7 +3,6 @@ package org.lagonette.app.app.widget.performer.impl;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
@@ -15,6 +14,8 @@ import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.room.entity.statement.LocationItem;
+import org.lagonette.app.tools.functions.Consumer;
+import org.lagonette.app.tools.functions.NullFunctions;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_CLUSTER;
@@ -25,11 +26,6 @@ import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP
 
 public abstract class MapFragmentPerformer implements ViewPerformer {
 
-    public interface OnMapMovementChangedCommand {
-
-        void notifyMapMovementChanged(@NonNull MainState.MapMovement mapMovement);
-    }
-
     @NonNull
     protected MainLiveEventBusViewModel mEventBus;
 
@@ -38,8 +34,8 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
     @NonNull
     private final FragmentManager mFragmentManager;
 
-    @Nullable
-    private OnMapMovementChangedCommand mMapMovementChangedCommand;
+    @NonNull
+    public Consumer<MainState.MapMovement> onMapMovementChanged = NullFunctions::doNothing;
 
     @NonNull
     protected MainState.MapMovement mMapMovement;
@@ -81,9 +77,7 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
 
     private void notifyMapMovement(@NonNull MainState.MapMovement mapMovement) {
         mMapMovement = mapMovement;
-        if (mMapMovementChangedCommand != null) {
-            mMapMovementChangedCommand.notifyMapMovementChanged(mMapMovement);
-        }
+        onMapMovementChanged.accept(mMapMovement);
     }
 
     public void moveToMyLocation() {
@@ -107,7 +101,4 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
         mEventBus.publish(STOP_MOVING);
     }
 
-    public void onMapMovementChanged(@Nullable OnMapMovementChangedCommand command) {
-        mMapMovementChangedCommand = command;
-    }
 }

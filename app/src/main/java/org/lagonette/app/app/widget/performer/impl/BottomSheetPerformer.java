@@ -2,45 +2,19 @@ package org.lagonette.app.app.widget.performer.impl;
 
 import android.content.res.Resources;
 import android.support.annotation.IdRes;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
+import org.lagonette.app.tools.functions.IntConsumer;
+import org.lagonette.app.tools.functions.NullFunctions;
 import org.lagonette.app.util.UiUtils;
-
-import java.lang.annotation.Retention;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public abstract class BottomSheetPerformer
         extends BottomSheetBehavior.BottomSheetCallback
         implements ViewPerformer {
-
-    @Retention(SOURCE)
-    @IntDef({
-            BottomSheetBehavior.STATE_DRAGGING,
-            BottomSheetBehavior.STATE_SETTLING,
-            BottomSheetBehavior.STATE_EXPANDED,
-            BottomSheetBehavior.STATE_COLLAPSED,
-            BottomSheetBehavior.STATE_HIDDEN
-    })
-    public @interface State {
-
-    }
-
-    public interface OnStateChangedCommand {
-
-        void notifyStateChanged(@State int newState);
-    }
-
-    public interface OnSlideChangedCommand {
-
-        void updateTopPadding(int topPadding);
-
-    }
 
     public static class Padding {
 
@@ -68,11 +42,11 @@ public abstract class BottomSheetPerformer
         }
     }
 
-    @Nullable
-    protected OnSlideChangedCommand mOnSlideChangedCommand;
+    @NonNull
+    public IntConsumer onSlideChanged = NullFunctions::doNothing;
 
-    @Nullable
-    private OnStateChangedCommand mOnStateChangedCommand;
+    @NonNull
+    public IntConsumer onStateChanged = NullFunctions::doNothing;
 
     @Nullable
     protected BottomSheetBehavior<View> mBehavior;
@@ -112,10 +86,8 @@ public abstract class BottomSheetPerformer
     public abstract void openBottomSheet();
 
     @Override
-    public void onStateChanged(@NonNull View bottomSheet, @State int newState) {
-        if (mOnStateChangedCommand != null) {
-            mOnStateChangedCommand.notifyStateChanged(newState);
-        }
+    public void onStateChanged(@NonNull View bottomSheet, @BottomSheetBehavior.State int newState) {
+        onStateChanged.accept(newState);
     }
 
     @Override
@@ -133,21 +105,11 @@ public abstract class BottomSheetPerformer
 
     private void updateBottomSheetTopPadding() {
         if (mPadding.updateTop()) {
-            if (mOnSlideChangedCommand != null) {
-                mOnSlideChangedCommand.updateTopPadding(mPadding.getTop());
-            }
+            onSlideChanged.accept(mPadding.getTop());
         }
     }
 
-    public void onStateChanged(@Nullable OnStateChangedCommand onStateChangedCommand) {
-        mOnStateChangedCommand = onStateChangedCommand;
-    }
-
-    public void onSlideChanged(@Nullable OnSlideChangedCommand command) {
-        mOnSlideChangedCommand = command;
-    }
-
-    @State
+    @BottomSheetBehavior.State
     public int getState() {
         return mBehavior.getState();
     }

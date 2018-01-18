@@ -11,20 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import org.lagonette.app.app.fragment.LocationDetailFragment;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.app.widget.performer.base.FragmentPerformer;
+import org.lagonette.app.tools.functions.LongConsumer;
 
 import java.util.ArrayList;
 
 public class LocationDetailFragmentPerformer implements FragmentPerformer {
-
-    public interface FragmentLoadedCommand {
-
-        void onLocationLoaded(long locationId);
-    }
-
-    public interface FragmentUnloadedCommand {
-
-        void onLocationUnloaded();
-    }
 
     @Nullable
     private LocationDetailFragment mFragment;
@@ -33,10 +24,10 @@ public class LocationDetailFragmentPerformer implements FragmentPerformer {
     private FragmentManager mFragmentManager;
 
     @NonNull
-    private final ArrayList<FragmentUnloadedCommand> mFragmentUnloadedCommands;
+    private final ArrayList<Runnable> mFragmentUnloadedCommands;
 
     @NonNull
-    private final ArrayList<FragmentLoadedCommand> mFragmentLoadedCommands;
+    private final ArrayList<LongConsumer> mFragmentLoadedCommands;
 
     @NonNull
     private final MutableLiveData<Integer> mTopPadding;
@@ -78,8 +69,8 @@ public class LocationDetailFragmentPerformer implements FragmentPerformer {
             mFragment = null;
         }
 
-        for (FragmentUnloadedCommand command : mFragmentUnloadedCommands) {
-            command.onLocationUnloaded();
+        for (Runnable command : mFragmentUnloadedCommands) {
+            command.run();
         }
     }
 
@@ -123,8 +114,8 @@ public class LocationDetailFragmentPerformer implements FragmentPerformer {
         mLoadedNotifier.observe(
                 mFragment,
                 aVoid -> {
-                    for (FragmentLoadedCommand command : mFragmentLoadedCommands) {
-                        command.onLocationLoaded(locationId);
+                    for (LongConsumer command : mFragmentLoadedCommands) {
+                        command.accept(locationId);
                     }
                 }
         );
@@ -134,12 +125,12 @@ public class LocationDetailFragmentPerformer implements FragmentPerformer {
         mTopPadding.setValue(topPadding);
     }
 
-    public void onFragmentLoaded(@Nullable FragmentLoadedCommand command) {
+    public void onFragmentLoaded(@NonNull LongConsumer command) {
         mFragmentLoadedCommands.add(command);
     }
 
     //TODO make one single command for loaded & unloaded notif'
-    public void onFragmentUnloaded(@Nullable FragmentUnloadedCommand command) {
+    public void onFragmentUnloaded(@NonNull Runnable command) {
         mFragmentUnloadedCommands.add(command);
     }
 }

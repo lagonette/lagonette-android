@@ -13,25 +13,17 @@ import android.widget.TextView;
 
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.repo.Resource;
+import org.lagonette.app.tools.functions.Consumer;
+import org.lagonette.app.tools.functions.IntConsumer;
 import org.lagonette.app.util.UiUtils;
 
 public abstract class SearchBarPerformer implements ViewPerformer {
 
-    public interface OnSearchCommand {
+    @NonNull
+    public IntConsumer onBottomChanged;
 
-        void notifySearch(@Nullable String search);
-    }
-
-    public interface OnBottomChangedCommand {
-
-        void notifyBottomChanged(int offset);
-    }
-
-    @Nullable
-    private OnBottomChangedCommand mOnBottomChangedCommand;
-
-    @Nullable
-    private OnSearchCommand mOnSearchCommand;
+    @NonNull
+    public Consumer<String> onSearch;
 
     @Nullable
     protected View mSearchBar;
@@ -78,13 +70,7 @@ public abstract class SearchBarPerformer implements ViewPerformer {
     }
 
     protected void onBottomChanged(@NonNull View searchBar) {
-        if (mOnBottomChangedCommand != null) {
-            mOnBottomChangedCommand.notifyBottomChanged((int) (searchBar.getBottom() + searchBar.getTranslationY()));
-        }
-    }
-
-    public void onBottomChanged(@NonNull OnBottomChangedCommand command) {
-        mOnBottomChangedCommand = command;
+        onBottomChanged.accept((int) (searchBar.getBottom() + searchBar.getTranslationY()));
     }
 
     public void setWorkStatus(@Resource.Status int workState) {
@@ -132,16 +118,11 @@ public abstract class SearchBarPerformer implements ViewPerformer {
 
                             @Override
                             public void afterTextChanged(Editable editable) {
-                                if (mOnSearchCommand != null) {
-                                    mOnSearchCommand.notifySearch(editable.toString());
-                                }
+                                onSearch.accept(editable.toString());
                             }
                         }
                 )
         );
     }
 
-    public void onSearch(@NonNull OnSearchCommand onSearch) {
-        mOnSearchCommand = onSearch;
-    }
 }

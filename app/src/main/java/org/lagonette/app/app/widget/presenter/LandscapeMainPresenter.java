@@ -39,7 +39,7 @@ public class LandscapeMainPresenter
         super.connect(activity);
 
         // Performer --> Performer
-        mBottomSheetPerformer.onSlideChanged(mLocationDetailFragmentPerformer::updateTopPadding);
-        mSearchBarPerformer.onBottomChanged(mFiltersFragmentPerformer::updateTopPadding);
+        mBottomSheetPerformer.onSlideChanged = mLocationDetailFragmentPerformer::updateTopPadding;
+        mSearchBarPerformer.onBottomChanged = mFiltersFragmentPerformer::updateTopPadding;
     }
 }
