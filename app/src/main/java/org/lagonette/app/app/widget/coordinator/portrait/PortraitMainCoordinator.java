@@ -16,12 +16,15 @@ public class PortraitMainCoordinator
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
-                closeBottomSheet.run();
+                openBottomSheet.run();
+                break;
+
+            case BottomSheetBehavior.STATE_SETTLING:
+                wait.run();
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_EXPANDED:
-            case BottomSheetBehavior.STATE_SETTLING:
                 if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
                     unloadLocationDetail.run();
                 }
@@ -111,7 +114,7 @@ public class PortraitMainCoordinator
                     closeBottomSheet.run();
                 }
                 else if (state.isFiltersLoaded) {
-                    // Wait
+                    wait.run();
                 }
                 else if (state.isLocationDetailLoaded) {
                     closeBottomSheet.run();
@@ -153,14 +156,14 @@ public class PortraitMainCoordinator
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
-                    // Well, it's okay. Just wait.
+                    wait.run();
                     break;
 
                 case BottomSheetBehavior.STATE_HIDDEN:
                     switch (state.mapMovement) {
 
                         case MOVE:
-                            // Well, it's okay. Just wait.
+                            wait.run();
                             break;
 
                         case IDLE:
@@ -188,7 +191,7 @@ public class PortraitMainCoordinator
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
-                    // Well, it's okay. Just wait.
+                    wait.run();
                     break;
 
                 case BottomSheetBehavior.STATE_HIDDEN:

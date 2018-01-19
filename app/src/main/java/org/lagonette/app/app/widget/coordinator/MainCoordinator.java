@@ -8,10 +8,12 @@ import android.util.Log;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.maps.android.clustering.Cluster;
 
+import org.lagonette.app.BuildConfig;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.tools.functions.Consumer;
+import org.lagonette.app.tools.functions.Logger;
 import org.lagonette.app.tools.functions.LongConsumer;
 import org.lagonette.app.tools.functions.NullFunctions;
 
@@ -58,10 +60,12 @@ public abstract class MainCoordinator {
     @NonNull
     public Runnable unloadLocationDetail = NullFunctions::doNothing;
 
+    @NonNull
+    protected Runnable wait = NullFunctions::doNothing;
+
     @CallSuper
     public void process(@NonNull MainState state) {
         if (state.action != null) {
-            Log.d(TAG, "Action -> " + state.action.type.name());
             switch (state.action.type) {
 
                 case RESTORE:
@@ -113,7 +117,7 @@ public abstract class MainCoordinator {
 
             case BottomSheetBehavior.STATE_SETTLING:
             case BottomSheetBehavior.STATE_DRAGGING:
-                // Wait.
+                wait.run();
                 break;
 
             case BottomSheetBehavior.STATE_COLLAPSED:
@@ -147,7 +151,7 @@ public abstract class MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_SETTLING:
-                // Well, just wait.
+                wait.run();
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
@@ -172,14 +176,14 @@ public abstract class MainCoordinator {
 
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_SETTLING:
-                // Well, it's okay. Just wait.
+                wait.run();
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
                 switch (state.mapMovement) {
 
                     case MOVE:
-                        // Well, it's okay. Just wait.
+                        wait.run();
                         break;
 
                     case IDLE:
@@ -246,6 +250,72 @@ public abstract class MainCoordinator {
     protected void wtf(@NonNull MainState state) {
         FirebaseCrash.logcat(Log.ERROR, TAG, state.toString());
         FirebaseCrash.report(new IllegalArgumentException("Coordinator received a weird state"));
+    }
+
+    public void setupLoggers() {
+        if (BuildConfig.DEBUG) {
+            finishAction = Logger.log(
+                    TAG, "INTENT --> finishAction",
+                    finishAction
+            );
+
+            openBottomSheet = Logger.log(
+                    TAG, "INTENT --> openBottomSheet",
+                    openBottomSheet
+            );
+            closeBottomSheet = Logger.log(
+                    TAG, "INTENT --> closeBottomSheet",
+                    closeBottomSheet
+            );
+
+            moveMapToCluster = Logger.log(
+                    TAG, "INTENT --> moveMapToCluster",
+                    moveMapToCluster
+            );
+            moveMapToLocation = Logger.log(
+                    TAG, "INTENT --> moveMapToLocation",
+                    moveMapToLocation
+            );
+            moveMapToMyLocation = Logger.log(
+                    TAG, "INTENT --> moveMapToMyLocation",
+                    moveMapToMyLocation
+            );
+            stopMapMoving = Logger.log(
+                    TAG, "INTENT --> stopMapMoving",
+                    stopMapMoving
+            );
+            moveMapToFootprint = Logger.log(
+                    TAG, "INTENT --> moveMapToFootprint",
+                    moveMapToFootprint
+            );
+            openLocation = Logger.log(
+                    TAG, "INTENT --> openLocation",
+                    openLocation
+            );
+
+            loadFilters = Logger.log(
+                    TAG, "INTENT --> loadFilters",
+                    loadFilters
+            );
+            unloadFilters = Logger.log(
+                    TAG, "INTENT --> unloadFilters",
+                    unloadFilters
+            );
+
+            loadLocationDetail = Logger.log(
+                    TAG, "INTENT --> loadLocationDetail",
+                    loadLocationDetail
+            );
+            unloadLocationDetail = Logger.log(
+                    TAG, "INTENT --> unloadLocationDetail",
+                    unloadLocationDetail
+            );
+
+            wait = Logger.log(
+                    TAG, "INTENT --X wait",
+                    (Runnable) NullFunctions::doNothing
+            );
+        }
     }
 
 }

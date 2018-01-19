@@ -19,7 +19,7 @@ public class Logger {
         };
     }
 
-    public static LongConsumer log2(@NonNull String tag, @NonNull String message, LongConsumer consumer) {
+    public static LongConsumer log(@NonNull String tag, @NonNull String message, LongConsumer consumer) {
         return param -> {
             Log.d(tag, message);
             consumer.accept(param);

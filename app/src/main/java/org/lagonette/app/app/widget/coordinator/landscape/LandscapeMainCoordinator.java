@@ -86,14 +86,14 @@ public class LandscapeMainCoordinator
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
-                    // Well, it's okay. Just wait.
+                    wait.run();
                     break;
 
                 case BottomSheetBehavior.STATE_HIDDEN:
                     switch (state.mapMovement) {
 
                         case MOVE:
-                            // Well, it's okay. Just wait.
+                            wait.run();
                             break;
 
                         case IDLE:
@@ -124,7 +124,7 @@ public class LandscapeMainCoordinator
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
-                    // Well, it's okay. Just wait.
+                    wait.run();
                     break;
 
                 case BottomSheetBehavior.STATE_HIDDEN:
@@ -144,7 +144,7 @@ public class LandscapeMainCoordinator
 
             case BottomSheetBehavior.STATE_DRAGGING:
             case BottomSheetBehavior.STATE_SETTLING:
-                // Wait.
+                wait.run();
                 break;
 
             case BottomSheetBehavior.STATE_EXPANDED:

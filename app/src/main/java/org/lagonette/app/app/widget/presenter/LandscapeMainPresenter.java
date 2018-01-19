@@ -38,7 +38,7 @@ public class LandscapeMainPresenter
     public void connect(@NonNull PresenterActivity activity) {
         super.connect(activity);
 
-        // Performer --> Performer
+        // Performer > Performer
         mBottomSheetPerformer.onSlideChanged = mLocationDetailFragmentPerformer::updateTopPadding;
         mSearchBarPerformer.onBottomChanged = mFiltersFragmentPerformer::updateTopPadding;
     }

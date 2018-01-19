@@ -36,18 +36,14 @@ public class PortraitMainPresenter
     public void connect(@NonNull PresenterActivity activity) {
         super.connect(activity);
 
-        // Performer's state --> LiveData
-        mFiltersFragmentPerformer.onFragmentLoaded(() -> mMainState.notifyFiltersLoading(true));
-        mFiltersFragmentPerformer.onFragmentUnloaded(() -> mMainState.notifyFiltersLoading(false));
-
-        // Performer's action --> LiveData
+        // Performer > LiveData
         mFabButtonsPerformer.onFiltersClick(() -> mAction.start(MainAction.openFilters()));
 
-        // LiveData --> Performer, Coordinator
+        // LiveData > Performer, Coordinator
         mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mSearchBarPerformer.enableBehavior(true));
         mFiltersFragmentPerformer.onFragmentLoaded(() -> mSearchBarPerformer.enableBehavior(false));
 
-        // Performer --> Performer
+        // Performer > Performer
         mBottomSheetPerformer.onSlideChanged = topPadding -> {
             mFiltersFragmentPerformer.updateTopPadding(topPadding);
             mLocationDetailFragmentPerformer.updateTopPadding(topPadding);

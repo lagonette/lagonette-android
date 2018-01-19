@@ -2,7 +2,6 @@ package org.lagonette.app.app.widget.performer.base;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
 
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
@@ -10,6 +9,7 @@ import org.lagonette.app.app.widget.coordinator.state.MainState;
 import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.NullFunctions;
 import org.lagonette.app.tools.functions.Producer;
+import org.lagonette.app.util.BottomSheetUtils;
 
 public class MainStateModel {
 
@@ -30,7 +30,7 @@ public class MainStateModel {
     }
 
     public void notifyAction(@Nullable MainAction action) {
-        Log.d(TAG, "STATE <-- Action: " + (action != null ? action.type : null));
+        Log.d(TAG, "STATE <-- Action <-- " + (action != null ? action.type : null));
         mState = getState().action(action);
         notifyStateChanged();
     }
@@ -41,8 +41,8 @@ public class MainStateModel {
         notifyStateChanged();
     }
 
-    public void notifyBottomSheetState(@BottomSheetBehavior.State int bottomSheetState) {
-        Log.d(TAG, "STATE <-- BottomSheetState: " + bottomSheetState);
+    public void notifyBottomSheetState(@MainState.BottomSheetState int bottomSheetState) {
+        Log.d(TAG, "STATE <-- BottomSheetState: " + BottomSheetUtils.toString(bottomSheetState));
         mState = getState().bottomSheetState(bottomSheetState);
         notifyStateChanged();
     }
@@ -60,7 +60,7 @@ public class MainStateModel {
     }
 
     public void notifyLocationDetailLoading(boolean isLocationDetailLoaded) {
-        Log.d(TAG, "STATE <-- LocationDetailLoading: ");
+        Log.d(TAG, "STATE <-- LocationDetailLoading: " + isLocationDetailLoaded);
         mState = getState().locationDetailLoading(isLocationDetailLoaded);
         notifyStateChanged();
     }

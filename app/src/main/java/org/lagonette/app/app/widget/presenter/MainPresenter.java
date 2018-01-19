@@ -150,23 +150,25 @@ public abstract class MainPresenter<
         // ========================================== //
 
         // Coordinator > Performer
-        mCoordinator.finishAction = Logger.log(TAG, "INTENT --> finishAction", mAction::finish);
+        mCoordinator.finishAction = mAction::finish;
 
-        mCoordinator.openBottomSheet = Logger.log(TAG, "INTENT --> openBottomSheet", mBottomSheetPerformer::openBottomSheet);
-        mCoordinator.closeBottomSheet = Logger.log(TAG, "INTENT --> closeBottomSheet", mBottomSheetPerformer::closeBottomSheet);
+        mCoordinator.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
+        mCoordinator.closeBottomSheet = mBottomSheetPerformer::closeBottomSheet;
 
-        mCoordinator.moveMapToCluster = Logger.log(TAG, "INTENT --> moveMapToCluster", mMapFragmentPerformer::moveToCluster);
-        mCoordinator.moveMapToLocation = Logger.log(TAG, "INTENT --> moveMapToLocation", mMapFragmentPerformer::moveToLocation);
-        mCoordinator.moveMapToMyLocation = Logger.log(TAG, "INTENT --> moveMapToMyLocation", mMapFragmentPerformer::moveToMyLocation);
-        mCoordinator.stopMapMoving = Logger.log(TAG, "INTENT --> stopMapMoving", mMapFragmentPerformer::stopMoving);
-        mCoordinator.moveMapToFootprint = Logger.log(TAG, "INTENT --> moveMapToFootprint", mMapFragmentPerformer::moveToFootprint);
-        mCoordinator.openLocation = Logger.log2(TAG, "INTENT --> openLocation", mMapFragmentPerformer::openLocation);
+        mCoordinator.moveMapToCluster = mMapFragmentPerformer::moveToCluster;
+        mCoordinator.moveMapToLocation = mMapFragmentPerformer::moveToLocation;
+        mCoordinator.moveMapToMyLocation = mMapFragmentPerformer::moveToMyLocation;
+        mCoordinator.stopMapMoving = mMapFragmentPerformer::stopMoving;
+        mCoordinator.moveMapToFootprint = mMapFragmentPerformer::moveToFootprint;
+        mCoordinator.openLocation = mMapFragmentPerformer::openLocation;
 
-        mCoordinator.loadFilters = Logger.log(TAG, "INTENT --> loadFilters", mFiltersFragmentPerformer::loadFragment);
-        mCoordinator.unloadFilters = Logger.log(TAG, "INTENT --> unloadFilters", mFiltersFragmentPerformer::unloadFragment);
+        mCoordinator.loadFilters = mFiltersFragmentPerformer::loadFragment;
+        mCoordinator.unloadFilters = mFiltersFragmentPerformer::unloadFragment;
 
-        mCoordinator.loadLocationDetail = Logger.log2(TAG, "INTENT --> loadLocationDetail", mLocationDetailFragmentPerformer::loadFragment);
-        mCoordinator.unloadLocationDetail = Logger.log(TAG, "INTENT --> unloadLocationDetail", mLocationDetailFragmentPerformer::unloadFragment);
+        mCoordinator.loadLocationDetail = mLocationDetailFragmentPerformer::loadFragment;
+        mCoordinator.unloadLocationDetail = mLocationDetailFragmentPerformer::unloadFragment;
+
+        mCoordinator.setupLoggers();
 
         // Event bus > action
         mEventBus.subscribe(
@@ -200,6 +202,8 @@ public abstract class MainPresenter<
         // Performer > model
         mLocationDetailFragmentPerformer.onFragmentLoaded(mMainState::notifyLoadedLocationId);
         mLocationDetailFragmentPerformer.onFragmentUnloaded(() -> mMainState.notifyLocationDetailLoading(false));
+        mFiltersFragmentPerformer.onFragmentLoaded(() -> mMainState.notifyFiltersLoading(true));
+        mFiltersFragmentPerformer.onFragmentUnloaded(() -> mMainState.notifyFiltersLoading(false));
         mBottomSheetPerformer.onStateChanged = mMainState::notifyBottomSheetState;
         mMapFragmentPerformer.onMapMovementChanged = mMainState::notifyMapMovement;
 

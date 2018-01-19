@@ -77,13 +77,27 @@ public abstract class BottomSheetPerformer
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
     }
 
-    public void closeBottomSheet() {
+    public void changeBottomSheetState(@BottomSheetBehavior.State int newState) {
         if (mBehavior != null) {
-            mBottomSheet.post(() -> mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
+            if (mBehavior.getState() == newState) {
+                onStateChanged.accept(newState);
+            }
+            else {
+                mBehavior.setState(newState);
+            }
         }
     }
 
-    public abstract void openBottomSheet();
+    public final void closeBottomSheet() {
+        changeBottomSheetState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    public void openBottomSheet() {
+        changeBottomSheetState(getOpenBottomSheetState());
+    }
+
+    @BottomSheetBehavior.State
+    public abstract int getOpenBottomSheetState();
 
     @Override
     public void onStateChanged(@NonNull View bottomSheet, @BottomSheetBehavior.State int newState) {
