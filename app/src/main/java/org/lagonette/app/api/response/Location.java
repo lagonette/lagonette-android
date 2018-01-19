@@ -1,9 +1,8 @@
 package org.lagonette.app.api.response;
 
-import android.arch.persistence.room.Ignore;
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import org.lagonette.app.room.embedded.Address;
 import org.lagonette.app.room.entity.LocationMetadata;
@@ -12,38 +11,35 @@ import java.util.List;
 
 public class Location {
 
-    @SerializedName("id")
+    @Json(name = "id")
     public long id;
 
-    @SerializedName("openingHours")
+    @Json(name = "openingHours")
     public String openingHours;
 
-    @SerializedName("isExchangeOffice")
-    public Boolean isExchangeOffice;
+    @Json(name = "isExchangeOffice")
+    public boolean isExchangeOffice;
 
-    @SerializedName("address")
+    @Json(name = "address")
     public String address;
 
-    @SerializedName("city")
+    @Json(name = "city")
     public String city;
 
-    @SerializedName("zipCode")
+    @Json(name = "zipCode")
     public String zipCode;
 
-    @SerializedName("latitude")
+    @Json(name = "latitude")
     public double latitude;
 
-    @SerializedName("longitude")
+    @Json(name = "longitude")
     public double longitude;
 
-    @SerializedName("displayLocation")
-    public Boolean displayLocation;
-
-    @Ignore
-    public long partnerId;
-
+    @Json(name = "displayLocation")
+    public boolean displayLocation;
 
     public void prepareInsert(
+            long partnerId,
             @NonNull List<org.lagonette.app.room.entity.Location> locationEntities,
             @NonNull List<LocationMetadata> locationMetadataEntities) {
         org.lagonette.app.room.entity.Location location = new org.lagonette.app.room.entity.Location();

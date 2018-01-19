@@ -5,16 +5,11 @@ import android.arch.persistence.room.Room;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.squareup.moshi.Moshi;
 
 import org.lagonette.app.BuildConfig;
-import org.lagonette.app.api.adapter.BooleanTypeAdapter;
-import org.lagonette.app.api.adapter.LongTypeAdapter;
-import org.lagonette.app.api.adapter.PartnerListTypeAdapter;
-import org.lagonette.app.api.adapter.PartnerTypeAdapter;
-import org.lagonette.app.api.adapter.StringTypeAdapter;
-import org.lagonette.app.api.response.Partner;
+import org.lagonette.app.api.adapter.BooleanAdapter;
+import org.lagonette.app.api.adapter.LongAdapter;
 import org.lagonette.app.api.service.LaGonetteService;
 import org.lagonette.app.locator.Api;
 import org.lagonette.app.locator.DB;
@@ -24,13 +19,12 @@ import org.lagonette.app.room.database.LaGonetteDatabase;
 import org.lagonette.app.util.DatabaseUtils;
 import org.lagonette.app.util.StrictModeUtils;
 
-import java.util.List;
 import java.util.concurrent.Executors;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class LaGonetteApplication
         extends Application {
@@ -73,35 +67,20 @@ public class LaGonetteApplication
             httpClient.addInterceptor(logging);
         }
 
-        Gson mainGson = new GsonBuilder()
-                .registerTypeAdapter(String.class, new StringTypeAdapter())
-                .registerTypeAdapter(Long.class, new LongTypeAdapter())
-                .registerTypeAdapter(Boolean.class, new BooleanTypeAdapter())
-                .create();
-
-        PartnerListTypeAdapter partnerListTypeAdapter = new PartnerListTypeAdapter(mainGson);
-        PartnerTypeAdapter partnerTypeAdapter = new PartnerTypeAdapter(mainGson, partnerListTypeAdapter);
-
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(List.class, partnerListTypeAdapter)
-                .registerTypeAdapter(Partner.class, partnerTypeAdapter)
-                .create();
+        Moshi moshi = new Moshi.Builder()
+                .add(new BooleanAdapter())
+                .add(new LongAdapter())
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(LaGonetteService.HOST)
                 .client(httpClient.build())
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .build();
 
         Api.setPartnerService(
                 retrofit.create(LaGonetteService.Partner.class)
         );
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(LaGonetteService.HOST)
-                .client(httpClient.build())
-                .addConverterFactory(GsonConverterFactory.create(mainGson))
-                .build();
 
         Api.setCategoryService(
                 retrofit.create(LaGonetteService.Category.class)

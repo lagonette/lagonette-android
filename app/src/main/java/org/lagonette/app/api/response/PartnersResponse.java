@@ -2,7 +2,7 @@ package org.lagonette.app.api.response;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import org.lagonette.app.room.entity.LocationMetadata;
 
@@ -12,7 +12,7 @@ public class PartnersResponse extends ApiResponse {
 
     private static final String TAG = "PartnersResponse";
 
-    @SerializedName("partners")
+    @Json(name = "partners")
     private List<Partner> mPartners;
 
     public void prepareInsert(

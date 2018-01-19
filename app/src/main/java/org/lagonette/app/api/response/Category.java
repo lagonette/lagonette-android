@@ -2,7 +2,7 @@ package org.lagonette.app.api.response;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import org.lagonette.app.room.embedded.CategoryKey;
 
@@ -10,25 +10,25 @@ import java.util.List;
 
 public class Category {
 
-    @SerializedName("id")
+    @Json(name = "id")
     public long id;
 
-    @SerializedName("categoryType")
+    @Json(name = "categoryType")
     public long categoryType;
 
-    @SerializedName("parentId")
+    @Json(name = "parentId")
     public long parentId;
 
-    @SerializedName("parentCategoryType")
+    @Json(name = "parentCategoryType")
     public long parentCategoryType;
 
-    @SerializedName("label")
+    @Json(name = "label")
     public String label;
 
-    @SerializedName("icon")
+    @Json(name = "icon")
     public String icon;
 
-    @SerializedName("displayOrder")
+    @Json(name = "displayOrder")
     public int displayOrder;
 
     public void prepareInsert(

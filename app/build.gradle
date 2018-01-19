@@ -93,7 +93,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:10.2.6'
     implementation 'com.google.firebase:firebase-crash:10.2.6'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
-    implementation 'com.google.code.gson:gson:2.8.0'
 
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.4.2'
 
@@ -106,9 +105,12 @@ dependencies {
     implementation 'android.arch.persistence.room:runtime:1.0.0-alpha9-1'
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha9-1"
 
+    // For Moshi
+    implementation 'com.squareup.moshi:moshi:1.5.0'
+
     // For Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.2.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.3.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
     // For Glide

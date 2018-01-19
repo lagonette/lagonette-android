@@ -1,9 +1,9 @@
 package org.lagonette.app.api.response;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 public class Md5SumResponse {
 
-    @SerializedName("md5_sum")
+    @Json(name = "md5_sum")
     public String md5Sum;
 }

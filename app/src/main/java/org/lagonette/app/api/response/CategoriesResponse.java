@@ -2,13 +2,13 @@ package org.lagonette.app.api.response;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import java.util.List;
 
 public class CategoriesResponse extends ApiResponse {
 
-    @SerializedName("categories")
+    @Json(name = "categories")
     private List<Category> mCategories;
 
     public void prepareInsert(

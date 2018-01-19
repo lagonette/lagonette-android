@@ -3,8 +3,9 @@ package org.lagonette.app.api.response;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
+import org.lagonette.app.api.adapter.BooleanAdapter;
 import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.LocationMetadata;
 
@@ -12,43 +13,43 @@ import java.util.List;
 
 public class Partner {
 
-    @SerializedName("id")
+    @Json(name = "id")
     public long id;
 
-    @SerializedName("clientCode")
+    @Json(name = "clientCode")
     public String clientCode;
 
-    @SerializedName("name")
+    @Json(name = "name")
     public String name;
 
-    @SerializedName("logo")
+    @Json(name = "logo")
     public String logo;
 
-    @SerializedName("phone")
+    @Json(name = "phone")
     public String phone;
 
-    @SerializedName("website")
+    @Json(name = "website")
     public String website;
 
-    @SerializedName("email")
+    @Json(name = "email")
     public String email;
 
-    @SerializedName("description")
+    @Json(name = "description")
     public String description;
 
-    @SerializedName("isGonetteHeadquarter")
-    public Boolean isGonetteHeadquarter;
+    @Json(name = "isGonetteHeadquarter")
+    public boolean isGonetteHeadquarter;
 
-    @SerializedName("shortDescription")
+    @Json(name = "shortDescription")
     public String shortDescription;
 
-    @SerializedName("locations")
+    @Json(name = "locations")
     public List<Location> locations;
 
-    @SerializedName("mainCategory")
+    @Json(name = "mainCategory")
     public long mainCategoryId;
 
-    @SerializedName("sideCategories")
+    @Json(name = "sideCategories")
     public List<Long> sideCategoryIds;
 
     @Override
@@ -79,7 +80,7 @@ public class Partner {
 
         for (Location location : locations) {
             if (location != null) {
-                location.prepareInsert(locationEntities, locationMetadataEntities);
+                location.prepareInsert(id, locationEntities, locationMetadataEntities);
             }
         }
 

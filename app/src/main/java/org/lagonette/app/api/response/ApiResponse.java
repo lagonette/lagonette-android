@@ -1,10 +1,10 @@
 package org.lagonette.app.api.response;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 public abstract class ApiResponse extends Md5SumResponse {
 
-    @SerializedName("errors")
+    @Json(name = "errors")
     public String errors;
 
 }
