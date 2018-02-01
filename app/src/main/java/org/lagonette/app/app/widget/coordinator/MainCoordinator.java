@@ -16,13 +16,14 @@ import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.Logger;
 import org.lagonette.app.tools.functions.LongConsumer;
 import org.lagonette.app.tools.functions.NullFunctions;
+import org.lagonette.app.worker.BackgroundWorker;
 
 public abstract class MainCoordinator {
 
     private static final String TAG = "MainCoordinator";
 
     @NonNull
-    public Consumer<MainAction> finishAction = NullFunctions::doNothing;
+    public Runnable finishAction = NullFunctions::doNothing;
 
     @NonNull
     public Runnable openBottomSheet = NullFunctions::doNothing;
@@ -49,10 +50,22 @@ public abstract class MainCoordinator {
     public LongConsumer openLocation = NullFunctions::doNothing;
 
     @NonNull
+    public Runnable loadMap = NullFunctions::doNothing;
+
+    @NonNull
+    public Runnable restoreMap = NullFunctions::doNothing;
+
+    @NonNull
+    public Runnable restoreFilters = NullFunctions::doNothing;
+
+    @NonNull
     public Runnable loadFilters = NullFunctions::doNothing;
 
     @NonNull
     public Runnable unloadFilters = NullFunctions::doNothing;
+
+    @NonNull
+    public Runnable restoreLocationDetail = NullFunctions::doNothing;
 
     @NonNull
     public LongConsumer loadLocationDetail = NullFunctions::doNothing;
@@ -63,14 +76,37 @@ public abstract class MainCoordinator {
     @NonNull
     protected Runnable wait = NullFunctions::doNothing;
 
+    @NonNull
+    public MainState init(@NonNull MainState state) {
+        loadMap.run();
+
+        if (state.bottomSheetState != BottomSheetBehavior.STATE_HIDDEN) {
+            closeBottomSheet.run();
+        }
+
+        return MainState.build()
+                .setAction(null)
+                .clearLoadedLocationId()
+                .setLocationDetailLoaded(false)
+                .setFiltersLoaded(false)
+                .setMapMovement(MainState.MapMovement.IDLE)
+                .setBottomSheetState(BottomSheetBehavior.STATE_HIDDEN)
+                .build();
+    }
+
+    @NonNull
+    @CallSuper
+    public MainState restore(@NonNull MainState state) {
+        restoreMap.run();
+        restoreFilters.run();
+        restoreLocationDetail.run();
+        return state;
+    }
+
     @CallSuper
     public void process(@NonNull MainState state) {
         if (state.action != null) {
             switch (state.action.type) {
-
-                case RESTORE:
-                    computeRestore(state.action, state);
-                    break;
 
                 case BACK:
                     computeBack(state.action, state);
@@ -108,8 +144,6 @@ public abstract class MainCoordinator {
         }
     }
 
-    protected abstract void computeRestore(@NonNull MainAction action, @NonNull MainState state);
-
     protected abstract void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state);
 
     private void computeMovementToMyLocation(@NonNull MainAction action, @NonNull MainState state) {
@@ -133,7 +167,7 @@ public abstract class MainCoordinator {
                         break;
 
                     case MOVE:
-                        finishAction.accept(action);
+                        finishAction.run();
                         break;
                 }
                 break;
@@ -155,11 +189,11 @@ public abstract class MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_DRAGGING:
-                        finishAction.accept(action);
+                        finishAction.run();
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                        finishAction.accept(action);
+                        finishAction.run();
                 break;
         }
     }
@@ -191,7 +225,7 @@ public abstract class MainCoordinator {
                             action.shouldMove = false;
                             moveMapToCluster.accept(action.cluster);
                         } else {
-                            finishAction.accept(action);
+                            finishAction.run();
                         }
                         break;
                 }
@@ -221,7 +255,7 @@ public abstract class MainCoordinator {
                         break;
 
                     case MOVE:
-                        finishAction.accept(action);
+                        finishAction.run();
                         break;
                 }
                 break;
@@ -232,7 +266,7 @@ public abstract class MainCoordinator {
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
-                finishAction.accept(action);
+                finishAction.run();
                 break;
 
             case BottomSheetBehavior.STATE_COLLAPSED:
@@ -242,7 +276,7 @@ public abstract class MainCoordinator {
                 break;
 
             case BottomSheetBehavior.STATE_HIDDEN:
-                finishAction.accept(action);
+                finishAction.run();
                 break;
         }
     }

@@ -11,52 +11,52 @@ import org.lagonette.app.room.statement.Statement;
 public class LandscapeMainCoordinator
         extends MainCoordinator {
 
+    @NonNull
     @Override
-    protected void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state) {
-        finishAction.accept(action);
-    }
+    public MainState restore(@NonNull MainState state) {
+        state = super.restore(state);
+        MainState.Builder builder = state.buildUppon();
 
-    /**
-     * Because of the view#post() call, bottom sheet state is set after performer is connected to LiveData.
-     * So bottom sheet state initialization is saved into LiveData.
-     * If you do 2 orientation changes, the bottom sheet state is not the same as the started state.
-     */
-    @Override
-    protected void computeRestore(@NonNull MainAction action, @NonNull MainState state) {
         if (!state.isFiltersLoaded) {
             loadFilters.run();
+            builder.setFiltersLoaded(true);
         }
-        else {
-            switch (state.bottomSheetState) {
 
-                case BottomSheetBehavior.STATE_COLLAPSED:
-                    if (state.isLocationDetailLoaded) {
-                        openBottomSheet.run();
-                    } else {
-                        closeBottomSheet.run();
-                    }
-                    break;
+        switch (state.bottomSheetState) {
 
-                case BottomSheetBehavior.STATE_DRAGGING:
-                case BottomSheetBehavior.STATE_EXPANDED:
-                case BottomSheetBehavior.STATE_SETTLING:
-                    if (state.isLocationDetailLoaded) {
-                        finishAction.accept(action);
-                    } else {
-                        closeBottomSheet.run();
-                    }
-                    break;
-
-                case BottomSheetBehavior.STATE_HIDDEN:
-                    if (state.isLocationDetailLoaded) {
-                        unloadLocationDetail.run();
-                    }
-                    else {
-                        finishAction.accept(action);
-                    }
-                    break;
-            }
+            case BottomSheetBehavior.STATE_DRAGGING:
+            case BottomSheetBehavior.STATE_SETTLING:
+            case BottomSheetBehavior.STATE_COLLAPSED:
+                if (state.isLocationDetailLoaded) {
+                    openBottomSheet.run();
+                    builder.setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+                else {
+                    closeBottomSheet.run();
+                    builder.setBottomSheetState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                break;
+            case BottomSheetBehavior.STATE_EXPANDED:
+                if (!state.isLocationDetailLoaded) {
+                    closeBottomSheet.run();
+                    builder.setBottomSheetState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                break;
+            case BottomSheetBehavior.STATE_HIDDEN:
+                if (state.isLocationDetailLoaded) {
+                    unloadLocationDetail.run();
+                    builder.setLocationDetailLoaded(true);
+                    builder.clearLoadedLocationId();
+                }
+                break;
         }
+
+        return builder.build();
+    }
+
+    @Override
+    protected void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state) {
+        finishAction.run();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class LandscapeMainCoordinator
         if (action.locationId > Statement.NO_ID) {
             openLocation.accept(action.locationId);
         } else if (action.item == null) {
-            finishAction.accept(action);
+            finishAction.run();
         } else if (state.isLocationDetailLoaded) {
             switch (state.bottomSheetState) {
 
@@ -77,12 +77,12 @@ public class LandscapeMainCoordinator
                     } else if (state.loadedLocationId != selectedId) {
                         loadLocationDetail.accept(action.item.getId());
                     } else {
-                        finishAction.accept(action);
+                        finishAction.run();
                     }
                     break;
 
                 case BottomSheetBehavior.STATE_DRAGGING:
-                    finishAction.accept(action);
+                    finishAction.run();
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:
@@ -105,7 +105,7 @@ public class LandscapeMainCoordinator
                                     openBottomSheet.run();
                                 }
                             } else {
-                                finishAction.accept(action);
+                                finishAction.run();
                             }
                             break;
                     }
@@ -120,7 +120,7 @@ public class LandscapeMainCoordinator
                     break;
 
                 case BottomSheetBehavior.STATE_DRAGGING:
-                    finishAction.accept(action);
+                    finishAction.run();
                     break;
 
                 case BottomSheetBehavior.STATE_SETTLING:

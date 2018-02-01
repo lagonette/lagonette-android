@@ -9,7 +9,7 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
 
     public interface Lifecycle {
 
-        void construct(@NonNull PresenterActivity owner);
+        void startConstruct(@NonNull PresenterActivity owner);
 
         @LayoutRes
         int getContentView();
@@ -20,15 +20,15 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
 
         void restore(@NonNull PresenterActivity owner, @NonNull Bundle savedInstanceState);
 
-        void connect(@NonNull PresenterActivity owner);
+        void endConstruct(@NonNull PresenterActivity owner);
     }
 
     protected Presenter mPresenter;
 
     @Override
-    protected void construct() {
+    protected void startConstruct() {
         mPresenter = getPresenter();
-        mPresenter.construct(PresenterActivity.this);
+        mPresenter.startConstruct(PresenterActivity.this);
     }
 
     @NonNull
@@ -56,7 +56,7 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
     }
 
     @Override
-    protected void connect() {
-        mPresenter.connect(PresenterActivity.this);
+    protected void endConstruct() {
+        mPresenter.endConstruct(PresenterActivity.this);
     }
 }

@@ -3,7 +3,6 @@ package org.lagonette.app.app.widget.coordinator.state;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.BottomSheetUtils;
@@ -34,13 +33,21 @@ public class MainState {
         MOVE
     }
 
+    public static Builder build() {
+        return new Builder();
+    }
+
+    public static Builder build(@Nullable MainState state) {
+        return state != null ? state.buildUppon() : new Builder();
+    }
+
     @Nullable
     public final MainAction action;
 
     @NonNull
     public final MapMovement mapMovement;
 
-    @BottomSheetBehavior.State
+    @BottomSheetState
     public final int bottomSheetState;
 
     public final boolean isFiltersLoaded;
@@ -52,7 +59,7 @@ public class MainState {
     public MainState(
             @Nullable MainAction action,
             @NonNull MapMovement mapMovement,
-            @BottomSheetBehavior.State int bottomSheetState,
+            @BottomSheetState  int bottomSheetState,
             boolean isFiltersLoaded,
             boolean isLocationDetailLoaded,
             long loadedLocationId) {
@@ -64,88 +71,8 @@ public class MainState {
         this.loadedLocationId = loadedLocationId;
     }
 
-    @NonNull
-    public MainState action(@NonNull MainAction action) {
-        return new MainState(
-                action,
-                mapMovement,
-                bottomSheetState,
-                isFiltersLoaded,
-                isLocationDetailLoaded,
-                loadedLocationId
-        );
-    }
-
-    @NonNull
-    public MainState mapMovement(@NonNull MapMovement mapMovement) {
-        return new MainState(
-                action,
-                mapMovement,
-                bottomSheetState,
-                isFiltersLoaded,
-                isLocationDetailLoaded,
-                loadedLocationId
-        );
-    }
-
-    @NonNull
-    public MainState bottomSheetState(@BottomSheetBehavior.State int bottomSheetState) {
-        return new MainState(
-                action,
-                mapMovement,
-                bottomSheetState,
-                isFiltersLoaded,
-                isLocationDetailLoaded,
-                loadedLocationId
-        );
-    }
-
-    @NonNull
-    public MainState filtersLoading(boolean isFiltersLoaded) {
-        return new MainState(
-                action,
-                mapMovement,
-                bottomSheetState,
-                isFiltersLoaded,
-                isLocationDetailLoaded,
-                loadedLocationId
-        );
-    }
-
-    @NonNull
-    public MainState locationDetailLoading(boolean isLocationDetailLoaded, long loadedLocationId) {
-        return new MainState(
-                action,
-                mapMovement,
-                bottomSheetState,
-                isFiltersLoaded,
-                isLocationDetailLoaded,
-                loadedLocationId
-        );
-    }
-
-    @NonNull
-    public MainState locationDetailLoading(boolean isLocationDetailLoaded) {
-        return new MainState(
-                action,
-                mapMovement,
-                bottomSheetState,
-                isFiltersLoaded,
-                isLocationDetailLoaded,
-                Statement.NO_ID
-        );
-    }
-
-    @NonNull
-    public MainState loadedLocationId(long loadedLocationId) {
-        return new MainState(
-                action,
-                mapMovement,
-                bottomSheetState,
-                isFiltersLoaded,
-                true,
-                loadedLocationId
-        );
+    public Builder buildUppon() {
+        return new Builder(this);
     }
 
     @Override
@@ -169,4 +96,81 @@ public class MainState {
         string += "]";
         return string;
     }
+
+    public static class Builder {
+
+        @Nullable
+        public MainAction action;
+
+        @NonNull
+        public MapMovement mapMovement = MapMovement.IDLE;
+
+        @BottomSheetState
+        public int bottomSheetState;
+
+        public boolean isFiltersLoaded;
+
+        public long loadedLocationId = Statement.NO_ID;
+
+        public boolean isLocationDetailLoaded;
+
+        public Builder() {
+        }
+
+        public Builder(@NonNull MainState state) {
+            this.action = state.action;
+            this.mapMovement = state.mapMovement;
+            this.bottomSheetState = state.bottomSheetState;
+            this.isFiltersLoaded = state.isFiltersLoaded;
+            this.isLocationDetailLoaded = state.isLocationDetailLoaded;
+            this.loadedLocationId = state.loadedLocationId;
+        }
+
+        public Builder setAction(@Nullable MainAction action) {
+            this.action = action;
+            return this;
+        }
+
+        public Builder setMapMovement(@NonNull MapMovement mapMovement) {
+            this.mapMovement = mapMovement;
+            return this;
+        }
+
+        public Builder setBottomSheetState(@BottomSheetState int bottomSheetState) {
+            this.bottomSheetState = bottomSheetState;
+            return this;
+        }
+
+        public Builder setFiltersLoaded(boolean filtersLoaded) {
+            isFiltersLoaded = filtersLoaded;
+            return this;
+        }
+
+        public Builder setLoadedLocationId(long loadedLocationId) {
+            this.loadedLocationId = loadedLocationId;
+            return this;
+        }
+
+        public Builder clearLoadedLocationId() {
+            this.loadedLocationId = Statement.NO_ID;
+            return this;
+        }
+
+        public Builder setLocationDetailLoaded(boolean locationDetailLoaded) {
+            isLocationDetailLoaded = locationDetailLoaded;
+            return this;
+        }
+
+        public MainState build() {
+            return new MainState(
+                    action,
+                    mapMovement,
+                    bottomSheetState,
+                    isFiltersLoaded,
+                    isLocationDetailLoaded,
+                    loadedLocationId
+            );
+        }
+    }
 }
+

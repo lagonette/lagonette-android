@@ -12,13 +12,12 @@ import android.view.View;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.activity.PresenterActivity;
-import org.lagonette.app.app.viewmodel.MainActionViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
+import org.lagonette.app.app.viewmodel.UiStateStore;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
-import org.lagonette.app.app.widget.performer.base.MainStateModel;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
@@ -27,7 +26,6 @@ import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.arch.LongObserver;
-import org.lagonette.app.tools.functions.Logger;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
@@ -42,13 +40,11 @@ public abstract class MainPresenter<
 
     private static final String TAG = "MainPresenter";
 
+    protected UiStateStore mUiStateStore;
+
     protected StateMapActivityViewModel mStateViewModel;
 
     protected MainLiveEventBusViewModel mEventBus;
-
-    protected MainActionViewModel mAction;
-
-    protected MainStateModel mMainState;
 
     protected MutableLiveData<String> mSearch;
 
@@ -70,7 +66,7 @@ public abstract class MainPresenter<
 
     @Override
     @CallSuper
-    public void construct(@NonNull PresenterActivity activity) {
+    public void startConstruct(@NonNull PresenterActivity activity) {
 
         mStateViewModel = ViewModelProviders
                 .of(activity)
@@ -80,16 +76,45 @@ public abstract class MainPresenter<
                 .of(activity)
                 .get(MainLiveEventBusViewModel.class);
 
-        mAction = ViewModelProviders
+        mUiStateStore = ViewModelProviders
                 .of(activity)
-                .get(MainActionViewModel.class);
+                .get(UiStateStore.class);
 
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
 
+        mCoordinator = createCoordinator();
+        mMapFragmentPerformer = createMapFragmentPerformer(activity);
+        mFabButtonsPerformer = createFabButtonPerformer(activity);
+        mSearchBarPerformer = createSearchBarPerformer(activity);
+        mBottomSheetPerformer = createBottomSheetPerformer(activity);
         mFiltersFragmentPerformer = new FiltersFragmentPerformer(activity, R.id.fragment_filters);
         mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity, R.id.fragment_location_detail);
-        mMainState = new MainStateModel();
+
+        // === Coordinator > Performer === //
+        mCoordinator.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
+        mCoordinator.closeBottomSheet = mBottomSheetPerformer::closeBottomSheet;
+
+        mCoordinator.moveMapToCluster = mMapFragmentPerformer::moveToCluster;
+        mCoordinator.moveMapToLocation = mMapFragmentPerformer::moveToLocation;
+        mCoordinator.moveMapToMyLocation = mMapFragmentPerformer::moveToMyLocation;
+        mCoordinator.stopMapMoving = mMapFragmentPerformer::stopMoving;
+        mCoordinator.moveMapToFootprint = mMapFragmentPerformer::moveToFootprint;
+        mCoordinator.openLocation = mMapFragmentPerformer::openLocation;
+
+        mCoordinator.loadMap = mMapFragmentPerformer::loadFragment;
+        mCoordinator.restoreMap = mMapFragmentPerformer::restoreFragment;
+
+        mCoordinator.loadFilters = mFiltersFragmentPerformer::loadFragment;
+        mCoordinator.unloadFilters = mFiltersFragmentPerformer::unloadFragment;
+        mCoordinator.restoreFilters = mFiltersFragmentPerformer::restoreFragment;
+
+        mCoordinator.loadLocationDetail = mLocationDetailFragmentPerformer::loadFragment;
+        mCoordinator.unloadLocationDetail = mLocationDetailFragmentPerformer::unloadFragment;
+        mCoordinator.restoreLocationDetail = mLocationDetailFragmentPerformer::restoreFragment;
+
+        // === Coordinator > Store === //
+        mCoordinator.finishAction = mUiStateStore::notifyActionIsFinished;
     }
 
     @Override
@@ -108,110 +133,69 @@ public abstract class MainPresenter<
     @Override
     @CallSuper
     public void init(@NonNull PresenterActivity activity) {
-        mMapFragmentPerformer.loadFragment();
-        mBottomSheetPerformer.closeBottomSheet();
+        MainState currentState = retrieveCurrentState();
+        MainState initState = mCoordinator.init(currentState);
+        mUiStateStore.setState(initState);
     }
 
     @Override
     @CallSuper
     public void restore(@NonNull PresenterActivity activity, @NonNull Bundle savedInstanceState) {
-        mMapFragmentPerformer.restoreFragment();
-        mFiltersFragmentPerformer.restoreFragment();
-        mLocationDetailFragmentPerformer.restoreFragment();
-
-        mAction.start(MainAction.restore(mAction.getLiveData().getValue()));
+        MainState currentState = retrieveCurrentState();
+        MainState restoredState = mCoordinator.restore(currentState);
+        mUiStateStore.setState(restoredState);
     }
 
     @Override
     @CallSuper
-    public void connect(@NonNull PresenterActivity activity) {
+    public void endConstruct(@NonNull PresenterActivity activity) {
 
-        // ======================== //
-        //   State initialisation   //
-        // ======================== //
-
-        mMainState.initState = this::initState;
-
-        // ========================================== //
-        //                                            //
-        //                    X                       //
-        //                    ^                       //
-        //   ⋄ ---------> Coordinator ----------- ⋄   //
-        //   |                |                   |   //
-        //   |                |                   |   //
-        //   State            |                   |   //
-        //   ^                |                   |   //
-        //   |                v                   v   //
-        //   Model <--------- ⋄ <-------- Performer   //
-        //                                |       ^   //
-        //                                v       |   //
-        //                       User --> View -- ⋄   //
-        //                                            //
-        // ========================================== //
-
-        // Coordinator > Performer
-        mCoordinator.finishAction = mAction::finish;
-
-        mCoordinator.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
-        mCoordinator.closeBottomSheet = mBottomSheetPerformer::closeBottomSheet;
-
-        mCoordinator.moveMapToCluster = mMapFragmentPerformer::moveToCluster;
-        mCoordinator.moveMapToLocation = mMapFragmentPerformer::moveToLocation;
-        mCoordinator.moveMapToMyLocation = mMapFragmentPerformer::moveToMyLocation;
-        mCoordinator.stopMapMoving = mMapFragmentPerformer::stopMoving;
-        mCoordinator.moveMapToFootprint = mMapFragmentPerformer::moveToFootprint;
-        mCoordinator.openLocation = mMapFragmentPerformer::openLocation;
-
-        mCoordinator.loadFilters = mFiltersFragmentPerformer::loadFragment;
-        mCoordinator.unloadFilters = mFiltersFragmentPerformer::unloadFragment;
-
-        mCoordinator.loadLocationDetail = mLocationDetailFragmentPerformer::loadFragment;
-        mCoordinator.unloadLocationDetail = mLocationDetailFragmentPerformer::unloadFragment;
-
-        mCoordinator.setupLoggers();
-
-        // Event bus > action
+        // === Performer > Store === //
         mEventBus.subscribe(
                 OPEN_LOCATION_ITEM,
                 activity,
-                locationItem -> mAction.start(MainAction.moveToAndOpenLocation(locationItem))
+                locationItem -> mUiStateStore.startAction(MainAction.moveToAndOpenLocation(locationItem))
         );
         mEventBus.subscribe(
                 MOVE_TO_CLUSTER,
                 activity,
-                cluster -> mAction.start(MainAction.moveToCluster(cluster))
+                cluster -> mUiStateStore.startAction(MainAction.moveToCluster(cluster))
         );
         mEventBus.subscribe(
                 SHOW_FULL_MAP,
                 activity,
-                aVoid -> mAction.start(MainAction.showFullMap())
+                aVoid -> mUiStateStore.startAction(MainAction.showFullMap())
         );
         mEventBus.subscribe(
                 OPEN_LOCATION_ID,
                 activity,
                 LongObserver.unbox(
                         Statement.NO_ID,
-                        locationId -> mAction.start(MainAction.moveToAndOpenLocation(locationId))
+                        locationId -> mUiStateStore.startAction(MainAction.moveToAndOpenLocation(locationId))
                 )
         );
 
-        // Performer > action
-        mFabButtonsPerformer.onPositionClick = () -> mAction.start(MainAction.moveToMyLocation());
-        mFabButtonsPerformer.onPositionLongClick = () -> mAction.start(MainAction.moveToFootprint());
+        mFabButtonsPerformer.onPositionClick = () -> mUiStateStore.startAction(MainAction.moveToMyLocation());
+        mFabButtonsPerformer.onPositionLongClick = () -> mUiStateStore.startAction(MainAction.moveToFootprint());
 
-        // Performer > model
-        mLocationDetailFragmentPerformer.onFragmentLoaded(mMainState::notifyLoadedLocationId);
-        mLocationDetailFragmentPerformer.onFragmentUnloaded(() -> mMainState.notifyLocationDetailLoading(false));
-        mFiltersFragmentPerformer.onFragmentLoaded(() -> mMainState.notifyFiltersLoading(true));
-        mFiltersFragmentPerformer.onFragmentUnloaded(() -> mMainState.notifyFiltersLoading(false));
-        mBottomSheetPerformer.onStateChanged = mMainState::notifyBottomSheetState;
-        mMapFragmentPerformer.onMapMovementChanged = mMainState::notifyMapMovement;
+        mLocationDetailFragmentPerformer.onFragmentLoaded(mUiStateStore::notifyLocationIdLoaded);
+        mLocationDetailFragmentPerformer.onFragmentUnloaded(mUiStateStore::notifyLocationDetailUnload);
+        mFiltersFragmentPerformer.onFragmentLoaded(() -> mUiStateStore.notifyFiltersLoading(true));
+        mFiltersFragmentPerformer.onFragmentUnloaded(() -> mUiStateStore.notifyFiltersLoading(false));
+        mBottomSheetPerformer.onStateChanged = mUiStateStore::notifyBottomSheetStateChanged;
+        mMapFragmentPerformer.onMapMovementChanged = mUiStateStore::notifyMapMovement;
 
-        // Action > State
-        mAction.getLiveData().observe(activity, mMainState::notifyAction);
 
-        // State > Coordinator
-        mMainState.onStateChanged = mCoordinator::process;
+        // === Store > Coordinator === //
+        mUiStateStore.getState()
+                .observe(
+                        activity,
+                        mCoordinator::process
+                );
+
+        // Setup loggers
+        mCoordinator.setupLoggers();
+
 
         // ------------------------------- //
         //                                 //
@@ -229,18 +213,21 @@ public abstract class MainPresenter<
 
     public boolean onBackPressed(@NonNull PresenterActivity activity) {
 
-        if (mMainState.getState().bottomSheetState == BottomSheetBehavior.STATE_HIDDEN) {
+        MainState state = mUiStateStore.getState().getValue();
+        if (state == null || state.bottomSheetState == BottomSheetBehavior.STATE_HIDDEN) {
             return false;
         }
 
-        mAction.start(MainAction.back());
+        mUiStateStore.startAction(MainAction.back());
         return true;
     }
 
     @NonNull
-    private MainState initState() {
+    private MainState retrieveCurrentState() {
         return new MainState(
-                mAction.getLiveData().getValue(),
+                mUiStateStore.getState().getValue() != null
+                        ? mUiStateStore.getState().getValue().action
+                        : null,
                 mMapFragmentPerformer.getMapMovement(),
                 mBottomSheetPerformer.getState(),
                 mFiltersFragmentPerformer.isLoaded(),
@@ -248,4 +235,20 @@ public abstract class MainPresenter<
                 mLocationDetailFragmentPerformer.getLoadedId()
         );
     }
+
+    @NonNull
+    protected abstract MainCoordinator createCoordinator();
+
+    @NonNull
+    protected abstract BottomSheetPerformer createBottomSheetPerformer(@NonNull PresenterActivity activity);
+
+    @NonNull
+    protected abstract SBP createSearchBarPerformer(@NonNull PresenterActivity activity);
+
+    @NonNull
+    protected abstract FBP createFabButtonPerformer(@NonNull PresenterActivity activity);
+
+    @NonNull
+    protected abstract MFP createMapFragmentPerformer(@NonNull PresenterActivity activity);
+
 }

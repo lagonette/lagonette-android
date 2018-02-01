@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.activity.PresenterActivity;
+import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.landscape.LandscapeMainCoordinator;
+import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeFabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeMapFragmentPerformer;
@@ -16,16 +18,34 @@ public class LandscapeMainPresenter
         LandscapeMapFragmentPerformer,
         LandscapeSearchBarPerformer> {
 
+    @NonNull
     @Override
-    public void construct(@NonNull PresenterActivity activity) {
-        super.construct(activity);
+    protected MainCoordinator createCoordinator() {
+        return new LandscapeMainCoordinator();
+    }
 
-        mMapFragmentPerformer = new LandscapeMapFragmentPerformer(activity, R.id.content);
-        mFabButtonsPerformer = new LandscapeFabButtonsPerformer(R.id.my_location_fab);
-        mSearchBarPerformer = new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
-        mBottomSheetPerformer = new LandscapeBottomSheetPerformer(activity.getResources(), R.id.bottom_sheet);
+    @NonNull
+    @Override
+    protected BottomSheetPerformer createBottomSheetPerformer(@NonNull PresenterActivity activity) {
+        return new LandscapeBottomSheetPerformer(activity.getResources(), R.id.bottom_sheet);
+    }
 
-        mCoordinator = new LandscapeMainCoordinator();
+    @NonNull
+    @Override
+    protected LandscapeSearchBarPerformer createSearchBarPerformer(@NonNull PresenterActivity activity) {
+        return new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
+    }
+
+    @NonNull
+    @Override
+    protected LandscapeFabButtonsPerformer createFabButtonPerformer(@NonNull PresenterActivity activity) {
+        return new LandscapeFabButtonsPerformer(R.id.my_location_fab);
+    }
+
+    @NonNull
+    @Override
+    protected LandscapeMapFragmentPerformer createMapFragmentPerformer(@NonNull PresenterActivity activity) {
+        return new LandscapeMapFragmentPerformer(activity, R.id.content);
     }
 
     @Override
@@ -35,8 +55,8 @@ public class LandscapeMainPresenter
     }
 
     @Override
-    public void connect(@NonNull PresenterActivity activity) {
-        super.connect(activity);
+    public void endConstruct(@NonNull PresenterActivity activity) {
+        super.endConstruct(activity);
 
         // Performer > Performer
         mBottomSheetPerformer.onSlideChanged = mLocationDetailFragmentPerformer::updateTopPadding;

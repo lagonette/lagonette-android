@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
@@ -46,7 +45,6 @@ import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
 import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.util.SharedPreferencesUtils;
-import org.lagonette.app.util.SnackbarUtils;
 import org.lagonette.app.util.UiUtils;
 
 import java.io.IOException;

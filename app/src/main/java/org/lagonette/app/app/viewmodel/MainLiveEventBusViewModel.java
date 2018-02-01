@@ -2,8 +2,8 @@ package org.lagonette.app.app.viewmodel;
 
 import com.google.maps.android.clustering.Cluster;
 
-import org.lagonette.app.tools.arch.LiveEventBus.Event;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.tools.arch.LiveEventBus.Event;
 import org.lagonette.app.room.entity.statement.LocationItem;
 
 public class MainLiveEventBusViewModel extends LiveEventBusViewModel {
