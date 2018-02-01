@@ -10,6 +10,8 @@ import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.repo.Resource;
 
 public class StateMapActivityViewModel extends AndroidViewModel {
+    //TODO Rename into DataViewModel
+    //TODO Just updateData and provide status
 
     @NonNull
     private final MutableLiveData<String> mSearch;
