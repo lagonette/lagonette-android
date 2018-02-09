@@ -20,6 +20,7 @@ import static org.lagonette.app.app.widget.coordinator.state.UiAction.ActionType
 public class UiAction {
 
     //TODO Make MainAction an enum not just action type
+    //TODO Or Use strategy pattern
 
     public enum  ActionType {
         IDLE,
