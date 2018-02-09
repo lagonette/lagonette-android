@@ -4,7 +4,6 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.BottomSheetUtils;
 
 import java.lang.annotation.Retention;
@@ -16,6 +15,7 @@ import static android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED;
 import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
 import static android.support.design.widget.BottomSheetBehavior.STATE_SETTLING;
 
+// TODO Rename as UiState
 public class MainState {
 
     @Retention(RetentionPolicy.SOURCE)

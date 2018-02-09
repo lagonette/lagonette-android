@@ -88,7 +88,7 @@ public abstract class MainCoordinator {
     }
 
     @CallSuper
-    public void restore(@NonNull MainState state) {
+    public void restore() {
         restoreMap.run();
         restoreFilters.run();
         restoreLocationDetail.run();
@@ -104,6 +104,10 @@ public abstract class MainCoordinator {
 
                 case BACK:
                     computeBack(state.action, state);
+                    break;
+
+                case RESTORE:
+                    computeRestore(state.action, state);
                     break;
 
                 case OPEN_FILTERS:
@@ -137,6 +141,8 @@ public abstract class MainCoordinator {
             }
         }
     }
+
+    protected abstract void computeRestore(@NonNull MainAction action, @NonNull MainState state);
 
     protected abstract void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state);
 

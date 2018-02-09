@@ -11,122 +11,6 @@ import org.lagonette.app.room.statement.Statement;
 public class PortraitMainCoordinator
         extends MainCoordinator {
 
-    @NonNull
-    @Override
-    public void restore(@NonNull MainState state) {
-        super.restore(state);
-
-        if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
-            unloadFilters.run();
-        }
-
-        switch (state.bottomSheetState) {
-
-            case BottomSheetBehavior.STATE_DRAGGING:
-            case BottomSheetBehavior.STATE_SETTLING:
-                break;
-
-            case BottomSheetBehavior.STATE_COLLAPSED:
-                if (!state.isLocationDetailLoaded && !state.isFiltersLoaded) {
-                    closeBottomSheet.run();
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_EXPANDED:
-                if (!state.isLocationDetailLoaded && !state.isFiltersLoaded) {
-                    closeBottomSheet.run();
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_HIDDEN:
-                if (state.isLocationDetailLoaded || state.isFiltersLoaded) {
-                    unloadFilters.run();
-                    unloadLocationDetail.run();
-                }
-                break;
-        }
-    }
-
-    @Override
-    protected void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state) {
-
-        switch (state.bottomSheetState) {
-
-            case BottomSheetBehavior.STATE_HIDDEN:
-
-                if (state.isLocationDetailLoaded) {
-                    unloadLocationDetail.run();
-                }
-                else if (state.isFiltersLoaded) {
-                    openBottomSheet.run();
-                }
-                else {
-                    loadFilters.run();
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_COLLAPSED:
-                if (state.isLocationDetailLoaded) {
-                    closeBottomSheet.run();
-                }
-                else if (state.isFiltersLoaded) {
-                    finishAction.run();
-                }
-                else {
-                    wtf(state);
-                    closeBottomSheet.run();
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_EXPANDED:
-                if (state.isLocationDetailLoaded) {
-                    closeBottomSheet.run();
-                }
-                else if (state.isFiltersLoaded) {
-                    finishAction.run();
-                }
-                else {
-                    wtf(state);
-                    closeBottomSheet.run();
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_DRAGGING:
-                if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
-                    wtf(state);
-                    closeBottomSheet.run();
-                }
-                else if (state.isFiltersLoaded) {
-                    finishAction.run();
-                }
-                else if (state.isLocationDetailLoaded) {
-                    finishAction.run();
-                }
-                else {
-                    wtf(state);
-                    closeBottomSheet.run();
-                }
-                break;
-
-            case BottomSheetBehavior.STATE_SETTLING:
-                if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
-                    wtf(state);
-                    closeBottomSheet.run();
-                }
-                else if (state.isFiltersLoaded) {
-                    wait.run();
-                }
-                else if (state.isLocationDetailLoaded) {
-                    closeBottomSheet.run();
-                }
-                else {
-                    wtf(state);
-                    closeBottomSheet.run();
-                }
-                break;
-        }
-    }
-
     @Override
     protected void computeMovementToAndOpeningLocation(@NonNull MainAction action, @NonNull MainState state) {
         if (action.locationId > Statement.NO_ID) {
@@ -225,6 +109,119 @@ public class PortraitMainCoordinator
                 }
                 else if (state.isLocationDetailLoaded) {
                     unloadLocationDetail.run();
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void computeRestore(@NonNull MainAction action, @NonNull MainState state) {
+        if (state.isFiltersLoaded) {
+            unloadFilters.run();
+        }
+        else {
+            switch (state.bottomSheetState) {
+
+                case BottomSheetBehavior.STATE_COLLAPSED:
+                case BottomSheetBehavior.STATE_EXPANDED:
+                    if (state.isLocationDetailLoaded) {
+                        finishAction.run();
+                    } else {
+                        closeBottomSheet.run();
+                    }
+                    break;
+
+                case BottomSheetBehavior.STATE_SETTLING:
+                case BottomSheetBehavior.STATE_DRAGGING:
+                    closeBottomSheet.run();
+                    break;
+
+                case BottomSheetBehavior.STATE_HIDDEN:
+                    if (state.isLocationDetailLoaded) {
+                        unloadLocationDetail.run();
+                    } else {
+                        finishAction.run();
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state) {
+
+        switch (state.bottomSheetState) {
+
+            case BottomSheetBehavior.STATE_HIDDEN:
+
+                if (state.isLocationDetailLoaded) {
+                    unloadLocationDetail.run();
+                }
+                else if (state.isFiltersLoaded) {
+                    openBottomSheet.run();
+                }
+                else {
+                    loadFilters.run();
+                }
+                break;
+
+            case BottomSheetBehavior.STATE_COLLAPSED:
+                if (state.isLocationDetailLoaded) {
+                    closeBottomSheet.run();
+                }
+                else if (state.isFiltersLoaded) {
+                    finishAction.run();
+                }
+                else {
+                    wtf(state);
+                    closeBottomSheet.run();
+                }
+                break;
+
+            case BottomSheetBehavior.STATE_EXPANDED:
+                if (state.isLocationDetailLoaded) {
+                    closeBottomSheet.run();
+                }
+                else if (state.isFiltersLoaded) {
+                    finishAction.run();
+                }
+                else {
+                    wtf(state);
+                    closeBottomSheet.run();
+                }
+                break;
+
+            case BottomSheetBehavior.STATE_DRAGGING:
+                if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
+                    wtf(state);
+                    closeBottomSheet.run();
+                }
+                else if (state.isFiltersLoaded) {
+                    finishAction.run();
+                }
+                else if (state.isLocationDetailLoaded) {
+                    finishAction.run();
+                }
+                else {
+                    wtf(state);
+                    closeBottomSheet.run();
+                }
+                break;
+
+            case BottomSheetBehavior.STATE_SETTLING:
+                if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
+                    wtf(state);
+                    closeBottomSheet.run();
+                }
+                else if (state.isFiltersLoaded) {
+                    wait.run();
+                }
+                else if (state.isLocationDetailLoaded) {
+                    closeBottomSheet.run();
+                }
+                else {
+                    wtf(state);
+                    closeBottomSheet.run();
                 }
                 break;
         }

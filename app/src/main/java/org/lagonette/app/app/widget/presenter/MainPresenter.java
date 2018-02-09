@@ -140,8 +140,8 @@ public abstract class MainPresenter<
     @Override
     @CallSuper
     public void restore(@NonNull PresenterActivity activity, @NonNull Bundle savedInstanceState) {
-        MainState currentState = retrieveCurrentState();
-        mCoordinator.restore(currentState);
+        mCoordinator.restore();
+        mUiActionStore.startAction(MainAction.restore(mUiActionStore.getAction().getValue()));
     }
 
     @Override

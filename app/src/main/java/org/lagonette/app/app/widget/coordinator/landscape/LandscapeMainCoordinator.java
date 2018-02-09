@@ -13,6 +13,7 @@ public class LandscapeMainCoordinator
 
     @Override
     public void init(@NonNull MainState state) {
+        super.init(state);
 
         if (!state.isFiltersLoaded) {
             loadFilters.run();
@@ -20,35 +21,41 @@ public class LandscapeMainCoordinator
     }
 
     @Override
-    public void restore(@NonNull MainState state) {
-        super.restore(state);
-
+    protected void computeRestore(@NonNull MainAction action, @NonNull MainState state) {
         if (!state.isFiltersLoaded) {
             loadFilters.run();
         }
+        else {
+            switch (state.bottomSheetState) {
 
-        switch (state.bottomSheetState) {
+                case BottomSheetBehavior.STATE_EXPANDED:
+                    if (!state.isLocationDetailLoaded) {
+                        closeBottomSheet.run();
+                    }
+                    else {
+                        finishAction.run();
+                    }
+                    break;
 
-            case BottomSheetBehavior.STATE_DRAGGING:
-            case BottomSheetBehavior.STATE_SETTLING:
-            case BottomSheetBehavior.STATE_COLLAPSED:
-                if (state.isLocationDetailLoaded) {
-                    openBottomSheet.run();
-                }
-                else {
-                    closeBottomSheet.run();
-                }
-                break;
-            case BottomSheetBehavior.STATE_EXPANDED:
-                if (!state.isLocationDetailLoaded) {
-                    closeBottomSheet.run();
-                }
-                break;
-            case BottomSheetBehavior.STATE_HIDDEN:
-                if (state.isLocationDetailLoaded) {
-                    unloadLocationDetail.run();
-                }
-                break;
+                case BottomSheetBehavior.STATE_DRAGGING:
+                case BottomSheetBehavior.STATE_SETTLING:
+                case BottomSheetBehavior.STATE_COLLAPSED:
+                    if (!state.isLocationDetailLoaded) {
+                        closeBottomSheet.run();
+                    }
+                    else {
+                        openBottomSheet.run();
+                    }
+                    break;
+
+                case BottomSheetBehavior.STATE_HIDDEN:
+                    if (state.isLocationDetailLoaded) {
+                        unloadLocationDetail.run();
+                    } else {
+                        finishAction.run();
+                    }
+                    break;
+            }
         }
     }
 

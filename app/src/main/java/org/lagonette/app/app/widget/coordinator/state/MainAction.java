@@ -14,6 +14,7 @@ import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionTy
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_FOOTPRINT;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.MOVE_TO_MY_LOCATION;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.OPEN_FILTERS;
+import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.RESTORE;
 import static org.lagonette.app.app.widget.coordinator.state.MainAction.ActionType.SHOW_FULL_MAP;
 
 public class MainAction {
@@ -22,6 +23,7 @@ public class MainAction {
 
     public enum  ActionType {
         IDLE,
+        RESTORE,
         BACK,
         OPEN_FILTERS,
         MOVE_TO_MY_LOCATION,
@@ -35,6 +37,9 @@ public class MainAction {
     public final ActionType type;
 
     @Nullable
+    public MainAction pendingAction;
+
+    @Nullable
     public final Cluster<LocationItem> cluster;
 
     public final long locationId;
@@ -46,6 +51,7 @@ public class MainAction {
 
     public MainAction(
             @NonNull ActionType type,
+            @Nullable MainAction pendingAction,
             @Nullable Cluster<LocationItem> cluster,
             @Nullable LocationItem item,
             long locationId,
@@ -62,6 +68,7 @@ public class MainAction {
                 OPEN_FILTERS,
                 null,
                 null,
+                null,
                 Statement.NO_ID,
                 false
         );
@@ -70,6 +77,7 @@ public class MainAction {
     public static MainAction showFullMap() {
         return new MainAction(
                 SHOW_FULL_MAP,
+                null,
                 null,
                 null,
                 Statement.NO_ID,
@@ -82,6 +90,7 @@ public class MainAction {
                 MOVE_TO_MY_LOCATION,
                 null,
                 null,
+                null,
                 Statement.NO_ID,
                 true
         );
@@ -92,6 +101,7 @@ public class MainAction {
                 MOVE_TO_FOOTPRINT,
                 null,
                 null,
+                null,
                 Statement.NO_ID,
                 true
         );
@@ -100,6 +110,7 @@ public class MainAction {
     public static MainAction moveToCluster(@Nullable Cluster<LocationItem> cluster) {
         return new MainAction(
                 MOVE_TO_CLUSTER,
+                null,
                 cluster,
                 null,
                 Statement.NO_ID,
@@ -110,6 +121,7 @@ public class MainAction {
     public static MainAction moveToAndOpenLocation(@Nullable LocationItem item) {
         return new MainAction(
                 MOVE_TO_AND_OPEN_LOCATION,
+                null,
                 null,
                 item,
                 Statement.NO_ID,
@@ -123,6 +135,7 @@ public class MainAction {
                 MOVE_TO_AND_OPEN_LOCATION,
                 null,
                 null,
+                null,
                 locationId,
                 true
         );
@@ -131,6 +144,18 @@ public class MainAction {
     public static MainAction back() {
         return new MainAction(
                 BACK,
+                null,
+                null,
+                null,
+                Statement.NO_ID,
+                false
+        );
+    }
+
+    public static MainAction restore(@Nullable MainAction pendingAction) {
+        return new MainAction(
+                RESTORE,
+                pendingAction,
                 null,
                 null,
                 Statement.NO_ID,

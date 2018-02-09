@@ -3,10 +3,9 @@ package org.lagonette.app.app.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
-import org.lagonette.app.app.widget.coordinator.state.MainState;
 
 public class UiActionStore extends ViewModel {
 
@@ -20,11 +19,16 @@ public class UiActionStore extends ViewModel {
         return mActionLiveData;
     }
 
-    public void startAction(@NonNull MainAction action) {
+    public void startAction(@Nullable MainAction action) {
         mActionLiveData.setValue(action);
     }
 
     public void finishAction() {
-        mActionLiveData.setValue(null);
+        MainAction nextAction = null;
+        MainAction currentAction = mActionLiveData.getValue();
+        if (currentAction != null) {
+            nextAction = currentAction.pendingAction;
+        }
+        mActionLiveData.setValue(nextAction);
     }
 }
