@@ -14,7 +14,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
-import org.lagonette.app.app.viewmodel.UiStateStore;
+import org.lagonette.app.app.viewmodel.UiActionStore;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.app.widget.coordinator.state.MainState;
@@ -40,7 +40,7 @@ public abstract class MainPresenter<
 
     private static final String TAG = "MainPresenter";
 
-    protected UiStateStore mUiStateStore;
+    protected UiActionStore mUiActionStore;
 
     protected StateMapActivityViewModel mStateViewModel;
 
@@ -76,9 +76,9 @@ public abstract class MainPresenter<
                 .of(activity)
                 .get(MainLiveEventBusViewModel.class);
 
-        mUiStateStore = ViewModelProviders
+        mUiActionStore = ViewModelProviders
                 .of(activity)
-                .get(UiStateStore.class);
+                .get(UiActionStore.class);
 
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
@@ -114,7 +114,7 @@ public abstract class MainPresenter<
         mCoordinator.restoreLocationDetail = mLocationDetailFragmentPerformer::restoreFragment;
 
         // === Coordinator > Store === //
-        mCoordinator.finishAction = mUiStateStore::notifyActionIsFinished;
+        mCoordinator.finishAction = mUiActionStore::finishAction;
     }
 
     @Override
@@ -134,63 +134,63 @@ public abstract class MainPresenter<
     @CallSuper
     public void init(@NonNull PresenterActivity activity) {
         MainState currentState = retrieveCurrentState();
-        MainState initState = mCoordinator.init(currentState);
-        mUiStateStore.setState(initState);
+        mCoordinator.init(currentState);
     }
 
     @Override
     @CallSuper
     public void restore(@NonNull PresenterActivity activity, @NonNull Bundle savedInstanceState) {
         MainState currentState = retrieveCurrentState();
-        MainState restoredState = mCoordinator.restore(currentState);
-        mUiStateStore.setState(restoredState);
+        mCoordinator.restore(currentState);
     }
 
     @Override
     @CallSuper
     public void endConstruct(@NonNull PresenterActivity activity) {
 
+        mCoordinator.getCurrentState = this::retrieveCurrentState;
+
         // === Performer > Store === //
         mEventBus.subscribe(
                 OPEN_LOCATION_ITEM,
                 activity,
-                locationItem -> mUiStateStore.startAction(MainAction.moveToAndOpenLocation(locationItem))
+                locationItem -> mUiActionStore.startAction(MainAction.moveToAndOpenLocation(locationItem))
         );
         mEventBus.subscribe(
                 MOVE_TO_CLUSTER,
                 activity,
-                cluster -> mUiStateStore.startAction(MainAction.moveToCluster(cluster))
+                cluster -> mUiActionStore.startAction(MainAction.moveToCluster(cluster))
         );
         mEventBus.subscribe(
                 SHOW_FULL_MAP,
                 activity,
-                aVoid -> mUiStateStore.startAction(MainAction.showFullMap())
+                aVoid -> mUiActionStore.startAction(MainAction.showFullMap())
         );
         mEventBus.subscribe(
                 OPEN_LOCATION_ID,
                 activity,
                 LongObserver.unbox(
                         Statement.NO_ID,
-                        locationId -> mUiStateStore.startAction(MainAction.moveToAndOpenLocation(locationId))
+                        locationId -> mUiActionStore.startAction(MainAction.moveToAndOpenLocation(locationId))
                 )
         );
 
-        mFabButtonsPerformer.onPositionClick = () -> mUiStateStore.startAction(MainAction.moveToMyLocation());
-        mFabButtonsPerformer.onPositionLongClick = () -> mUiStateStore.startAction(MainAction.moveToFootprint());
+        mFabButtonsPerformer.onPositionClick = () -> mUiActionStore.startAction(MainAction.moveToMyLocation());
+        mFabButtonsPerformer.onPositionLongClick = () -> mUiActionStore.startAction(MainAction.moveToFootprint());
 
-        mLocationDetailFragmentPerformer.onFragmentLoaded(mUiStateStore::notifyLocationIdLoaded);
-        mLocationDetailFragmentPerformer.onFragmentUnloaded(mUiStateStore::notifyLocationDetailUnload);
-        mFiltersFragmentPerformer.onFragmentLoaded(() -> mUiStateStore.notifyFiltersLoading(true));
-        mFiltersFragmentPerformer.onFragmentUnloaded(() -> mUiStateStore.notifyFiltersLoading(false));
-        mBottomSheetPerformer.onStateChanged = mUiStateStore::notifyBottomSheetStateChanged;
-        mMapFragmentPerformer.onMapMovementChanged = mUiStateStore::notifyMapMovement;
+        mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mCoordinator.process());
+        mLocationDetailFragmentPerformer.onFragmentUnloaded(() -> mCoordinator.process());
+        mFiltersFragmentPerformer.onFragmentLoaded(() -> mCoordinator.process());
+        mFiltersFragmentPerformer.onFragmentUnloaded(() -> mCoordinator.process());
+        mBottomSheetPerformer.onStateChanged = state -> mCoordinator.process();
+        mMapFragmentPerformer.onMapMovementChanged = movement -> mCoordinator.process();
 
 
         // === Store > Coordinator === //
-        mUiStateStore.getState()
+        mUiActionStore.getAction()
                 .observe(
                         activity,
-                        mCoordinator::process
+                        action -> mCoordinator.process()
                 );
 
         // Setup loggers
@@ -213,21 +213,18 @@ public abstract class MainPresenter<
 
     public boolean onBackPressed(@NonNull PresenterActivity activity) {
 
-        MainState state = mUiStateStore.getState().getValue();
-        if (state == null || state.bottomSheetState == BottomSheetBehavior.STATE_HIDDEN) {
+        if (mBottomSheetPerformer.getState()  == BottomSheetBehavior.STATE_HIDDEN) {
             return false;
         }
 
-        mUiStateStore.startAction(MainAction.back());
+        mUiActionStore.startAction(MainAction.back());
         return true;
     }
 
     @NonNull
     private MainState retrieveCurrentState() {
         return new MainState(
-                mUiStateStore.getState().getValue() != null
-                        ? mUiStateStore.getState().getValue().action
-                        : null,
+                mUiActionStore.getAction().getValue(),
                 mMapFragmentPerformer.getMapMovement(),
                 mBottomSheetPerformer.getState(),
                 mFiltersFragmentPerformer.isLoaded(),

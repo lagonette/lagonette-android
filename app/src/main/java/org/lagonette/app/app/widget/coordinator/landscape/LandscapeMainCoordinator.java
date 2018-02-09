@@ -11,28 +11,20 @@ import org.lagonette.app.room.statement.Statement;
 public class LandscapeMainCoordinator
         extends MainCoordinator {
 
-    @NonNull
     @Override
-    public MainState init(@NonNull MainState state) {
+    public void init(@NonNull MainState state) {
 
         if (!state.isFiltersLoaded) {
             loadFilters.run();
         }
-
-        return super.init(state).buildUppon()
-                .setFiltersLoaded(true)
-                .build();
     }
 
-    @NonNull
     @Override
-    public MainState restore(@NonNull MainState state) {
-        state = super.restore(state);
-        MainState.Builder builder = state.buildUppon();
+    public void restore(@NonNull MainState state) {
+        super.restore(state);
 
         if (!state.isFiltersLoaded) {
             loadFilters.run();
-            builder.setFiltersLoaded(true);
         }
 
         switch (state.bottomSheetState) {
@@ -42,29 +34,22 @@ public class LandscapeMainCoordinator
             case BottomSheetBehavior.STATE_COLLAPSED:
                 if (state.isLocationDetailLoaded) {
                     openBottomSheet.run();
-                    builder.setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
                 }
                 else {
                     closeBottomSheet.run();
-                    builder.setBottomSheetState(BottomSheetBehavior.STATE_HIDDEN);
                 }
                 break;
             case BottomSheetBehavior.STATE_EXPANDED:
                 if (!state.isLocationDetailLoaded) {
                     closeBottomSheet.run();
-                    builder.setBottomSheetState(BottomSheetBehavior.STATE_HIDDEN);
                 }
                 break;
             case BottomSheetBehavior.STATE_HIDDEN:
                 if (state.isLocationDetailLoaded) {
                     unloadLocationDetail.run();
-                    builder.setLocationDetailLoaded(true);
-                    builder.clearLoadedLocationId();
                 }
                 break;
         }
-
-        return builder.build();
     }
 
     @Override

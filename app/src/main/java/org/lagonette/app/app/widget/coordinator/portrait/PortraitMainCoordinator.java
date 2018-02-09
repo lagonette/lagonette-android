@@ -13,13 +13,11 @@ public class PortraitMainCoordinator
 
     @NonNull
     @Override
-    public MainState restore(@NonNull MainState state) {
-        state = super.restore(state);
-        MainState.Builder builder = state.buildUppon();
+    public void restore(@NonNull MainState state) {
+        super.restore(state);
 
         if (state.isFiltersLoaded && state.isLocationDetailLoaded) {
             unloadFilters.run();
-            builder.setFiltersLoaded(false);
         }
 
         switch (state.bottomSheetState) {
@@ -31,14 +29,12 @@ public class PortraitMainCoordinator
             case BottomSheetBehavior.STATE_COLLAPSED:
                 if (!state.isLocationDetailLoaded && !state.isFiltersLoaded) {
                     closeBottomSheet.run();
-                    builder.setBottomSheetState(BottomSheetBehavior.STATE_HIDDEN);
                 }
                 break;
 
             case BottomSheetBehavior.STATE_EXPANDED:
                 if (!state.isLocationDetailLoaded && !state.isFiltersLoaded) {
                     closeBottomSheet.run();
-                    builder.setBottomSheetState(BottomSheetBehavior.STATE_HIDDEN);
                 }
                 break;
 
@@ -46,14 +42,9 @@ public class PortraitMainCoordinator
                 if (state.isLocationDetailLoaded || state.isFiltersLoaded) {
                     unloadFilters.run();
                     unloadLocationDetail.run();
-                    builder.setFiltersLoaded(false);
-                    builder.setLocationDetailLoaded(false);
-                    builder.clearLoadedLocationId();
                 }
                 break;
         }
-
-        return builder.build();
     }
 
     @Override

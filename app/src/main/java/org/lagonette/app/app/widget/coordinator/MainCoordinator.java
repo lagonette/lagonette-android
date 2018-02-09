@@ -16,11 +16,14 @@ import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.Logger;
 import org.lagonette.app.tools.functions.LongConsumer;
 import org.lagonette.app.tools.functions.NullFunctions;
-import org.lagonette.app.worker.BackgroundWorker;
+import org.lagonette.app.tools.functions.Producer;
 
 public abstract class MainCoordinator {
 
     private static final String TAG = "MainCoordinator";
+
+    @NonNull
+    public Producer<MainState> getCurrentState;
 
     @NonNull
     public Runnable finishAction = NullFunctions::doNothing;
@@ -76,35 +79,26 @@ public abstract class MainCoordinator {
     @NonNull
     protected Runnable wait = NullFunctions::doNothing;
 
-    @NonNull
-    public MainState init(@NonNull MainState state) {
+    public void init(@NonNull MainState state) {
         loadMap.run();
 
         if (state.bottomSheetState != BottomSheetBehavior.STATE_HIDDEN) {
             closeBottomSheet.run();
         }
-
-        return MainState.build()
-                .setAction(null)
-                .clearLoadedLocationId()
-                .setLocationDetailLoaded(false)
-                .setFiltersLoaded(false)
-                .setMapMovement(MainState.MapMovement.IDLE)
-                .setBottomSheetState(BottomSheetBehavior.STATE_HIDDEN)
-                .build();
     }
 
-    @NonNull
     @CallSuper
-    public MainState restore(@NonNull MainState state) {
+    public void restore(@NonNull MainState state) {
         restoreMap.run();
         restoreFilters.run();
         restoreLocationDetail.run();
-        return state;
     }
 
-    @CallSuper
-    public void process(@NonNull MainState state) {
+    public void process() {
+        process(getCurrentState.get());
+    }
+
+    private void process(@NonNull MainState state) {
         if (state.action != null) {
             switch (state.action.type) {
 

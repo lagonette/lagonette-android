@@ -33,14 +33,6 @@ public class MainState {
         MOVE
     }
 
-    public static Builder build() {
-        return new Builder();
-    }
-
-    public static Builder build(@Nullable MainState state) {
-        return state != null ? state.buildUppon() : new Builder();
-    }
-
     @Nullable
     public final MainAction action;
 
@@ -71,10 +63,6 @@ public class MainState {
         this.loadedLocationId = loadedLocationId;
     }
 
-    public Builder buildUppon() {
-        return new Builder(this);
-    }
-
     @Override
     public String toString() {
         String string = "MainState: [\n";
@@ -95,82 +83,6 @@ public class MainState {
         string += "\t]\n";
         string += "]";
         return string;
-    }
-
-    public static class Builder {
-
-        @Nullable
-        public MainAction action;
-
-        @NonNull
-        public MapMovement mapMovement = MapMovement.IDLE;
-
-        @BottomSheetState
-        public int bottomSheetState;
-
-        public boolean isFiltersLoaded;
-
-        public long loadedLocationId = Statement.NO_ID;
-
-        public boolean isLocationDetailLoaded;
-
-        public Builder() {
-        }
-
-        public Builder(@NonNull MainState state) {
-            this.action = state.action;
-            this.mapMovement = state.mapMovement;
-            this.bottomSheetState = state.bottomSheetState;
-            this.isFiltersLoaded = state.isFiltersLoaded;
-            this.isLocationDetailLoaded = state.isLocationDetailLoaded;
-            this.loadedLocationId = state.loadedLocationId;
-        }
-
-        public Builder setAction(@Nullable MainAction action) {
-            this.action = action;
-            return this;
-        }
-
-        public Builder setMapMovement(@NonNull MapMovement mapMovement) {
-            this.mapMovement = mapMovement;
-            return this;
-        }
-
-        public Builder setBottomSheetState(@BottomSheetState int bottomSheetState) {
-            this.bottomSheetState = bottomSheetState;
-            return this;
-        }
-
-        public Builder setFiltersLoaded(boolean filtersLoaded) {
-            isFiltersLoaded = filtersLoaded;
-            return this;
-        }
-
-        public Builder setLoadedLocationId(long loadedLocationId) {
-            this.loadedLocationId = loadedLocationId;
-            return this;
-        }
-
-        public Builder clearLoadedLocationId() {
-            this.loadedLocationId = Statement.NO_ID;
-            return this;
-        }
-
-        public Builder setLocationDetailLoaded(boolean locationDetailLoaded) {
-            isLocationDetailLoaded = locationDetailLoaded;
-            return this;
-        }
-
-        public MainState build() {
-            return new MainState(
-                    action,
-                    mapMovement,
-                    bottomSheetState,
-                    isFiltersLoaded,
-                    isLocationDetailLoaded,
-                    loadedLocationId
-            );
-        }
     }
 }
 

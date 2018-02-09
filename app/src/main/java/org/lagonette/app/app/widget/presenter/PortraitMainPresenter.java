@@ -57,7 +57,7 @@ public class PortraitMainPresenter
         super.endConstruct(activity);
 
         // Performer > LiveData
-        mFabButtonsPerformer.onFiltersClick(() -> mUiStateStore.startAction(MainAction.openFilters()));
+        mFabButtonsPerformer.onFiltersClick(() -> mUiActionStore.startAction(MainAction.openFilters()));
 
         // LiveData > Performer, Coordinator
         mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mSearchBarPerformer.enableBehavior(true));
