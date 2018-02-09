@@ -9,8 +9,8 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.BuildConfig;
-import org.lagonette.app.app.widget.coordinator.state.MainAction;
-import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.coordinator.state.UiAction;
+import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.Logger;
@@ -23,7 +23,7 @@ public abstract class MainCoordinator {
     private static final String TAG = "MainCoordinator";
 
     @NonNull
-    public Producer<MainState> getCurrentState;
+    public Producer<UiState> getCurrentState;
 
     @NonNull
     public Runnable finishAction = NullFunctions::doNothing;
@@ -79,7 +79,7 @@ public abstract class MainCoordinator {
     @NonNull
     protected Runnable wait = NullFunctions::doNothing;
 
-    public void init(@NonNull MainState state) {
+    public void init(@NonNull UiState state) {
         loadMap.run();
 
         if (state.bottomSheetState != BottomSheetBehavior.STATE_HIDDEN) {
@@ -98,7 +98,7 @@ public abstract class MainCoordinator {
         process(getCurrentState.get());
     }
 
-    private void process(@NonNull MainState state) {
+    private void process(@NonNull UiState state) {
         if (state.action != null) {
             switch (state.action.type) {
 
@@ -142,11 +142,11 @@ public abstract class MainCoordinator {
         }
     }
 
-    protected abstract void computeRestore(@NonNull MainAction action, @NonNull MainState state);
+    protected abstract void computeRestore(@NonNull UiAction action, @NonNull UiState state);
 
-    protected abstract void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state);
+    protected abstract void computeFiltersOpening(@NonNull UiAction action, @NonNull UiState state);
 
-    private void computeMovementToMyLocation(@NonNull MainAction action, @NonNull MainState state) {
+    private void computeMovementToMyLocation(@NonNull UiAction action, @NonNull UiState state) {
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
@@ -174,9 +174,9 @@ public abstract class MainCoordinator {
         }
     }
 
-    protected abstract void computeIdle(@NonNull MainAction action, @NonNull MainState state);
+    protected abstract void computeIdle(@NonNull UiAction action, @NonNull UiState state);
 
-    private void computeFullMapShowing(@NonNull MainAction action, @NonNull MainState state) {
+    private void computeFullMapShowing(@NonNull UiAction action, @NonNull UiState state) {
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
@@ -198,9 +198,9 @@ public abstract class MainCoordinator {
         }
     }
 
-    protected abstract void computeMovementToAndOpeningLocation(@NonNull MainAction action, @NonNull MainState state);
+    protected abstract void computeMovementToAndOpeningLocation(@NonNull UiAction action, @NonNull UiState state);
 
-    private void computeMovementToCluster(@NonNull MainAction action, @NonNull MainState state) {
+    private void computeMovementToCluster(@NonNull UiAction action, @NonNull UiState state) {
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:
@@ -233,7 +233,7 @@ public abstract class MainCoordinator {
         }
     }
 
-    private void computeMovementToFootprint(@NonNull MainAction action, @NonNull MainState state) {
+    private void computeMovementToFootprint(@NonNull UiAction action, @NonNull UiState state) {
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
@@ -262,7 +262,7 @@ public abstract class MainCoordinator {
         }
     }
 
-    private void computeBack(@NonNull MainAction action, @NonNull MainState state) {
+    private void computeBack(@NonNull UiAction action, @NonNull UiState state) {
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_SETTLING:
@@ -281,7 +281,7 @@ public abstract class MainCoordinator {
         }
     }
 
-    protected void wtf(@NonNull MainState state) {
+    protected void wtf(@NonNull UiState state) {
         FirebaseCrash.logcat(Log.ERROR, TAG, state.toString());
         FirebaseCrash.report(new IllegalArgumentException("Coordinator received a weird state"));
     }

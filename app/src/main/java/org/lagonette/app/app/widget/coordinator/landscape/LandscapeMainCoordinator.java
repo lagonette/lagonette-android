@@ -4,15 +4,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
-import org.lagonette.app.app.widget.coordinator.state.MainAction;
-import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.coordinator.state.UiAction;
+import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.room.statement.Statement;
 
 public class LandscapeMainCoordinator
         extends MainCoordinator {
 
     @Override
-    public void init(@NonNull MainState state) {
+    public void init(@NonNull UiState state) {
         super.init(state);
 
         if (!state.isFiltersLoaded) {
@@ -21,7 +21,7 @@ public class LandscapeMainCoordinator
     }
 
     @Override
-    protected void computeRestore(@NonNull MainAction action, @NonNull MainState state) {
+    protected void computeRestore(@NonNull UiAction action, @NonNull UiState state) {
         if (!state.isFiltersLoaded) {
             loadFilters.run();
         }
@@ -60,12 +60,12 @@ public class LandscapeMainCoordinator
     }
 
     @Override
-    protected void computeFiltersOpening(@NonNull MainAction action, @NonNull MainState state) {
+    protected void computeFiltersOpening(@NonNull UiAction action, @NonNull UiState state) {
         finishAction.run();
     }
 
     @Override
-    protected void computeMovementToAndOpeningLocation(@NonNull MainAction action, @NonNull MainState state) {
+    protected void computeMovementToAndOpeningLocation(@NonNull UiAction action, @NonNull UiState state) {
         if (action.locationId > Statement.NO_ID) {
             openLocation.accept(action.locationId);
         } else if (action.item == null) {
@@ -140,7 +140,7 @@ public class LandscapeMainCoordinator
     }
 
     @Override
-    protected void computeIdle(@NonNull MainAction action, @NonNull MainState state)  {
+    protected void computeIdle(@NonNull UiAction action, @NonNull UiState state)  {
         switch (state.bottomSheetState) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:

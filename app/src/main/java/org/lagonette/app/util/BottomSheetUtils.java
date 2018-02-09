@@ -3,12 +3,12 @@ package org.lagonette.app.util;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
-import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.coordinator.state.UiState;
 
 public class BottomSheetUtils {
 
     @NonNull
-    public static String toString(@MainState.BottomSheetState int state) {
+    public static String toString(@UiState.BottomSheetState int state) {
         switch (state) {
 
             case BottomSheetBehavior.STATE_COLLAPSED:

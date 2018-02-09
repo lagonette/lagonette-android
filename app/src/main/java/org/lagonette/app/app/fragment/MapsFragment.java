@@ -38,7 +38,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
-import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.app.widget.error.Error;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
@@ -336,12 +336,12 @@ public class MapsFragment
                 latLng -> mEventBus.publish(SHOW_FULL_MAP)
         );
         mMap.setOnCameraMoveStartedListener(
-                reason -> mEventBus.publish(NOTIFY_MAP_MOVEMENT, MainState.MapMovement.MOVE)
+                reason -> mEventBus.publish(NOTIFY_MAP_MOVEMENT, UiState.MapMovement.MOVE)
         );
         mMap.setOnCameraIdleListener(
                 () -> {
                     mClusterManager.onCameraIdle();
-                    mEventBus.publish(NOTIFY_MAP_MOVEMENT, MainState.MapMovement.IDLE);
+                    mEventBus.publish(NOTIFY_MAP_MOVEMENT, UiState.MapMovement.IDLE);
                 }
         );
         mMap.setOnMarkerClickListener(mClusterManager);

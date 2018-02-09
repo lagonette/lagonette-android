@@ -6,7 +6,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.app.widget.coordinator.state.MainAction;
 import org.lagonette.app.repo.Resource;
 
 public class StateMapActivityViewModel extends AndroidViewModel {

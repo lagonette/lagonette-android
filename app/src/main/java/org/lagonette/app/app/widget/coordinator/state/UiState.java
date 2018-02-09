@@ -15,8 +15,7 @@ import static android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED;
 import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
 import static android.support.design.widget.BottomSheetBehavior.STATE_SETTLING;
 
-// TODO Rename as UiState
-public class MainState {
+public class UiState {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -34,7 +33,7 @@ public class MainState {
     }
 
     @Nullable
-    public final MainAction action;
+    public final UiAction action;
 
     @NonNull
     public final MapMovement mapMovement;
@@ -48,8 +47,8 @@ public class MainState {
 
     public final boolean isLocationDetailLoaded;
 
-    public MainState(
-            @Nullable MainAction action,
+    public UiState(
+            @Nullable UiAction action,
             @NonNull MapMovement mapMovement,
             @BottomSheetState  int bottomSheetState,
             boolean isFiltersLoaded,

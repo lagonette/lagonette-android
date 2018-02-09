@@ -6,7 +6,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.portrait.PortraitMainCoordinator;
-import org.lagonette.app.app.widget.coordinator.state.MainAction;
+import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitFabButtonsPerformer;
@@ -57,7 +57,7 @@ public class PortraitMainPresenter
         super.endConstruct(activity);
 
         // Performer > LiveData
-        mFabButtonsPerformer.onFiltersClick(() -> mUiActionStore.startAction(MainAction.openFilters()));
+        mFabButtonsPerformer.onFiltersClick(() -> mUiActionStore.startAction(UiAction.openFilters()));
 
         // LiveData > Performer, Coordinator
         mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mSearchBarPerformer.enableBehavior(true));

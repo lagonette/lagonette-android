@@ -16,8 +16,8 @@ import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.viewmodel.UiActionStore;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
-import org.lagonette.app.app.widget.coordinator.state.MainAction;
-import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.coordinator.state.UiAction;
+import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
@@ -133,7 +133,7 @@ public abstract class MainPresenter<
     @Override
     @CallSuper
     public void init(@NonNull PresenterActivity activity) {
-        MainState currentState = retrieveCurrentState();
+        UiState currentState = retrieveCurrentState();
         mCoordinator.init(currentState);
     }
 
@@ -141,7 +141,7 @@ public abstract class MainPresenter<
     @CallSuper
     public void restore(@NonNull PresenterActivity activity, @NonNull Bundle savedInstanceState) {
         mCoordinator.restore();
-        mUiActionStore.startAction(MainAction.restore(mUiActionStore.getAction().getValue()));
+        mUiActionStore.startAction(UiAction.restore(mUiActionStore.getAction().getValue()));
     }
 
     @Override
@@ -154,29 +154,29 @@ public abstract class MainPresenter<
         mEventBus.subscribe(
                 OPEN_LOCATION_ITEM,
                 activity,
-                locationItem -> mUiActionStore.startAction(MainAction.moveToAndOpenLocation(locationItem))
+                locationItem -> mUiActionStore.startAction(UiAction.moveToAndOpenLocation(locationItem))
         );
         mEventBus.subscribe(
                 MOVE_TO_CLUSTER,
                 activity,
-                cluster -> mUiActionStore.startAction(MainAction.moveToCluster(cluster))
+                cluster -> mUiActionStore.startAction(UiAction.moveToCluster(cluster))
         );
         mEventBus.subscribe(
                 SHOW_FULL_MAP,
                 activity,
-                aVoid -> mUiActionStore.startAction(MainAction.showFullMap())
+                aVoid -> mUiActionStore.startAction(UiAction.showFullMap())
         );
         mEventBus.subscribe(
                 OPEN_LOCATION_ID,
                 activity,
                 LongObserver.unbox(
                         Statement.NO_ID,
-                        locationId -> mUiActionStore.startAction(MainAction.moveToAndOpenLocation(locationId))
+                        locationId -> mUiActionStore.startAction(UiAction.moveToAndOpenLocation(locationId))
                 )
         );
 
-        mFabButtonsPerformer.onPositionClick = () -> mUiActionStore.startAction(MainAction.moveToMyLocation());
-        mFabButtonsPerformer.onPositionLongClick = () -> mUiActionStore.startAction(MainAction.moveToFootprint());
+        mFabButtonsPerformer.onPositionClick = () -> mUiActionStore.startAction(UiAction.moveToMyLocation());
+        mFabButtonsPerformer.onPositionLongClick = () -> mUiActionStore.startAction(UiAction.moveToFootprint());
 
         mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mCoordinator.process());
         mLocationDetailFragmentPerformer.onFragmentUnloaded(() -> mCoordinator.process());
@@ -217,13 +217,13 @@ public abstract class MainPresenter<
             return false;
         }
 
-        mUiActionStore.startAction(MainAction.back());
+        mUiActionStore.startAction(UiAction.back());
         return true;
     }
 
     @NonNull
-    private MainState retrieveCurrentState() {
-        return new MainState(
+    private UiState retrieveCurrentState() {
+        return new UiState(
                 mUiActionStore.getAction().getValue(),
                 mMapFragmentPerformer.getMapMovement(),
                 mBottomSheetPerformer.getState(),

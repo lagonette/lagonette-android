@@ -2,7 +2,7 @@ package org.lagonette.app.app.viewmodel;
 
 import com.google.maps.android.clustering.Cluster;
 
-import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.tools.arch.LiveEventBus.Event;
 import org.lagonette.app.room.entity.statement.LocationItem;
 
@@ -18,7 +18,7 @@ public class MainLiveEventBusViewModel extends LiveEventBusViewModel {
 
         Event<Void> SHOW_FULL_MAP = new Event<>();
 
-        Event<MainState.MapMovement> NOTIFY_MAP_MOVEMENT = new Event<>();
+        Event<UiState.MapMovement> NOTIFY_MAP_MOVEMENT = new Event<>();
     }
 
     public interface Map {

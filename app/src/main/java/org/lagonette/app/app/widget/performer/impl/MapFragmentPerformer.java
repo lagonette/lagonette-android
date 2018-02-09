@@ -11,7 +11,7 @@ import com.google.maps.android.clustering.Cluster;
 import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.MapsFragment;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
-import org.lagonette.app.app.widget.coordinator.state.MainState;
+import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.tools.functions.Consumer;
@@ -35,10 +35,10 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
     private final FragmentManager mFragmentManager;
 
     @NonNull
-    public Consumer<MainState.MapMovement> onMapMovementChanged = NullFunctions::doNothing;
+    public Consumer<UiState.MapMovement> onMapMovementChanged = NullFunctions::doNothing;
 
     @NonNull
-    protected MainState.MapMovement mMapMovement;
+    protected UiState.MapMovement mMapMovement;
 
     @IdRes
     protected int mMapFragmentRes;
@@ -47,7 +47,7 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
         mEventBus = ViewModelProviders.of(activity).get(MainLiveEventBusViewModel.class);
         mFragmentManager = activity.getSupportFragmentManager();
         mMapFragmentRes = mapFragmentRes;
-        mMapMovement = MainState.MapMovement.IDLE;
+        mMapMovement = UiState.MapMovement.IDLE;
 
         mEventBus.subscribe(
                 NOTIFY_MAP_MOVEMENT,
@@ -71,11 +71,11 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
         mEventBus.publish(MainLiveEventBusViewModel.Map.OPEN_LOCATION_ID, locationId);
     }
 
-    public MainState.MapMovement getMapMovement() {
+    public UiState.MapMovement getMapMovement() {
         return mMapMovement;
     }
 
-    private void notifyMapMovement(@NonNull MainState.MapMovement mapMovement) {
+    private void notifyMapMovement(@NonNull UiState.MapMovement mapMovement) {
         mMapMovement = mapMovement;
         onMapMovementChanged.accept(mMapMovement);
     }
