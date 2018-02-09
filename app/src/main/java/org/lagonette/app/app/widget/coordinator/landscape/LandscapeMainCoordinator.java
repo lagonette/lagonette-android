@@ -13,6 +13,19 @@ public class LandscapeMainCoordinator
 
     @NonNull
     @Override
+    public MainState init(@NonNull MainState state) {
+
+        if (!state.isFiltersLoaded) {
+            loadFilters.run();
+        }
+
+        return super.init(state).buildUppon()
+                .setFiltersLoaded(true)
+                .build();
+    }
+
+    @NonNull
+    @Override
     public MainState restore(@NonNull MainState state) {
         state = super.restore(state);
         MainState.Builder builder = state.buildUppon();
