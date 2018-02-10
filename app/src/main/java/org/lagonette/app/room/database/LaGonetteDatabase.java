@@ -4,7 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
 import org.lagonette.app.room.dao.CategoryDao;
-import org.lagonette.app.room.dao.MainDao;
+import org.lagonette.app.room.dao.UiDao;
 import org.lagonette.app.room.dao.PartnerDao;
 import org.lagonette.app.room.dao.WriterDao;
 import org.lagonette.app.room.entity.Category;
@@ -28,7 +28,7 @@ import org.lagonette.app.util.DatabaseUtils;
 )
 public abstract class LaGonetteDatabase extends RoomDatabase {
 
-    public abstract MainDao mainDao();
+    public abstract UiDao mainDao();
 
     public abstract WriterDao writerDao();
 

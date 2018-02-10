@@ -1,29 +1,30 @@
 package org.lagonette.app.room.dao;
 
 import android.arch.persistence.room.Dao;
-import android.support.annotation.NonNull;
 import android.arch.persistence.room.Transaction;
+import android.support.annotation.NonNull;
 
 import org.lagonette.app.background.client.store.EntitiesStore;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
+import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.Category;
 import org.lagonette.app.room.entity.CategoryMetadata;
 import org.lagonette.app.room.entity.Partner;
-import org.lagonette.app.room.entity.custom.HiddenCategory;
 
 @Dao
 public abstract class WriterDao {
 
     @Transaction
     public void insert(@NonNull EntitiesStore.CategoryEntities categoryEntities, @NonNull EntitiesStore.PartnerEntities partnerEntities) {
-        insert(categoryEntities);
-        insert(partnerEntities);
-        cleanUp();
+        LaGonetteDatabase database = DB.get();
+        insert(database, categoryEntities);
+        insert(database, partnerEntities);
+        insertHeadquarter(database);
+        cleanUp(database);
     }
 
-    private void insert(@NonNull EntitiesStore.PartnerEntities partnerEntities) {
-        LaGonetteDatabase database = DB.get();
+    private void insert(@NonNull LaGonetteDatabase database, @NonNull EntitiesStore.PartnerEntities partnerEntities) {
         //TODO Make a better clean
         database.partnerDao().deletePartners();
         database.partnerDao().deleteLocations();
@@ -33,40 +34,52 @@ public abstract class WriterDao {
         database.partnerDao().insertLocationsMetadatas(partnerEntities.locationMetadata); //TODO Make metadata insert only by SQL
         database.partnerDao().insertPartners(partnerEntities.partners);
         database.partnerDao().insertPartnersSideCategories(partnerEntities.partnerSideCategories);
+    }
 
-        // Manage headquarter
+    private void insert(@NonNull LaGonetteDatabase database, @NonNull EntitiesStore.CategoryEntities categoryEntities) {
+        database.categoryDao().deleteCategories();
+        database.categoryDao().insertCategories(categoryEntities.categories);
+        database.categoryDao().insertCategoriesMetadatas(categoryEntities.categoryMetadata); //TODO Make metadata insert only by SQL
+    }
+
+    private void insertHeadquarter(@NonNull LaGonetteDatabase database) {
         Partner headquarter = database.partnerDao().getHeadquarter();
-        Category hidden = database.categoryDao().getHiddenCategory();
-        if (headquarter != null && hidden != null) {
 
-            hidden.icon = headquarter.logo;
-            headquarter.mainCategoryKey = hidden.key.clone();
+        if (headquarter != null) {
 
-            database.categoryDao().insertCategory(hidden);
+            // Manage headquarter category
+            Category headquarterCategory = new Category();
+            headquarterCategory.key = new CategoryKey();
+            headquarterCategory.key.id = 0; //TODO
+            headquarterCategory.key.type = 9999; //TODO
+            headquarterCategory.parentId = -1;
+            headquarterCategory.parentCategoryType = -1;
+            headquarterCategory.label = "Headquarter Category";
+            headquarterCategory.icon = headquarter.logo;
+            headquarterCategory.displayOrder = -1; //TODO
+            headquarterCategory.hidden = true;
+
+            // Manage headquarter category metadata
+            CategoryMetadata headquarterCategoryMetadata = new CategoryMetadata();
+            headquarterCategoryMetadata.categoryKey = headquarterCategory.key.clone();
+            headquarterCategoryMetadata.isCollapsed = false;
+            headquarterCategoryMetadata.isVisible = true;
+
+            // Manage headquarter partner
+            headquarter.mainCategoryKey = headquarterCategory.key.clone();
+
+            // Insert
+            database.categoryDao().insertCategory(headquarterCategory);
+            database.categoryDao().insertCategoryMetadata(headquarterCategoryMetadata);
             database.partnerDao().insertPartner(headquarter);
         }
     }
 
-    private void insert(@NonNull EntitiesStore.CategoryEntities categoryEntities) {
-        LaGonetteDatabase database = DB.get();
-
-        database.categoryDao().deleteCategories();
-        database.categoryDao().insertCategories(categoryEntities.categories);
-        database.categoryDao().insertCategoriesMetadatas(categoryEntities.categoryMetadata); //TODO Make metadata insert only by SQL
-
-        // Manage hidden category
-        HiddenCategory hiddenCategory = new HiddenCategory();
-        CategoryMetadata categoryMetadata = hiddenCategory.getMetadata();
-        database.categoryDao().insertCategory(hiddenCategory);
-        database.categoryDao().insertCategoryMetadata(categoryMetadata);
-    }
-
-    private void cleanUp() {
-        LaGonetteDatabase database = DB.get();
-        // Clean up
+    private void cleanUp(LaGonetteDatabase database) {
         database.partnerDao().cleanLocation();
         database.partnerDao().cleanPartner();
 //        db.partnerDao().cleanPartnerMetadata(); //TODO clean partner metadata
+//        database.categoryDao().cleanCategories(); //TODO clean categories and metadata
     }
 
 }

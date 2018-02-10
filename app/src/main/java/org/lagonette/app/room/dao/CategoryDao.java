@@ -13,15 +13,11 @@ import java.util.List;
 @Dao
 public interface CategoryDao {
 
-    //TODO Improve type
-    @Query("SELECT * FROM category WHERE id = 0 AND type = 9999")
-    Category getHiddenCategory();
+    //TODO Use foreign key cascade or not?
+    @Query("DELETE FROM category WHERE id = :id AND type = :type")
+    void deleteCategory(long id, long type);
 
-    //TODO Improve type
-    @Query("SELECT * FROM category_metadata WHERE category_id = 0 AND category_type = 9999")
-    CategoryMetadata getHiddenCategoryMetadata();
-
-    //TODO Use foreign key cascade
+    //TODO Use foreign key cascade or not?
     @Query("DELETE FROM category")
     void deleteCategories();
 

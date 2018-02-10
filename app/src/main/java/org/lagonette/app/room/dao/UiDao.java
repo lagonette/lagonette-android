@@ -14,7 +14,7 @@ import org.lagonette.app.room.statement.PartnerDetailStatement;
 import java.util.List;
 
 @Dao
-public interface MainDao {
+public interface UiDao {
 
     @Query(PartnerDetailStatement.SQL)
     LiveData<LocationDetail> getLocationsDetail(long id); //TODO Use LiveData to update fragment ?
