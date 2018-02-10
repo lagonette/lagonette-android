@@ -15,7 +15,7 @@ import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.sql.Tables;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.SearchUtils;
-import org.lagonette.app.worker.DataRefreshWorker;
+import org.lagonette.app.background.worker.DataRefreshWorker;
 
 import java.util.List;
 import java.util.concurrent.Executor;

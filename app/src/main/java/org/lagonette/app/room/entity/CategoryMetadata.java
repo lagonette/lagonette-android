@@ -3,6 +3,7 @@ package org.lagonette.app.room.entity;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.support.annotation.NonNull;
 
 import org.lagonette.app.room.embedded.CategoryKey;
 
@@ -13,6 +14,7 @@ import org.lagonette.app.room.embedded.CategoryKey;
 )
 public class CategoryMetadata {
 
+    @NonNull
     @Embedded(prefix = "category_")
     public CategoryKey categoryKey;
 

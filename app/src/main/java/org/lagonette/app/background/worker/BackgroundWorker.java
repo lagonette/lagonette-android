@@ -1,4 +1,4 @@
-package org.lagonette.app.worker;
+package org.lagonette.app.background.worker;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;

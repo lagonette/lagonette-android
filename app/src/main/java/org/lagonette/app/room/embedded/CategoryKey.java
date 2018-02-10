@@ -1,12 +1,15 @@
 package org.lagonette.app.room.embedded;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.support.annotation.NonNull;
 
 public class CategoryKey {
 
+    @NonNull
     @ColumnInfo(name = "id")
     public long id;
 
+    @NonNull
     @ColumnInfo(name = "type")
     public long type;
 

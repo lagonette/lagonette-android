@@ -1,5 +1,7 @@
 package org.lagonette.app.api.service;
 
+import android.support.annotation.NonNull;
+
 import org.lagonette.app.BuildConfig;
 import org.lagonette.app.api.response.CategoriesResponse;
 import org.lagonette.app.api.response.Md5SumResponse;
@@ -22,9 +24,11 @@ public interface LaGonetteService {
 
     interface Category {
 
+        @NonNull
         @GET(ENDPOINT_CATEGORIES)
         Call<CategoriesResponse> getCategories();
 
+        @NonNull
         @GET(ENDPOINT_CATEGORIES_MD5)
         Call<Md5SumResponse> getMd5Sum();
 
@@ -32,9 +36,11 @@ public interface LaGonetteService {
 
     interface Partner {
 
+        @NonNull
         @GET(ENDPOINT_PARTNERS)
         Call<PartnersResponse> getPartners();
 
+        @NonNull
         @GET(ENDPOINT_PARTNERS_MD5)
         Call<Md5SumResponse> getMd5Sum();
 

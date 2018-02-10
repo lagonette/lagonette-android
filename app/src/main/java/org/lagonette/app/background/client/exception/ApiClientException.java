@@ -1,4 +1,4 @@
-package org.lagonette.app.api.client.exception;
+package org.lagonette.app.background.client.exception;
 
 public class ApiClientException extends Exception {
 

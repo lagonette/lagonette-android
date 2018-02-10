@@ -6,8 +6,8 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.app.worker.BackgroundWorker;
-import org.lagonette.app.worker.WorkerResponse;
+import org.lagonette.app.background.worker.BackgroundWorker;
+import org.lagonette.app.background.worker.WorkerResponse;
 
 
 // ResultType: Type for the Resource data

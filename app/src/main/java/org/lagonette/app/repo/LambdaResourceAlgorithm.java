@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.app.helper.Factory;
-import org.lagonette.app.worker.BackgroundWorker;
+import org.lagonette.app.background.worker.BackgroundWorker;
 
 import java.util.concurrent.Executor;
 
