@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.NullFunctions;
-import org.lagonette.app.tools.functions.Producer;
+import org.lagonette.app.tools.functions.Supplier;
 
 public class SignatureStore {
 
@@ -17,7 +17,7 @@ public class SignatureStore {
     public Runnable signatureSaved = NullFunctions::doNothing;
 
     @NonNull
-    public Producer<String> retrieveLocalSignature;
+    public Supplier<String> retrieveLocalSignature;
 
     @Nullable
     private String mSignature;

@@ -2,7 +2,7 @@ package org.lagonette.app.tools.functions;
 
 import android.support.annotation.Nullable;
 
-public interface NullableProducer<T> {
+public interface NullableSupplier<T> {
 
     @Nullable
     T get();

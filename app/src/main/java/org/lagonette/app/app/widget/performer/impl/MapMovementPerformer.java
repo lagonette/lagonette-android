@@ -12,7 +12,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.tools.functions.NullableProducer;
 import org.lagonette.app.util.SharedPreferencesUtils;
 
 public class MapMovementPerformer

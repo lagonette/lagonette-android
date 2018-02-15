@@ -25,7 +25,6 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.tools.functions.BooleanProducer;
 import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.NullFunctions;
 import org.lagonette.app.util.UiUtils;

@@ -8,9 +8,9 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.Function;
-import org.lagonette.app.tools.functions.IntBiObjConsumer;
-import org.lagonette.app.tools.functions.IntBiObjFunction;
-import org.lagonette.app.tools.functions.Producer;
+import org.lagonette.app.tools.functions.IntBiConsumer;
+import org.lagonette.app.tools.functions.IntBiFunction;
+import org.lagonette.app.tools.functions.Supplier;
 
 public class ErrorCatcher {
 
@@ -20,12 +20,12 @@ public class ErrorCatcher {
     }
 
     @NonNull
-    public static <P2, P3> IntBiObjConsumer<P2, P3> logError(@NonNull IntBiObjFunction<String, P2, P3> message) {
+    public static <P2, P3> IntBiConsumer<P2, P3> logError(@NonNull IntBiFunction<String, P2, P3> message) {
         return (param1, param2, param3) -> FirebaseCrash.logcat(Log.ERROR, TAG, message.apply(param1, param2, param3));
     }
 
     @NonNull
-    public static Runnable logError(@NonNull Producer<String> message) {
+    public static Runnable logError(@NonNull Supplier<String> message) {
         return () -> FirebaseCrash.logcat(Log.ERROR, TAG, message.get());
     }
 

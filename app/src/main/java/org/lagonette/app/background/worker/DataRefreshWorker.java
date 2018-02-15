@@ -59,7 +59,7 @@ public class DataRefreshWorker
         EntitiesStore entitiesStore = new EntitiesStore();
 
 
-        // Produce
+        // Supply
         partnerSignatureStore.retrieveLocalSignature = () -> preferences.getString(
                 PreferenceUtils.KEY_PARTNER_MD5_SUM,
                 PreferenceUtils.DEFAULT_VALUE_PARTNER_MD5_SUM

@@ -32,7 +32,7 @@ public interface NullFunctions {
 
     static <P> Predicate<P> predicate(boolean bool) { return paran -> bool; }
 
-    static BooleanProducer produce(boolean bool) { return () -> bool; }
+    static BooleanSupplier supply(boolean bool) { return () -> bool; }
 
-    static <P> Producer<P> produce(@NonNull P param) { return () -> param; }
+    static <P> Supplier<P> supply(@NonNull P param) { return () -> param; }
 }

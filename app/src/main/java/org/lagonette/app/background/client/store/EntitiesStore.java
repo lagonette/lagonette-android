@@ -9,7 +9,7 @@ import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.LocationMetadata;
 import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.PartnerSideCategory;
-import org.lagonette.app.tools.functions.BiObjConsumer;
+import org.lagonette.app.tools.functions.BiConsumer;
 import org.lagonette.app.tools.functions.NullFunctions;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class EntitiesStore {
     public Runnable entitiesSaved = NullFunctions::doNothing;
 
     @NonNull
-    public BiObjConsumer<CategoryEntities, PartnerEntities> saveEntities = NullFunctions::doNothing;
+    public BiConsumer<CategoryEntities, PartnerEntities> saveEntities = NullFunctions::doNothing;
 
     private final PartnerEntities mPartnerEntities = new PartnerEntities();
 

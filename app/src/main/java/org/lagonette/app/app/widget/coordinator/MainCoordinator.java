@@ -17,14 +17,14 @@ import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.Logger;
 import org.lagonette.app.tools.functions.LongConsumer;
 import org.lagonette.app.tools.functions.NullFunctions;
-import org.lagonette.app.tools.functions.Producer;
+import org.lagonette.app.tools.functions.Supplier;
 
 public abstract class MainCoordinator {
 
     private static final String TAG = "MainCoordinator";
 
     @NonNull
-    public Producer<UiState> getCurrentState;
+    public Supplier<UiState> getCurrentState;
 
     @NonNull
     public Runnable finishAction = NullFunctions::doNothing;
