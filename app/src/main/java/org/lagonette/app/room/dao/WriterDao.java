@@ -25,21 +25,25 @@ public abstract class WriterDao {
     }
 
     private void insert(@NonNull LaGonetteDatabase database, @NonNull EntitiesStore.PartnerEntities partnerEntities) {
-        //TODO Make a better clean
-        database.partnerDao().deletePartners();
-        database.partnerDao().deleteLocations();
-        database.partnerDao().deletePartnerSideCategories();
+        if (partnerEntities.hasValues) {
+            //TODO Make a better clean
+            database.partnerDao().deletePartners();
+            database.partnerDao().deleteLocations();
+            database.partnerDao().deletePartnerSideCategories();
 
-        database.partnerDao().insertLocations(partnerEntities.locations);
-        database.partnerDao().insertLocationsMetadatas(partnerEntities.locationMetadata); //TODO Make metadata insert only by SQL
-        database.partnerDao().insertPartners(partnerEntities.partners);
-        database.partnerDao().insertPartnersSideCategories(partnerEntities.partnerSideCategories);
+            database.partnerDao().insertLocations(partnerEntities.locations);
+            database.partnerDao().insertLocationsMetadatas(partnerEntities.locationMetadata); //TODO Make metadata insert only by SQL
+            database.partnerDao().insertPartners(partnerEntities.partners);
+            database.partnerDao().insertPartnersSideCategories(partnerEntities.partnerSideCategories);
+        }
     }
 
     private void insert(@NonNull LaGonetteDatabase database, @NonNull EntitiesStore.CategoryEntities categoryEntities) {
-        database.categoryDao().deleteCategories();
-        database.categoryDao().insertCategories(categoryEntities.categories);
-        database.categoryDao().insertCategoriesMetadatas(categoryEntities.categoryMetadata); //TODO Make metadata insert only by SQL
+        if (categoryEntities.hasValues) {
+            database.categoryDao().deleteCategories();
+            database.categoryDao().insertCategories(categoryEntities.categories);
+            database.categoryDao().insertCategoriesMetadatas(categoryEntities.categoryMetadata); //TODO Make metadata insert only by SQL
+        }
     }
 
     private void insertHeadquarter(@NonNull LaGonetteDatabase database) {

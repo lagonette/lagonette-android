@@ -1,5 +1,6 @@
 package org.lagonette.app.app.widget.coordinator;
 
+import android.location.Location;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -13,7 +14,7 @@ import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.tools.functions.Consumer;
-import org.lagonette.app.tools.functions.Logger;
+import org.lagonette.app.tools.Logger;
 import org.lagonette.app.tools.functions.LongConsumer;
 import org.lagonette.app.tools.functions.NullFunctions;
 import org.lagonette.app.tools.functions.Producer;
@@ -41,7 +42,7 @@ public abstract class MainCoordinator {
     public Consumer<LocationItem> moveMapToLocation = NullFunctions::doNothing;
 
     @NonNull
-    public Runnable moveMapToMyLocation = NullFunctions::doNothing;
+    public Consumer<Location> moveMapToMyLocation = NullFunctions::doNothing;
 
     @NonNull
     public Runnable stopMapMoving = NullFunctions::doNothing;
@@ -163,7 +164,7 @@ public abstract class MainCoordinator {
                 switch (state.mapMovement) {
 
                     case IDLE:
-                        moveMapToMyLocation.run();
+                        moveMapToMyLocation.accept(action.mapLocation);
                         break;
 
                     case MOVE:

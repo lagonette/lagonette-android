@@ -8,6 +8,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import org.lagonette.app.R;
@@ -23,8 +24,10 @@ import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
+import org.lagonette.app.app.widget.performer.impl.PermissionsPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 import org.lagonette.app.room.statement.Statement;
+import org.lagonette.app.tools.arch.LocationViewModel;
 import org.lagonette.app.tools.arch.LongObserver;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
@@ -40,15 +43,23 @@ public abstract class MainPresenter<
 
     private static final String TAG = "MainPresenter";
 
+    // --- View Model --- //
+
     protected UiActionStore mUiActionStore;
 
     protected StateMapActivityViewModel mStateViewModel;
 
     protected MainLiveEventBusViewModel mEventBus;
 
+    protected LocationViewModel mLocationViewModel;
+
+    // --- Live Data --- //
+
     protected MutableLiveData<String> mSearch;
 
     protected LiveData<Integer> mWorkStatus;
+
+    // --- Performers --- //
 
     protected MainCoordinator mCoordinator;
 
@@ -63,6 +74,8 @@ public abstract class MainPresenter<
     protected FiltersFragmentPerformer mFiltersFragmentPerformer;
 
     protected LocationDetailFragmentPerformer mLocationDetailFragmentPerformer;
+
+    protected PermissionsPerformer mPermissionsPerformer;
 
     @Override
     @CallSuper
@@ -80,6 +93,10 @@ public abstract class MainPresenter<
                 .of(activity)
                 .get(UiActionStore.class);
 
+        mLocationViewModel = ViewModelProviders
+                .of(activity)
+                .get(LocationViewModel.class);
+
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
 
@@ -90,6 +107,7 @@ public abstract class MainPresenter<
         mBottomSheetPerformer = createBottomSheetPerformer(activity);
         mFiltersFragmentPerformer = new FiltersFragmentPerformer(activity, R.id.fragment_filters);
         mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity, R.id.fragment_location_detail);
+        mPermissionsPerformer = new PermissionsPerformer(activity);
 
         // === Coordinator > Performer === //
         mCoordinator.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
@@ -115,6 +133,8 @@ public abstract class MainPresenter<
 
         // === Coordinator > Store === //
         mCoordinator.finishAction = mUiActionStore::finishAction;
+
+
     }
 
     @Override
@@ -148,6 +168,15 @@ public abstract class MainPresenter<
     @CallSuper
     public void endConstruct(@NonNull PresenterActivity activity) {
 
+        mPermissionsPerformer.requestPermissions = (permissions, requestCode) -> ActivityCompat.requestPermissions(activity, permissions, requestCode);
+        mPermissionsPerformer.onFineLocationPermissionGranted = () -> {
+            mLocationViewModel
+                    .getLocation()
+                    .observe(activity, mFabButtonsPerformer::updateLocation);
+            mFabButtonsPerformer.notifyFineLocationgranted();
+            mMapFragmentPerformer.updateLocationUI();
+        };
+
         mCoordinator.getCurrentState = this::retrieveCurrentState;
 
         // === Performer > Store === //
@@ -175,8 +204,9 @@ public abstract class MainPresenter<
                 )
         );
 
-        mFabButtonsPerformer.onPositionClick = () -> mUiActionStore.startAction(UiAction.moveToMyLocation());
+        mFabButtonsPerformer.onPositionClick = location -> mUiActionStore.startAction(UiAction.moveToMyLocation(location));
         mFabButtonsPerformer.onPositionLongClick = () -> mUiActionStore.startAction(UiAction.moveToFootprint());
+        mFabButtonsPerformer.askForFineLocationPermission = mPermissionsPerformer::askForFineLocation;
 
         mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mCoordinator.process());
         mLocationDetailFragmentPerformer.onFragmentUnloaded(() -> mCoordinator.process());
@@ -209,6 +239,10 @@ public abstract class MainPresenter<
         // ViewModels > View
         mWorkStatus.observe(activity, mSearchBarPerformer::setWorkStatus);
 
+
+        // --- Start --- //
+        mPermissionsPerformer.askForFineLocation();
+
     }
 
     public boolean onBackPressed(@NonNull PresenterActivity activity) {
@@ -219,6 +253,14 @@ public abstract class MainPresenter<
 
         mUiActionStore.startAction(UiAction.back());
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
+        mPermissionsPerformer.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @NonNull

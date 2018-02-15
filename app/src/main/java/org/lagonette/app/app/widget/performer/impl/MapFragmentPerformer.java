@@ -1,8 +1,10 @@
 package org.lagonette.app.app.widget.performer.impl;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.location.Location;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
@@ -23,6 +25,7 @@ import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_LOCATION;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_MY_LOCATION;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP_MOVING;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.UPDATE_MAP_LOCATION_UI;
 
 public abstract class MapFragmentPerformer implements ViewPerformer {
 
@@ -80,8 +83,8 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
         onMapMovementChanged.accept(mMapMovement);
     }
 
-    public void moveToMyLocation() {
-        mEventBus.publish(MOVE_TO_MY_LOCATION);
+    public void moveToMyLocation(@Nullable Location location) {
+        mEventBus.publish(MOVE_TO_MY_LOCATION, location);
     }
 
     public boolean moveToFootprint() {
@@ -101,4 +104,7 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
         mEventBus.publish(STOP_MOVING);
     }
 
+    public void updateLocationUI() {
+        mEventBus.publish(UPDATE_MAP_LOCATION_UI);
+    }
 }

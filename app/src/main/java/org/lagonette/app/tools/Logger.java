@@ -1,7 +1,11 @@
-package org.lagonette.app.tools.functions;
+package org.lagonette.app.tools;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import org.lagonette.app.tools.functions.Consumer;
+import org.lagonette.app.tools.functions.Function;
+import org.lagonette.app.tools.functions.LongConsumer;
 
 public class Logger {
 

@@ -21,6 +21,8 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
         void restore(@NonNull PresenterActivity owner, @NonNull Bundle savedInstanceState);
 
         void endConstruct(@NonNull PresenterActivity owner);
+
+        void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
     }
 
     protected Presenter mPresenter;
@@ -58,5 +60,11 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
     @Override
     protected void endConstruct() {
         mPresenter.endConstruct(PresenterActivity.this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

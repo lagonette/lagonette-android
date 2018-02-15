@@ -1,5 +1,7 @@
 package org.lagonette.app.app.viewmodel;
 
+import android.location.Location;
+
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.app.widget.coordinator.state.UiState;
@@ -25,7 +27,7 @@ public class MainLiveEventBusViewModel extends LiveEventBusViewModel {
 
         Event<Long> OPEN_LOCATION_ID = new Event<>();
 
-        Event<Void> MOVE_TO_MY_LOCATION = new Event<>();
+        Event<Location> MOVE_TO_MY_LOCATION = new Event<>();
 
         Event<Void> MOVE_TO_FOOTPRINT = new Event<>();
 
@@ -34,6 +36,8 @@ public class MainLiveEventBusViewModel extends LiveEventBusViewModel {
         Event<Cluster<LocationItem>> MOVE_TO_CLUSTER = new Event<>();
 
         Event<Void> STOP_MOVING = new Event<>();
+
+        Event<Void> UPDATE_MAP_LOCATION_UI = new Event<>();
 
     }
 }

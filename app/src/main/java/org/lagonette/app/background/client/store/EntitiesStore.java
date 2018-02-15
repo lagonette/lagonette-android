@@ -12,33 +12,38 @@ import org.lagonette.app.room.entity.PartnerSideCategory;
 import org.lagonette.app.tools.functions.BiObjConsumer;
 import org.lagonette.app.tools.functions.NullFunctions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntitiesStore {
 
     public static class PartnerEntities {
 
-        @Nullable
-        public List<Partner> partners;
+        public boolean hasValues;
 
-        @Nullable
-        public List<Location> locations;
+        @NonNull
+        public List<Partner> partners = new ArrayList<>();
 
-        @Nullable
-        public List<LocationMetadata> locationMetadata;
+        @NonNull
+        public List<Location> locations = new ArrayList<>();
 
-        @Nullable
-        public List<PartnerSideCategory> partnerSideCategories;
+        @NonNull
+        public List<LocationMetadata> locationMetadata = new ArrayList<>();
+
+        @NonNull
+        public List<PartnerSideCategory> partnerSideCategories = new ArrayList<>();
 
     }
 
     public static class CategoryEntities {
 
-        @Nullable
-        public List<Category> categories;
+        public boolean hasValues;
 
-        @Nullable
-        public List<CategoryMetadata> categoryMetadata;
+        @NonNull
+        public List<Category> categories = new ArrayList<>();
+
+        @NonNull
+        public List<CategoryMetadata> categoryMetadata= new ArrayList<>();
 
     }
 
@@ -53,26 +58,32 @@ public class EntitiesStore {
     private final CategoryEntities mCategoryEntities = new CategoryEntities();
 
     public void storePartners(@Nullable List<Partner> partners) {
+        mPartnerEntities.hasValues = true;
         mPartnerEntities.partners = partners;
     }
 
     public void storeLocations(@Nullable List<Location> locations) {
+        mCategoryEntities.hasValues = true;
         mPartnerEntities.locations = locations;
     }
 
     public void storeLocationMetadata(@Nullable List<LocationMetadata> locationMetadata) {
+        mCategoryEntities.hasValues = true;
         mPartnerEntities.locationMetadata = locationMetadata;
     }
 
     public void storePartnerSideCategories(@Nullable List<PartnerSideCategory> partnerSideCategories) {
+        mCategoryEntities.hasValues = true;
         mPartnerEntities.partnerSideCategories = partnerSideCategories;
     }
 
     public void storeCategories(@Nullable List<Category> categories) {
+        mCategoryEntities.hasValues = true;
         mCategoryEntities.categories = categories;
     }
 
     public void storeCategoryMetadata(@Nullable List<CategoryMetadata> categoryMetadata) {
+        mCategoryEntities.hasValues = true;
         mCategoryEntities.categoryMetadata = categoryMetadata;
     }
 

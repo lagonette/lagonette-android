@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.squareup.moshi.Json;
 
-import org.lagonette.app.api.adapter.BooleanAdapter;
 import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.LocationMetadata;
 

@@ -6,6 +6,8 @@ public interface NullFunctions {
 
     static <P> void doNothing(@NonNull P param) {}
 
+    static <P1> void doNothing(@NonNull P1 param1, int param2) {}
+
     static <P2, P3> void doNothing(int param1, @NonNull P2 param2, @NonNull P3 param3) {}
 
     static <P1, P2> void doNothing(@NonNull P1 param1, @NonNull P2 param2) {}
@@ -27,4 +29,10 @@ public interface NullFunctions {
     static <P> boolean falsePredicate(@NonNull P param) {
         return false;
     }
+
+    static <P> Predicate<P> predicate(boolean bool) { return paran -> bool; }
+
+    static BooleanProducer produce(boolean bool) { return () -> bool; }
+
+    static <P> Producer<P> produce(@NonNull P param) { return () -> param; }
 }

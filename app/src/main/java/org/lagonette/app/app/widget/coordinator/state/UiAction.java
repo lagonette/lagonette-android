@@ -1,5 +1,6 @@
 package org.lagonette.app.app.widget.coordinator.state;
 
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -48,6 +49,9 @@ public class UiAction {
     @Nullable
     public final LocationItem item;
 
+    @Nullable
+    public final Location mapLocation;
+
     public boolean shouldMove;
 
     public UiAction(
@@ -55,11 +59,14 @@ public class UiAction {
             @Nullable UiAction pendingAction,
             @Nullable Cluster<LocationItem> cluster,
             @Nullable LocationItem item,
+            @Nullable Location mapLocation,
             long locationId,
             boolean shouldMove) {
         this.type = type;
+        this.pendingAction = pendingAction;
         this.cluster = cluster;
         this.item = item;
+        this.mapLocation = mapLocation;
         this.locationId = locationId;
         this.shouldMove = shouldMove;
     }
@@ -67,6 +74,7 @@ public class UiAction {
     public static UiAction openFilters() {
         return new UiAction(
                 OPEN_FILTERS,
+                null,
                 null,
                 null,
                 null,
@@ -81,17 +89,19 @@ public class UiAction {
                 null,
                 null,
                 null,
+                null,
                 Statement.NO_ID,
                 false
         );
     }
 
-    public static UiAction moveToMyLocation() {
+    public static UiAction moveToMyLocation(Location mapLocation) {
         return new UiAction(
                 MOVE_TO_MY_LOCATION,
                 null,
                 null,
                 null,
+                mapLocation,
                 Statement.NO_ID,
                 true
         );
@@ -100,6 +110,7 @@ public class UiAction {
     public static UiAction moveToFootprint() {
         return new UiAction(
                 MOVE_TO_FOOTPRINT,
+                null,
                 null,
                 null,
                 null,
@@ -114,6 +125,7 @@ public class UiAction {
                 null,
                 cluster,
                 null,
+                null,
                 Statement.NO_ID,
                 true
         );
@@ -125,6 +137,7 @@ public class UiAction {
                 null,
                 null,
                 item,
+                null,
                 Statement.NO_ID,
                 true
         );
@@ -134,6 +147,7 @@ public class UiAction {
     public static UiAction moveToAndOpenLocation(long locationId) {
         return new UiAction(
                 MOVE_TO_AND_OPEN_LOCATION,
+                null,
                 null,
                 null,
                 null,
@@ -148,6 +162,7 @@ public class UiAction {
                 null,
                 null,
                 null,
+                null,
                 Statement.NO_ID,
                 false
         );
@@ -157,6 +172,7 @@ public class UiAction {
         return new UiAction(
                 RESTORE,
                 pendingAction,
+                null,
                 null,
                 null,
                 Statement.NO_ID,
