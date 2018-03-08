@@ -10,8 +10,9 @@
     <string name="error_no_call_app_found">Aucune application téléphonique trouvée.</string>
     <string name="error_no_browser_app_found">Aucun navigateur web trouvé.</string>
     <string name="error_no_email_app_found">Aucune application email trouvée.</string>
-    <string name="error_getting_partners_first">Echec de recuperation des partenaires.</string>
-    <string name="error_getting_partners">Echec de mise à jour des partenaires.</string>
+    <string name="error_getting_categories">Echec lors de la mise à jour des categories.</string>
+    <string name="error_getting_partners">Echec lors de la mise à jour des partenaires.</string>
+    <string name="error_unknown">"Une erreur inconnue s'est produite."</string>
 
     <string name="shortcut_partner">Partenaire</string>
     <string name="shortcut_exchange_office">Comptoir de change</string>

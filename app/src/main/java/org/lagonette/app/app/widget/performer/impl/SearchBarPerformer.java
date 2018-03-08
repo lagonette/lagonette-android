@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
-import org.lagonette.app.repo.Resource;
+import org.lagonette.app.background.worker.WorkerState;
 import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.IntConsumer;
 import org.lagonette.app.util.UiUtils;
@@ -43,9 +43,6 @@ public abstract class SearchBarPerformer implements ViewPerformer {
     @IdRes
     private final int mSearchTextRes;
 
-    @Resource.Status
-    private int mWorkStatus;
-
     public SearchBarPerformer(
             @IdRes int searchBarRes,
             @IdRes int progressBarRes,
@@ -73,16 +70,15 @@ public abstract class SearchBarPerformer implements ViewPerformer {
         onBottomChanged.accept((int) (searchBar.getBottom() + searchBar.getTranslationY()));
     }
 
-    public void setWorkStatus(@Resource.Status int workState) {
-        mWorkStatus = workState;
-        switch (mWorkStatus) {
+    public void setWorkStatus(@NonNull Integer status) {
+        switch (status) {
 
-            case Resource.LOADING:
+            case WorkerState.LOADING:
                 mProgressBar.setVisibility(View.VISIBLE);
                 break;
 
-            case Resource.ERROR:
-            case Resource.SUCCESS:
+            case WorkerState.ERROR:
+            case WorkerState.SUCCESS:
                 mProgressBar.setVisibility(View.GONE);
                 break;
         }

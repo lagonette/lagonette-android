@@ -13,7 +13,7 @@ import android.view.View;
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
-import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
+import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
 import org.lagonette.app.room.reader.FilterReader;
 
@@ -37,7 +37,7 @@ public class FiltersFragment
 
     private FiltersViewModel mFiltersViewModel;
 
-    private StateMapActivityViewModel mStateViewModel;
+    private DataViewModel mStateViewModel;
 
     private LiveData<FilterReader> mFilters;
 
@@ -64,7 +64,7 @@ public class FiltersFragment
 
         mStateViewModel = ViewModelProviders
                 .of(getActivity())
-                .get(StateMapActivityViewModel.class);
+                .get(DataViewModel.class);
 
         mFilters = mFiltersViewModel.getFilters();
         mSearch = mStateViewModel.getSearch();

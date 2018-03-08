@@ -16,7 +16,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapLocationViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
-import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
+import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.widget.error.Error;
 import org.lagonette.app.app.widget.performer.impl.MapMovementPerformer;
 import org.lagonette.app.app.widget.performer.impl.MapPerformer;
@@ -44,7 +44,7 @@ public class MapsFragment
 
     private MapViewModel mViewModel;
 
-    private StateMapActivityViewModel mStateViewModel;
+    private DataViewModel mStateViewModel;
 
     private MainLiveEventBusViewModel mEventBus;
 
@@ -78,7 +78,7 @@ public class MapsFragment
 
         mStateViewModel = ViewModelProviders
                 .of(getActivity())
-                .get(StateMapActivityViewModel.class);
+                .get(DataViewModel.class);
 
         mEventBus = ViewModelProviders
                 .of(getActivity())
@@ -120,7 +120,7 @@ public class MapsFragment
 
             mViewModel.getMapPartners().observe(
                     MapsFragment.this,
-                    this::dispatchPartnersResource
+                    mMapPerformer::showPartners
             );
         });
 
@@ -186,19 +186,6 @@ public class MapsFragment
     private void openLocation(long locationId) {
         LocationItem locationItem = mMapPerformer.retrieveLocationItem(locationId);
         mEventBus.publish(OPEN_LOCATION_ITEM, locationItem);
-    }
-
-    public void dispatchPartnersResource(@NonNull Resource<List<LocationItem>> partnerResource) {
-        mMapPerformer.showPartners(partnerResource.data);
-        mStateViewModel.setWorkStatus(partnerResource.status);
-
-        if (partnerResource.status == Resource.ERROR) {
-            mSnackbarPerformer.show(
-                    partnerResource.data.isEmpty()
-                            ? Error.PARTNER_NOT_LOADED
-                            : Error.PARTNER_NOT_UPDATED
-            );
-        }
     }
 
     public void setMapPadding(int left, int top, int right, int bottom) {

@@ -15,9 +15,11 @@ public enum Error {
 
     NO_BROWSER_APP_FOUND(R.string.error_no_browser_app_found),
 
-    PARTNER_NOT_LOADED(R.string.error_getting_partners_first),
+    CATEGORIES_NOT_UPDATED(R.string.error_getting_categories),
 
-    PARTNER_NOT_UPDATED(R.string.error_getting_partners);
+    PARTNERS_NOT_UPDATED(R.string.error_getting_partners),
+
+    UNKNOWN_ERROR(R.string.error_unknown);
 
     @StringRes
     public final int stringRes;

@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.lagonette.app.background.worker.BackgroundWorker;
-import org.lagonette.app.background.worker.WorkerResponse;
+import org.lagonette.app.background.worker.WorkerState;
 
 
 // ResultType: Type for the Resource data
@@ -48,26 +48,26 @@ public abstract class ResourceAlgorithm<ResultType, Worker extends BackgroundWor
 
     private void updateData(final LiveData<ResultType> dbSource) {
         Worker worker = createWorker();
-        LiveData<WorkerResponse> workerSource = worker.getWorkerResponse();
+        LiveData<WorkerState> workerSource = worker.getWorkerState();
         // we re-attach dbSource as a new source,
         // it will dispatch its latest value quickly
         result.addSource(
                 workerSource,
-                response -> {
+                workerState -> {
                     result.removeSource(workerSource);
                     result.removeSource(dbSource);
                     //noinspection ConstantConditions
-                    if (response.isSuccessful()) {
+                    if (workerState.isSuccessful()) {
                         result.addSource( //TODO setValue is never called
                                 loadFromDb(), // Re init loader
-                                newData -> result.setValue(Resource.success(newData))
+                                newData -> result.setValue(Resource.create(workerState, newData))
                         );
                     } else {
                         onUpdateFailed();
                         result.addSource( //TODO is onChanged() really called ?
                                 dbSource,
                                 newData -> result.setValue(
-                                        Resource.error(response.getErrorMessage(), newData)
+                                        Resource.create(workerState, newData)
                                 )
                         );
                     }

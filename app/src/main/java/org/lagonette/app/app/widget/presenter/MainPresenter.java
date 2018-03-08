@@ -13,12 +13,13 @@ import android.view.View;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.activity.PresenterActivity;
+import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
-import org.lagonette.app.app.viewmodel.StateMapActivityViewModel;
 import org.lagonette.app.app.viewmodel.UiActionStore;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
+import org.lagonette.app.app.widget.error.Error;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
@@ -26,6 +27,7 @@ import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerform
 import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.PermissionsPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
+import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.arch.LocationViewModel;
 import org.lagonette.app.tools.arch.LongObserver;
@@ -47,7 +49,7 @@ public abstract class MainPresenter<
 
     protected UiActionStore mUiActionStore;
 
-    protected StateMapActivityViewModel mStateViewModel;
+    protected DataViewModel mStateViewModel;
 
     protected MainLiveEventBusViewModel mEventBus;
 
@@ -58,6 +60,8 @@ public abstract class MainPresenter<
     protected MutableLiveData<String> mSearch;
 
     protected LiveData<Integer> mWorkStatus;
+
+    protected LiveData<Error> mWorkError;
 
     // --- Performers --- //
 
@@ -77,13 +81,15 @@ public abstract class MainPresenter<
 
     protected PermissionsPerformer mPermissionsPerformer;
 
+    protected SnackbarPerformer mSnackbarPerformer;
+
     @Override
     @CallSuper
     public void startConstruct(@NonNull PresenterActivity activity) {
 
         mStateViewModel = ViewModelProviders
                 .of(activity)
-                .get(StateMapActivityViewModel.class);
+                .get(DataViewModel.class);
 
         mEventBus = ViewModelProviders
                 .of(activity)
@@ -99,6 +105,7 @@ public abstract class MainPresenter<
 
         mSearch = mStateViewModel.getSearch();
         mWorkStatus = mStateViewModel.getWorkStatus();
+        mWorkError = mStateViewModel.getWorkError();
 
         mCoordinator = createCoordinator();
         mMapFragmentPerformer = createMapFragmentPerformer(activity);
@@ -108,6 +115,7 @@ public abstract class MainPresenter<
         mFiltersFragmentPerformer = new FiltersFragmentPerformer(activity, R.id.fragment_filters);
         mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity, R.id.fragment_location_detail);
         mPermissionsPerformer = new PermissionsPerformer(activity);
+        mSnackbarPerformer = new SnackbarPerformer(activity);
 
         // === Coordinator > Performer === //
         mCoordinator.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
@@ -133,7 +141,6 @@ public abstract class MainPresenter<
 
         // === Coordinator > Store === //
         mCoordinator.finishAction = mUiActionStore::finishAction;
-
 
     }
 
@@ -238,6 +245,7 @@ public abstract class MainPresenter<
 
         // ViewModels > View
         mWorkStatus.observe(activity, mSearchBarPerformer::setWorkStatus);
+        mWorkError.observe(activity, mSnackbarPerformer::show);
 
 
         // --- Start --- //

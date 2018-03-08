@@ -5,6 +5,7 @@ import android.arch.lifecycle.Transformations;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import org.lagonette.app.background.worker.WorkerState;
 import org.lagonette.app.tools.arch.CursorLiveData;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
@@ -36,21 +37,20 @@ public class MainRepo {
         mShouldUpdate = true;
     }
 
-    public LiveData<Resource<List<LocationItem>>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
-        return new LambdaResourceAlgorithm<>(
-                mExecutor,
-                this::shouldUpdate,
-                () -> Transformations.switchMap(
-                        searchLiveData,
-                        search -> DB
-                                .get()
-                                .mainDao()
-                                .getMapLocations(SearchUtils.formatSearch(search))
-                ),
-                () -> new DataRefreshWorker(mContext)
-        )
-                .start()
-                .getAsLiveData();
+    public LiveData<WorkerState> updateDatas() {
+        DataRefreshWorker worker = new DataRefreshWorker(mContext);
+        mExecutor.execute(worker);
+        return worker.getWorkerState();
+    }
+
+    public LiveData<List<LocationItem>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
+        return Transformations.switchMap(
+                searchLiveData,
+                search -> DB
+                        .get()
+                        .mainDao()
+                        .getMapLocations(SearchUtils.formatSearch(search))
+        );
     } //TODO Fix "Application did not close the cursor or database object that was opened here" issue
 
     public LiveData<LocationDetail> getLocationDetail(@NonNull LiveData<Long> locationIdLiveData) {

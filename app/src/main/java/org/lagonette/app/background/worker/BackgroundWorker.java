@@ -12,23 +12,24 @@ public abstract class BackgroundWorker
     private final Context mContext;
 
     @NonNull
-    private MutableLiveData<WorkerResponse> mWorkerResponseLiveData;
+    private MutableLiveData<WorkerState> mWorkerState;
 
     public BackgroundWorker(@NonNull Context context) {
         mContext = context;
-        mWorkerResponseLiveData = new MutableLiveData<>();
+        mWorkerState = new MutableLiveData<>();
     }
 
     @Override
     public void run() {
-        WorkerResponse response = new WorkerResponse();
+        mWorkerState.postValue(WorkerState.loading());
 
-        doWork(response);
+        WorkerState workerState = doWork();
 
-        mWorkerResponseLiveData.postValue(response);
+        mWorkerState.postValue(workerState);
     }
 
-    protected abstract void doWork(@NonNull WorkerResponse workerResponse);
+    @NonNull
+    protected abstract WorkerState doWork();
 
     @NonNull
     protected Context getContext() {
@@ -36,8 +37,8 @@ public abstract class BackgroundWorker
     }
 
     @NonNull
-    public LiveData<WorkerResponse> getWorkerResponse() {
-        return mWorkerResponseLiveData;
+    public LiveData<WorkerState> getWorkerState() {
+        return mWorkerState;
     }
 
 }

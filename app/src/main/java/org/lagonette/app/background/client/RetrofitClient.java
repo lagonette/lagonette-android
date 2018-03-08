@@ -2,6 +2,8 @@ package org.lagonette.app.background.client;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import org.lagonette.app.background.client.exception.ApiClientException;
 import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.IntBiConsumer;
@@ -40,6 +42,7 @@ public class RetrofitClient<R> {
                 onResponseError.accept(response.code(), response.message(), response.errorBody());
             }
         } catch (IOException e) {
+            FirebaseCrash.report(e);
             onException.accept(new ApiClientException(e));
         }
     }
