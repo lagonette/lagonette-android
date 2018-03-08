@@ -21,7 +21,7 @@
     <color name="colorPrimaryDark">@color/la_gonette_04</color>
     <color name="colorAccent">@color/la_gonette_05</color>
 
-    <color name="footprint">@color/la_gonette_06</color>
+    <color name="map_footprint">@color/la_gonette_06</color>
 
     <color name="text_primary">@color/la_gonette_07</color>
     <color name="text_secondary">@color/la_gonette_08</color>

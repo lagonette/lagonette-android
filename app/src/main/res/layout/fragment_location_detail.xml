@@ -60,7 +60,7 @@
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textColor="@android:color/white"
-                tools:text="@string/partner_type_exchange_office"/>
+                tools:text="@string/location_detail_exchange_office"/>
 
         </LinearLayout>
 

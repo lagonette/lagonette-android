@@ -119,8 +119,8 @@ public class LocationDetailPerformer implements ViewPerformer {
 
             mPartnerTypeTextView.setText(
                     locationDetail.isExchangeOffice
-                            ? resources.getString(R.string.partner_type_exchange_office)
-                            : resources.getString(R.string.partner_type_partner)
+                            ? resources.getString(R.string.location_detail_exchange_office)
+                            : resources.getString(R.string.location_detail_partner)
             );
 
             mNameTextView.setText(locationDetail.name);

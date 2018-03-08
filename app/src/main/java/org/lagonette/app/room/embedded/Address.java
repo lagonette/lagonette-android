@@ -18,6 +18,6 @@ public class Address {
     public String city;
 
     public String format(@NonNull Resources resources) {
-        return resources.getString(R.string.format_address_full, street, zipCode, city);
+        return resources.getString(R.string.all_format_address_full, street, zipCode, city);
     }
 }

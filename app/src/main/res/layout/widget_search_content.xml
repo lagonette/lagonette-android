@@ -20,7 +20,7 @@
         android:layout_marginStart="8dp"
         android:layout_weight="1"
         android:background="@android:color/transparent"
-        android:hint="@string/hint_search"
+        android:hint="@string/searchbar_hint"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:maxLines="1"

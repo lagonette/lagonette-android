@@ -123,7 +123,7 @@ public class MapPerformer implements OnMapReadyCallback {
             GeoJsonLayer footprintLayer = new GeoJsonLayer(mMap, R.raw.footprint, mContext);
             for (GeoJsonFeature feature : footprintLayer.getFeatures()) {
                 GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
-                lineStringStyle.setColor(ContextCompat.getColor(mContext, R.color.footprint));
+                lineStringStyle.setColor(ContextCompat.getColor(mContext, R.color.map_footprint));
                 feature.setLineStringStyle(lineStringStyle);
             }
             footprintLayer.addLayerToMap();

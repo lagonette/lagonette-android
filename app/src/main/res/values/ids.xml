@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="content_uri_partner" type="id"/>
-    <item name="content_uri_partners" type="id"/>
-    <item name="content_uri_partners_metadata" type="id"/>
-    <item name="content_uri_partners_extended" type="id"/>
-    <item name="content_uri_partners_side_categories" type="id"/>
-    <item name="content_uri_categories" type="id"/>
-    <item name="content_uri_categories_extended" type="id"/>
-    <item name="content_uri_categories_metadata" type="id"/>
-    <item name="content_uri_filters" type="id"/>
-    <item name="content_uri_map" type="id"/>
-
     <item name="view_type_loading" type="id"/>
     <item name="view_type_shortcut" type="id"/>
     <item name="view_type_category" type="id"/>

@@ -1,27 +1,28 @@
 <resources>
 
+    <!--naming convention: https://jeroenmols.com/blog/2016/03/07/resourcenaming/-->
+
     <string name="app_name">La Gonette</string>
 
-    <string name="row_partners">Partenaires</string>
+    <string name="all_format_address_full">%1$s, %2$s %3$s</string>
 
-    <string name="hint_search">Rechercher…</string>
+    <string name="filters_partners">Partenaires</string>
 
-    <string name="error_no_direction_app_found">Aucune application GPS trouvée.</string>
-    <string name="error_no_call_app_found">Aucune application téléphonique trouvée.</string>
-    <string name="error_no_browser_app_found">Aucun navigateur web trouvé.</string>
-    <string name="error_no_email_app_found">Aucune application email trouvée.</string>
-    <string name="error_getting_categories">Echec lors de la mise à jour des categories.</string>
-    <string name="error_getting_partners">Echec lors de la mise à jour des partenaires.</string>
-    <string name="error_unknown">"Une erreur inconnue s'est produite."</string>
+    <string name="location_detail_partner">Partenaire</string>
+    <string name="location_detail_exchange_office">Partenaire + Comptoir de change</string>
+
+    <string name="searchbar_hint">Rechercher…</string>
 
     <string name="shortcut_partner">Partenaire</string>
     <string name="shortcut_exchange_office">Comptoir de change</string>
     <string name="shortcut_la_gonette">La Gonette</string>
-    <string name="shortcut_bank">Banque</string>
 
-    <string name="format_address_full">%1$s, %2$s %3$s</string>
-
-    <string name="partner_type_partner">Partenaire</string>
-    <string name="partner_type_exchange_office">Partenaire + Comptoir de change</string>
+    <string name="snackbar_error_no_direction_app_found">Aucune application GPS trouvée.</string>
+    <string name="snackbar_error_no_call_app_found">Aucune application téléphonique trouvée.</string>
+    <string name="snackbar_error_no_browser_app_found">Aucun navigateur web trouvé.</string>
+    <string name="snackbar_error_no_email_app_found">Aucune application email trouvée.</string>
+    <string name="snackbar_error_getting_categories">Echec lors de la mise à jour des categories.</string>
+    <string name="snackbar_error_getting_partners">Echec lors de la mise à jour des partenaires.</string>
+    <string name="snackbar_error_unknown">"Une erreur inconnue s'est produite."</string>
 
 </resources>
