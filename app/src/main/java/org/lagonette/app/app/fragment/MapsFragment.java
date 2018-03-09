@@ -2,7 +2,6 @@ package org.lagonette.app.app.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,14 +16,9 @@ import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapLocationViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.viewmodel.DataViewModel;
-import org.lagonette.app.app.widget.error.Error;
 import org.lagonette.app.app.widget.performer.impl.MapMovementPerformer;
 import org.lagonette.app.app.widget.performer.impl.MapPerformer;
-import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
-import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationItem;
-
-import java.util.List;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
@@ -42,15 +36,17 @@ public class MapsFragment
 
     public static final String TAG = "MapsFragment";
 
-    private MapViewModel mViewModel;
+    // --- View Models --- //
 
-    private DataViewModel mStateViewModel;
+    private MapViewModel mMapViewModel;
+
+    private DataViewModel mDataViewModel;
 
     private MainLiveEventBusViewModel mEventBus;
 
-    private SnackbarPerformer mSnackbarPerformer;
-
     private MapLocationViewModel mMapLocationViewModel;
+
+    // --- Performers --- //
 
     private MapMovementPerformer mMapMovementPerformer;
 
@@ -72,11 +68,11 @@ public class MapsFragment
                 .of(MapsFragment.this)
                 .get(MapLocationViewModel.class);
 
-        mViewModel = ViewModelProviders
+        mMapViewModel = ViewModelProviders
                 .of(MapsFragment.this)
                 .get(MapViewModel.class);
 
-        mStateViewModel = ViewModelProviders
+        mDataViewModel = ViewModelProviders
                 .of(getActivity())
                 .get(DataViewModel.class);
 
@@ -84,11 +80,11 @@ public class MapsFragment
                 .of(getActivity())
                 .get(MainLiveEventBusViewModel.class);
 
-        mStateViewModel
+        mDataViewModel
                 .getSearch()
                 .observe(
                         MapsFragment.this,
-                        mViewModel.getSearch()::setValue
+                        mMapViewModel.getSearch()::setValue
                 );
     }
 
@@ -118,7 +114,7 @@ public class MapsFragment
                     mMapMovementPerformer::setCameraPosition
             );
 
-            mViewModel.getMapPartners().observe(
+            mMapViewModel.getMapPartners().observe(
                     MapsFragment.this,
                     mMapPerformer::showPartners
             );
@@ -171,7 +167,6 @@ public class MapsFragment
                 mMapPerformer::updateLocationUI
         );
 
-        mSnackbarPerformer = new SnackbarPerformer(getActivity());
     }
 
     @Override
@@ -188,6 +183,9 @@ public class MapsFragment
         mEventBus.publish(OPEN_LOCATION_ITEM, locationItem);
     }
 
+    /**
+     * Do not pass through LiveData for optimisation purpose.
+     */
     public void setMapPadding(int left, int top, int right, int bottom) {
         mMapPerformer.setMapPadding(left, top, right, bottom);
     }
