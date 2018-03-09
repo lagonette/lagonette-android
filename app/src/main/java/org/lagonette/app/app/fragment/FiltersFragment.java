@@ -141,7 +141,7 @@ public class FiltersFragment
         mFilterAdapter.onCategoryCollapsedClick = mFiltersViewModel::changeCategoryCollapsed;
         mFilterAdapter.onLocationShortcutClick = mFiltersViewModel::showAllLocations;
         mFilterAdapter.onExchangeOfficeShortcutClick = mFiltersViewModel::showAllExchangeOffices;
-        mFilterAdapter.onOfficeShortcutClick = () -> {/* YOLO */};
+        mFilterAdapter.onHeadquarterShortcutClick = (locationId) -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
     }
 
     public void updateTopPadding(int top) {

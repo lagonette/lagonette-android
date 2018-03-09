@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.lagonette.app.R;
+import org.lagonette.app.tools.functions.Consumer;
 
 public class ShortcutViewHolder extends RecyclerView.ViewHolder {
 
@@ -20,22 +21,22 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
     public final View exchangeOfficeView;
 
     @NonNull
-    public final View officeView;
+    public final View headquarterView;
 
     @NonNull
-    public final View backgroundOfficeView;
+    public final View backgroundHeadquarterView;
 
     @NonNull
-    public final ImageView iconOfficeView;
+    public final ImageView iconHeadquarterView;
 
     @NonNull
-    public final TextView textOfficeView;
+    public final TextView textHeadquarterView;
 
     public ShortcutViewHolder(
             @NonNull ViewGroup parent,
             @Nullable Runnable onLocationClick,
             @Nullable Runnable onExchangeOfficeClick,
-            @Nullable Runnable onOfficeClick) {
+            @Nullable Consumer<Long> onHeadquarterClick) {
         super(
                 LayoutInflater
                         .from(parent.getContext())
@@ -50,10 +51,10 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
 
         exchangeOfficeView = itemView.findViewById(R.id.layout_shortcut_exchange_office);
 
-        officeView = itemView.findViewById(R.id.layout_shortcut_headquarter);
-        backgroundOfficeView = itemView.findViewById(R.id.layout_shortcut_headquarter_background);
-        iconOfficeView = itemView.findViewById(R.id.view_shortcut_headquarter_icon);
-        textOfficeView = itemView.findViewById(R.id.view_shortcut_headquarter_text);
+        headquarterView = itemView.findViewById(R.id.layout_shortcut_headquarter);
+        backgroundHeadquarterView = itemView.findViewById(R.id.layout_shortcut_headquarter_background);
+        iconHeadquarterView = itemView.findViewById(R.id.view_shortcut_headquarter_icon);
+        textHeadquarterView = itemView.findViewById(R.id.view_shortcut_headquarter_text);
 
         if (onLocationClick != null) {
             locationView.setOnClickListener(view -> onLocationClick.run());
@@ -63,8 +64,8 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
             exchangeOfficeView.setOnClickListener(view -> onExchangeOfficeClick.run());
         }
 
-        if (onOfficeClick != null) {
-            officeView.setOnClickListener(view -> onOfficeClick.run());
+        if (onHeadquarterClick != null) {
+            headquarterView.setOnClickListener(view -> onHeadquarterClick.accept((Long) headquarterView.getTag()));
         }
     }
 }

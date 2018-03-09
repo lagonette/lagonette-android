@@ -25,6 +25,8 @@ import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.statement.FilterStatement;
+import org.lagonette.app.room.statement.Statement;
+import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.LongBooleanConsumer;
 import org.lagonette.app.tools.functions.LongConsumer;
 import org.lagonette.app.tools.functions.ObjBooleanConsumer;
@@ -80,7 +82,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public Runnable onExchangeOfficeShortcutClick;
 
     @Nullable
-    public Runnable onOfficeShortcutClick;
+    public Consumer<Long> onHeadquarterShortcutClick;
 
     @Nullable
     private HeadquarterShortcut mHeadquarterShortcut;
@@ -198,7 +200,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         switch (viewType) {
 
             case R.id.view_type_shortcut:
-                return new ShortcutViewHolder(parent, onLocationShortcutClick, onExchangeOfficeShortcutClick, onOfficeShortcutClick);
+                return new ShortcutViewHolder(parent, onLocationShortcutClick, onExchangeOfficeShortcutClick, onHeadquarterShortcutClick);
 
             case R.id.view_type_category:
                 return new CategoryViewHolder(parent, onCategoryCollapsedClick, onCategoryVisibilityClick);
@@ -241,20 +243,22 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     // TODO Make onBind into ViewHolder
     private void onBindShortcutViewHolder(@NonNull ShortcutViewHolder holder, int position) {
         if (mHeadquarterShortcut != null) {
-            holder.officeView.setClickable(true);
-            holder.backgroundOfficeView.setBackgroundResource(R.drawable.bg_item_partner);
-            holder.textOfficeView.setTextColor(mSecondaryTextColor);
+            holder.headquarterView.setTag(mHeadquarterShortcut.locationId);
+            holder.headquarterView.setClickable(true);
+            holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_partner);
+            holder.textHeadquarterView.setTextColor(mSecondaryTextColor);
             Glide.with(holder.itemView.getContext())
                     .load(mHeadquarterShortcut.icon)
                     .asBitmap()
                     .override(mCategoryIconSize, mCategoryIconSize)
-                    .into(holder.iconOfficeView);
+                    .into(holder.iconHeadquarterView);
         }
         else {
-            holder.officeView.setClickable(false);
-            holder.backgroundOfficeView.setBackgroundResource(R.drawable.bg_item_category);
-            holder.textOfficeView.setTextColor(mDisabledTextColor);
-            holder.iconOfficeView.setImageBitmap(null);
+            holder.headquarterView.setTag(Statement.NO_ID);
+            holder.headquarterView.setClickable(false);
+            holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_category);
+            holder.textHeadquarterView.setTextColor(mDisabledTextColor);
+            holder.iconHeadquarterView.setImageBitmap(null);
         }
     }
 

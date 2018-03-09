@@ -196,8 +196,6 @@ public class DataRefreshWorker
         // ------- //
 
         // --- Save entities --- //
-
-        // Save entities
         entitiesStore.saveEntities = (categoryEntities, partnerEntities) -> {
             database.writerDao().insert(categoryEntities, partnerEntities);
             categorySignatureStore.save();

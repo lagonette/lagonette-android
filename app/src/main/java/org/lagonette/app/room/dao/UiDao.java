@@ -26,7 +26,7 @@ public interface UiDao {
     @Query(FilterStatement.SQL)
     Cursor getFilters(String search);
 
-    @Query("SELECT partner.logo as icon " +
+    @Query("SELECT location.id AS location_id, partner.logo AS icon " +
             "FROM partner " +
             "JOIN location ON partner.id = location.partner_id " +
             "WHERE partner.is_gonette_headquarter = 1 " +
