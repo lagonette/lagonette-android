@@ -53,11 +53,6 @@ public class FiltersFragment
 
     @Override
     protected void construct() {
-
-        mEventBus = ViewModelProviders
-                .of(getActivity()) // TODO maybe activity is not created
-                .get(MainLiveEventBusViewModel.class);
-
         mFiltersViewModel = ViewModelProviders
                 .of(FiltersFragment.this)
                 .get(FiltersViewModel.class);
@@ -86,6 +81,11 @@ public class FiltersFragment
 
     @Override
     protected void construct(@NonNull FragmentActivity activity) {
+
+        mEventBus = ViewModelProviders
+                .of(activity)
+                .get(MainLiveEventBusViewModel.class);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getContext(),
                 LinearLayoutManager.VERTICAL,
