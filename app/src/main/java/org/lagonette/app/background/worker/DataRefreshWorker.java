@@ -198,11 +198,12 @@ public class DataRefreshWorker
         // --- Save entities --- //
 
         // Save entities
-        entitiesStore.saveEntities = database.writerDao()::insert;
-        entitiesStore.entitiesSaved = categorySignatureStore::save;
-
-        categorySignatureStore.signatureSaved = partnerSignatureStore::save;
-        partnerSignatureStore.signatureSaved = () -> workerStateStore.store(WorkerState.success());
+        entitiesStore.saveEntities = (categoryEntities, partnerEntities) -> {
+            database.writerDao().insert(categoryEntities, partnerEntities);
+            categorySignatureStore.save();
+            partnerSignatureStore.save();
+            workerStateStore.store(WorkerState.success());
+        };
         // -------- //
 
         // --- Start --- //

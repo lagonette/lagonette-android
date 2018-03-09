@@ -6,7 +6,7 @@
             android:shape="oval">
 
             <stroke
-                android:width="3dp"
+                android:width="2dp"
                 android:color="#1E000000"/>
 
             <solid

@@ -48,9 +48,6 @@ public class EntitiesStore {
     }
 
     @NonNull
-    public Runnable entitiesSaved = NullFunctions::doNothing;
-
-    @NonNull
     public BiConsumer<CategoryEntities, PartnerEntities> saveEntities = NullFunctions::doNothing;
 
     private final PartnerEntities mPartnerEntities = new PartnerEntities();
@@ -89,6 +86,5 @@ public class EntitiesStore {
 
     public void saveEntities() {
         saveEntities.accept(mCategoryEntities, mPartnerEntities);
-        entitiesSaved.run();
     }
 }

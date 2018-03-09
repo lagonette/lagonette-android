@@ -14,9 +14,6 @@ public class SignatureStore {
     public Consumer<String> saveSignature = NullFunctions::doNothing;
 
     @NonNull
-    public Runnable signatureSaved = NullFunctions::doNothing;
-
-    @NonNull
     public Supplier<String> retrieveLocalSignature;
 
     @Nullable
@@ -30,7 +27,6 @@ public class SignatureStore {
         if (!TextUtils.isEmpty(mSignature)) {
             saveSignature.accept(mSignature);
         }
-        signatureSaved.run();
     }
 
     public boolean hasSignatureChanged(@NonNull String remoteSignature) {

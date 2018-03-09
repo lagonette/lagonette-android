@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.lagonette.app.R;
 
@@ -19,6 +21,15 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull
     public final View officeView;
+
+    @NonNull
+    public final View backgroundOfficeView;
+
+    @NonNull
+    public final ImageView iconOfficeView;
+
+    @NonNull
+    public final TextView textOfficeView;
 
     public ShortcutViewHolder(
             @NonNull ViewGroup parent,
@@ -34,9 +45,15 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
                                 false
                         )
         );
-        locationView = itemView.findViewById(R.id.shortcut_location);
-        exchangeOfficeView = itemView.findViewById(R.id.shortcut_exchange_office);
-        officeView = itemView.findViewById(R.id.shortcut_office);
+
+        locationView = itemView.findViewById(R.id.layout_shortcut_location);
+
+        exchangeOfficeView = itemView.findViewById(R.id.layout_shortcut_exchange_office);
+
+        officeView = itemView.findViewById(R.id.layout_shortcut_headquarter);
+        backgroundOfficeView = itemView.findViewById(R.id.layout_shortcut_headquarter_background);
+        iconOfficeView = itemView.findViewById(R.id.view_shortcut_headquarter_icon);
+        textOfficeView = itemView.findViewById(R.id.view_shortcut_headquarter_text);
 
         if (onLocationClick != null) {
             locationView.setOnClickListener(view -> onLocationClick.run());

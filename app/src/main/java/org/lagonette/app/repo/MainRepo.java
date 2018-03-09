@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.background.worker.WorkerState;
+import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.tools.arch.CursorLiveData;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
@@ -29,12 +30,9 @@ public class MainRepo {
     @NonNull
     private final Executor mExecutor;
 
-    private boolean mShouldUpdate;
-
     public MainRepo(@NonNull Context context, @NonNull Executor executor) {
         mContext = context;
         mExecutor = executor;
-        mShouldUpdate = true;
     }
 
     public LiveData<WorkerState> updateDatas() {
@@ -48,7 +46,7 @@ public class MainRepo {
                 searchLiveData,
                 search -> DB
                         .get()
-                        .mainDao()
+                        .uiDao()
                         .getMapLocations(SearchUtils.formatSearch(search))
         );
     } //TODO Fix "Application did not close the cursor or database object that was opened here" issue
@@ -57,7 +55,7 @@ public class MainRepo {
         return Transformations.switchMap(
                 locationIdLiveData,
                 locationId -> locationId > Statement.NO_ID
-                        ? DB.get().mainDao().getLocationsDetail(locationId)
+                        ? DB.get().uiDao().getLocationsDetail(locationId)
                         : null
         );
     }
@@ -71,12 +69,16 @@ public class MainRepo {
                                 mExecutor,
                                 () -> DB
                                         .get()
-                                        .mainDao()
+                                        .uiDao()
                                         .getFilters(SearchUtils.formatSearch(search))
                         )
                 ),
                 FilterReader::create
         );
+    }
+
+    public LiveData<HeadquarterShortcut> getHeadquarterShortcut() {
+        return DB.get().uiDao().getHeadquarterShortcut();
     }
 
     public void setLocationVisibility(long locationId, boolean isVisible) {
@@ -135,12 +137,4 @@ public class MainRepo {
         );
     }
 
-    private boolean shouldUpdate() {
-        if (mShouldUpdate) {
-            mShouldUpdate = false;
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

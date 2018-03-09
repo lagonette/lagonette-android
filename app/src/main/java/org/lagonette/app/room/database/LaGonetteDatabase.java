@@ -28,7 +28,7 @@ import org.lagonette.app.util.DatabaseUtils;
 )
 public abstract class LaGonetteDatabase extends RoomDatabase {
 
-    public abstract UiDao mainDao();
+    public abstract UiDao uiDao();
 
     public abstract WriterDao writerDao();
 

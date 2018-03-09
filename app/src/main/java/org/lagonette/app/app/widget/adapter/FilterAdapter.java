@@ -22,6 +22,7 @@ import org.lagonette.app.app.widget.viewholder.LoadingViewHolder;
 import org.lagonette.app.app.widget.viewholder.LocationViewHolder;
 import org.lagonette.app.app.widget.viewholder.ShortcutViewHolder;
 import org.lagonette.app.room.embedded.CategoryKey;
+import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.tools.functions.LongBooleanConsumer;
@@ -81,6 +82,13 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Nullable
     public Runnable onOfficeShortcutClick;
 
+    @Nullable
+    private HeadquarterShortcut mHeadquarterShortcut;
+
+    private int mDisabledTextColor;
+
+    private int mSecondaryTextColor;
+
     public FilterAdapter(@NonNull Context context, @NonNull Resources resources) {
         mCategoryIconSize = resources.getDimensionPixelSize(R.dimen.filters_category_icon_size);
 
@@ -89,6 +97,9 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         mPartnerIndicatorImage = ContextCompat.getDrawable(context, R.drawable.img_partner_indicator);
         mExchangeOfficeIndicatorImage = ContextCompat.getDrawable(context, R.drawable.img_exchange_office_indicator);
+
+        mDisabledTextColor = ContextCompat.getColor(context, R.color.text_disabled);
+        mSecondaryTextColor = ContextCompat.getColor(context, R.color.text_secondary);
     }
 
     @Override
@@ -227,8 +238,24 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+    // TODO Make onBind into ViewHolder
     private void onBindShortcutViewHolder(@NonNull ShortcutViewHolder holder, int position) {
-
+        if (mHeadquarterShortcut != null) {
+            holder.officeView.setClickable(true);
+            holder.backgroundOfficeView.setBackgroundResource(R.drawable.bg_item_partner);
+            holder.textOfficeView.setTextColor(mSecondaryTextColor);
+            Glide.with(holder.itemView.getContext())
+                    .load(mHeadquarterShortcut.icon)
+                    .asBitmap()
+                    .override(mCategoryIconSize, mCategoryIconSize)
+                    .into(holder.iconOfficeView);
+        }
+        else {
+            holder.officeView.setClickable(false);
+            holder.backgroundOfficeView.setBackgroundResource(R.drawable.bg_item_category);
+            holder.textOfficeView.setTextColor(mDisabledTextColor);
+            holder.iconOfficeView.setImageBitmap(null);
+        }
     }
 
     private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
@@ -312,4 +339,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
+    public void setHeadquarterShortcut(@Nullable HeadquarterShortcut headquarterShortcut) {
+        mHeadquarterShortcut = headquarterShortcut;
+        notifyDataSetChanged();
+    }
 }

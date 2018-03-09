@@ -15,6 +15,7 @@ import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
+import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.room.reader.FilterReader;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
@@ -33,19 +34,28 @@ public class FiltersFragment
         return fragment;
     }
 
+    // --- View Models --- //
+
     private MainLiveEventBusViewModel mEventBus;
 
     private FiltersViewModel mFiltersViewModel;
 
     private DataViewModel mDataViewModel;
 
+    // --- LiveDatas --- //
+
+    private LiveData<HeadquarterShortcut> mHeadquarterShortcut;
+
     private LiveData<FilterReader> mFilters;
 
     private MutableLiveData<String> mSearch;
 
+    // --- Views --- //
     private View mFilterContainer;
 
     private RecyclerView mRecyclerView;
+
+    // --- Widget --- //
 
     private FilterAdapter mFilterAdapter;
 
@@ -62,6 +72,7 @@ public class FiltersFragment
                 .get(DataViewModel.class);
 
         mFilters = mFiltersViewModel.getFilters();
+        mHeadquarterShortcut = mFiltersViewModel.getHeadquarterShortcut();
         mSearch = mDataViewModel.getSearch();
 
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
@@ -112,6 +123,11 @@ public class FiltersFragment
         mFilters.observe(
                 FiltersFragment.this,
                 mFilterAdapter::setFilterReader //TODO manage loading & error
+        );
+
+        mHeadquarterShortcut.observe(
+                FiltersFragment.this,
+                mFilterAdapter::setHeadquarterShortcut
         );
 
         mSearch.observe(

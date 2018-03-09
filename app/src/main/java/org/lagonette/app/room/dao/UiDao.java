@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import android.database.Cursor;
 
+import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.room.statement.FilterStatement;
@@ -24,4 +25,11 @@ public interface UiDao {
 
     @Query(FilterStatement.SQL)
     Cursor getFilters(String search);
+
+    @Query("SELECT partner.logo as icon " +
+            "FROM partner " +
+            "JOIN location ON partner.id = location.partner_id " +
+            "WHERE partner.is_gonette_headquarter = 1 " +
+            "LIMIT 1")
+    LiveData<HeadquarterShortcut> getHeadquarterShortcut();
 }

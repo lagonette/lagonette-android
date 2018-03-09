@@ -18,7 +18,7 @@
     tools:layout_marginTop="32dp">
 
     <LinearLayout
-        android:id="@+id/shortcut_location"
+        android:id="@+id/layout_shortcut_location"
         android:layout_width="84dp"
         android:layout_height="84dp"
         android:layout_weight="1"
@@ -45,7 +45,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/shortcut_exchange_office"
+        android:id="@+id/layout_shortcut_exchange_office"
         android:layout_width="84dp"
         android:layout_height="84dp"
         android:layout_weight="1"
@@ -72,7 +72,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/shortcut_office"
+        android:id="@+id/layout_shortcut_headquarter"
         android:layout_width="84dp"
         android:layout_height="84dp"
         android:layout_weight="1"
@@ -82,13 +82,15 @@
         android:padding="8dp">
 
         <FrameLayout
+            android:id="@+id/layout_shortcut_headquarter_background"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="8dp"
-            android:background="@drawable/bg_item_exchange_office">
+            android:background="@drawable/bg_item_partner">
 
             <ImageView
+                android:id="@+id/view_shortcut_headquarter_icon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
@@ -98,6 +100,7 @@
         </FrameLayout>
 
         <TextView
+            android:id="@+id/view_shortcut_headquarter_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
