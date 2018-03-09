@@ -85,7 +85,7 @@ public abstract class MainPresenter<
 
     @Override
     @CallSuper
-    public void startConstruct(@NonNull PresenterActivity activity) {
+    public void construct(@NonNull PresenterActivity activity) {
 
         mStateViewModel = ViewModelProviders
                 .of(activity)
@@ -173,7 +173,7 @@ public abstract class MainPresenter<
 
     @Override
     @CallSuper
-    public void endConstruct(@NonNull PresenterActivity activity) {
+    public void onConstructed(@NonNull PresenterActivity activity) {
 
         mPermissionsPerformer.requestPermissions = (permissions, requestCode) -> ActivityCompat.requestPermissions(activity, permissions, requestCode);
         mPermissionsPerformer.onFineLocationPermissionGranted = () -> {

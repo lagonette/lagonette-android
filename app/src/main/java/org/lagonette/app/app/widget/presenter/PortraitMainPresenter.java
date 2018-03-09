@@ -53,8 +53,8 @@ public class PortraitMainPresenter
     }
 
     @Override
-    public void endConstruct(@NonNull PresenterActivity activity) {
-        super.endConstruct(activity);
+    public void onConstructed(@NonNull PresenterActivity activity) {
+        super.onConstructed(activity);
 
         // Performer > LiveData
         mFabButtonsPerformer.onFiltersClick(() -> mUiActionStore.startAction(UiAction.openFilters()));

@@ -9,7 +9,7 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
 
     public interface Lifecycle {
 
-        void startConstruct(@NonNull PresenterActivity owner);
+        void construct(@NonNull PresenterActivity owner);
 
         @LayoutRes
         int getContentView();
@@ -20,7 +20,7 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
 
         void restore(@NonNull PresenterActivity owner, @NonNull Bundle savedInstanceState);
 
-        void endConstruct(@NonNull PresenterActivity owner);
+        void onConstructed(@NonNull PresenterActivity owner);
 
         void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
     }
@@ -28,9 +28,9 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
     protected Presenter mPresenter;
 
     @Override
-    protected void startConstruct() {
+    protected void construct() {
         mPresenter = getPresenter();
-        mPresenter.startConstruct(PresenterActivity.this);
+        mPresenter.construct(PresenterActivity.this);
     }
 
     @NonNull
@@ -58,8 +58,8 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
     }
 
     @Override
-    protected void endConstruct() {
-        mPresenter.endConstruct(PresenterActivity.this);
+    protected void onConstructed() {
+        mPresenter.onConstructed(PresenterActivity.this);
     }
 
     @Override

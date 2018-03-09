@@ -84,7 +84,7 @@ public class LocationDetailFragment
     }
 
     @Override
-    protected void connect() {
+    protected void onConstructed() {
         mIntentPerformer.onError = mSnackbarPerformer::show;
 
         mLocationPerformer.onAddressClick = mIntentPerformer::startDirection;

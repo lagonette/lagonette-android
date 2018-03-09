@@ -42,7 +42,7 @@ public abstract class BaseFragment extends Fragment {
         else {
             restore(savedInstanceState);
         }
-        connect();
+        onConstructed();
     }
 
     protected abstract void construct();
@@ -58,5 +58,5 @@ public abstract class BaseFragment extends Fragment {
 
     protected abstract void restore(@NonNull Bundle savedInstanceState);
 
-    protected abstract void connect();
+    protected abstract void onConstructed();
 }

@@ -37,7 +37,7 @@ public class FiltersFragment
 
     private FiltersViewModel mFiltersViewModel;
 
-    private DataViewModel mStateViewModel;
+    private DataViewModel mDataViewModel;
 
     private LiveData<FilterReader> mFilters;
 
@@ -62,12 +62,12 @@ public class FiltersFragment
                 .of(FiltersFragment.this)
                 .get(FiltersViewModel.class);
 
-        mStateViewModel = ViewModelProviders
+        mDataViewModel = ViewModelProviders
                 .of(getActivity())
                 .get(DataViewModel.class);
 
         mFilters = mFiltersViewModel.getFilters();
-        mSearch = mStateViewModel.getSearch();
+        mSearch = mDataViewModel.getSearch();
 
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
         mFilterAdapter.setHasStableIds(true);
@@ -108,7 +108,7 @@ public class FiltersFragment
     }
 
     @Override
-    protected void connect() {
+    protected void onConstructed() {
         mFilters.observe(
                 FiltersFragment.this,
                 mFilterAdapter::setFilterReader //TODO manage loading & error

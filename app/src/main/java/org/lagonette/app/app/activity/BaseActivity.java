@@ -11,7 +11,7 @@ public abstract class BaseActivity
 
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startConstruct();
+        construct();
         setContentView(getContentView());
         inject(getWindow().getDecorView().getRootView());
         if (savedInstanceState == null) {
@@ -19,10 +19,10 @@ public abstract class BaseActivity
         } else {
             restore(savedInstanceState);
         }
-        endConstruct();
+        onConstructed();
     }
 
-    protected abstract void startConstruct();
+    protected abstract void construct();
 
     @LayoutRes
     protected abstract int getContentView();
@@ -33,5 +33,5 @@ public abstract class BaseActivity
 
     protected abstract void restore(@NonNull Bundle savedInstanceState);
 
-    protected abstract void endConstruct();
+    protected abstract void onConstructed();
 }

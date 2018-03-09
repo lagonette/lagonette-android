@@ -2,20 +2,18 @@ package org.lagonette.app.app.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 
 import org.lagonette.app.R;
+import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapLocationViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
-import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.widget.performer.impl.MapMovementPerformer;
 import org.lagonette.app.app.widget.performer.impl.MapPerformer;
 import org.lagonette.app.room.entity.statement.LocationItem;
@@ -32,7 +30,7 @@ import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.UPDATE_MAP_LOCATION_UI;
 
 public class MapsFragment
-        extends Fragment {
+        extends BaseFragment {
 
     public static final String TAG = "MapsFragment";
 
@@ -52,14 +50,18 @@ public class MapsFragment
 
     private MapPerformer mMapPerformer;
 
+    // --- Fragments --- //
+
+    private SupportMapFragment mMapFragment;
+
     public static MapsFragment newInstance() {
         return new MapsFragment();
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    //TODO Use firebase to find broken data
 
+    @Override
+    protected void construct() {
         mMapPerformer = new MapPerformer(getContext());
 
         mMapMovementPerformer = new MapMovementPerformer();
@@ -88,25 +90,36 @@ public class MapsFragment
                 );
     }
 
-    //TODO Use firebase to find broken data
-
-    @Nullable
     @Override
-    public View onCreateView(
-            LayoutInflater inflater,
-            @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+    protected int getContentView() {
+        return R.layout.fragment_maps;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // Obtain the SupportMapFragment and create notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+    protected void inject(@NonNull View view) {
+        // Obtain the SupportMapFragment and create notification when the map is ready to be used.
+        mMapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
+    }
 
-        mapFragment.getMapAsync(googleMap -> {
+    @Override
+    protected void construct(@NonNull FragmentActivity activity) {
+
+    }
+
+    @Override
+    protected void init() {
+
+    }
+
+    @Override
+    protected void restore(@NonNull Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    protected void onConstructed() {
+        mMapFragment.getMapAsync(googleMap -> {
             mMapPerformer.onMapReady(googleMap);
             mMapMovementPerformer.onMapReady(googleMap);
             mMapLocationViewModel.getCameraPosition().observe(
