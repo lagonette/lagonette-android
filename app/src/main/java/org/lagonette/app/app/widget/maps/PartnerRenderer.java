@@ -113,11 +113,11 @@ public class PartnerRenderer
             final LocationItem locationItem,
             final MarkerOptions markerOptions) {
 
-        boolean isExchangeOffice = locationItem.isExchangeOffice() && !locationItem.isGonetteHeadquarter();
+        boolean displayAsExchangeOffice = locationItem.isExchangeOffice() && !locationItem.isGonetteHeadquarter();
 
         markerOptions
                 .icon( //TODO Make a correct placeholder
-                        isExchangeOffice
+                        displayAsExchangeOffice
                                 ? mExchangeOfficePlaceholderBitmapDescriptor
                                 : mPartnerPlaceholderBitmapDescriptor
                 )
@@ -126,7 +126,7 @@ public class PartnerRenderer
                 .title(locationItem.getTitle());
 
         int categoryId = (int) locationItem.getCategoryId();
-        BitmapDescriptor bitmapDescriptor = isExchangeOffice
+        BitmapDescriptor bitmapDescriptor = displayAsExchangeOffice
                 ? mExchangeOfficeBitmapDescriptors.get(categoryId)
                 : mPartnerBitmapDescriptors.get(categoryId);
 
@@ -169,9 +169,9 @@ public class PartnerRenderer
             @NonNull MarkerOptions markerOptions,
             @NonNull Bitmap bitmap) {
 
-        boolean isExchangeOffice = locationItem.isExchangeOffice();
+        boolean displayAsExchangeOffice = locationItem.isExchangeOffice() && !locationItem.isGonetteHeadquarter();
         int categoryId = (int) locationItem.getCategoryId();
-        SparseArray<BitmapDescriptor> bitmapDescriptors = isExchangeOffice
+        SparseArray<BitmapDescriptor> bitmapDescriptors = displayAsExchangeOffice
                 ? mExchangeOfficeBitmapDescriptors
                 : mPartnerBitmapDescriptors;
         BitmapDescriptor bitmapDescriptor = bitmapDescriptors.get(categoryId);
@@ -179,7 +179,7 @@ public class PartnerRenderer
         if (bitmapDescriptor == null) { //TODO Not tested yet.
             mPartnerIconView.setImageBitmap(bitmap);
             mPartnerView.setBackground(
-                    locationItem.isExchangeOffice()
+                    displayAsExchangeOffice
                             ? mExchangeOfficeBackgroundDrawable
                             : mPartnerBackgroundDrawable
             );

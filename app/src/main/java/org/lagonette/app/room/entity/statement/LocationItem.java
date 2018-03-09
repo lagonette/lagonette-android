@@ -37,10 +37,10 @@ public class LocationItem
     @ColumnInfo(name = "main_category_id") //TODO Use CategoryKey
     private long mCategoryId;
 
-    public LocationItem(long id, boolean isGonetteHeadquarter, boolean isExchangeOffice, double latitude, double longitude, long categoryId, @NonNull String iconUrl) {
+    public LocationItem(long id, long categoryId, boolean isGonetteHeadquarter, boolean isExchangeOffice, double latitude, double longitude, @NonNull String iconUrl) {
         mId = id;
-        mIsExchangeOffice = isExchangeOffice;
         mIsGonetteHeadquarter = isGonetteHeadquarter;
+        mIsExchangeOffice = isExchangeOffice;
         mPosition = new LatLng(latitude, longitude);
         mLatitude = latitude;
         mLongitude = longitude;
