@@ -52,12 +52,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @NonNull
     private final Drawable mExchangeOfficeIndicatorImage;
 
-    @ColorInt
-    private final int mPartnerMainBackgroundColor;
-
-    @ColorInt
-    private final int mPartnerSideBackgroundColor;
-
     private final int mCategoryIconSize;
 
     @Nullable
@@ -94,9 +88,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public FilterAdapter(@NonNull Context context, @NonNull Resources resources) {
         mCategoryIconSize = resources.getDimensionPixelSize(R.dimen.filters_category_icon_size);
 
-        mPartnerMainBackgroundColor = ContextCompat.getColor(context, R.color.row_partner_main_background);
-        mPartnerSideBackgroundColor = ContextCompat.getColor(context, R.color.row_partner_side_background);
-
         mPartnerIndicatorImage = ContextCompat.getDrawable(context, R.drawable.img_partner_indicator);
         mExchangeOfficeIndicatorImage = ContextCompat.getDrawable(context, R.drawable.img_exchange_office_indicator);
 
@@ -131,7 +122,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     case FilterStatement.VALUE_ROW_FOOTER:
                         return R.id.view_type_footer;
                     case FilterStatement.VALUE_ROW_MAIN_PARTNER:
-                    case FilterStatement.VALUE_ROW_SIDE_PARTNER:
                         return R.id.view_type_location;
                     default:
                         throw new IllegalStateException("Filter row must be a PARTNER or a CATEGORY.");
@@ -173,12 +163,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 mFilterReader.getCategoryKey().getUniqueId()
                         );
                     case FilterStatement.VALUE_ROW_MAIN_PARTNER:
-                        return AdapterUtils.createItemId(
-                                rowType,
-                                ROW_TYPE_COUNT,
-                                mFilterReader.getLocationId()
-                        );
-                    case FilterStatement.VALUE_ROW_SIDE_PARTNER:
                         return AdapterUtils.createItemId(
                                 rowType,
                                 ROW_TYPE_COUNT,
@@ -319,12 +303,6 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_grey_24dp);
             } else {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
-            }
-
-            if (holder.isMainPartner) {
-                holder.itemView.setBackgroundColor(mPartnerMainBackgroundColor);
-            } else {
-                holder.itemView.setBackgroundColor(mPartnerSideBackgroundColor);
             }
 
             if (holder.isExchangeOffice) {
