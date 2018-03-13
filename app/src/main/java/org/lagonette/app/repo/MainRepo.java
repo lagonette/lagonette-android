@@ -2,22 +2,22 @@ package org.lagonette.app.repo;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import org.lagonette.app.background.worker.DataRefreshWorker;
 import org.lagonette.app.background.worker.WorkerState;
-import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
-import org.lagonette.app.tools.arch.CursorLiveData;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
 import org.lagonette.app.room.embedded.CategoryKey;
+import org.lagonette.app.room.entity.statement.Filter;
+import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.room.reader.FilterReader;
-import org.lagonette.app.room.sql.Tables;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.SearchUtils;
-import org.lagonette.app.background.worker.DataRefreshWorker;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -60,20 +60,14 @@ public class MainRepo {
         );
     }
 
-    public LiveData<FilterReader> getFilters(@NonNull LiveData<String> searchLiveData) {
-        return Transformations.map(
-                Transformations.switchMap(
-                        searchLiveData,
-                        search -> new CursorLiveData(
-                                Tables.TABLES,
-                                mExecutor,
-                                () -> DB
-                                        .get()
-                                        .uiDao()
-                                        .getFilters(SearchUtils.formatSearch(search))
-                        )
-                ),
-                FilterReader::create
+    public LiveData<PagedList<Filter>> getFilters(@NonNull LiveData<String> searchLiveData) {
+        return Transformations.switchMap(
+                searchLiveData,
+                search -> new LivePagedListBuilder<>(
+                        DB.get().uiDao().getFilters(SearchUtils.formatSearch(search)),
+                        20
+                )
+                        .build()
         );
     }
 

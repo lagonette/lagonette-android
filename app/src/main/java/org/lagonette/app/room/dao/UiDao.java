@@ -1,10 +1,11 @@
 package org.lagonette.app.room.dao;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.paging.DataSource;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
-import android.database.Cursor;
 
+import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.entity.statement.LocationItem;
@@ -24,7 +25,7 @@ public interface UiDao {
     LiveData<List<LocationItem>> getMapLocations(String search);
 
     @Query(FilterStatement.SQL)
-    Cursor getFilters(String search);
+    DataSource.Factory<Integer, Filter> getFilters(String search);
 
     @Query("SELECT location.id AS location_id, partner.logo AS icon " +
             "FROM partner " +

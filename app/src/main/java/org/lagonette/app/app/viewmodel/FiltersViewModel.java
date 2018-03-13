@@ -3,12 +3,13 @@ package org.lagonette.app.app.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.room.embedded.CategoryKey;
+import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
-import org.lagonette.app.room.reader.FilterReader;
 
 public class FiltersViewModel extends ViewModel {
 
@@ -16,7 +17,7 @@ public class FiltersViewModel extends ViewModel {
     private final MutableLiveData<String> mSearch;
 
     @NonNull
-    private final LiveData<FilterReader> mFilters;
+    private final LiveData<PagedList<Filter>> mFilters;
 
     @NonNull
     private final LiveData<HeadquarterShortcut> mHeadquarterShortcut;
@@ -33,7 +34,7 @@ public class FiltersViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<FilterReader> getFilters() {
+    public LiveData<PagedList<Filter>> getFilters() {
         return mFilters;
     }
 

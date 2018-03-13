@@ -1,10 +1,11 @@
 package org.lagonette.app.app.widget.adapter;
 
 
+import android.arch.paging.AsyncPagedListDiffer;
+import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -22,8 +23,8 @@ import org.lagonette.app.app.widget.viewholder.LoadingViewHolder;
 import org.lagonette.app.app.widget.viewholder.LocationViewHolder;
 import org.lagonette.app.app.widget.viewholder.ShortcutViewHolder;
 import org.lagonette.app.room.embedded.CategoryKey;
+import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
-import org.lagonette.app.room.reader.FilterReader;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.functions.Consumer;
@@ -54,8 +55,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private final int mCategoryIconSize;
 
-    @Nullable
-    private FilterReader mFilterReader;
+    @NonNull
+    private AsyncPagedListDiffer<Filter> mDiffer;
 
     @Nullable
     public LongConsumer onLocationClick;
@@ -86,6 +87,12 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private int mSecondaryTextColor;
 
     public FilterAdapter(@NonNull Context context, @NonNull Resources resources) {
+
+        mDiffer = new AsyncPagedListDiffer<>(
+                FilterAdapter.this,
+                new Filter.DiffCallback()
+        );
+
         mCategoryIconSize = resources.getDimensionPixelSize(R.dimen.filters_category_icon_size);
 
         mPartnerIndicatorImage = ContextCompat.getDrawable(context, R.drawable.img_partner_indicator);
@@ -97,26 +104,23 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        if (mFilterReader == null) {
-            return LOADING_COUNT;
-        } else {
-            return mFilterReader.getCount();
-        }
+        return mDiffer.getItemCount() <= 0
+                ? LOADING_COUNT
+                : mDiffer.getItemCount();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mFilterReader == null) {
+        if (mDiffer.getCurrentList() == null) {
             return R.id.view_type_loading;
         } else if (position < SHORTCUT_COUNT) {
             return R.id.view_type_shortcut;
         }
         position -= SHORTCUT_COUNT;
-        if (position < mFilterReader.getCount()) {
-            if (mFilterReader.moveToPosition(position)) {
-                @FilterStatement.RowType
-                int rowType = mFilterReader.getRowType();
-                switch (rowType) {
+        if (position < mDiffer.getItemCount()) {
+            Filter filter = mDiffer.getItem(position);
+            if (filter != null) {
+                switch (filter.rowType) {
                     case FilterStatement.VALUE_ROW_CATEGORY:
                         return R.id.view_type_category;
                     case FilterStatement.VALUE_ROW_FOOTER:
@@ -127,7 +131,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         throw new IllegalStateException("Filter row must be a PARTNER or a CATEGORY.");
                 }
             } else {
-                throw new IllegalStateException("Cursor can not reach position " + position);
+                throw new IllegalStateException("There is no item at " + position);
             }
         } else {
             throw new IllegalStateException("Try to reach a position(" + position + ") out of bounds");
@@ -136,7 +140,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public long getItemId(int position) {
-        if (mFilterReader == null) {
+        if (mDiffer.getItemCount() <= 0) {
             return AdapterUtils.createItemId(
                     ROW_TYPE_LOADING,
                     ROW_TYPE_COUNT,
@@ -150,23 +154,22 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             );
         }
         position -= SHORTCUT_COUNT;
-        if (position < mFilterReader.getCount()) {
-            if (mFilterReader.moveToPosition(position)) {
-                @FilterStatement.RowType
-                int rowType = mFilterReader.getRowType();
-                switch (rowType) {
+        if (position < mDiffer.getItemCount()) {
+            Filter filter = mDiffer.getItem(position);
+            if (filter != null) {
+                switch (filter.rowType) {
                     case FilterStatement.VALUE_ROW_CATEGORY:
                     case FilterStatement.VALUE_ROW_FOOTER:
                         return AdapterUtils.createItemId(
-                                rowType,
+                                filter.rowType,
                                 ROW_TYPE_COUNT,
-                                mFilterReader.getCategoryKey().getUniqueId()
+                                filter.categoryKey.getUniqueId()
                         );
                     case FilterStatement.VALUE_ROW_MAIN_PARTNER:
                         return AdapterUtils.createItemId(
-                                rowType,
+                                filter.rowType,
                                 ROW_TYPE_COUNT,
-                                mFilterReader.getLocationId()
+                                filter.locationId
                         );
                     default:
                         return RecyclerView.NO_ID;
@@ -180,7 +183,7 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
 
             case R.id.view_type_shortcut:
@@ -247,11 +250,12 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void onBindCategoryViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        if (mFilterReader.moveToPosition(position)) {
-            holder.categoryKey = mFilterReader.getCategoryKey(holder.categoryKey);
-            holder.isPartnersVisible = mFilterReader.isCategoryPartnersVisible();
-            holder.isVisible = mFilterReader.isCategoryVisible();
-            holder.isCollapsed = mFilterReader.isCategoryCollapsed();
+        Filter filter = mDiffer.getItem(position);
+        if (filter != null) {
+            holder.categoryKey = filter.categoryKey;
+            holder.isPartnersVisible = filter.isCategoryPartnersVisible;
+            holder.isVisible = filter.isCategoryVisible;
+            holder.isCollapsed = filter.isCategoryCollapsed;
 
             if (holder.isVisible && holder.isPartnersVisible) {
                 holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
@@ -267,10 +271,10 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 holder.collapsedButton.setImageResource(R.drawable.ic_expand_less_grey_24dp);
             }
 
-            holder.categoryTextView.setText(mFilterReader.getCategoryLabel());
+            holder.categoryTextView.setText(filter.categoryLabel);
 
             Glide.with(holder.itemView.getContext())
-                    .load(mFilterReader.getCategoryIcon())
+                    .load(filter.categoryIcon)
                     .asBitmap()
                     .override(mCategoryIconSize, mCategoryIconSize)
                     .placeholder(R.drawable.img_item_default)
@@ -279,17 +283,18 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void onBindLocationViewHolder(@NonNull LocationViewHolder holder, int position) {
-        if (mFilterReader.moveToPosition(position)) {
-            holder.locationId = mFilterReader.getLocationId();
-            holder.isVisible = mFilterReader.isLocationVisible();
-            holder.isCategoryVisible = mFilterReader.isCategoryVisible();
-            holder.isExchangeOffice = mFilterReader.isLocationExchangeOffice();
-            holder.isMainPartner = mFilterReader.getRowType() == FilterStatement.VALUE_ROW_MAIN_PARTNER;
+        Filter filter = mDiffer.getItem(position);
+        if (filter != null) {
+            holder.locationId = filter.locationId;
+            holder.isVisible = filter.isLocationVisible;
+            holder.isCategoryVisible = filter.isCategoryVisible;
+            holder.isExchangeOffice = filter.isLocationExchangeOffice;
+            holder.isMainPartner = filter.rowType == FilterStatement.VALUE_ROW_MAIN_PARTNER;
 
-            holder.nameTextView.setText(mFilterReader.getPartnerName());
+            holder.nameTextView.setText(filter.partnerName);
             holder.itemView.setClickable(holder.isVisible);
 
-            String address = mFilterReader.getLocationAddress(holder.itemView.getResources());
+            String address = filter.address.format(holder.itemView.getResources());
             if (!TextUtils.isEmpty(address)) {
                 holder.addressTextView.setText(address);
                 holder.addressTextView.setVisibility(View.VISIBLE);
@@ -313,12 +318,8 @@ public class FilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public void setFilterReader(@Nullable FilterReader filterReader) {
-        if (mFilterReader == filterReader) {
-            return;
-        }
-        mFilterReader = filterReader;
-        notifyDataSetChanged();
+    public void setFilter(@Nullable PagedList<Filter> filters) {
+        mDiffer.submitList(filters);
     }
 
     public void setHeadquarterShortcut(@Nullable HeadquarterShortcut headquarterShortcut) {

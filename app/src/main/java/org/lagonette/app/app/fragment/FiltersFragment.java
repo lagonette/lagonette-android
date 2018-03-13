@@ -3,6 +3,7 @@ package org.lagonette.app.app.fragment;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -11,12 +12,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import org.lagonette.app.R;
+import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
-import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
+import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
-import org.lagonette.app.room.reader.FilterReader;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
 
@@ -46,7 +47,7 @@ public class FiltersFragment
 
     private LiveData<HeadquarterShortcut> mHeadquarterShortcut;
 
-    private LiveData<FilterReader> mFilters;
+    private LiveData<PagedList<Filter>> mFilters;
 
     private MutableLiveData<String> mSearch;
 
@@ -122,7 +123,7 @@ public class FiltersFragment
     protected void onConstructed() {
         mFilters.observe(
                 FiltersFragment.this,
-                mFilterAdapter::setFilterReader //TODO manage loading & error
+                mFilterAdapter::setFilter //TODO manage loading & error
         );
 
         mHeadquarterShortcut.observe(
