@@ -13,7 +13,7 @@ public abstract class DataSourceAdapter<VH extends RecyclerView.ViewHolder, I, D
     public void addDecorator(@NonNull AdapterDecorator<? extends VH, I> decorator) {
         DataSourceComponent<VH, I, DS> component = get();
         if (component != null) {
-            component.addDecorator(decorator);
+            component.decorators.add(decorator);
         }
         else {
             throw new IllegalStateException("You must provide a component before adding a decorator.");

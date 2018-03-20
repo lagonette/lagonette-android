@@ -10,12 +10,10 @@ public class VoidComponent<VH extends RecyclerView.ViewHolder>
         extends DataSourceComponent<VH,Void,VoidDataSource> {
 
     public VoidComponent(int itemCount, @NonNull VoidDecorator<? extends VH> decorator) {
-        super(new VoidDataSource(itemCount));
-        addDecorator(decorator);
+        super(new VoidDataSource(itemCount), decorator);
     }
 
     public VoidComponent(@NonNull VoidDecorator<? extends VH> decorator) {
-        super(new VoidDataSource(1));
-        addDecorator(decorator);
+        super(new VoidDataSource(1), decorator);
     }
 }

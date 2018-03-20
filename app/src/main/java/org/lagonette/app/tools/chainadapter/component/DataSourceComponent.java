@@ -8,6 +8,7 @@ import org.lagonette.app.tools.chainadapter.datasource.AdapterDataSource;
 import org.lagonette.app.tools.chainadapter.decorator.AdapterDecorator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DataSourceComponent<VH extends RecyclerView.ViewHolder, I, DS extends AdapterDataSource<I>>
@@ -17,11 +18,16 @@ public class DataSourceComponent<VH extends RecyclerView.ViewHolder, I, DS exten
     public final DS dataSource;
 
     @NonNull
-    private final List<AdapterDecorator<? extends VH, I>> decorators;
+    public final List<AdapterDecorator<? extends VH, I>> decorators;
 
     public DataSourceComponent(@NonNull DS dataSource) {
         this.dataSource = dataSource;
         decorators = new ArrayList<>();
+    }
+
+    public DataSourceComponent(@NonNull DS dataSource, @NonNull AdapterDecorator<? extends VH, I>... decorators) {
+        this.dataSource = dataSource;
+        this.decorators = Arrays.asList(decorators);
     }
 
     @Override
@@ -66,11 +72,6 @@ public class DataSourceComponent<VH extends RecyclerView.ViewHolder, I, DS exten
             }
         }
         throw new IllegalStateException("There no decorator to handle position " + position);
-    }
-
-    public void addDecorator(
-            @NonNull AdapterDecorator<? extends VH, I> decorator) {
-        decorators.add(decorator);
     }
 
     public boolean handleViewType(int viewType) {
