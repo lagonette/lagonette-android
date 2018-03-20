@@ -123,7 +123,7 @@ public class FiltersFragment
     protected void onConstructed() {
         mFilters.observe(
                 FiltersFragment.this,
-                mFilterAdapter::setFilter //TODO manage loading & error
+                mFilterAdapter::setFilters //TODO manage loading & error
         );
 
         mHeadquarterShortcut.observe(
@@ -136,13 +136,13 @@ public class FiltersFragment
                 mFiltersViewModel.getSearch()::setValue //TODO Weird
         );
 
-        mFilterAdapter.onLocationClick = locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
-        mFilterAdapter.onLocationVisibilityClick = mFiltersViewModel::changeLocationVisibility;
-        mFilterAdapter.onCategoryVisibilityClick = mFiltersViewModel::changeCategoryVisibility;
-        mFilterAdapter.onCategoryCollapsedClick = mFiltersViewModel::changeCategoryCollapsed;
-        mFilterAdapter.onLocationShortcutClick = mFiltersViewModel::showAllLocations;
-        mFilterAdapter.onExchangeOfficeShortcutClick = mFiltersViewModel::showAllExchangeOffices;
-        mFilterAdapter.onHeadquarterShortcutClick = (locationId) -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
+        mFilterAdapter.locationCallbacks.onClick = locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
+        mFilterAdapter.locationCallbacks.onVisibilityClick = mFiltersViewModel::changeLocationVisibility;
+        mFilterAdapter.categoryCallbacks.onVisibilityClick = mFiltersViewModel::changeCategoryVisibility;
+        mFilterAdapter.categoryCallbacks.onCollapsedClick = mFiltersViewModel::changeCategoryCollapsed;
+        mFilterAdapter.shortcutCallbacks.onLocationClick = mFiltersViewModel::showAllLocations;
+        mFilterAdapter.shortcutCallbacks.onExchangeOfficeClick = mFiltersViewModel::showAllExchangeOffices;
+        mFilterAdapter.shortcutCallbacks.onHeadquarterClick = (locationId) -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
     }
 
     public void updateTopPadding(int top) {

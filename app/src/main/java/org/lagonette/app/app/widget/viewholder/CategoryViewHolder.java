@@ -37,10 +37,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     public final TextView categoryTextView;
 
-    public CategoryViewHolder(
-            @NonNull ViewGroup parent,
-            @Nullable ObjBooleanConsumer<CategoryKey> onCollapsedClick,
-            @Nullable ObjBooleanConsumer<CategoryKey> onVisibilityClick) {
+    public CategoryViewHolder(@NonNull ViewGroup parent) {
         super(
                 LayoutInflater
                         .from(parent.getContext())
@@ -55,13 +52,5 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
         visibilityButton = itemView.findViewById(R.id.category_visibility);
         collapsedButton = itemView.findViewById(R.id.category_collapsed);
         categoryTextView = itemView.findViewById(R.id.category_label);
-
-        if (onCollapsedClick != null) {
-            collapsedButton.setOnClickListener(view -> onCollapsedClick.accept(categoryKey, !isCollapsed));
-        }
-
-        if (onVisibilityClick != null) {
-            visibilityButton.setOnClickListener(view -> onVisibilityClick.accept(categoryKey, !isVisible));
-        }
     }
 }

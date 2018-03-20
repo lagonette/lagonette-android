@@ -33,10 +33,7 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
     public final TextView textHeadquarterView;
 
     public ShortcutViewHolder(
-            @NonNull ViewGroup parent,
-            @Nullable Runnable onLocationClick,
-            @Nullable Runnable onExchangeOfficeClick,
-            @Nullable Consumer<Long> onHeadquarterClick) {
+            @NonNull ViewGroup parent) {
         super(
                 LayoutInflater
                         .from(parent.getContext())
@@ -55,17 +52,5 @@ public class ShortcutViewHolder extends RecyclerView.ViewHolder {
         backgroundHeadquarterView = itemView.findViewById(R.id.layout_shortcut_headquarter_background);
         iconHeadquarterView = itemView.findViewById(R.id.view_shortcut_headquarter_icon);
         textHeadquarterView = itemView.findViewById(R.id.view_shortcut_headquarter_text);
-
-        if (onLocationClick != null) {
-            locationView.setOnClickListener(view -> onLocationClick.run());
-        }
-
-        if (onExchangeOfficeClick != null) {
-            exchangeOfficeView.setOnClickListener(view -> onExchangeOfficeClick.run());
-        }
-
-        if (onHeadquarterClick != null) {
-            headquarterView.setOnClickListener(view -> onHeadquarterClick.accept((Long) headquarterView.getTag()));
-        }
     }
 }

@@ -38,9 +38,7 @@ public class LocationViewHolder extends RecyclerView.ViewHolder {
     public final ImageButton visibilityButton;
 
     public LocationViewHolder(
-            @NonNull ViewGroup parent,
-            @Nullable LongConsumer onLocationClick,
-            @Nullable LongBooleanConsumer onVisibilityClick) {
+            @NonNull ViewGroup parent) {
         super(
                 LayoutInflater
                         .from(parent.getContext())
@@ -54,13 +52,5 @@ public class LocationViewHolder extends RecyclerView.ViewHolder {
         addressTextView = itemView.findViewById(R.id.location_address);
         exchangeOfficeIndicatorImage = itemView.findViewById(R.id.location_exchange_office_indicator);
         visibilityButton = itemView.findViewById(R.id.location_visibility);
-
-        if (onLocationClick != null) {
-            itemView.setOnClickListener(view -> onLocationClick.accept(locationId));
-        }
-
-        if (onVisibilityClick != null) {
-            visibilityButton.setOnClickListener(view -> onVisibilityClick.accept(locationId, !isVisible));
-        }
     }
 }
