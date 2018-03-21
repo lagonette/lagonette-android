@@ -10,7 +10,6 @@ import org.lagonette.app.room.embedded.CategoryKey;
 @Entity(
         tableName = "category_metadata",
         primaryKeys = {"category_id", "category_type"}
-        //TODO Do not use foreign, if not metadata is deleted on category insert with Replace strategy
 )
 public class CategoryMetadata {
 

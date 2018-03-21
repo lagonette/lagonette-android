@@ -13,11 +13,9 @@ import java.util.List;
 @Dao
 public interface CategoryDao {
 
-    //TODO Use foreign key cascade or not?
     @Query("DELETE FROM category WHERE id = :id AND type = :type")
     void deleteCategory(long id, long type);
 
-    //TODO Use foreign key cascade or not?
     @Query("DELETE FROM category")
     void deleteCategories();
 

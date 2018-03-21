@@ -1,7 +1,6 @@
 package org.lagonette.app.room.entity.statement;
 
 import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Ignore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -11,39 +10,37 @@ import com.google.maps.android.clustering.ClusterItem;
 public class LocationItem
         implements ClusterItem {
 
-    @Ignore //TODO Try to use type converter
-    @NonNull
-    private final LatLng mPosition;
-
     @ColumnInfo(name = "id")
-    private long mId;
+    private final long mId;
 
-    @ColumnInfo(name = "latitude")
-    private double mLatitude;
-
-    @ColumnInfo(name = "longitude")
-    private double mLongitude;
+    @NonNull
+    @ColumnInfo(name = "position")
+    private final LatLng mPosition;
 
     @ColumnInfo(name = "icon")
     @NonNull
     private final String mIconUrl;
 
     @ColumnInfo(name = "is_exchange_office")
-    private boolean mIsExchangeOffice;
+    private final boolean mIsExchangeOffice;
 
     @ColumnInfo(name = "is_gonette_headquarter")
-    private boolean mIsGonetteHeadquarter;
+    private final boolean mIsGonetteHeadquarter;
 
     @ColumnInfo(name = "main_category_id") //TODO Use CategoryKey
-    private long mCategoryId;
+    private final long mCategoryId;
 
-    public LocationItem(long id, long categoryId, boolean isGonetteHeadquarter, boolean isExchangeOffice, double latitude, double longitude, @NonNull String iconUrl) {
+    public LocationItem(
+            long id,
+            long categoryId,
+            boolean isGonetteHeadquarter,
+            boolean isExchangeOffice,
+            @NonNull LatLng position,
+            @NonNull String iconUrl) {
         mId = id;
         mIsGonetteHeadquarter = isGonetteHeadquarter;
         mIsExchangeOffice = isExchangeOffice;
-        mPosition = new LatLng(latitude, longitude);
-        mLatitude = latitude;
-        mLongitude = longitude;
+        mPosition = position;
         mCategoryId = categoryId;
         mIconUrl = iconUrl;
     }
@@ -82,14 +79,6 @@ public class LocationItem
     @NonNull
     public long getCategoryId() {
         return mCategoryId;
-    }
-
-    public double getLatitude() {
-        return mLatitude;
-    }
-
-    public double getLongitude() {
-        return mLongitude;
     }
 
     public boolean isGonetteHeadquarter() {

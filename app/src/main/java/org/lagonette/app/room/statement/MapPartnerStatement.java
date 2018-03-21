@@ -11,8 +11,7 @@ public abstract class MapPartnerStatement
                 "partner.main_category_id, " +
                 "partner.is_gonette_headquarter, " +
                 "location.is_exchange_office, " +
-                "location.latitude, " +
-                "location.longitude, " +
+                "location.latitude || ',' || location.longitude AS position, " +
                 "main_category.icon " +
             FROM_PARTNER +
             JOIN_LOCATION_AND_METADATA_ON_PARTNER +
