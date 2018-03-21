@@ -49,7 +49,7 @@ public class MainRepo {
                         .uiDao()
                         .getMapLocations(SearchUtils.formatSearch(search))
         );
-    } //TODO Fix "Application did not close the cursor or database object that was opened here" issue
+    }
 
     public LiveData<LocationDetail> getLocationDetail(@NonNull LiveData<Long> locationIdLiveData) {
         return Transformations.switchMap(

@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.locator.Repo;
-import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 
 public class LocationDetailViewModel extends ViewModel {

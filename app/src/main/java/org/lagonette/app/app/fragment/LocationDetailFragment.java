@@ -13,7 +13,6 @@ import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
 import org.lagonette.app.app.widget.performer.impl.IntentPerformer;
 import org.lagonette.app.app.widget.performer.impl.LocationDetailPerformer;
 import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
-import org.lagonette.app.repo.Resource;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
 
