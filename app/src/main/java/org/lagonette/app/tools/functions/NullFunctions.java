@@ -24,6 +24,8 @@ public interface NullFunctions {
 
     static void doNothing(double param1, double param2) {}
 
+    static <P> void doNothing(@NonNull P param1, double param2, double param3) {}
+
     static void doNothing() {}
 
     static <P> boolean falsePredicate(@NonNull P param) {

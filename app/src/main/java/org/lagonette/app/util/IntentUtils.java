@@ -19,11 +19,10 @@ public final class IntentUtils {
     private IntentUtils() {
     }
 
-    //TODO Improve with label and do not start directly the directions
-    public static boolean startDirection(@NonNull Context context, double latitude, double longitude) {
+    public static boolean startDirection(@NonNull Context context, @NonNull String label, double latitude, double longitude) {
         Intent intent = new Intent(
                 android.content.Intent.ACTION_VIEW,
-                Uri.parse("google.navigation:q=" + latitude + "," + longitude)
+                Uri.parse("geo:0,0?q=" + latitude + "," + longitude + "(" + label + ")")
         );
         PackageManager packageManager = context.getPackageManager();
         if (intent.resolveActivity(packageManager) != null) {
@@ -69,7 +68,7 @@ public final class IntentUtils {
     }
 
     private static String formatUrl(@NonNull String url) {
-        if (!url.startsWith(SCHEME_HTTP + "://") && !url.startsWith(SCHEME_HTTP + "://")) {
+        if (!url.startsWith(SCHEME_HTTP + "://") && !url.startsWith(SCHEME_HTTPS + "://")) {
             url = SCHEME_HTTP + "://" + url;
         }
         return url;

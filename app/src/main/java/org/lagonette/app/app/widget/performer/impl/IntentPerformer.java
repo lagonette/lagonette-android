@@ -20,9 +20,10 @@ public class IntentPerformer {
         mContext = context;
     }
 
-    public void startDirection(double latitude, double longitude) {
+    public void startDirection(@NonNull String label, double latitude, double longitude) {
         boolean success = IntentUtils.startDirection(
                 mContext,
+                label,
                 latitude,
                 longitude
         );

@@ -10,15 +10,15 @@ import android.widget.TextView;
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.room.entity.statement.LocationDetail;
-import org.lagonette.app.tools.functions.BiDoubleConsumer;
 import org.lagonette.app.tools.functions.Consumer;
 import org.lagonette.app.tools.functions.NullFunctions;
+import org.lagonette.app.tools.functions.ObjBiDoubleConsumer;
 import org.lagonette.app.util.PhoneUtils;
 
 public class LocationDetailPerformer implements ViewPerformer {
 
     @NonNull
-    public BiDoubleConsumer onAddressClick = NullFunctions::doNothing;
+    public ObjBiDoubleConsumer<String> onAddressClick = NullFunctions::doNothing;
 
     @NonNull
     public Consumer<String> onPhoneClick = NullFunctions::doNothing;
@@ -104,7 +104,7 @@ public class LocationDetailPerformer implements ViewPerformer {
 //        mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
 
 //        mBackImageButton.setOnClickListener(LocationDetailFragment.this);
-        mAddressLayout.setOnClickListener(v -> onAddressClick.accept(mLatitude, mLongitude));
+        mAddressLayout.setOnClickListener(v -> onAddressClick.accept(mNameTextView.getText().toString(), mLatitude, mLongitude));
         mPhoneLayout.setOnClickListener(v -> onPhoneClick.accept(mPhoneTextView.getText().toString()));
         mWebsiteLayout.setOnClickListener(v -> onWebsiteClick.accept(mWebsiteTextView.getText().toString()));
         mEmailLayout.setOnClickListener(v -> onEmailClick.accept(mEmailTextView.getText().toString()));
