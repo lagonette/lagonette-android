@@ -28,7 +28,6 @@ public interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertCategories(List<Category> categories);
 
-    //TODO Maybe use @relation and @transaction for insertion
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertCategoriesMetadatas(List<CategoryMetadata> categoriesMetadatas);
 
