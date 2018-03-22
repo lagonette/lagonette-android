@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="search_bar_margin_start">16dp</dimen>
-    <dimen name="search_bar_margin_end">16dp</dimen>
-    <dimen name="search_bar_margin_top">16dp</dimen>
+    <dimen name="search_bar_margin_start">8dp</dimen>
+    <dimen name="search_bar_margin_end">8dp</dimen>
+    <dimen name="search_bar_margin_top">8dp</dimen>
     <dimen name="search_bar_margin_bottom">-1dp</dimen>
 
 </resources>

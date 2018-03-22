@@ -4,9 +4,9 @@
     <dimen name="fab_elevation_primary">6dp</dimen>
     <dimen name="fab_elevation_secondary">2dp</dimen>
 
-    <dimen name="search_bar_margin_start">12dp</dimen>
-    <dimen name="search_bar_margin_end">12dp</dimen>
-    <dimen name="search_bar_margin_top">12dp</dimen>
+    <dimen name="search_bar_margin_start">4dp</dimen>
+    <dimen name="search_bar_margin_end">4dp</dimen>
+    <dimen name="search_bar_margin_top">4dp</dimen>
     <dimen name="search_bar_margin_bottom">0dp</dimen>
     <dimen name="search_bar_elevation">4dp</dimen>
     <dimen name="search_bar_height">64dp</dimen>
