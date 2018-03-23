@@ -31,7 +31,7 @@
 
     <include
         layout="@layout/widget_search"
-        android:layout_width="240dp"
+        android:layout_width="256dp"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_marginBottom="@dimen/search_bar_margin_bottom"
