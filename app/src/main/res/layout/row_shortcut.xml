@@ -20,7 +20,7 @@
     <LinearLayout
         android:id="@+id/layout_shortcut_location"
         android:layout_width="84dp"
-        android:layout_height="84dp"
+        android:layout_height="88dp"
         android:layout_weight="1"
         android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
@@ -47,7 +47,7 @@
     <LinearLayout
         android:id="@+id/layout_shortcut_exchange_office"
         android:layout_width="84dp"
-        android:layout_height="84dp"
+        android:layout_height="88dp"
         android:layout_weight="1"
         android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
@@ -74,7 +74,7 @@
     <LinearLayout
         android:id="@+id/layout_shortcut_headquarter"
         android:layout_width="84dp"
-        android:layout_height="84dp"
+        android:layout_height="88dp"
         android:layout_weight="1"
         android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
