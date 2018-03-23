@@ -21,10 +21,10 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="4dp"
         android:padding="16dp"
         android:src="@drawable/img_exchange_office_indicator" />
 
@@ -63,10 +63,10 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="4dp"
         android:background="?selectableItemBackgroundBorderless"
         android:src="@drawable/ic_visibility_accent_24dp" />
 
