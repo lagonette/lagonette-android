@@ -2,15 +2,12 @@ package org.lagonette.app.tools.chainadapter.datasource;
 
 import android.support.annotation.Nullable;
 
-public class SingleDataSource<Item> implements AdapterDataSource<Item> {
+public class SingleItemDataSource<Item> extends AbstractDataSource<Item,Item> {
 
-    @Nullable
-    private Item mItem;
+    private boolean mDisplayWhenEmpty;
 
-    private boolean mForceDisplay;
-
-    public SingleDataSource(boolean forceDisplay) {
-        mForceDisplay = forceDisplay;
+    public SingleItemDataSource(boolean displayWhenEmpty) {
+        mDisplayWhenEmpty = displayWhenEmpty;
     }
 
     @Override
@@ -25,7 +22,7 @@ public class SingleDataSource<Item> implements AdapterDataSource<Item> {
     @Nullable
     @Override
     public Item getItem(int position) {
-        if (!mForceDisplay && mItem == null) {
+        if (!mDisplayWhenEmpty && mSource == null) {
             throw new IllegalStateException("Item is null, you should not get item.");
         }
 
@@ -33,15 +30,17 @@ public class SingleDataSource<Item> implements AdapterDataSource<Item> {
             throw new IllegalStateException("Position should be equals to 0.");
         }
 
-        return mItem;
+        return mSource;
     }
 
     @Override
     public int getCount() {
-        return mForceDisplay || mItem != null ? 1 : 0;
+        return mDisplayWhenEmpty || mSource != null ? 1 : 0;
     }
 
-    public void setItem(@Nullable Item item) {
-        mItem = item;
+    @Override
+    public void setSource(@Nullable Item item) {
+        mSource = item;
     }
+
 }

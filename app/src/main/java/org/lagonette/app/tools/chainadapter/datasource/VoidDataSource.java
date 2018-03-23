@@ -2,7 +2,7 @@ package org.lagonette.app.tools.chainadapter.datasource;
 
 import android.support.annotation.Nullable;
 
-public class VoidDataSource implements AdapterDataSource<Void> {
+public class VoidDataSource implements AdapterDataSource<Void, Void> {
 
     private int mItemCount;
 
@@ -27,5 +27,10 @@ public class VoidDataSource implements AdapterDataSource<Void> {
     @Override
     public int getCount() {
         return mItemCount;
+    }
+
+    @Override
+    public void setSource(@Nullable Void v) {
+
     }
 }

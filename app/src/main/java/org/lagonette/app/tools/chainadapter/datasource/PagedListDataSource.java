@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
-public abstract class PagedListDataSource<Item> implements AdapterDataSource<Item> {
+public abstract class PagedListDataSource<Item> implements AdapterDataSource<Item, PagedList<Item>> {
 
     @NonNull
     private AsyncPagedListDiffer<Item> mDiffer;
@@ -24,11 +24,11 @@ public abstract class PagedListDataSource<Item> implements AdapterDataSource<Ite
             return RecyclerView.NO_ID;
         }
         else {
-            return getItemId(item);
+            return getItemId(position, item);
         }
     }
 
-    protected abstract long getItemId(@NonNull Item item);
+    protected abstract long getItemId(int position, @NonNull Item item);
 
     @Override
     public Item getItem(int position) {
@@ -40,7 +40,8 @@ public abstract class PagedListDataSource<Item> implements AdapterDataSource<Ite
         return mDiffer.getItemCount();
     }
 
-    public void setPagedList(@Nullable PagedList<Item> pagedList) {
+    @Override
+    public void setSource(@Nullable PagedList<Item> pagedList) {
         mDiffer.submitList(pagedList);
     }
 }

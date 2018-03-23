@@ -7,10 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
-import org.lagonette.app.app.widget.adapter.component.BaseComponent;
-import org.lagonette.app.app.widget.adapter.component.BaseVoidComponent;
 import org.lagonette.app.app.widget.adapter.datasource.FilterDataSource;
-import org.lagonette.app.app.widget.adapter.datasource.ShortcutDataSource;
+import org.lagonette.app.app.widget.adapter.datasource.wrapper.SingleIdentifierDataSourceWrapper;
 import org.lagonette.app.app.widget.adapter.decorator.CategoryDecorator;
 import org.lagonette.app.app.widget.adapter.decorator.FooterDecorator;
 import org.lagonette.app.app.widget.adapter.decorator.LoadingDecorator;
@@ -19,8 +17,11 @@ import org.lagonette.app.app.widget.adapter.decorator.ShortcutDecorator;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.tools.chainadapter.adapter.ChainAdapter;
+import org.lagonette.app.tools.chainadapter.component.DataSourceComponent;
+import org.lagonette.app.tools.chainadapter.datasource.SingleItemDataSource;
 import org.lagonette.app.tools.chainadapter.link.AdapterLink;
 import org.lagonette.app.tools.chainadapter.locator.HeaderLocator;
+import org.lagonette.app.tools.identifier.Identifier;
 
 public class FilterAdapter
         extends ChainAdapter<RecyclerView.ViewHolder> {
@@ -31,7 +32,7 @@ public class FilterAdapter
 
     public final static int RANK_SHORTCUT = 2;
 
-    public final static int LINK_COUNT = 3;
+    public final static int TYPE_COUNT = 5;
 
     @NonNull
     public final ShortcutDecorator.Callbacks shortcutCallbacks;
@@ -43,16 +44,20 @@ public class FilterAdapter
     public final LocationDecorator.Callbacks locationCallbacks;
 
     @NonNull
-    private final BaseComponent<Filter, FilterDataSource> mFilterComponent;
+    private final DataSourceComponent<RecyclerView.ViewHolder, Filter, PagedList<Filter>> mFilterComponent;
 
     @NonNull
-    private final BaseComponent<HeadquarterShortcut, ShortcutDataSource> mShortcutComponent;
+    private final DataSourceComponent<RecyclerView.ViewHolder, HeadquarterShortcut, HeadquarterShortcut> mShortcutComponent;
+
+    @NonNull
+    private final Identifier mIdentifier;
 
     @NonNull
     private final AdapterLink<RecyclerView.ViewHolder> mLoadingLink;
 
     public FilterAdapter(@NonNull Context context, @NonNull Resources resources) {
-        super(LINK_COUNT);
+
+        mIdentifier = new Identifier(TYPE_COUNT);
 
         shortcutCallbacks = new ShortcutDecorator.Callbacks();
         categoryCallbacks = new CategoryDecorator.Callbacks();
@@ -60,8 +65,11 @@ public class FilterAdapter
 
         HeaderLocator<RecyclerView.ViewHolder> headerLocator = new HeaderLocator<>();
 
-        mFilterComponent = new BaseComponent<>(
-                new FilterDataSource(FilterAdapter.this),
+        mFilterComponent = new DataSourceComponent<>(
+                new FilterDataSource(
+                        FilterAdapter.this,
+                        mIdentifier
+                ),
                 new CategoryDecorator(
                         resources,
                         categoryCallbacks
@@ -73,8 +81,11 @@ public class FilterAdapter
                 new FooterDecorator()
         );
 
-        mShortcutComponent = new BaseComponent<>(
-                new ShortcutDataSource(),
+        mShortcutComponent = new DataSourceComponent<>(
+                new SingleIdentifierDataSourceWrapper<>(
+                        new SingleItemDataSource<>(true),
+                        mIdentifier
+                ),
                 new ShortcutDecorator(
                         context,
                         resources,
@@ -84,7 +95,11 @@ public class FilterAdapter
 
         mLoadingLink = chainUp(
                 RANK_LOADING,
-                new BaseVoidComponent(
+                new DataSourceComponent<>(
+                        new SingleIdentifierDataSourceWrapper<>(
+                                new SingleItemDataSource<>(true),
+                                mIdentifier
+                        ),
                         new LoadingDecorator()
                 )
         );
@@ -102,11 +117,10 @@ public class FilterAdapter
     }
 
     public void setFilters(@Nullable PagedList<Filter> filters) {
+        mFilterComponent.setSource(filters);
         if (filters != null) {
-            mFilterComponent.dataSource.setPagedList(filters);
             unchain(RANK_LOADING);
-        }
-        else {
+        } else {
             if (!isChained(RANK_LOADING)) {
                 chainUp(mLoadingLink);
                 notifyDataSetChanged();
@@ -115,7 +129,7 @@ public class FilterAdapter
     }
 
     public void setHeadquarterShortcut(@Nullable HeadquarterShortcut headquarterShortcut) {
-        mShortcutComponent.dataSource.setItem(headquarterShortcut);
+        mShortcutComponent.setSource(headquarterShortcut);
         notifyDataSetChanged();
     }
 }

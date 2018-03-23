@@ -2,7 +2,7 @@ package org.lagonette.app.tools.chainadapter.datasource;
 
 import android.support.annotation.Nullable;
 
-public interface AdapterDataSource<Item> {
+public interface AdapterDataSource<Item, Source> {
 
     long getItemId(int position);
 
@@ -10,4 +10,6 @@ public interface AdapterDataSource<Item> {
     Item getItem(int position);
 
     int getCount();
+
+    void setSource(@Nullable Source source);
 }

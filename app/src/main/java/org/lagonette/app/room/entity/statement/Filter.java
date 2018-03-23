@@ -10,6 +10,8 @@ import org.lagonette.app.room.statement.FilterStatement;
 
 public class Filter {
 
+    public static final DiffCallback DIFF_CALLBACK = new DiffCallback();
+
     @FilterStatement.RowType
     @ColumnInfo(name = "row_type")
     public final int rowType;

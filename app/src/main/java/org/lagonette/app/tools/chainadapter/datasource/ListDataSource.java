@@ -7,10 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
-public abstract class ListDataSource<Item> implements AdapterDataSource<Item> {
-
-    @Nullable
-    private List<Item> mItems;
+public abstract class ListDataSource<Item> extends AbstractDataSource<Item,List<Item>> {
 
     @Override
     public long getItemId(int position) {
@@ -19,21 +16,21 @@ public abstract class ListDataSource<Item> implements AdapterDataSource<Item> {
             return RecyclerView.NO_ID;
         }
         else {
-            return getItemId(item);
+            return getItemId(position, item);
         }
     }
 
-    protected abstract long getItemId(@NonNull Item item);
+    protected abstract long getItemId(int position, @NonNull Item item);
 
     @Nullable
     @Override
     public Item getItem(int position) {
-        if (mItems != null) {
-            int size = mItems.size();
+        if (mSource != null) {
+            int size = mSource.size();
             if (position > size) {
                 throw new IllegalStateException("Position should not be greater than list size.");
             }
-            return mItems.get(position);
+            return mSource.get(position);
         }
         else {
             throw new IllegalStateException("List is empty, you should not get item.");
@@ -43,15 +40,12 @@ public abstract class ListDataSource<Item> implements AdapterDataSource<Item> {
 
     @Override
     public int getCount() {
-        if (mItems != null) {
-            return mItems.size();
+        if (mSource != null) {
+            return mSource.size();
         }
         else {
             return 0;
         }
     }
 
-    public void setItems(@Nullable List<Item> items) {
-        mItems = items;
-    }
 }

@@ -5,13 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import org.lagonette.app.tools.chainadapter.component.AdapterComponent;
-import org.lagonette.app.tools.chainadapter.identifier.Identifier;
 
 public class StubLink<VH extends RecyclerView.ViewHolder, C extends AdapterComponent<VH>>
         extends ComponentLink<VH, C> {
 
-    public StubLink(int rank, @NonNull Identifier identifier, @NonNull C component) {
-        super(rank, identifier, component);
+    public StubLink(int rank, @NonNull C component) {
+        super(rank, component);
     }
 
     @Override
@@ -26,7 +25,7 @@ public class StubLink<VH extends RecyclerView.ViewHolder, C extends AdapterCompo
 
     @Override
     public long getItemId(int position) {
-        return genId(component.getItemId(position));
+        return component.getItemId(position);
     }
 
     @NonNull

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
 import org.lagonette.app.tools.chainadapter.component.AdapterComponent;
-import org.lagonette.app.tools.chainadapter.identifier.Identifier;
 
 public abstract class ComponentLink<VH extends RecyclerView.ViewHolder, C extends AdapterComponent<VH>>
         implements AdapterLink<VH> {
@@ -19,16 +18,9 @@ public abstract class ComponentLink<VH extends RecyclerView.ViewHolder, C extend
     @Nullable
     protected AdapterLink<VH> mNextLink;
 
-    private final int mIdentifierType;
-
-    @NonNull
-    private final Identifier mIdentifier;
-
-    protected ComponentLink(int rank, @NonNull Identifier identifier, @NonNull C component) {
+    protected ComponentLink(int rank, @NonNull C component) {
         mRank = rank;
         this.component = component;
-        mIdentifier = identifier;
-        mIdentifierType = mIdentifier.addType();
     }
 
     @Override
@@ -100,9 +92,5 @@ public abstract class ComponentLink<VH extends RecyclerView.ViewHolder, C extend
         else { // We are at the end of the chain, nothing to do.
             return ComponentLink.this; // The end of the chain remains this one.
         }
-    }
-
-    protected long genId(long id) {
-        return mIdentifier.gen(mIdentifierType, id);
     }
 }

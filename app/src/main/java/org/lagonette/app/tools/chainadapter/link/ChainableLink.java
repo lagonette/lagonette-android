@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import org.lagonette.app.tools.chainadapter.component.AdapterComponent;
-import org.lagonette.app.tools.chainadapter.identifier.Identifier;
 import org.lagonette.app.tools.chainadapter.locator.AdapterLocator;
 
 public class ChainableLink<VH extends RecyclerView.ViewHolder, C extends AdapterComponent<VH>>
@@ -14,8 +13,8 @@ public class ChainableLink<VH extends RecyclerView.ViewHolder, C extends Adapter
     @NonNull
     private final AdapterLocator<VH> mLocator;
 
-    public ChainableLink(int rank, @NonNull Identifier identifier, @NonNull C component, @NonNull AdapterLocator<VH> locator) {
-        super(rank, identifier, component);
+    public ChainableLink(int rank, @NonNull C component, @NonNull AdapterLocator<VH> locator) {
+        super(rank, component);
         mLocator = locator;
     }
 
@@ -51,7 +50,7 @@ public class ChainableLink<VH extends RecyclerView.ViewHolder, C extends Adapter
         }
 
         if (mLocator.handlePosition(position, component, mNextLink)) {
-            return genId(component.getItemId(position));
+            return component.getItemId(position);
         }
         else {
             position -= mLocator.calculateInsertedBeforeCount(position, component, mNextLink);

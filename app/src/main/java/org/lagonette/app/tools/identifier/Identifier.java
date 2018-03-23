@@ -1,8 +1,6 @@
-package org.lagonette.app.tools.chainadapter.identifier;
+package org.lagonette.app.tools.identifier;
 
 import android.util.Log;
-
-import org.lagonette.app.BuildConfig;
 
 public class Identifier {
 
