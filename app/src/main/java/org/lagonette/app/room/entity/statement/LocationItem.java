@@ -84,4 +84,8 @@ public class LocationItem
     public boolean isGonetteHeadquarter() {
         return mIsGonetteHeadquarter;
     }
+
+    public boolean displayAsExchangeOffice() {
+        return mIsExchangeOffice && !mIsGonetteHeadquarter;
+    }
 }

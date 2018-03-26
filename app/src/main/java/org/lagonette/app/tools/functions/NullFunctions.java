@@ -14,6 +14,8 @@ public interface NullFunctions {
 
     static <P1, P2, P3, P4> void doNothing(@NonNull P1 param1, @NonNull P2 param2, @NonNull P3 param3, @NonNull P4 param4) {}
 
+    static <P1, P2, P3> void doNothing(@NonNull P1 param1, @NonNull P2 param2, @NonNull P3 param3) {}
+
     static <P> void doNothing(int param1, @NonNull P param2) {}
 
     static void doNothing(int param) {}

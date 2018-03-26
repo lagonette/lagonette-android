@@ -153,7 +153,10 @@ public class MapsFragment
         mEventBus.subscribe(
                 MOVE_TO_LOCATION,
                 MapsFragment.this,
-                mMapMovementPerformer::moveToLocation
+                locationItem -> {
+                    mMapPerformer.selectLocation(locationItem);
+                    mMapMovementPerformer.moveToLocation(locationItem);
+                }
         );
 
         mEventBus.subscribe(

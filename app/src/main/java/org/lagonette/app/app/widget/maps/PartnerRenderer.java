@@ -25,11 +25,17 @@ import com.google.maps.android.ui.IconGenerator;
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.glide.PartnerMarkerTarget;
 import org.lagonette.app.room.entity.statement.LocationItem;
+import org.lagonette.app.tools.functions.NullableSupplier;
+import org.lagonette.app.tools.functions.TriConsumer;
 
 public class PartnerRenderer
-        extends DefaultClusterRenderer<LocationItem> implements PartnerMarkerTarget.Callback {
+        extends DefaultClusterRenderer<LocationItem> {
 
     private static final String TAG = "PartnerRenderer";
+
+    public static final float Z_INDEX_ITEM = 0f;
+
+    public static final float Z_INDEX_SELECTED_ITEM = 1f;
 
     public static final int MIN_CLUSTER_SIZE = 7;
 
@@ -38,6 +44,10 @@ public class PartnerRenderer
     private final BitmapDescriptor mPartnerPlaceholderBitmapDescriptor;
 
     private final BitmapDescriptor mExchangeOfficePlaceholderBitmapDescriptor;
+
+    private final BitmapDescriptor mSelectedPartnerPlaceholderBitmapDescriptor;
+
+    private final BitmapDescriptor mSelectedExchangeOfficePlaceholderBitmapDescriptor;
 
     @NonNull
     private final Context mContext;
@@ -51,7 +61,13 @@ public class PartnerRenderer
     private final View mPartnerView;
 
     @NonNull
+    private final View mSelectedPartnerView;
+
+    @NonNull
     private final ImageView mPartnerIconView;
+
+    @NonNull
+    private final ImageView mSelectedPartnerIconView;
 
     @NonNull
     private final Drawable mPartnerBackgroundDrawable;
@@ -60,21 +76,41 @@ public class PartnerRenderer
     private final Drawable mExchangeOfficeBackgroundDrawable;
 
     @NonNull
+    private final Drawable mSelectedPartnerBackgroundDrawable;
+
+    @NonNull
+    private final Drawable mSelectedExchangeOfficeBackgroundDrawable;
+
+    @NonNull
     private SparseArray<BitmapDescriptor> mPartnerBitmapDescriptors;
 
     @NonNull
     private SparseArray<BitmapDescriptor> mExchangeOfficeBitmapDescriptors;
 
+    @NonNull
+    private SparseArray<BitmapDescriptor> mSelectedPartnerBitmapDescriptors;
+
+    @NonNull
+    private SparseArray<BitmapDescriptor> mSelectedExchangeOfficeBitmapDescriptors;
+
+    @NonNull
+    private final NullableSupplier<Marker> mGetSelectedItem;
+
     public PartnerRenderer(
             @NonNull Context context,
             @NonNull LayoutInflater layoutInflater,
             @NonNull GoogleMap map,
-            @NonNull ClusterManager<LocationItem> clusterManager) {
+            @NonNull ClusterManager<LocationItem> clusterManager,
+            @NonNull NullableSupplier<Marker> getSelectedItem) {
         super(context, map, clusterManager);
         mContext = context;
 
+        mGetSelectedItem = getSelectedItem;
+
         mPartnerBitmapDescriptors = new SparseArray<>();
         mExchangeOfficeBitmapDescriptors = new SparseArray<>();
+        mSelectedPartnerBitmapDescriptors = new SparseArray<>();
+        mSelectedExchangeOfficeBitmapDescriptors = new SparseArray<>();
 
         Resources resources = context.getResources();
         mItemSize = resources.getDimensionPixelSize(R.dimen.map_item_size);
@@ -88,22 +124,38 @@ public class PartnerRenderer
         mClusterIconGenerator.setContentView(clusterView);
         mClusterIconGenerator.setBackground(null);
 
+
         mPartnerView = layoutInflater.inflate(R.layout.item_partner, null);
         mPartnerIconView = mPartnerView.findViewById(R.id.item_partner_icon);
 
         mPartnerBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_partner);
         mPartnerView.setBackground(mPartnerBackgroundDrawable);
-        mIconGenerator.setContentView(mPartnerView);
-        mIconGenerator.setBackground(null);
-        mPartnerPlaceholderBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon());
+        mPartnerPlaceholderBitmapDescriptor = createBitmapDescriptor(mPartnerView);
 
         mExchangeOfficeBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_exchange_office);
         mPartnerView.setBackground(mExchangeOfficeBackgroundDrawable);
-        mIconGenerator.setContentView(mPartnerView);
-        mIconGenerator.setBackground(null);
-        mExchangeOfficePlaceholderBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon());
+        mExchangeOfficePlaceholderBitmapDescriptor = createBitmapDescriptor(mPartnerView);
+
+
+        mSelectedPartnerView = layoutInflater.inflate(R.layout.item_partner_selected, null);
+        mSelectedPartnerIconView = mSelectedPartnerView.findViewById(R.id.item_partner_icon);
+
+        mSelectedPartnerBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_partner);
+        mSelectedPartnerView.setBackground(mSelectedPartnerBackgroundDrawable);
+        mSelectedPartnerPlaceholderBitmapDescriptor = createBitmapDescriptor(mSelectedPartnerView);
+
+        mSelectedExchangeOfficeBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_exchange_office);
+        mSelectedPartnerView.setBackground(mSelectedExchangeOfficeBackgroundDrawable);
+        mSelectedExchangeOfficePlaceholderBitmapDescriptor = createBitmapDescriptor(mSelectedPartnerView);
+
 
         setMinClusterSize(MIN_CLUSTER_SIZE);
+    }
+
+    private BitmapDescriptor createBitmapDescriptor(@NonNull View contentView) {
+        mIconGenerator.setContentView(contentView);
+        mIconGenerator.setBackground(null);
+        return BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon());
     }
 
     //TODO Display just a point instead of logo when zoom is huge
@@ -112,23 +164,29 @@ public class PartnerRenderer
     protected void onBeforeClusterItemRendered(
             final LocationItem locationItem,
             final MarkerOptions markerOptions) {
+        render(locationItem, markerOptions, this::onItemBitmapReady, false);
+    }
 
-        boolean displayAsExchangeOffice = locationItem.isExchangeOffice() && !locationItem.isGonetteHeadquarter();
+    public void render(
+            @NonNull final LocationItem locationItem,
+            @NonNull final MarkerOptions markerOptions,
+            @NonNull final TriConsumer<LocationItem, MarkerOptions, Bitmap> onItemBitmapReady,
+            boolean isSelectedItem) {
+
+        boolean displayAsExchangeOffice = locationItem.displayAsExchangeOffice();
 
         markerOptions
                 .icon( //TODO Make a correct placeholder
-                        displayAsExchangeOffice
-                                ? mExchangeOfficePlaceholderBitmapDescriptor
-                                : mPartnerPlaceholderBitmapDescriptor
+                        getPlaceholderBitmapDescriptor(displayAsExchangeOffice, isSelectedItem)
                 )
                 .anchor(0.5f, 0.5f)
                 .flat(true)
-                .title(locationItem.getTitle());
+                .title(locationItem.getTitle())
+                .zIndex(isSelectedItem ? Z_INDEX_SELECTED_ITEM : Z_INDEX_ITEM);
 
         int categoryId = (int) locationItem.getCategoryId();
-        BitmapDescriptor bitmapDescriptor = displayAsExchangeOffice
-                ? mExchangeOfficeBitmapDescriptors.get(categoryId)
-                : mPartnerBitmapDescriptors.get(categoryId);
+        SparseArray<BitmapDescriptor> bitmapDescriptors = getBitmapDescriptors(displayAsExchangeOffice, isSelectedItem);
+        BitmapDescriptor bitmapDescriptor = bitmapDescriptors.get(categoryId);
 
         if (bitmapDescriptor != null) {
             markerOptions.icon(bitmapDescriptor);
@@ -140,15 +198,14 @@ public class PartnerRenderer
                     .centerCrop()
                     .into(
                             new PartnerMarkerTarget(
-                                    PartnerRenderer.this,
                                     locationItem,
                                     markerOptions,
+                                    onItemBitmapReady,
                                     mItemSize,
                                     mItemSize
                             )
                     );
         }
-
     }
 
     @Override
@@ -163,31 +220,12 @@ public class PartnerRenderer
 
     //TODO Check, remake, improve and so on
 
-    @Override
     public void onItemBitmapReady(
             @NonNull LocationItem locationItem,
             @NonNull MarkerOptions markerOptions,
             @NonNull Bitmap bitmap) {
 
-        boolean displayAsExchangeOffice = locationItem.isExchangeOffice() && !locationItem.isGonetteHeadquarter();
-        int categoryId = (int) locationItem.getCategoryId();
-        SparseArray<BitmapDescriptor> bitmapDescriptors = displayAsExchangeOffice
-                ? mExchangeOfficeBitmapDescriptors
-                : mPartnerBitmapDescriptors;
-        BitmapDescriptor bitmapDescriptor = bitmapDescriptors.get(categoryId);
-
-        if (bitmapDescriptor == null) { //TODO Not tested yet.
-            mPartnerIconView.setImageBitmap(bitmap);
-            mPartnerView.setBackground(
-                    displayAsExchangeOffice
-                            ? mExchangeOfficeBackgroundDrawable
-                            : mPartnerBackgroundDrawable
-            );
-            mIconGenerator.setContentView(mPartnerView);
-            mIconGenerator.setBackground(null);
-            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon());
-            bitmapDescriptors.append(categoryId, bitmapDescriptor);
-        }
+        BitmapDescriptor bitmapDescriptor = getBitmapDescriptor(locationItem, bitmap, false);
 
         Marker marker = getMarker(locationItem);
         if (marker != null) {
@@ -195,6 +233,118 @@ public class PartnerRenderer
         } else {
             markerOptions.icon(bitmapDescriptor);
         }
+    }
+
+    public void onSelectedItemBitmapReady(
+            @NonNull LocationItem locationItem,
+            @NonNull MarkerOptions markerOptions,
+            @NonNull Bitmap bitmap) {
+
+        BitmapDescriptor bitmapDescriptor = getBitmapDescriptor(locationItem, bitmap, true);
+
+        Marker marker = mGetSelectedItem.get();
+        if (marker != null) {
+            marker.setIcon(bitmapDescriptor);
+        } else {
+            markerOptions.icon(bitmapDescriptor);
+        }
+    }
+
+    @NonNull
+    private BitmapDescriptor getBitmapDescriptor(
+            @NonNull LocationItem locationItem,
+            @NonNull Bitmap bitmap,
+            boolean isSelectedItem) {
+        boolean displayAsExchangeOffice = locationItem.displayAsExchangeOffice();
+        int categoryId = (int) locationItem.getCategoryId();
+        SparseArray<BitmapDescriptor> bitmapDescriptors = getBitmapDescriptors(displayAsExchangeOffice, isSelectedItem);
+        BitmapDescriptor bitmapDescriptor = bitmapDescriptors.get(categoryId);
+
+        if (bitmapDescriptor == null) {
+            View partnerView = getPartnerView(isSelectedItem);
+            ImageView partnerIconView = getPartnerIconView(isSelectedItem);
+            partnerIconView.setImageBitmap(bitmap);
+            partnerView.setBackground(getItemDrawable(displayAsExchangeOffice, isSelectedItem));
+            bitmapDescriptor = createBitmapDescriptor(partnerView);
+            bitmapDescriptors.append(categoryId, bitmapDescriptor);
+        }
+
+        return bitmapDescriptor;
+    }
+
+    @NonNull
+    private BitmapDescriptor getPlaceholderBitmapDescriptor(boolean displayAsExchangeOffice, boolean isSelectedItem) {
+        if (displayAsExchangeOffice && isSelectedItem) {
+            return mSelectedExchangeOfficePlaceholderBitmapDescriptor;
+        }
+        else if (isSelectedItem) {
+            return mSelectedPartnerPlaceholderBitmapDescriptor;
+        }
+        else if (displayAsExchangeOffice) {
+            return mExchangeOfficePlaceholderBitmapDescriptor;
+        }
+        else {
+            return mPartnerPlaceholderBitmapDescriptor;
+        }
+    }
+
+    @NonNull
+    private SparseArray<BitmapDescriptor> getBitmapDescriptors(boolean displayAsExchangeOffice, boolean isSelectedItem) {
+        if (displayAsExchangeOffice && isSelectedItem) {
+            return mSelectedExchangeOfficeBitmapDescriptors;
+        }
+        else if (isSelectedItem) {
+            return mSelectedPartnerBitmapDescriptors;
+        }
+        else if (displayAsExchangeOffice) {
+            return mExchangeOfficeBitmapDescriptors;
+        }
+        else {
+            return mPartnerBitmapDescriptors;
+        }
+    }
+
+    @NonNull
+    private Drawable getItemDrawable(boolean displayAsExchangeOffice, boolean isSelectedItem) {
+        if (displayAsExchangeOffice && isSelectedItem) {
+            return mSelectedExchangeOfficeBackgroundDrawable;
+        }
+        else if (isSelectedItem) {
+            return mSelectedPartnerBackgroundDrawable;
+        }
+        else if (displayAsExchangeOffice) {
+            return mExchangeOfficeBackgroundDrawable;
+        }
+        else {
+            return mPartnerBackgroundDrawable;
+        }
+    }
+
+    @NonNull
+    private View getPartnerView(boolean isSelectedItem) {
+        if (isSelectedItem) {
+            return mSelectedPartnerView;
+        }
+        else {
+            return mPartnerView;
+        }
+    }
+
+    @NonNull
+    private ImageView getPartnerIconView(boolean isSelectedItem) {
+        if (isSelectedItem) {
+            return mSelectedPartnerIconView;
+        }
+        else {
+            return mPartnerIconView;
+        }
+    }
+
+    public MarkerOptions createSelectedMarkerOptions(@NonNull LocationItem locationItem) {
+        MarkerOptions selectedOptions = new MarkerOptions()
+                .position(locationItem.getPosition());
+        render(locationItem, selectedOptions, this::onSelectedItemBitmapReady, true);
+        return selectedOptions;
     }
 
 }

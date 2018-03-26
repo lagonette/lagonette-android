@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_partner_background"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:background="@drawable/bg_item_partner">
+
+    <ImageView
+        android:id="@+id/item_partner_icon"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_margin="1dp"
+        android:src="@drawable/img_item_default" />
+
+</FrameLayout>

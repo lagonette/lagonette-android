@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -56,9 +57,14 @@ public class MapPerformer implements OnMapReadyCallback {
 
     private ClusterManager<LocationItem> mClusterManager;
 
+    private PartnerRenderer mPartnerRenderer;
+
     private int mStatusBarHeight;
 
     private LongSparseArray<LocationItem> mPartnerItems;
+
+    @Nullable
+    private Marker mSelectedMarker;
 
     public MapPerformer(@NonNull Context context) {
         mContext = context;
@@ -83,16 +89,19 @@ public class MapPerformer implements OnMapReadyCallback {
         updateLocationUI();
 
         mClusterManager = new ClusterManager<>(mContext, mMap);
-        mClusterManager.setRenderer(
-                new PartnerRenderer(
-                        mContext,
-                        LayoutInflater.from(mContext),
-                        mMap,
-                        mClusterManager
-                )
+
+        mPartnerRenderer = new PartnerRenderer(
+                mContext,
+                LayoutInflater.from(mContext),
+                mMap,
+                mClusterManager,
+                () -> mSelectedMarker
         );
+
+        mClusterManager.setRenderer(mPartnerRenderer);
+
         mMap.setOnMapClickListener(
-                latLng -> showFullMap.run()
+                latLng -> showFullMap()
         );
         mMap.setOnCameraMoveStartedListener(
                 reason -> notifyMapMovement.accept(UiState.MapMovement.MOVE)
@@ -171,5 +180,24 @@ public class MapPerformer implements OnMapReadyCallback {
     @Nullable
     public LocationItem retrieveLocationItem(long locationId) {
         return mPartnerItems.get(locationId);
+    }
+
+    public void selectLocation(@NonNull LocationItem selected) {
+        unselectLocation();
+        mSelectedMarker = mMap.addMarker(
+                mPartnerRenderer.createSelectedMarkerOptions(selected)
+        );
+    }
+
+    private void unselectLocation() {
+        if (mSelectedMarker != null) {
+            mSelectedMarker.remove();
+            mSelectedMarker = null;
+        }
+    }
+
+    public void showFullMap() {
+        unselectLocation();
+        showFullMap.run();
     }
 }

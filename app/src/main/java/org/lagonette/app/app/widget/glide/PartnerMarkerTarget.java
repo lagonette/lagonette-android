@@ -8,11 +8,12 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.lagonette.app.room.entity.statement.LocationItem;
+import org.lagonette.app.tools.functions.TriConsumer;
 
 public class PartnerMarkerTarget extends SimpleTarget<Bitmap> {
 
     @NonNull
-    private final Callback mCallback;
+    private final TriConsumer<LocationItem, MarkerOptions, Bitmap> mOnItemBitmapReady;
 
     @NonNull
     private final LocationItem mLocationItem;
@@ -20,27 +21,21 @@ public class PartnerMarkerTarget extends SimpleTarget<Bitmap> {
     @NonNull
     private final MarkerOptions mMarkerOptions;
 
-    public interface Callback {
-
-        void onItemBitmapReady(@NonNull LocationItem locationItem, @NonNull MarkerOptions markerOptions, @NonNull Bitmap bitmap);
-
-    }
-
     public PartnerMarkerTarget(
-            @NonNull Callback callback,
             @NonNull LocationItem locationItem,
             @NonNull MarkerOptions markerOptions,
+            @NonNull TriConsumer<LocationItem, MarkerOptions, Bitmap> onItemBitmapReady,
             int width,
             int height) {
         super(width, height);
-        mCallback = callback;
         mLocationItem = locationItem;
         mMarkerOptions = markerOptions;
+        mOnItemBitmapReady = onItemBitmapReady;
     }
 
     @Override
     public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-        mCallback.onItemBitmapReady(mLocationItem, mMarkerOptions, bitmap);
+        mOnItemBitmapReady.accept(mLocationItem, mMarkerOptions, bitmap);
     }
 
 }
