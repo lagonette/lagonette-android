@@ -4,6 +4,7 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,12 +42,10 @@ public class MapMovementPerformer
 
     public void moveToLocation(@NonNull LocationItem item) {
         if (mMap != null) {
-            LatLng latLng = new LatLng( //TODO Why not just getPosition ?
-                    item.getPosition().latitude,
-                    item.getPosition().longitude
-            );
+            LatLng latLng = item.getPosition();
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET);
             mMap.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET),
+                    cameraUpdate,
                     ANIMATION_LENGTH_LONG,
                     null
             );
