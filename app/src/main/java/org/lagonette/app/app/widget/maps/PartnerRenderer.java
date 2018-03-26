@@ -225,6 +225,10 @@ public class PartnerRenderer
             @NonNull MarkerOptions markerOptions,
             @NonNull Bitmap bitmap) {
 
+        // Load bitmap descriptor for selected item
+        getBitmapDescriptor(locationItem, bitmap, true);
+
+        // Load and get bitmap descriptor for current item
         BitmapDescriptor bitmapDescriptor = getBitmapDescriptor(locationItem, bitmap, false);
 
         Marker marker = getMarker(locationItem);
