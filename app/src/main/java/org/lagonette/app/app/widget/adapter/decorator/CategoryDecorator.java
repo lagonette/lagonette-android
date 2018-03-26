@@ -87,7 +87,8 @@ public class CategoryDecorator
                     .load(filter.categoryIcon)
                     .asBitmap()
                     .override(mCategoryIconSize, mCategoryIconSize)
-                    .placeholder(R.drawable.img_item_default);
+                    .placeholder(R.drawable.img_item_default)
+                    .into(holder.iconImageView);
         }
     }
 
