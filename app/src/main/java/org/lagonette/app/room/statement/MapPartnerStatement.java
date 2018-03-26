@@ -21,6 +21,6 @@ public abstract class MapPartnerStatement
                 "AND location.display_location <> 0 " +
                 "AND location_metadata.is_visible <> 0 " +
             "GROUP BY location.id " +
-            "HAVING main_category_metadata.is_visible + TOTAL (side_category_metadata.is_visible) > 0";
+            "HAVING main_category_metadata.is_visible";
 
 }
