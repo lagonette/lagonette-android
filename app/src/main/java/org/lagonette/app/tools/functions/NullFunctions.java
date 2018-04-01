@@ -38,5 +38,7 @@ public interface NullFunctions {
 
     static BooleanSupplier supply(boolean bool) { return () -> bool; }
 
+    static IntSupplier supply(int integer) { return () -> integer; }
+
     static <P> Supplier<P> supply(@NonNull P param) { return () -> param; }
 }
