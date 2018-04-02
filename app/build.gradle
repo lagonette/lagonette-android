@@ -50,6 +50,8 @@ android {
 
             buildConfigField "boolean", "LOG_SQL", "true"
             buildConfigField "boolean", "USE_DEV_API", "true"
+            buildConfigField "boolean", "FILL_DB_WITH_LOCAL_VALUE", "true"
+            buildConfigField "boolean", "FILL_DB_WITH_SERVER_VALUE", "false"
         }
         prod.initWith(buildTypes.release)
         prod {
@@ -62,6 +64,8 @@ android {
 
             buildConfigField "boolean", "LOG_SQL", "true"
             buildConfigField "boolean", "USE_DEV_API", "false"
+            buildConfigField "boolean", "FILL_DB_WITH_LOCAL_VALUE", "true"
+            buildConfigField "boolean", "FILL_DB_WITH_SERVER_VALUE", "true"
         }
         release {
             minifyEnabled true
@@ -72,6 +76,8 @@ android {
 
             buildConfigField "boolean", "LOG_SQL", "false"
             buildConfigField "boolean", "USE_DEV_API", "false"
+            buildConfigField "boolean", "FILL_DB_WITH_LOCAL_VALUE", "true"
+            buildConfigField "boolean", "FILL_DB_WITH_SERVER_VALUE", "true"
         }
     }
 }

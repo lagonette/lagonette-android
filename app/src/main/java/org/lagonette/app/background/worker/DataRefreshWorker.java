@@ -7,207 +7,195 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.squareup.moshi.Moshi;
 
+import org.lagonette.app.BuildConfig;
+import org.lagonette.app.R;
 import org.lagonette.app.api.response.CategoriesResponse;
 import org.lagonette.app.api.response.Md5SumResponse;
 import org.lagonette.app.api.response.PartnersResponse;
 import org.lagonette.app.api.service.LaGonetteService;
 import org.lagonette.app.app.widget.error.Error;
-import org.lagonette.app.background.client.EntityConverter;
-import org.lagonette.app.background.client.RetrofitClient;
-import org.lagonette.app.background.client.dispatcher.ApiResponseDispatcher;
-import org.lagonette.app.background.client.dispatcher.SignatureDispatcher;
-import org.lagonette.app.background.client.store.EntitiesStore;
-import org.lagonette.app.background.client.store.SignatureStore;
-import org.lagonette.app.background.client.store.WorkerStateStore;
+import org.lagonette.app.background.tools.LocalClient;
+import org.lagonette.app.background.tools.ResponseSaver;
+import org.lagonette.app.background.tools.RetrofitClient;
+import org.lagonette.app.background.tools.exception.WorkerException;
 import org.lagonette.app.locator.Api;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
+import org.lagonette.app.tools.functions.BiConsumer;
 import org.lagonette.app.util.PreferenceUtils;
 
 public class DataRefreshWorker
-        extends BackgroundWorker {
+		extends BackgroundWorker {
 
-    private static final String TAG = "DataRefreshWorker";
+	private static final String TAG = "DataRefreshWorker";
 
-    public DataRefreshWorker(@NonNull Context context) {
-        super(context);
-    }
+	public interface ThrowablePredicate<P, E extends Throwable> {
 
-    @NonNull
-    @Override
-    protected WorkerState doWork() {
+		boolean test(@NonNull P param) throws E;
+	}
 
-        // Construct
-        LaGonetteDatabase database = DB.get();
+	public interface ThrowableSupplier<T, E extends Throwable> {
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+		@NonNull
+		T get() throws E;
+	}
 
-        LaGonetteService.Category categoryService = Api.category();
-        LaGonetteService.Partner partnerService = Api.partner();
+	public interface ThrowableConsumer<P, E extends Throwable> {
 
-        SignatureStore categorySignatureStore = new SignatureStore();
-        RetrofitClient<Md5SumResponse> categorySignatureClient = new RetrofitClient<>();
-        RetrofitClient<CategoriesResponse> categoryClient = new RetrofitClient<>();
-        SignatureDispatcher categorySignatureDispatcher = new SignatureDispatcher();
-        ApiResponseDispatcher<CategoriesResponse> categoryDispatcher = new ApiResponseDispatcher<>();
+		void accept(@NonNull P param) throws E;
+	}
 
-        SignatureStore partnerSignatureStore = new SignatureStore();
-        RetrofitClient<Md5SumResponse> partnerSignatureClient = new RetrofitClient<>();
-        RetrofitClient<PartnersResponse> partnerClient = new RetrofitClient<>();
-        SignatureDispatcher partnerSignatureDispatcher = new SignatureDispatcher();
-        ApiResponseDispatcher<PartnersResponse> partnerDispatcher = new ApiResponseDispatcher<>();
+	@NonNull
+	private final ThrowableSupplier<Md5SumResponse, WorkerException> mGetCategorySignature;
 
-        EntityConverter entityConverter = new EntityConverter();
-        EntitiesStore entitiesStore = new EntitiesStore();
+	@NonNull
+	private final ThrowablePredicate<String, WorkerException> mCategoryHasChanged;
 
-        WorkerStateStore workerStateStore = new WorkerStateStore();
+	@NonNull
+	private final ThrowableSupplier<CategoriesResponse, WorkerException> mGetNewCategories;
 
+	@NonNull
+	private final ThrowableSupplier<CategoriesResponse, WorkerException> mGetLocalCategories;
 
-        // Supply
-        partnerSignatureStore.retrieveLocalSignature = () -> preferences.getString(
-                PreferenceUtils.KEY_PARTNER_MD5_SUM,
-                PreferenceUtils.DEFAULT_VALUE_PARTNER_MD5_SUM
-        );
-        partnerSignatureStore.saveSignature = signature -> preferences.edit()
-                .putString(PreferenceUtils.KEY_PARTNER_MD5_SUM, signature)
-                .apply();
+	@NonNull
+	private final ThrowableSupplier<Md5SumResponse, WorkerException> mGetPartnerSignature;
 
-        categorySignatureStore.retrieveLocalSignature = () -> preferences.getString(
-                PreferenceUtils.KEY_CATEGORY_MD5_SUM,
-                PreferenceUtils.DEFAULT_VALUE_CATEGORY_MD5_SUM
-        );
-        categorySignatureStore.saveSignature = signature -> preferences.edit()
-                .putString(PreferenceUtils.KEY_CATEGORY_MD5_SUM, signature)
-                .apply();
+	@NonNull
+	private final ThrowablePredicate<String, WorkerException> mPartnerHasChanged;
 
-        partnerSignatureClient.callFactory = partnerService::getMd5Sum;
-        partnerClient.callFactory = partnerService::getPartners;
+	@NonNull
+	private final ThrowableSupplier<PartnersResponse, WorkerException> mGetLocalPartners;
 
-        categorySignatureClient.callFactory = categoryService::getMd5Sum;
-        categoryClient.callFactory = categoryService::getCategories;
+	@NonNull
+	private final ThrowableSupplier<PartnersResponse, WorkerException> mGetNewPartners;
 
+	@NonNull
+	private final BiConsumer<CategoriesResponse, PartnersResponse> mSaveEntities;
 
-        // --- Update categories --- //
+	@NonNull
+	private final ThrowableSupplier<Boolean, WorkerException> mIsDatabaseEmpty;
 
-        // Get category signature
-        categorySignatureClient.onResponseSuccessful = categorySignatureDispatcher::onResponseSuccessful;
-        categorySignatureClient.onResponseError = (code, message, body) -> {
-            Log.e(TAG, "Response error → " + code + ": " + message);
-            workerStateStore.store(WorkerState.error(Error.CATEGORIES_NOT_UPDATED));
-        };
-        categorySignatureClient.onException = exc -> {
-            Log.e(TAG, "Caught: ", exc);
-            FirebaseCrash.report(exc);
-            workerStateStore.store(WorkerState.error(Error.CATEGORIES_NOT_UPDATED));
-        };
+	public DataRefreshWorker(@NonNull Context context) {
+		super(context);
 
-        // Dispatch category signature
-        categorySignatureDispatcher.onBodyError = () -> {
-            Log.e(TAG, "Remote category signature is NULL.");
-            workerStateStore.store(WorkerState.error(Error.CATEGORIES_NOT_UPDATED));
-        };
-        categorySignatureDispatcher.hasSignatureChanged = categorySignatureStore::hasSignatureChanged;
-        categorySignatureDispatcher.onSignatureNotChanged = partnerSignatureClient::call;
-        categorySignatureDispatcher.onSignatureChanged = signature -> {
-            Log.d(TAG, "Category signature has changed → update categories");
-            categoryClient.call();
-        };
+		// Construct
+		LaGonetteDatabase database = DB.get();
 
-        // Get categories
-        categoryClient.onException = exc -> {
-            Log.e(TAG, "Caught: ", exc);
-            FirebaseCrash.report(exc);
-            workerStateStore.store(WorkerState.error(Error.CATEGORIES_NOT_UPDATED));
-        };
-        categoryClient.onResponseError = (code, message, ResponseBody) -> {
-            Log.e(TAG, "Response error → " + code + ": " + message);
-            workerStateStore.store(WorkerState.error(Error.CATEGORIES_NOT_UPDATED));
-        };
-        categoryClient.onResponseSuccessful = categoryDispatcher::onResponseSuccessful;
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        // Dispatch categories
-        categoryDispatcher.onBodyError = errors -> {
-            Log.e(TAG, errors);
-            workerStateStore.store(WorkerState.error(Error.CATEGORIES_NOT_UPDATED));
-        };
-        categoryDispatcher.onSuccessful = entityConverter::convertEntity;
+		Moshi moshi = Api.moshi();
+		LaGonetteService.Category categoryService = Api.category();
+		LaGonetteService.Partner partnerService = Api.partner();
 
-        // Convert API entities and store it
-        entityConverter.storeCategorySignature = categorySignatureStore::store;
-        entityConverter.storeCategories = entitiesStore::storeCategories;
-        entityConverter.storeCategoryMetadata = entitiesStore::storeCategoryMetadata;
-        entityConverter.onCategoryConversionFinished = partnerSignatureClient::call;
-        // ------- //
+		mIsDatabaseEmpty = () -> database.categoryDao().getCategorieCount() == 0;
 
+		mGetLocalCategories = new LocalClient<>(
+				() -> context.getResources().openRawResource(R.raw.categories),
+				() -> moshi.adapter(CategoriesResponse.class),
+				Error.CATEGORIES_NOT_UPDATED
+		)::call;
 
-        // --- Update partners --- //
+		mGetLocalPartners = new LocalClient<>(
+				() -> context.getResources().openRawResource(R.raw.partners),
+				() -> moshi.adapter(PartnersResponse.class),
+				Error.PARTNERS_NOT_UPDATED
+		)::call;
 
-        // Get partner signature
-        partnerSignatureClient.onException = exc -> {
-            Log.e(TAG, "Caught: ", exc);
-            FirebaseCrash.report(exc);
-            workerStateStore.store(WorkerState.error(Error.PARTNERS_NOT_UPDATED));
-        };
-        partnerSignatureClient.onResponseError = (code, message, ResponseBody) -> {
-            Log.e(TAG, "Response error → " + code + ": " + message);
-            workerStateStore.store(WorkerState.error(Error.PARTNERS_NOT_UPDATED));
-        };
-        partnerSignatureClient.onResponseSuccessful = partnerSignatureDispatcher::onResponseSuccessful;
+		mGetCategorySignature = new RetrofitClient<>(
+				Error.CATEGORIES_NOT_UPDATED,
+				categoryService::getMd5Sum
+		)::call;
 
-        // Dispatch partner signature
-        partnerSignatureDispatcher.onBodyError = () -> {
-            Log.e(TAG, "Partner remote signature is NULL.");
-            workerStateStore.store(WorkerState.error(Error.PARTNERS_NOT_UPDATED));
-        };
-        partnerSignatureDispatcher.hasSignatureChanged = partnerSignatureStore::hasSignatureChanged;
-        partnerSignatureDispatcher.onSignatureNotChanged = entitiesStore::saveEntities;
-        partnerSignatureDispatcher.onSignatureChanged = signature -> {
-            Log.d(TAG, "Partner signature has changed → update partners");
-            partnerClient.call();
-        };
+		mGetNewCategories = new RetrofitClient<>(
+				Error.CATEGORIES_NOT_UPDATED,
+				categoryService::getCategories
+		)::call;
 
-        // Get partners
-        partnerClient.onException = exc -> {
-            Log.e(TAG, "Caught: ", exc);
-            FirebaseCrash.report(exc);
-            workerStateStore.store(WorkerState.error(Error.PARTNERS_NOT_UPDATED));
-        };
-        partnerClient.onResponseError = (code, message, ResponseBody) -> {
-            Log.e(TAG, "Response error → " + code + ": " + message);
-            workerStateStore.store(WorkerState.error(Error.PARTNERS_NOT_UPDATED));
-        };
-        partnerClient.onResponseSuccessful = partnerDispatcher::onResponseSuccessful;
+		mGetPartnerSignature = new RetrofitClient<>(
+				Error.PARTNERS_NOT_UPDATED,
+				partnerService::getMd5Sum
+		)::call;
 
-        // Dispatch partners
-        partnerDispatcher.onBodyError = (errors) -> {
-            Log.d(TAG, errors);
-            workerStateStore.store(WorkerState.error(Error.PARTNERS_NOT_UPDATED));
-        };
-        partnerDispatcher.onSuccessful = entityConverter::convertEntity;
+		mGetNewPartners = new RetrofitClient<>(
+				Error.CATEGORIES_NOT_UPDATED,
+				partnerService::getPartners
+		)::call;
 
-        // Convert API entities and store it
-        entityConverter.storePartnerSignature = partnerSignatureStore::store;
-        entityConverter.storePartners = entitiesStore::storePartners;
-        entityConverter.storeLocations = entitiesStore::storeLocations;
-        entityConverter.storeLocationMetadata = entitiesStore::storeLocationMetadata;
-        entityConverter.storePartnerSideCategories = entitiesStore::storePartnerSideCategories;
-        entityConverter.onPartnerConversionFinished = entitiesStore::saveEntities;
-        // ------- //
+		mCategoryHasChanged = remoteSignature -> {
+			String localSignature = preferences.getString(
+					PreferenceUtils.KEY_CATEGORY_MD5_SUM,
+					PreferenceUtils.DEFAULT_VALUE_CATEGORY_MD5_SUM
+			);
+			return !remoteSignature.equals(localSignature);
+		};
 
-        // --- Save entities --- //
-        entitiesStore.saveEntities = (categoryEntities, partnerEntities) -> {
-            database.writerDao().insert(categoryEntities, partnerEntities);
-            categorySignatureStore.save();
-            partnerSignatureStore.save();
-            workerStateStore.store(WorkerState.success());
-        };
-        // -------- //
+		mPartnerHasChanged = remoteSignature -> {
+			String localSignature = preferences.getString(
+					PreferenceUtils.KEY_PARTNER_MD5_SUM,
+					PreferenceUtils.DEFAULT_VALUE_PARTNER_MD5_SUM
+			);
+			return !remoteSignature.equals(localSignature);
+		};
 
-        // --- Start --- //
-        categorySignatureClient.call();
+		mSaveEntities = new ResponseSaver(
+				database.writerDao()::insert,
+				signature -> preferences.edit()
+						.putString(PreferenceUtils.KEY_CATEGORY_MD5_SUM, signature)
+						.apply(),
+				signature -> preferences.edit()
+						.putString(PreferenceUtils.KEY_PARTNER_MD5_SUM, signature)
+						.apply()
+		)::save;
+	}
 
-        return workerStateStore.getState();
-    }
+	@NonNull
+	@Override
+	protected WorkerState doWork() {
+		try {
+
+			fillWithLocalValueIfNeeded();
+
+			fillWithServerValueIfNeeded();
+
+			return WorkerState.success();
+
+		}
+		catch (WorkerException e) {
+			Log.e(TAG, "Caught: ", e);
+			FirebaseCrash.report(e);
+			return WorkerState.error(e.error);
+		}
+	}
+
+	private void fillWithServerValueIfNeeded() throws WorkerException {
+		if (BuildConfig.FILL_DB_WITH_SERVER_VALUE) {
+
+			CategoriesResponse categories = null;
+			String categorySignature = mGetCategorySignature.get().md5Sum;
+			if (mCategoryHasChanged.test(categorySignature)) {
+				categories = mGetNewCategories.get();
+			}
+
+			PartnersResponse partners = null;
+			String partnerSignature = mGetPartnerSignature.get().md5Sum;
+			if (mPartnerHasChanged.test(partnerSignature)) {
+				partners = mGetNewPartners.get();
+			}
+
+			mSaveEntities.accept(categories, partners);
+		}
+	}
+
+	private void fillWithLocalValueIfNeeded() throws WorkerException {
+		if (BuildConfig.FILL_DB_WITH_LOCAL_VALUE) {
+			if (mIsDatabaseEmpty.get()) {
+				CategoriesResponse categories = mGetLocalCategories.get();
+				PartnersResponse partners = mGetLocalPartners.get();
+				mSaveEntities.accept(categories, partners);
+			}
+		}
+	}
 
 }

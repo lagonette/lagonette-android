@@ -27,72 +27,76 @@ import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class LaGonetteApplication
-        extends Application {
+		extends Application {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+	@Override
+	public void onCreate() {
+		super.onCreate();
 
-        if (BuildConfig.DEBUG) {
-            FragmentManager.enableDebugLogging(true);
-            LoaderManager.enableDebugLogging(true);
-            StrictModeUtils.enableStrictMode();
-        }
+		if (BuildConfig.DEBUG) {
+			FragmentManager.enableDebugLogging(true);
+			LoaderManager.enableDebugLogging(true);
+			StrictModeUtils.enableStrictMode();
+		}
 
-        setUpDb();
-        setUpApi();
-        setUpRepo();
-    }
+		setUpDb();
+		setUpApi();
+		setUpRepo();
+	}
 
-    private void setUpDb() {
-        DB.set(
-                Room
-                        .databaseBuilder(
-                                LaGonetteApplication.this,
-                                LaGonetteDatabase.class,
-                                DatabaseUtils.DATABASE_NAME
-                        )
-                        .fallbackToDestructiveMigration()
-                        .build()
-        );
-    }
+	private void setUpDb() {
+		DB.set(
+				Room
+						.databaseBuilder(
+								LaGonetteApplication.this,
+								LaGonetteDatabase.class,
+								DatabaseUtils.DATABASE_NAME
+						)
+						.fallbackToDestructiveMigration()
+						.build()
+		);
+	}
 
-    private void setUpApi() {
+	private void setUpApi() {
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+		OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-        if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-            httpClient.addInterceptor(logging);
-        }
+		if (BuildConfig.DEBUG) {
+			HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+			logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+			httpClient.addInterceptor(logging);
+		}
 
-        Moshi moshi = new Moshi.Builder()
-                .add(new BooleanAdapter())
-                .add(new LongAdapter())
-                .build();
+		Moshi moshi = new Moshi.Builder()
+				.add(new BooleanAdapter())
+				.add(new LongAdapter())
+				.build();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(LaGonetteService.HOST)
-                .client(httpClient.build())
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .build();
+		Retrofit retrofit = new Retrofit.Builder()
+				.baseUrl(LaGonetteService.HOST)
+				.client(httpClient.build())
+				.addConverterFactory(MoshiConverterFactory.create(moshi))
+				.build();
 
-        Api.setPartnerService(
-                retrofit.create(LaGonetteService.Partner.class)
-        );
+		Api.setPartnerService(
+				retrofit.create(LaGonetteService.Partner.class)
+		);
 
-        Api.setCategoryService(
-                retrofit.create(LaGonetteService.Category.class)
-        );
-    }
+		Api.setCategoryService(
+				retrofit.create(LaGonetteService.Category.class)
+		);
 
-    private void setUpRepo() {
-        Repo.set(
-                new MainRepo(
-                        LaGonetteApplication.this,
-                        Executors.newCachedThreadPool()
-                )
-        );
-    }
+		Api.setMoshi(
+				moshi
+		);
+	}
+
+	private void setUpRepo() {
+		Repo.set(
+				new MainRepo(
+						LaGonetteApplication.this,
+						Executors.newCachedThreadPool()
+				)
+		);
+	}
 }

@@ -3,6 +3,8 @@ package org.lagonette.app.locator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.squareup.moshi.Moshi;
+
 import org.lagonette.app.api.service.LaGonetteService;
 
 public class Api {
@@ -12,6 +14,9 @@ public class Api {
 
     @Nullable
     private static LaGonetteService.Category SERVICE_CATEGORY;
+
+    @Nullable
+    private static Moshi MOSHI;
 
     private Api() {
     }
@@ -34,6 +39,16 @@ public class Api {
 
     public static void setCategoryService(@NonNull LaGonetteService.Category service) {
         SERVICE_CATEGORY = service;
+    }
+
+    @NonNull
+    public static Moshi moshi() {
+        if (MOSHI == null) throw new IllegalStateException("MOSHI was not set!");
+        return MOSHI;
+    }
+
+    public static void setMoshi(@NonNull Moshi moshi) {
+        MOSHI = moshi;
     }
 
 }

@@ -13,30 +13,33 @@ import java.util.List;
 @Dao
 public interface CategoryDao {
 
-    @Query("DELETE FROM category WHERE id = :id AND type = :type")
-    void deleteCategory(long id, long type);
+	@Query("SELECT count(1) FROM category")
+	int getCategorieCount();
 
-    @Query("DELETE FROM category")
-    void deleteCategories();
+	@Query("DELETE FROM category WHERE id = :id AND type = :type")
+	void deleteCategory(long id, long type);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertCategory(Category category);
+	@Query("DELETE FROM category")
+	void deleteCategories();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insertCategoryMetadata(CategoryMetadata categoryMetadata);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insertCategory(Category category);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertCategories(List<Category> categories);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	long insertCategoryMetadata(CategoryMetadata categoryMetadata);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertCategoriesMetadatas(List<CategoryMetadata> categoriesMetadatas);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insertCategories(List<Category> categories);
 
-    @Query("UPDATE category_metadata SET is_visible = :isVisible WHERE category_id = :id AND category_type = :type")
-    int updateCategoryVisibility(long id, long type, boolean isVisible);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insertCategoriesMetadatas(List<CategoryMetadata> categoriesMetadatas);
 
-    @Query("UPDATE category_metadata SET is_visible = :isVisible")
-    void updateCategoryVisibilities(boolean isVisible);
+	@Query("UPDATE category_metadata SET is_visible = :isVisible WHERE category_id = :id AND category_type = :type")
+	int updateCategoryVisibility(long id, long type, boolean isVisible);
 
-    @Query("UPDATE category_metadata SET is_collapsed = :isCollapsed WHERE category_id = :id AND category_type = :type")
-    int updateCategoryCollapsed(long id,  long type, boolean isCollapsed);
+	@Query("UPDATE category_metadata SET is_visible = :isVisible")
+	void updateCategoryVisibilities(boolean isVisible);
+
+	@Query("UPDATE category_metadata SET is_collapsed = :isCollapsed WHERE category_id = :id AND category_type = :type")
+	int updateCategoryCollapsed(long id, long type, boolean isCollapsed);
 }

@@ -1,0 +1,463 @@
+{
+  "errors": "",
+  "partners": [
+    {
+      "id": "81",
+      "clientCode": "P0080",
+      "name": "3 Ptits Pois",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/81/logos/google.png",
+      "phone": null,
+      "website": "www.3ptitspois.fr",
+      "email": "",
+      "description": "test desc\r\navec é des à accents",
+      "shortDescription": "desc courte",
+      "mainCategory": "8",
+      "sideCategories": [
+        "9",
+        "34"
+      ],
+      "isGonetteHeadquarter": "0",
+      "locations": [
+        {
+          "id": "810",
+          "openingHours": "lundi au mardi de 8h à 21h",
+          "isExchangeOffice": "1",
+          "address": "10 rue des Emeraudes",
+          "city": "Lyon",
+          "zipCode": "69006",
+          "latitude": 45.7699371,
+          "longitude": 4.8624413,
+          "displayLocation": "1"
+        }
+      ]
+    },
+    {
+      "id": "126",
+      "clientCode": "P0995",
+      "name": "a a a",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/126/logos/",
+      "phone": null,
+      "website": null,
+      "email": null,
+      "description": "description",
+      "shortDescription": "desc courte",
+      "mainCategory": "7",
+      "sideCategories": [
+        "11",
+        "12",
+        "34"
+      ],
+      "isGonetteHeadquarter": "0",
+      "locations": [
+        {
+          "id": "1260",
+          "openingHours": null,
+          "isExchangeOffice": null,
+          "address": "1 rue du Président Edouard Herriot",
+          "city": "Lyon",
+          "zipCode": "69001",
+          "latitude": 45.7671434,
+          "longitude": 4.8345289,
+          "displayLocation": "1"
+        }
+      ]
+    },
+    {
+      "id": "130",
+      "clientCode": null,
+      "name": "a a a a a",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/130/logos/",
+      "phone": null,
+      "website": null,
+      "email": null,
+      "description": null,
+      "shortDescription": null,
+      "mainCategory": "35",
+      "sideCategories": [
+        "36"
+      ],
+      "isGonetteHeadquarter": "0",
+      "locations": [
+        {
+          "id": "1300",
+          "openingHours": null,
+          "isExchangeOffice": null,
+          "address": "1 rue du président Edouard Herriot",
+          "city": "Lyon",
+          "zipCode": "69001",
+          "latitude": 45.7671434,
+          "longitude": 4.8345289,
+          "displayLocation": "1"
+        }
+      ]
+    },
+    {
+      "id": "46",
+      "clientCode": "P0042",
+      "name": "A Coeur de Peau",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/46/logos/tr.jpeg",
+      "phone": "0472008619",
+      "website": "www.acoeurdepeau.fr",
+      "email": "olivier.montmagnon@gmail.com",
+      "description": "super description 2\r\nsur plusieurs lignes test test",
+      "shortDescription": "petite desc",
+      "mainCategory": "9",
+      "sideCategories": [
+        ""
+      ],
+      "isGonetteHeadquarter": "0",
+      "locations": [
+        {
+          "id": "460",
+          "openingHours": "du lundi qu mardi test2",
+          "isExchangeOffice": "1",
+          "address": "41 Rue du Bon Pasteur",
+          "city": "Lyon",
+          "zipCode": "69001",
+          "latitude": 45.7724256,
+          "longitude": 4.830491,
+          "displayLocation": "1"
+        }
+      ]
+    },
+    {
+      "id": "138",
+      "clientCode": "P0130",
+      "name": "AlterConso",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/138/logos/",
+      "phone": "0472044302",
+      "website": "www.alter-conso.org",
+      "email": "contact@alter-conso.org",
+      "description": "La coopérative AlterConso distribue chaque semaine, à plus de 700 personnes, des paniers de produits agricoles locaux, dans 14 lieux de la Métropole de Lyon.\r\n\r\nSon action vise à permettre l’accès de tous-tes à une agriculture locale de qualité (paysanne et/ou biologique) à un prix abordable; à dynamiser l’agriculture périurbaine, à limiter les transports, à réduire l’utilisation d’emballages, à développer le lien social entre ville et campagne, et à créer des emplois.\r\n\r\nImportant : La Gonette n’est pas acceptée pour le paiement des paniers mais seulement sur les produits vendus séparément les jours de distribution",
+      "shortDescription": null,
+      "mainCategory": "3",
+      "sideCategories": [
+        ""
+      ],
+      "isGonetteHeadquarter": "0",
+      "locations": [
+        {
+          "id": "1380",
+          "openingHours": "Mercredi de 17h30 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.9001276493073,
+          "longitude": 45.814129597595,
+          "displayLocation": "1"
+        },
+        {
+          "id": "1381",
+          "openingHours": "Jeudi de 17h30 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.7841891646385,
+          "longitude": 45.756795303267,
+          "displayLocation": "1"
+        },
+        {
+          "id": "1382",
+          "openingHours": "Mardi de 17h30 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.8635101318359,
+          "longitude": 45.749498268873,
+          "displayLocation": "1"
+        },
+        {
+          "id": "1383",
+          "openingHours": "Mardi de 17h30 à 19h30",
+          "isExchangeOffice": null,
+          "address": "13 rue Delandine",
+          "city": "Lyon",
+          "zipCode": "69002",
+          "latitude": 4.8275256156921,
+          "longitude": 45.746967758713,
+          "displayLocation": "1"
+        },
+        {
+          "id": "1384",
+          "openingHours": "Jeudi de 17h00 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.8126608133316,
+          "longitude": 45.75751578453,
+          "displayLocation": "1"
+        },
+        {
+          "id": "1385",
+          "openingHours": "Vendredi de 17h30 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.8064005374908,
+          "longitude": 45.714957762842,
+          "displayLocation": "1"
+        },
+        {
+          "id": "1386",
+          "openingHours": "Mardi de 17h30 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.8063415288925,
+          "longitude": 45.775971903538,
+          "displayLocation": "1"
+        },
+        {
+          "id": "1387",
+          "openingHours": "Mercredi de 17h00 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.9141556024551,
+          "longitude": 45.780038763049,
+          "displayLocation": "1"
+        },
+        {
+          "id": "1388",
+          "openingHours": "Vendredi de 17h00 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.8213458061218,
+          "longitude": 45.768847637208,
+          "displayLocation": "1"
+        },
+        {
+          "id": "1389",
+          "openingHours": "Vendredi de 17h00 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.8279923200607,
+          "longitude": 45.730685150693,
+          "displayLocation": "1"
+        },
+        {
+          "id": "13810",
+          "openingHours": "Mercredi de 17h00 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.9093329906464,
+          "longitude": 45.731767310785,
+          "displayLocation": "1"
+        },
+        {
+          "id": "13811",
+          "openingHours": "Mercredi de 17h30 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.8810678720474,
+          "longitude": 45.700795769106,
+          "displayLocation": "1"
+        },
+        {
+          "id": "13812",
+          "openingHours": "Jeudi de 17h00 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.8821568489075,
+          "longitude": 45.759922311654,
+          "displayLocation": "1"
+        },
+        {
+          "id": "13813",
+          "openingHours": "Jeudi de 17h30 à 19h15",
+          "isExchangeOffice": null,
+          "address": "",
+          "city": "",
+          "zipCode": "",
+          "latitude": 4.8785948753357,
+          "longitude": 45.779051070991,
+          "displayLocation": "1"
+        }
+      ]
+    },
+    {
+      "id": "33",
+      "clientCode": "P0033",
+      "name": "BiereLab",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/33/logos/google.png",
+      "phone": "0650880350",
+      "website": "www.brasserieplatypus.com",
+      "email": "contact@bierelab.com",
+      "description": "Description client 3",
+      "shortDescription": "Description courte",
+      "mainCategory": "15",
+      "sideCategories": [
+        "5",
+        "6"
+      ],
+      "isGonetteHeadquarter": "0",
+      "locations": [
+        {
+          "id": "330",
+          "openingHours": "du lundi au mardi",
+          "isExchangeOffice": null,
+          "address": "9 boulevard Edmond Michelet",
+          "city": "Lyon",
+          "zipCode": "69008",
+          "latitude": 45.7325191,
+          "longitude": 4.8773264,
+          "displayLocation": "1"
+        }
+      ]
+    },
+    {
+      "id": "137",
+      "clientCode": "P0000",
+      "name": "Local Gonette",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/137/logos/La-Gonette.png",
+      "phone": "0951579133",
+      "website": "www.lagonette.org",
+      "email": "contact@lagonette.org",
+      "description": null,
+      "shortDescription": "Local de la Gonette",
+      "mainCategory": "5",
+      "sideCategories": [
+        ""
+      ],
+      "isGonetteHeadquarter": "1",
+      "locations": [
+        {
+          "id": "1370",
+          "openingHours": "lundi au vendredi de 9h à 18h",
+          "isExchangeOffice": "1",
+          "address": "4 rue Imbert Colomès",
+          "city": "Lyon",
+          "zipCode": "69001",
+          "latitude": 45.771293,
+          "longitude": 4.8320613,
+          "displayLocation": "1"
+        }
+      ]
+    },
+    {
+      "id": "107",
+      "clientCode": "P0107",
+      "name": "Ludi'zique",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/107/logos/tg.jpeg",
+      "phone": null,
+      "website": "ludiziquz.sitew.fr",
+      "email": "ludizique@yahoo.fr",
+      "description": "desc",
+      "shortDescription": null,
+      "mainCategory": "6",
+      "sideCategories": [
+        ""
+      ],
+      "isGonetteHeadquarter": "0",
+      "locations": [
+        {
+          "id": "1070",
+          "openingHours": null,
+          "isExchangeOffice": "1",
+          "address": "11, Impasse de l'Ordre",
+          "city": "Lyon",
+          "zipCode": "69003",
+          "latitude": 45.757348,
+          "longitude": 4.8666969,
+          "displayLocation": "1"
+        }
+      ]
+    },
+    {
+      "id": "134",
+      "clientCode": "P0999",
+      "name": "test seb",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/134/logos/tg.jpeg",
+      "phone": "0606060606",
+      "website": "internet.web",
+      "email": "test@test.com",
+      "description": "blablablablablabla 2",
+      "shortDescription": "test description",
+      "mainCategory": "3",
+      "sideCategories": [
+        ""
+      ],
+      "isGonetteHeadquarter": "0",
+      "locations": [
+        {
+          "id": "1340",
+          "openingHours": "horaire d'ouverture\r\nlundi bla\r\nùardi bla\r\nmercredi bla",
+          "isExchangeOffice": "1",
+          "address": "rue imbert colomes",
+          "city": "Lyon",
+          "zipCode": "69001",
+          "latitude": 45.7713694,
+          "longitude": 4.8325118,
+          "displayLocation": "1"
+        }
+      ]
+    },
+    {
+      "id": "135",
+      "clientCode": "P0998",
+      "name": "test seb 2",
+      "logo": "http://82.225.211.150:18001/dolibarr/documents/societe/135/logos/",
+      "phone": null,
+      "website": "test.com",
+      "email": "blabla@gmail.com",
+      "description": "descr longue\r\nblablabal\r\nblablabla",
+      "shortDescription": "desc courte",
+      "mainCategory": "12",
+      "sideCategories": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23"
+      ],
+      "isGonetteHeadquarter": "0",
+      "locations": [
+        {
+          "id": "1350",
+          "openingHours": "Horaores d'ouverture\r\nJours d'ouverture",
+          "isExchangeOffice": "1",
+          "address": "",
+          "city": null,
+          "zipCode": null,
+          "displayLocation": "0"
+        }
+      ]
+    }
+  ],
+  "md5_sum": "9b14f866331397d7497d1766acb54e96"
+}
