@@ -20,10 +20,10 @@ import org.lagonette.app.util.UiUtils;
 public abstract class SearchBarPerformer implements ViewPerformer {
 
     @NonNull
-    public IntConsumer onBottomChanged;
+    public IntConsumer onBottomChanged = IntConsumer::doNothing;
 
     @NonNull
-    public Consumer<String> onSearch;
+    public Consumer<String> onSearch = Consumer::doNothing;
 
     @Nullable
     protected View mSearchBar;

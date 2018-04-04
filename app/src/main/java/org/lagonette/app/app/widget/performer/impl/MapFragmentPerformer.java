@@ -73,6 +73,7 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
         mEventBus.publish(MainLiveEventBusViewModel.Map.OPEN_LOCATION_ID, locationId);
     }
 
+    @NonNull
     public UiState.MapMovement getMapMovement() {
         return mMapMovement;
     }

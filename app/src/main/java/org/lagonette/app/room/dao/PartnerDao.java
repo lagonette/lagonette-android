@@ -15,6 +15,7 @@ import org.lagonette.app.room.entity.PartnerSideCategory;
 
 import java.util.List;
 
+@SuppressWarnings("NullableProblems")
 @Dao
 public interface PartnerDao {
 

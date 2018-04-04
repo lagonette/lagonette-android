@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import org.lagonette.app.app.fragment.FiltersFragment;
 import org.lagonette.app.app.widget.performer.base.FragmentPerformer;

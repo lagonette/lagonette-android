@@ -3,7 +3,6 @@ package org.lagonette.app.app.activity;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.R;
 import org.lagonette.app.app.widget.presenter.LandscapeMainPresenter;
 import org.lagonette.app.app.widget.presenter.MainPresenter;
 import org.lagonette.app.app.widget.presenter.PortraitMainPresenter;

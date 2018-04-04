@@ -2,7 +2,6 @@ package org.lagonette.app.app.widget.performer.landscape;
 
 import android.support.annotation.IdRes;
 
-import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 
 public class LandscapeSearchBarPerformer

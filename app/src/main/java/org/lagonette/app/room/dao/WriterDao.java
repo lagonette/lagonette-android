@@ -49,6 +49,7 @@ public abstract class WriterDao {
 
     }
 
+    @SuppressWarnings("NullableProblems")
     @Transaction
     public void insert(@NonNull CategoryEntities categoryEntities, @NonNull PartnerEntities partnerEntities) {
         LaGonetteDatabase database = DB.get();

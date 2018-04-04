@@ -76,7 +76,6 @@ public class LocationItem
         return mIconUrl;
     }
 
-    @NonNull
     public long getCategoryId() {
         return mCategoryId;
     }

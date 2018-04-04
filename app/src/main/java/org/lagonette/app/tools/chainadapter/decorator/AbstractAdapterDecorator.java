@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
-import org.lagonette.app.tools.chainadapter.component.AdapterComponent;
-
 
 public abstract class AbstractAdapterDecorator<VH extends RecyclerView.ViewHolder, I>
         implements AdapterDecorator<VH, I> {
