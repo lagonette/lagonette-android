@@ -26,8 +26,8 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.tools.functions.Consumer;
-import org.lagonette.app.tools.functions.NullFunctions;
+import org.lagonette.app.tools.functions.main.Consumer;
+import org.lagonette.app.tools.functions.main.Runnable;
 import org.lagonette.app.util.UiUtils;
 
 import java.io.IOException;
@@ -38,16 +38,16 @@ public class MapPerformer implements OnMapReadyCallback {
     private static final String TAG = "MapPerformer";
 
     @NonNull
-    public Runnable showFullMap = NullFunctions::doNothing;
+    public Runnable showFullMap = Runnable::doNothing;
 
     @NonNull
-    public Consumer<UiState.MapMovement> notifyMapMovement = NullFunctions::doNothing;
+    public Consumer<UiState.MapMovement> notifyMapMovement = Consumer::doNothing;
 
     @NonNull
-    public Consumer<Cluster<LocationItem>> moveToCluster = NullFunctions::doNothing;
+    public Consumer<Cluster<LocationItem>> moveToCluster = Consumer::doNothing;
 
     @NonNull
-    public Consumer<LocationItem> openLocationItem = NullFunctions::doNothing;
+    public Consumer<LocationItem> openLocationItem = Consumer::doNothing;
 
     @NonNull
     private final Context mContext;

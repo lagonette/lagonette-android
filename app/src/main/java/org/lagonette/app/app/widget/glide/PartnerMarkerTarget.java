@@ -8,7 +8,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.tools.functions.TriConsumer;
+import org.lagonette.app.tools.functions.main.TriConsumer;
 
 public class PartnerMarkerTarget extends SimpleTarget<Bitmap> {
 

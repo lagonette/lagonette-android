@@ -16,8 +16,7 @@ import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.tools.functions.Consumer;
-import org.lagonette.app.tools.functions.NullFunctions;
+import org.lagonette.app.tools.functions.main.Consumer;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_CLUSTER;
@@ -38,7 +37,7 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
     private final FragmentManager mFragmentManager;
 
     @NonNull
-    public Consumer<UiState.MapMovement> onMapMovementChanged = NullFunctions::doNothing;
+    public Consumer<UiState.MapMovement> onMapMovementChanged = Consumer::doNothing;
 
     @NonNull
     protected UiState.MapMovement mMapMovement;

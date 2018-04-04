@@ -11,19 +11,19 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
-import org.lagonette.app.tools.functions.Consumer;
-import org.lagonette.app.tools.functions.NullFunctions;
+import org.lagonette.app.tools.functions.main.Consumer;
+import org.lagonette.app.tools.functions.main.Runnable;
 
 public abstract class FabButtonsPerformer implements ViewPerformer {
 
     @NonNull
-    public Consumer<Location> onPositionClick = NullFunctions::doNothing;
+    public Consumer<Location> onPositionClick = Consumer::doNothing;
 
     @NonNull
-    public Runnable askForFineLocationPermission = NullFunctions::doNothing;
+    public Runnable askForFineLocationPermission = Runnable::doNothing;
 
     @NonNull
-    public Runnable onPositionLongClick = NullFunctions::doNothing;
+    public Runnable onPositionLongClick = Runnable::doNothing;
 
     @IdRes
     private int mPositionButtonRes;

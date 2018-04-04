@@ -10,24 +10,23 @@ import android.widget.TextView;
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.room.entity.statement.LocationDetail;
-import org.lagonette.app.tools.functions.Consumer;
-import org.lagonette.app.tools.functions.NullFunctions;
-import org.lagonette.app.tools.functions.ObjBiDoubleConsumer;
+import org.lagonette.app.tools.functions.main.Consumer;
+import org.lagonette.app.tools.functions.main.ObjBiDoubleConsumer;
 import org.lagonette.app.util.PhoneUtils;
 
 public class LocationDetailPerformer implements ViewPerformer {
 
     @NonNull
-    public ObjBiDoubleConsumer<String> onAddressClick = NullFunctions::doNothing;
+    public ObjBiDoubleConsumer<String> onAddressClick = ObjBiDoubleConsumer::doNothing;
 
     @NonNull
-    public Consumer<String> onPhoneClick = NullFunctions::doNothing;
+    public Consumer<String> onPhoneClick = Consumer::doNothing;
 
     @NonNull
-    public Consumer<String> onWebsiteClick = NullFunctions::doNothing;
+    public Consumer<String> onWebsiteClick = Consumer::doNothing;
 
     @NonNull
-    public Consumer<String> onEmailClick = NullFunctions::doNothing;
+    public Consumer<String> onEmailClick = Consumer::doNothing;
 
     private View mHeaderView;
 

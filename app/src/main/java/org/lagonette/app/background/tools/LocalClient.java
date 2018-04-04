@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonAdapter;
 
 import org.lagonette.app.app.widget.error.Error;
 import org.lagonette.app.background.tools.exception.WorkerException;
-import org.lagonette.app.tools.functions.Supplier;
+import org.lagonette.app.tools.functions.main.Supplier;
 
 import java.io.IOException;
 import java.io.InputStream;

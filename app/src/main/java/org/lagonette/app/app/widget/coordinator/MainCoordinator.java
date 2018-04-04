@@ -13,11 +13,11 @@ import org.lagonette.app.BuildConfig;
 import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.tools.functions.Consumer;
+import org.lagonette.app.tools.functions.main.Consumer;
 import org.lagonette.app.tools.Logger;
-import org.lagonette.app.tools.functions.LongConsumer;
-import org.lagonette.app.tools.functions.NullFunctions;
-import org.lagonette.app.tools.functions.Supplier;
+import org.lagonette.app.tools.functions.main.LongConsumer;
+import org.lagonette.app.tools.functions.main.Runnable;
+import org.lagonette.app.tools.functions.main.Supplier;
 
 public abstract class MainCoordinator {
 
@@ -27,58 +27,58 @@ public abstract class MainCoordinator {
     public Supplier<UiState> getCurrentState;
 
     @NonNull
-    public Runnable finishAction = NullFunctions::doNothing;
+    public Runnable finishAction = Runnable::doNothing;
 
     @NonNull
-    public Runnable openBottomSheet = NullFunctions::doNothing;
+    public Runnable openBottomSheet = Runnable::doNothing;
 
     @NonNull
-    public Runnable closeBottomSheet = NullFunctions::doNothing;
+    public Runnable closeBottomSheet = Runnable::doNothing;
 
     @NonNull
-    public Consumer<Cluster<LocationItem>> moveMapToCluster = NullFunctions::doNothing;
+    public Consumer<Cluster<LocationItem>> moveMapToCluster = Consumer::doNothing;
 
     @NonNull
-    public Consumer<LocationItem> moveMapToLocation = NullFunctions::doNothing;
+    public Consumer<LocationItem> moveMapToLocation = Consumer::doNothing;
 
     @NonNull
-    public Consumer<Location> moveMapToMyLocation = NullFunctions::doNothing;
+    public Consumer<Location> moveMapToMyLocation = Consumer::doNothing;
 
     @NonNull
-    public Runnable stopMapMoving = NullFunctions::doNothing;
+    public Runnable stopMapMoving = Runnable::doNothing;
 
     @NonNull
-    public Runnable moveMapToFootprint = NullFunctions::doNothing;
+    public Runnable moveMapToFootprint = Runnable::doNothing;
 
     @NonNull
-    public LongConsumer openLocation = NullFunctions::doNothing;
+    public LongConsumer openLocation = LongConsumer::doNothing;
 
     @NonNull
-    public Runnable loadMap = NullFunctions::doNothing;
+    public Runnable loadMap = Runnable::doNothing;
 
     @NonNull
-    public Runnable restoreMap = NullFunctions::doNothing;
+    public Runnable restoreMap = Runnable::doNothing;
 
     @NonNull
-    public Runnable restoreFilters = NullFunctions::doNothing;
+    public Runnable restoreFilters = Runnable::doNothing;
 
     @NonNull
-    public Runnable loadFilters = NullFunctions::doNothing;
+    public Runnable loadFilters = Runnable::doNothing;
 
     @NonNull
-    public Runnable unloadFilters = NullFunctions::doNothing;
+    public Runnable unloadFilters = Runnable::doNothing;
 
     @NonNull
-    public Runnable restoreLocationDetail = NullFunctions::doNothing;
+    public Runnable restoreLocationDetail = Runnable::doNothing;
 
     @NonNull
-    public LongConsumer loadLocationDetail = NullFunctions::doNothing;
+    public LongConsumer loadLocationDetail = LongConsumer::doNothing;
 
     @NonNull
-    public Runnable unloadLocationDetail = NullFunctions::doNothing;
+    public Runnable unloadLocationDetail = Runnable::doNothing;
 
     @NonNull
-    protected Runnable wait = NullFunctions::doNothing;
+    protected Runnable wait = Runnable::doNothing;
 
     public void init(@NonNull UiState state) {
         loadMap.run();
@@ -348,7 +348,7 @@ public abstract class MainCoordinator {
 
             wait = Logger.log(
                     TAG, "INTENT --X wait",
-                    (Runnable) NullFunctions::doNothing
+                    Runnable::doNothing
             );
         }
     }

@@ -6,18 +6,18 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
-import org.lagonette.app.tools.functions.NullFunctions;
-import org.lagonette.app.tools.functions.ObjIntConsumer;
+import org.lagonette.app.tools.functions.main.ObjIntConsumer;
+import org.lagonette.app.tools.functions.main.Runnable;
 
 public class PermissionsPerformer {
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
     @NonNull
-    public ObjIntConsumer<String[]> requestPermissions = NullFunctions::doNothing;
+    public ObjIntConsumer<String[]> requestPermissions = ObjIntConsumer::doNothing;
 
     @NonNull
-    public Runnable onFineLocationPermissionGranted = NullFunctions::doNothing;
+    public Runnable onFineLocationPermissionGranted = Runnable::doNothing;
 
     @NonNull
     private final Context mContext;

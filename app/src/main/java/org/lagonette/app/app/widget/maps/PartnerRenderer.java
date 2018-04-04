@@ -25,8 +25,8 @@ import com.google.maps.android.ui.IconGenerator;
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.glide.PartnerMarkerTarget;
 import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.tools.functions.NullableSupplier;
-import org.lagonette.app.tools.functions.TriConsumer;
+import org.lagonette.app.tools.functions.main.Provider;
+import org.lagonette.app.tools.functions.main.TriConsumer;
 
 public class PartnerRenderer
         extends DefaultClusterRenderer<LocationItem> {
@@ -94,14 +94,14 @@ public class PartnerRenderer
     private SparseArray<BitmapDescriptor> mSelectedExchangeOfficeBitmapDescriptors;
 
     @NonNull
-    private final NullableSupplier<Marker> mGetSelectedItem;
+    private final Provider<Marker> mGetSelectedItem;
 
     public PartnerRenderer(
             @NonNull Context context,
             @NonNull LayoutInflater layoutInflater,
             @NonNull GoogleMap map,
             @NonNull ClusterManager<LocationItem> clusterManager,
-            @NonNull NullableSupplier<Marker> getSelectedItem) {
+            @NonNull Provider<Marker> getSelectedItem) {
         super(context, map, clusterManager);
         mContext = context;
 

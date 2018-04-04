@@ -23,7 +23,9 @@ import org.lagonette.app.background.tools.exception.WorkerException;
 import org.lagonette.app.locator.Api;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
-import org.lagonette.app.tools.functions.BiConsumer;
+import org.lagonette.app.tools.functions.main.BiConsumer;
+import org.lagonette.app.tools.functions.throwable.Predicate;
+import org.lagonette.app.tools.functions.throwable.Supplier;
 import org.lagonette.app.util.PreferenceUtils;
 
 public class DataRefreshWorker
@@ -31,51 +33,35 @@ public class DataRefreshWorker
 
 	private static final String TAG = "DataRefreshWorker";
 
-	public interface ThrowablePredicate<P, E extends Throwable> {
-
-		boolean test(@NonNull P param) throws E;
-	}
-
-	public interface ThrowableSupplier<T, E extends Throwable> {
-
-		@NonNull
-		T get() throws E;
-	}
-
-	public interface ThrowableConsumer<P, E extends Throwable> {
-
-		void accept(@NonNull P param) throws E;
-	}
+	@NonNull
+	private final Supplier<Md5SumResponse, WorkerException> mGetCategorySignature;
 
 	@NonNull
-	private final ThrowableSupplier<Md5SumResponse, WorkerException> mGetCategorySignature;
+	private final Predicate<String, WorkerException> mCategoryHasChanged;
 
 	@NonNull
-	private final ThrowablePredicate<String, WorkerException> mCategoryHasChanged;
+	private final Supplier<CategoriesResponse, WorkerException> mGetNewCategories;
 
 	@NonNull
-	private final ThrowableSupplier<CategoriesResponse, WorkerException> mGetNewCategories;
+	private final Supplier<CategoriesResponse, WorkerException> mGetLocalCategories;
 
 	@NonNull
-	private final ThrowableSupplier<CategoriesResponse, WorkerException> mGetLocalCategories;
+	private final Supplier<Md5SumResponse, WorkerException> mGetPartnerSignature;
 
 	@NonNull
-	private final ThrowableSupplier<Md5SumResponse, WorkerException> mGetPartnerSignature;
+	private final Predicate<String, WorkerException> mPartnerHasChanged;
 
 	@NonNull
-	private final ThrowablePredicate<String, WorkerException> mPartnerHasChanged;
+	private final Supplier<PartnersResponse, WorkerException> mGetLocalPartners;
 
 	@NonNull
-	private final ThrowableSupplier<PartnersResponse, WorkerException> mGetLocalPartners;
-
-	@NonNull
-	private final ThrowableSupplier<PartnersResponse, WorkerException> mGetNewPartners;
+	private final Supplier<PartnersResponse, WorkerException> mGetNewPartners;
 
 	@NonNull
 	private final BiConsumer<CategoriesResponse, PartnersResponse> mSaveEntities;
 
 	@NonNull
-	private final ThrowableSupplier<Boolean, WorkerException> mIsDatabaseEmpty;
+	private final Supplier<Boolean, WorkerException> mIsDatabaseEmpty;
 
 	public DataRefreshWorker(@NonNull Context context) {
 		super(context);

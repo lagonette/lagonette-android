@@ -8,8 +8,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
-import org.lagonette.app.tools.functions.IntConsumer;
-import org.lagonette.app.tools.functions.NullFunctions;
+import org.lagonette.app.tools.functions.main.IntConsumer;
 import org.lagonette.app.util.UiUtils;
 
 public abstract class BottomSheetPerformer
@@ -43,10 +42,10 @@ public abstract class BottomSheetPerformer
     }
 
     @NonNull
-    public IntConsumer onSlideChanged = NullFunctions::doNothing;
+    public IntConsumer onSlideChanged = IntConsumer::doNothing;
 
     @NonNull
-    public IntConsumer onStateChanged = NullFunctions::doNothing;
+    public IntConsumer onStateChanged = IntConsumer::doNothing;
 
     @Nullable
     protected BottomSheetBehavior<View> mBehavior;

@@ -4,7 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.lagonette.app.tools.functions.LongConsumer;
+import org.lagonette.app.tools.functions.main.LongConsumer;
 
 public class LongObserver implements Observer<Long> {
 

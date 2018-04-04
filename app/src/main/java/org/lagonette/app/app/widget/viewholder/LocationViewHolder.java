@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.viewholder;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -10,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.lagonette.app.R;
-import org.lagonette.app.tools.functions.LongBooleanConsumer;
-import org.lagonette.app.tools.functions.LongConsumer;
 
 public class LocationViewHolder extends RecyclerView.ViewHolder {
 

@@ -7,8 +7,8 @@ import org.lagonette.app.api.response.CategoriesResponse;
 import org.lagonette.app.api.response.PartnersResponse;
 import org.lagonette.app.room.dao.WriterDao.CategoryEntities;
 import org.lagonette.app.room.dao.WriterDao.PartnerEntities;
-import org.lagonette.app.tools.functions.BiConsumer;
-import org.lagonette.app.tools.functions.Consumer;
+import org.lagonette.app.tools.functions.main.BiConsumer;
+import org.lagonette.app.tools.functions.main.Consumer;
 
 public class ResponseSaver {
 

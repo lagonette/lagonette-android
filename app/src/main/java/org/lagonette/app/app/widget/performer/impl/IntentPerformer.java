@@ -4,8 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.app.widget.error.Error;
-import org.lagonette.app.tools.functions.Consumer;
-import org.lagonette.app.tools.functions.NullFunctions;
+import org.lagonette.app.tools.functions.main.Consumer;
 import org.lagonette.app.util.IntentUtils;
 
 public class IntentPerformer {
@@ -14,7 +13,7 @@ public class IntentPerformer {
     private final Context mContext;
 
     @NonNull
-    public Consumer<Error> onError = NullFunctions::doNothing;
+    public Consumer<Error> onError = Consumer::doNothing;
 
     public IntentPerformer(@NonNull Context context) {
         mContext = context;

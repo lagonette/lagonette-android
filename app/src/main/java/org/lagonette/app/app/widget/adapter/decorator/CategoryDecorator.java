@@ -12,8 +12,7 @@ import org.lagonette.app.app.widget.viewholder.CategoryViewHolder;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.tools.chainadapter.decorator.AbstractAdapterDecorator;
-import org.lagonette.app.tools.functions.LongBooleanConsumer;
-import org.lagonette.app.tools.functions.ObjBooleanConsumer;
+import org.lagonette.app.tools.functions.main.LongBooleanConsumer;
 
 public class CategoryDecorator
         extends AbstractAdapterDecorator<CategoryViewHolder, Filter> {

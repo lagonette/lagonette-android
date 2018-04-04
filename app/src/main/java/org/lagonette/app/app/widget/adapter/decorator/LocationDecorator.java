@@ -14,9 +14,8 @@ import org.lagonette.app.app.widget.viewholder.LocationViewHolder;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.tools.chainadapter.decorator.AbstractAdapterDecorator;
-import org.lagonette.app.tools.functions.LongBooleanConsumer;
-import org.lagonette.app.tools.functions.LongConsumer;
-import org.lagonette.app.tools.functions.NullFunctions;
+import org.lagonette.app.tools.functions.main.LongBooleanConsumer;
+import org.lagonette.app.tools.functions.main.LongConsumer;
 
 public class LocationDecorator
         extends AbstractAdapterDecorator<LocationViewHolder, Filter> {
@@ -24,10 +23,10 @@ public class LocationDecorator
     public static class Callbacks {
 
         @Nullable
-        public LongConsumer onClick = NullFunctions::doNothing;
+        public LongConsumer onClick = LongConsumer::doNothing;
 
         @Nullable
-        public LongBooleanConsumer onVisibilityClick = NullFunctions::doNothing;
+        public LongBooleanConsumer onVisibilityClick = LongBooleanConsumer::doNothing;
 
     }
 
