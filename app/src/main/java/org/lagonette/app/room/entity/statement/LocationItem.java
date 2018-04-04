@@ -27,7 +27,7 @@ public class LocationItem
     @ColumnInfo(name = "is_gonette_headquarter")
     private final boolean mIsGonetteHeadquarter;
 
-    @ColumnInfo(name = "main_category_id") //TODO Use CategoryKey
+    @ColumnInfo(name = "main_category_id")
     private final long mCategoryId;
 
     public LocationItem(
