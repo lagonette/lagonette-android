@@ -1,12 +1,7 @@
 package org.lagonette.app.room.statement;
 
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
 
-import org.lagonette.app.room.embedded.Address;
-import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.statement.base.GonetteStatement;
 
 import java.lang.annotation.Retention;
@@ -37,7 +32,6 @@ public abstract class FilterStatement
             "SELECT " +
                     VALUE_ROW_CATEGORY + " AS row_type, " +
                     "category.id AS category_id, " +
-                    "category.type AS category_type, " +
                     "category.label AS category_label, " +
                     "category.icon AS category_icon, " +
                     "category.display_order AS category_display_order, " +
@@ -56,13 +50,12 @@ public abstract class FilterStatement
                     LEFT_JOIN_MAIN_LOCATION_AND_METADATA_ON_MAIN_PARTNER +
                     " WHERE category.hidden = 0 " +
                     " AND main_partner.name LIKE :search " +
-                    " GROUP BY category.type, category.id ";
+                    " GROUP BY category.id ";
 
     private static final String SQL_FOOTERS =
             "SELECT " +
                     VALUE_ROW_FOOTER + " AS row_type, " +
                     "category.id AS category_id, " +
-                    "category.type AS category_type, " +
                     "NULL AS category_label, " +
                     "NULL AS category_icon, " +
                     "category.display_order AS category_display_order, " +
@@ -81,14 +74,13 @@ public abstract class FilterStatement
                     LEFT_JOIN_MAIN_LOCATION_ON_MAIN_PARTNER +
                     " WHERE main_partner.main_category_id IS NOT NULL " +
                     " AND main_partner.name LIKE :search " +
-                    " GROUP BY category.type, category.id ";
+                    " GROUP BY category.id ";
 
 
     private static final String SQL_MAIN_PARTNERS =
             "SELECT " +
                     VALUE_ROW_MAIN_PARTNER + " AS row_type, " +
                     "category.id AS category_id, " +
-                    "category.type AS category_type, " +
                     "NULL AS category_label, " +
                     "NULL AS category_icon, " +
                     "category.display_order AS category_display_order, " +

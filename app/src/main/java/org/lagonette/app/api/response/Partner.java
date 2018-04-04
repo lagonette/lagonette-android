@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.squareup.moshi.Json;
 
-import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.LocationMetadata;
 
 import java.util.List;
@@ -72,9 +71,7 @@ public class Partner {
         partner.description = description;
         partner.isGonetteHeadquarter = isGonetteHeadquarter;
         partner.shortDescription = shortDescription;
-        partner.mainCategoryKey = new CategoryKey();
-        partner.mainCategoryKey.id = mainCategoryId;
-        partner.mainCategoryKey.type = 0; //TODO Workaround, actually, partner associated with custom/parent category does not exit.
+        partner.mainCategoryId = mainCategoryId;
         partnerEntities.add(partner);
 
         for (Location location : locations) {
@@ -86,9 +83,7 @@ public class Partner {
         for (Long sideCategoryId : sideCategoryIds) {
             if (sideCategoryId != null) {
                 org.lagonette.app.room.entity.PartnerSideCategory sideCategory = new org.lagonette.app.room.entity.PartnerSideCategory();
-                sideCategory.categoryKey = new CategoryKey();
-                sideCategory.categoryKey.id = sideCategoryId;
-                sideCategory.categoryKey.type = 0; //TODO Workaround, actually, partner associated with custom/parent category does not exit.
+                sideCategory.categoryId = sideCategoryId;
                 sideCategory.partnerId = id;
                 partnerSideCategoryEntities.add(sideCategory);
             }

@@ -1,31 +1,18 @@
 package org.lagonette.app.room.entity;
 
 import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
-
-import org.lagonette.app.room.embedded.CategoryKey;
 
 @Entity(
         tableName = "category",
         primaryKeys = {
-                "id",
-                "type"
+                "id"
         }
 )
 public class Category {
 
-    @NonNull
-    @Embedded
-    public CategoryKey key;
-
-    //TODO Parent category key
-    @ColumnInfo(name = "parent_id")
-    public long parentId;
-
-    @ColumnInfo(name = "parent_category_type")
-    public long parentCategoryType;
+    @ColumnInfo(name = "id")
+    public long id;
 
     @ColumnInfo(name = "label")
     public String label;

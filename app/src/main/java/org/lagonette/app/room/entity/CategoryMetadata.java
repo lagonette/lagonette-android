@@ -1,21 +1,16 @@
 package org.lagonette.app.room.entity;
 
 import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
-
-import org.lagonette.app.room.embedded.CategoryKey;
 
 @Entity(
         tableName = "category_metadata",
-        primaryKeys = {"category_id", "category_type"}
+        primaryKeys = {"category_id"}
 )
 public class CategoryMetadata {
 
-    @NonNull
-    @Embedded(prefix = "category_")
-    public CategoryKey categoryKey;
+    @ColumnInfo(name = "category_id")
+    public long categoryId;
 
     @ColumnInfo(name = "is_visible")
     public boolean isVisible;

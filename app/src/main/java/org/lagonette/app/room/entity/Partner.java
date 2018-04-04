@@ -1,11 +1,8 @@
 package org.lagonette.app.room.entity;
 
 import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-
-import org.lagonette.app.room.embedded.CategoryKey;
 
 
 @Entity(
@@ -44,7 +41,7 @@ public class Partner {
     @ColumnInfo(name = "is_gonette_headquarter")
     public boolean isGonetteHeadquarter;
 
-    @Embedded(prefix = "main_category_")
-    public CategoryKey mainCategoryKey;
+    @ColumnInfo(name = "main_category_id")
+    public long mainCategoryId;
 
 }

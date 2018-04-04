@@ -2,252 +2,168 @@
   "errors": "",
   "categories": [
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 15,
       "label": "Restaurants, Bars, Traiteurs",
       "displayOrder": "0",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-1.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 3,
       "label": "Commerces alimentaires",
       "displayOrder": "10",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-2.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 1,
       "label": "Artisanat, métiers d'art",
       "displayOrder": "20",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-3.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 7,
       "label": "Habillement, mode, accessoires",
       "displayOrder": "30",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-4.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 9,
       "label": "Hygiène, beauté",
       "displayOrder": "40",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-5.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 13,
       "label": "Papeterie, librairie, presse, édition",
       "displayOrder": "50",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-6.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 4,
       "label": "Décoration, ameublement, bricolage, jardin",
       "displayOrder": "60",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-7.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 2,
       "label": "Autres commerces",
       "displayOrder": "70",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-8.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 19,
       "label": "Sorties culturelles",
       "displayOrder": "80",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-9.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 11,
       "label": "Informatique, électronique",
       "displayOrder": "90",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-10.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 16,
       "label": "Santé, Bien-être",
       "displayOrder": "100",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-11.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 12,
       "label": "Mécanique, réparation",
       "displayOrder": "110",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-12.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 21,
       "label": "Transport, livraison",
       "displayOrder": "120",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-13.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 22,
       "label": "Web, multimédia, communication, imprimerie",
       "displayOrder": "130",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-14.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 20,
       "label": "Sport et loisirs",
       "displayOrder": "140",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-15.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 6,
       "label": "Education, formation",
       "displayOrder": "150",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-16.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 14,
       "label": "Produits de l'agriculture et de l'élevage",
       "displayOrder": "160",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-17.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 8,
       "label": "Hébergement",
       "displayOrder": "170",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-18.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 10,
       "label": "Immobilier",
       "displayOrder": "180",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-19.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 17,
       "label": "Services à la personne",
       "displayOrder": "190",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-20.png"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 1,
-      "parentId": -1,
       "id": 31,
       "label": "Services aux entreprises",
       "displayOrder": "200",
       "icon": ""
     },
     {
-      "parentCategoryType": 1,
-      "categoryType": 0,
-      "parentId": 31,
       "id": 31,
       "label": "Conseils et services",
       "displayOrder": "200",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/"
     },
     {
-      "parentCategoryType": 1,
-      "categoryType": 0,
-      "parentId": 31,
       "id": 32,
       "label": "Communication",
       "displayOrder": "201",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/"
     },
     {
-      "parentCategoryType": 1,
-      "categoryType": 0,
-      "parentId": 31,
       "id": 34,
       "label": "Transport, livraison",
       "displayOrder": "202",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/"
     },
     {
-      "parentCategoryType": 1,
-      "categoryType": 0,
-      "parentId": 31,
       "id": 35,
       "label": "Traiteur",
       "displayOrder": "203",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/"
     },
     {
-      "parentCategoryType": 1,
-      "categoryType": 0,
-      "parentId": 31,
       "id": 36,
       "label": "Travaux, fournitures et agencements",
       "displayOrder": "204",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/"
     },
     {
-      "parentCategoryType": 1,
-      "categoryType": 0,
-      "parentId": 31,
       "id": 37,
       "label": "Location de salle et espaces de co-working",
       "displayOrder": "205",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/"
     },
     {
-      "parentCategoryType": -1,
-      "categoryType": 0,
-      "parentId": -1,
       "id": 5,
       "label": "Divers",
       "displayOrder": "210",

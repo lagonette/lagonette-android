@@ -5,7 +5,6 @@ import android.arch.persistence.room.Embedded;
 import android.support.v7.util.DiffUtil;
 
 import org.lagonette.app.room.embedded.Address;
-import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.statement.FilterStatement;
 
 public class Filter {
@@ -16,8 +15,8 @@ public class Filter {
     @ColumnInfo(name = "row_type")
     public final int rowType;
 
-    @Embedded(prefix = "category_")
-    public final CategoryKey categoryKey;
+    @ColumnInfo(name = "category_id")
+    public final long categoryId;
 
     @ColumnInfo(name = "category_label")
     public final String categoryLabel;
@@ -56,7 +55,7 @@ public class Filter {
 
     public Filter(
             int rowType,
-            CategoryKey categoryKey,
+            long categoryId,
             String categoryLabel,
             String categoryIcon,
             int displayOrder,
@@ -69,7 +68,7 @@ public class Filter {
             boolean isLocationVisible,
             String partnerName) {
         this.rowType = rowType;
-        this.categoryKey = categoryKey;
+        this.categoryId = categoryId;
         this.categoryLabel = categoryLabel;
         this.categoryIcon = categoryIcon;
         this.displayOrder = displayOrder;
@@ -92,7 +91,7 @@ public class Filter {
 
     private int createHashCode() {
         int result = rowType;
-        result = 31 * result + (categoryKey != null ? categoryKey.hashCode() : 0);
+        result = 31 * result + (int) (categoryId ^ (categoryId >>> 32));
         result = 31 * result + (categoryLabel != null ? categoryLabel.hashCode() : 0);
         result = 31 * result + (categoryIcon != null ? categoryIcon.hashCode() : 0);
         result = 31 * result + displayOrder;
@@ -117,7 +116,7 @@ public class Filter {
             if (oldItem == null) return false;
             if (newItem == null) return false;
             if (oldItem.rowType != newItem.rowType) return false;
-            if (oldItem.categoryKey.getUniqueId() != newItem.categoryKey.getUniqueId()) return false;
+            if (oldItem.categoryId != newItem.categoryId) return false;
             return oldItem.locationId == newItem.locationId;
         }
 

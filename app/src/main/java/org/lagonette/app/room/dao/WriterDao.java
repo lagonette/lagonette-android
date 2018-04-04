@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
-import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.Category;
 import org.lagonette.app.room.entity.CategoryMetadata;
 import org.lagonette.app.room.entity.Location;
@@ -88,11 +87,7 @@ public abstract class WriterDao {
 
             // Manage headquarter category
             Category headquarterCategory = new Category();
-            headquarterCategory.key = new CategoryKey();
-            headquarterCategory.key.id = 0; //TODO
-            headquarterCategory.key.type = 9999; //TODO
-            headquarterCategory.parentId = -1;
-            headquarterCategory.parentCategoryType = -1;
+            headquarterCategory.id = 0; //TODO
             headquarterCategory.label = "Headquarter Category";
             headquarterCategory.icon = headquarter.logo;
             headquarterCategory.displayOrder = -1; //TODO
@@ -100,12 +95,12 @@ public abstract class WriterDao {
 
             // Manage headquarter category metadata
             CategoryMetadata headquarterCategoryMetadata = new CategoryMetadata();
-            headquarterCategoryMetadata.categoryKey = headquarterCategory.key.clone();
+            headquarterCategoryMetadata.categoryId = headquarterCategory.id;
             headquarterCategoryMetadata.isCollapsed = false;
             headquarterCategoryMetadata.isVisible = true;
 
             // Manage headquarter partner
-            headquarter.mainCategoryKey = headquarterCategory.key.clone();
+            headquarter.mainCategoryId = headquarterCategory.id;
 
             // Insert
             database.categoryDao().insertCategory(headquarterCategory);

@@ -11,7 +11,6 @@ import org.lagonette.app.background.worker.DataRefreshWorker;
 import org.lagonette.app.background.worker.WorkerState;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
-import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.room.entity.statement.LocationDetail;
@@ -83,19 +82,19 @@ public class MainRepo {
         );
     }
 
-    public void setCategoryVisibility(@NonNull CategoryKey key, boolean isVisible) {
+    public void setCategoryVisibility(long categoryId, boolean isVisible) {
         mExecutor.execute(
                 () -> DB.get()
                         .categoryDao()
-                        .updateCategoryVisibility(key.id, key.type, isVisible)
+                        .updateCategoryVisibility(categoryId, isVisible)
         );
     }
 
-    public void setCategoryCollapsed(@NonNull CategoryKey key, boolean isCollapsed) {
+    public void setCategoryCollapsed(long categoryId, boolean isCollapsed) {
         mExecutor.execute(
                 () -> DB.get()
                         .categoryDao()
-                        .updateCategoryCollapsed(key.id, key.type, isCollapsed)
+                        .updateCategoryCollapsed(categoryId, isCollapsed)
         );
     }
 

@@ -9,10 +9,10 @@ import com.bumptech.glide.Glide;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.viewholder.CategoryViewHolder;
-import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.tools.chainadapter.decorator.AbstractAdapterDecorator;
+import org.lagonette.app.tools.functions.LongBooleanConsumer;
 import org.lagonette.app.tools.functions.ObjBooleanConsumer;
 
 public class CategoryDecorator
@@ -21,10 +21,10 @@ public class CategoryDecorator
     public static class Callbacks {
 
         @Nullable
-        public ObjBooleanConsumer<CategoryKey> onCollapsedClick;
+        public LongBooleanConsumer onCollapsedClick;
 
         @Nullable
-        public ObjBooleanConsumer<CategoryKey> onVisibilityClick;
+        public LongBooleanConsumer onVisibilityClick;
 
     }
 
@@ -49,11 +49,11 @@ public class CategoryDecorator
         CategoryViewHolder holder = new CategoryViewHolder(parent);
 
         if (mCallbacks.onCollapsedClick != null) {
-            holder.collapsedButton.setOnClickListener(view -> mCallbacks.onCollapsedClick.accept(holder.categoryKey, !holder.isCollapsed));
+            holder.collapsedButton.setOnClickListener(view -> mCallbacks.onCollapsedClick.accept(holder.categoryId, !holder.isCollapsed));
         }
 
         if (mCallbacks.onVisibilityClick != null) {
-            holder.visibilityButton.setOnClickListener(view -> mCallbacks.onVisibilityClick.accept(holder.categoryKey, !holder.isVisible));
+            holder.visibilityButton.setOnClickListener(view -> mCallbacks.onVisibilityClick.accept(holder.categoryId, !holder.isVisible));
         }
 
         return holder;
@@ -62,7 +62,7 @@ public class CategoryDecorator
     @Override
     protected void onBindViewHolder(@Nullable Filter filter, @NonNull CategoryViewHolder holder) {
         if (filter!= null) {
-            holder.categoryKey = filter.categoryKey;
+            holder.categoryId = filter.categoryId;
             holder.isPartnersVisible = filter.isCategoryPartnersVisible;
             holder.isVisible = filter.isCategoryVisible;
             holder.isCollapsed = filter.isCategoryCollapsed;

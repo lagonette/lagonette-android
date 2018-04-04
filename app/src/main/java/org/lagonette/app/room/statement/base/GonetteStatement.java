@@ -8,35 +8,29 @@ public interface GonetteStatement {
 
     String JOIN_METADATA_ON_CATEGORY =
             " JOIN category_metadata " +
-                    " ON category.id = category_metadata.category_id " +
-                    " AND category.type = category_metadata.category_type ";
+                    " ON category.id = category_metadata.category_id ";
 
     String LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY =
             " LEFT JOIN partner AS main_partner " +
-                    " ON category.id = main_partner.main_category_id " +
-                    " AND category.type = main_partner.main_category_type ";
+                    " ON category.id = main_partner.main_category_id ";
 
     String JOIN_MAIN_PARTNER_ON_CATEGORY =
             " JOIN partner AS main_partner " +
-                    " ON category.id = main_partner.main_category_id " +
-                    " AND category.type = main_partner.main_category_type ";
+                    " ON category.id = main_partner.main_category_id ";
 
     String JOIN_PARTNER_ON_CATEGORY =
             " JOIN partner " +
-                    " ON category.id = partner.main_category_id " +
-                    " AND category.type = partner.category_type ";
+                    " ON category.id = partner.main_category_id ";
 
     String LEFT_JOIN_SIDE_PARTNER_ON_CATEGORY =
             " LEFT JOIN partner_side_category " +
                     " ON category.id = partner_side_category.category_id " +
-                    " AND category.type = partner_side_category.category_type " +
                     " LEFT JOIN partner AS side_partner " +
                     " ON partner_side_category.partner_id = side_partner.id ";
 
     String JOIN_SIDE_PARTNER_ON_CATEGORY =
             " JOIN partner_side_category " +
                     " ON category.id = partner_side_category.category_id " +
-                    " AND category.type = partner_side_category.category_type " +
                     " JOIN partner AS side_partner " +
                     " ON partner_side_category.partner_id = side_partner.id ";
 
@@ -78,25 +72,21 @@ public interface GonetteStatement {
 
     String JOIN_MAIN_CATEGORY_ON_PARTNER =
             " JOIN category AS main_category " +
-                    " ON partner.main_category_id = main_category.id " +
-                    " AND partner.main_category_type = main_category.type ";
+                    " ON partner.main_category_id = main_category.id ";
 
     String JOIN_METADATA_ON_MAIN_CATEGORY =
             " JOIN category_metadata AS main_category_metadata " +
-                    " ON main_category.id = main_category_metadata.category_id " +
-                    " AND main_category.type = main_category_metadata.category_type ";
+                    " ON main_category.id = main_category_metadata.category_id ";
 
     String LEFT_JOIN_SIDE_CATEGORY_ON_PARTNER =
             " LEFT JOIN partner_side_category " +
                     " ON partner.id = partner_side_category.partner_id " +
                     " LEFT JOIN category AS side_category " +
-                    " ON partner_side_category.category_id = side_category.id " +
-                    " AND partner_side_category.category_type = side_category.type ";
+                    " ON partner_side_category.category_id = side_category.id ";
 
     String LEFT_JOIN_METADATA_ON_SIDE_CATEGORY =
             " LEFT JOIN category_metadata AS side_category_metadata " +
-                    " ON side_category.id = side_category_metadata.category_id " +
-                    " AND side_category.type = side_category_metadata.category_type ";
+                    " ON side_category.id = side_category_metadata.category_id ";
 
     String FROM_CATEGORY_AND_METADATA = FROM_CATEGORY + JOIN_METADATA_ON_CATEGORY;
 

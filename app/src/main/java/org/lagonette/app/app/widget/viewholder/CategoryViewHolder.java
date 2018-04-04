@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.viewholder;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -10,14 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.lagonette.app.R;
-import org.lagonette.app.room.embedded.CategoryKey;
-import org.lagonette.app.tools.functions.LongBooleanConsumer;
-import org.lagonette.app.tools.functions.ObjBooleanConsumer;
+import org.lagonette.app.room.statement.Statement;
 
 public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull
-    public CategoryKey categoryKey;
+    public long categoryId;
 
     public boolean isVisible;
 
@@ -47,7 +43,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
                                 false
                         )
         );
-        categoryKey = new CategoryKey();
+        categoryId = Statement.NO_ID;
         iconImageView = itemView.findViewById(R.id.category_icon);
         visibilityButton = itemView.findViewById(R.id.category_visibility);
         collapsedButton = itemView.findViewById(R.id.category_collapsed);

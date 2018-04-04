@@ -7,7 +7,6 @@ import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.locator.Repo;
-import org.lagonette.app.room.embedded.CategoryKey;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 
@@ -49,16 +48,16 @@ public class FiltersViewModel extends ViewModel {
                 .setLocationVisibility(locationId, isVisible);
     }
 
-    public void changeCategoryVisibility(@NonNull CategoryKey categoryKey, boolean isVisible) {
+    public void changeCategoryVisibility(long categoryId, boolean isVisible) {
         Repo
                 .get()
-                .setCategoryVisibility(categoryKey, isVisible);
+                .setCategoryVisibility(categoryId, isVisible);
     }
 
-    public void changeCategoryCollapsed(@NonNull CategoryKey categoryKey, boolean isCollapsed) {
+    public void changeCategoryCollapsed(long categoryId, boolean isCollapsed) {
         Repo
                 .get()
-                .setCategoryCollapsed(categoryKey, isCollapsed);
+                .setCategoryCollapsed(categoryId, isCollapsed);
     }
 
     public void showAllLocations() {

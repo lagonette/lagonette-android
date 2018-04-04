@@ -41,9 +41,9 @@ public class FilterDataSource
     protected long getItemId(int position, @NonNull Filter filter) {
         switch (filter.rowType) {
             case FilterStatement.VALUE_ROW_CATEGORY:
-                return mIdentifier.gen(mCategoryType, filter.categoryKey.getUniqueId());
+                return mIdentifier.gen(mCategoryType, filter.categoryId);
             case FilterStatement.VALUE_ROW_FOOTER:
-                return mIdentifier.gen(mFooterType, filter.categoryKey.getUniqueId());
+                return mIdentifier.gen(mFooterType, filter.categoryId);
             default:
             case FilterStatement.VALUE_ROW_MAIN_PARTNER:
                 return mIdentifier.gen(mLocationType, filter.locationId);
