@@ -119,7 +119,9 @@ public class FilterAdapter
 	public void setFilters(@Nullable PagedList<Filter> filters) {
 		mFilterComponent.setSource(filters);
 		if (filters != null) {
-			unchain(RANK_LOADING);
+			if (isChained(RANK_LOADING)) {
+				unchain(RANK_LOADING);
+			}
 		}
 		else {
 			if (!isChained(RANK_LOADING)) {
