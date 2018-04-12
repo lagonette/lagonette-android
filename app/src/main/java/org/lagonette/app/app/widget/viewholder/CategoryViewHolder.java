@@ -11,42 +11,43 @@ import android.widget.TextView;
 import org.lagonette.app.R;
 import org.lagonette.app.room.statement.Statement;
 
-public class CategoryViewHolder extends RecyclerView.ViewHolder {
+public class CategoryViewHolder
+		extends RecyclerView.ViewHolder {
 
-    public long categoryId;
+	@NonNull
+	public final ImageView iconImageView;
 
-    public boolean isVisible;
+	@NonNull
+	public final ImageButton visibilityButton;
 
-    public boolean isPartnersVisible;
+	@NonNull
+	public final ImageButton collapsedButton;
 
-    public boolean isCollapsed;
+	@NonNull
+	public final TextView categoryTextView;
 
-    @NonNull
-    public final ImageView iconImageView;
+	public long categoryId;
 
-    @NonNull
-    public final ImageButton visibilityButton;
+	public boolean isVisible;
 
-    @NonNull
-    public final ImageButton collapsedButton;
+	public boolean isPartnersVisible;
 
-    @NonNull
-    public final TextView categoryTextView;
+	public boolean isCollapsed;
 
-    public CategoryViewHolder(@NonNull ViewGroup parent) {
-        super(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_category,
-                                parent,
-                                false
-                        )
-        );
-        categoryId = Statement.NO_ID;
-        iconImageView = itemView.findViewById(R.id.category_icon);
-        visibilityButton = itemView.findViewById(R.id.category_visibility);
-        collapsedButton = itemView.findViewById(R.id.category_collapsed);
-        categoryTextView = itemView.findViewById(R.id.category_label);
-    }
+	public CategoryViewHolder(@NonNull ViewGroup parent) {
+		super(
+				LayoutInflater
+						.from(parent.getContext())
+						.inflate(
+								R.layout.row_category,
+								parent,
+								false
+						)
+		);
+		categoryId = Statement.NO_ID;
+		iconImageView = itemView.findViewById(R.id.category_icon);
+		visibilityButton = itemView.findViewById(R.id.category_visibility);
+		collapsedButton = itemView.findViewById(R.id.category_collapsed);
+		categoryTextView = itemView.findViewById(R.id.category_label);
+	}
 }

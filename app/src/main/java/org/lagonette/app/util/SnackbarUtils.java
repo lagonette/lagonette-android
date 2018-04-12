@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 
 public abstract class SnackbarUtils {
 
-    public static ViewGroup getViewGroup(@NonNull Fragment fragment) {
-        return (ViewGroup) fragment.getActivity().findViewById(android.R.id.content);
-    }
+	public static ViewGroup getViewGroup(@NonNull Fragment fragment) {
+		return (ViewGroup) fragment.getActivity().findViewById(android.R.id.content);
+	}
 
-    public static ViewGroup getViewGroup(@NonNull Activity activity) {
-        return (ViewGroup) activity.findViewById(android.R.id.content);
-    }
+	public static ViewGroup getViewGroup(@NonNull Activity activity) {
+		return (ViewGroup) activity.findViewById(android.R.id.content);
+	}
 
 }

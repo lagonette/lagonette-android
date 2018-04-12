@@ -5,35 +5,35 @@ import android.support.annotation.NonNull;
 
 public abstract class CursorReader {
 
-    @NonNull
-    protected Cursor mCursor;
+	@NonNull
+	protected Cursor mCursor;
 
-    public CursorReader(@NonNull Cursor cursor) {
-        this.mCursor = cursor;
-    }
+	public CursorReader(@NonNull Cursor cursor) {
+		this.mCursor = cursor;
+	}
 
-    public boolean moveToNext() {
-        return mCursor.moveToNext();
-    }
+	public boolean moveToNext() {
+		return mCursor.moveToNext();
+	}
 
-    public boolean moveToPosition(int position) {
-        return mCursor.moveToPosition(position);
-    }
+	public boolean moveToPosition(int position) {
+		return mCursor.moveToPosition(position);
+	}
 
-    public int getPosition() {
-        return mCursor.getPosition();
-    }
+	public int getPosition() {
+		return mCursor.getPosition();
+	}
 
-    public int getCount() {
-        return mCursor.getCount();
-    }
+	public int getCount() {
+		return mCursor.getCount();
+	}
 
-    public boolean moveToFirst() {
-        return mCursor.moveToFirst();
-    }
+	public boolean moveToFirst() {
+		return mCursor.moveToFirst();
+	}
 
-    @NonNull
-    public Cursor getCursor() {
-        return mCursor;
-    }
+	@NonNull
+	public Cursor getCursor() {
+		return mCursor;
+	}
 }

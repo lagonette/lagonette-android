@@ -7,14 +7,14 @@ import android.view.ViewGroup;
 
 public interface AdapterDecorator<ViewHolder extends RecyclerView.ViewHolder, Item> {
 
-    @NonNull
-    ViewHolder createViewHolder(@NonNull ViewGroup parent);
+	@NonNull
+	ViewHolder createViewHolder(@NonNull ViewGroup parent);
 
-    void bindViewHolder(@Nullable Item item, @NonNull RecyclerView.ViewHolder holder);
+	void bindViewHolder(@Nullable Item item, @NonNull RecyclerView.ViewHolder holder);
 
-    boolean handleViewType(int viewType);
+	boolean handleViewType(int viewType);
 
-    int getViewType();
+	int getViewType();
 
-    boolean handleItem(@Nullable Item item);
+	boolean handleItem(@Nullable Item item);
 }

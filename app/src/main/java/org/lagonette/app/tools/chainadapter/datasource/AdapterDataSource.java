@@ -4,12 +4,12 @@ import android.support.annotation.Nullable;
 
 public interface AdapterDataSource<Item, Source> {
 
-    long getItemId(int position);
+	long getItemId(int position);
 
-    @Nullable
-    Item getItem(int position);
+	@Nullable
+	Item getItem(int position);
 
-    int getCount();
+	int getCount();
 
-    void setSource(@Nullable Source source);
+	void setSource(@Nullable Source source);
 }

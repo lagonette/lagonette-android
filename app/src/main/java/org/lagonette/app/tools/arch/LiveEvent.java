@@ -12,90 +12,92 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class LiveEvent<T> extends LiveData<T> {
+public class LiveEvent<T>
+		extends LiveData<T> {
 
-    public static class WrappedObserver<T> implements Observer<T> {
+	public static class WrappedObserver<T>
+			implements Observer<T> {
 
-        @NonNull
-        private final AtomicBoolean mPending;
+		@NonNull
+		private final AtomicBoolean mPending;
 
-        @NonNull
-        private final Observer<T> mObserver;
+		@NonNull
+		private final Observer<T> mObserver;
 
-        public WrappedObserver(@NonNull Observer<T> observer) {
-            mObserver = observer;
-            mPending = new AtomicBoolean(false);
-        }
+		public WrappedObserver(@NonNull Observer<T> observer) {
+			mObserver = observer;
+			mPending = new AtomicBoolean(false);
+		}
 
-        @Override
-        public void onChanged(@Nullable T t) {
-            if (mPending.compareAndSet(true, false)) {
-                mObserver.onChanged(t);
-            }
-        }
+		@Override
+		public void onChanged(@Nullable T t) {
+			if (mPending.compareAndSet(true, false)) {
+				mObserver.onChanged(t);
+			}
+		}
 
-        public void pending() {
-            mPending.set(true);
-        }
-    }
+		public void pending() {
+			mPending.set(true);
+		}
+	}
 
-    @NonNull
-    private final ArrayMap<Observer<T>, WrappedObserver<T>> mWrappedObservers = new ArrayMap<>();
+	@NonNull
+	private final ArrayMap<Observer<T>, WrappedObserver<T>> mWrappedObservers = new ArrayMap<>();
 
-    @NonNull
-    private final ArrayMap<Observer<T>, LifecycleOwner> mLifecycleOwners = new ArrayMap<>();
+	@NonNull
+	private final ArrayMap<Observer<T>, LifecycleOwner> mLifecycleOwners = new ArrayMap<>();
 
-    @Override
-    public void observe(LifecycleOwner owner, Observer<T> observer) {
-        WrappedObserver<T> wrappedObserver = new WrappedObserver<>(observer);
-        mLifecycleOwners.put(observer, owner);
-        mWrappedObservers.put(observer, wrappedObserver);
-        super.observe(owner, wrappedObserver);
-    }
+	@Override
+	public void observe(LifecycleOwner owner, Observer<T> observer) {
+		WrappedObserver<T> wrappedObserver = new WrappedObserver<>(observer);
+		mLifecycleOwners.put(observer, owner);
+		mWrappedObservers.put(observer, wrappedObserver);
+		super.observe(owner, wrappedObserver);
+	}
 
-    @Override
-    public void observeForever(Observer<T> observer) {
-        WrappedObserver<T> wrappedObserver = new WrappedObserver<>(observer);
-        mWrappedObservers.put(observer, wrappedObserver);
-        super.observeForever(observer);
-    }
+	@Override
+	public void observeForever(Observer<T> observer) {
+		WrappedObserver<T> wrappedObserver = new WrappedObserver<>(observer);
+		mWrappedObservers.put(observer, wrappedObserver);
+		super.observeForever(observer);
+	}
 
-    @Override
-    public void removeObserver(Observer<T> observer) {
-        mLifecycleOwners.remove(observer);
-        WrappedObserver<T> wrappedObserver = mWrappedObservers.remove(observer);
+	@Override
+	public void removeObserver(Observer<T> observer) {
+		mLifecycleOwners.remove(observer);
+		WrappedObserver<T> wrappedObserver = mWrappedObservers.remove(observer);
 
-        super.removeObserver(wrappedObserver);
-    }
+		super.removeObserver(wrappedObserver);
+	}
 
-    @Override
-    public void removeObservers(LifecycleOwner owner) {
-        ArrayList<Observer<T>> list = new ArrayList<>();
-        for (Map.Entry<Observer<T>, LifecycleOwner> entry : mLifecycleOwners.entrySet()) {
-            if (entry.getValue() == owner) {
-                list.add(entry.getKey());
-            }
-        }
-        mWrappedObservers.removeAll(list);
-        mLifecycleOwners.removeAll(list);
+	@Override
+	public void removeObservers(LifecycleOwner owner) {
+		ArrayList<Observer<T>> list = new ArrayList<>();
+		for (Map.Entry<Observer<T>, LifecycleOwner> entry : mLifecycleOwners.entrySet()) {
+			if (entry.getValue() == owner) {
+				list.add(entry.getKey());
+			}
+		}
+		mWrappedObservers.removeAll(list);
+		mLifecycleOwners.removeAll(list);
 
-        super.removeObservers(owner);
-    }
+		super.removeObservers(owner);
+	}
 
-    @Override
-    protected void setValue(T value) {
-        for (WrappedObserver<T> observer : mWrappedObservers.values()) {
-            observer.pending();
-        }
-        super.setValue(value);
-    }
+	@Override
+	protected void setValue(T value) {
+		for (WrappedObserver<T> observer : mWrappedObservers.values()) {
+			observer.pending();
+		}
+		super.setValue(value);
+	}
 
-    protected void sendEvent(T value) {
-        setValue(value);
-    }
+	protected void sendEvent(T value) {
+		setValue(value);
+	}
 
-    protected void postEvent(T value) {
-        super.postValue(value);
-    }
+	protected void postEvent(T value) {
+		super.postValue(value);
+	}
 
 }

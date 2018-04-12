@@ -6,39 +6,39 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 public abstract class BackgroundWorker
-        implements Runnable {
+		implements Runnable {
 
-    @NonNull
-    private final Context mContext;
+	@NonNull
+	private final Context mContext;
 
-    @NonNull
-    private MutableLiveData<WorkerState> mWorkerState;
+	@NonNull
+	private MutableLiveData<WorkerState> mWorkerState;
 
-    public BackgroundWorker(@NonNull Context context) {
-        mContext = context;
-        mWorkerState = new MutableLiveData<>();
-    }
+	public BackgroundWorker(@NonNull Context context) {
+		mContext = context;
+		mWorkerState = new MutableLiveData<>();
+	}
 
-    @Override
-    public void run() {
-        mWorkerState.postValue(WorkerState.loading());
+	@Override
+	public void run() {
+		mWorkerState.postValue(WorkerState.loading());
 
-        WorkerState workerState = doWork();
+		WorkerState workerState = doWork();
 
-        mWorkerState.postValue(workerState);
-    }
+		mWorkerState.postValue(workerState);
+	}
 
-    @NonNull
-    protected abstract WorkerState doWork();
+	@NonNull
+	protected abstract WorkerState doWork();
 
-    @NonNull
-    protected Context getContext() {
-        return mContext;
-    }
+	@NonNull
+	protected Context getContext() {
+		return mContext;
+	}
 
-    @NonNull
-    public LiveData<WorkerState> getWorkerState() {
-        return mWorkerState;
-    }
+	@NonNull
+	public LiveData<WorkerState> getWorkerState() {
+		return mWorkerState;
+	}
 
 }

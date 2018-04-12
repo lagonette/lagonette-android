@@ -16,83 +16,86 @@ import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.chainadapter.decorator.AbstractAdapterDecorator;
 import org.lagonette.app.tools.functions.main.Consumer;
 
-public class ShortcutDecorator extends AbstractAdapterDecorator<ShortcutViewHolder, HeadquarterShortcut> {
+public class ShortcutDecorator
+		extends AbstractAdapterDecorator<ShortcutViewHolder, HeadquarterShortcut> {
 
-    public static class Callbacks {
+	public static class Callbacks {
 
-        @Nullable
-        public Runnable onLocationClick;
+		@Nullable
+		public Runnable onLocationClick;
 
-        @Nullable
-        public Runnable onExchangeOfficeClick;
+		@Nullable
+		public Runnable onExchangeOfficeClick;
 
-        @Nullable
-        public Consumer<Long> onHeadquarterClick;
+		@Nullable
+		public Consumer<Long> onHeadquarterClick;
 
-    }
+	}
 
-    @NonNull
-    private final Callbacks mCallbacks;
+	@NonNull
+	private final Callbacks mCallbacks;
 
-    private final int mCategoryIconSize;
+	private final int mCategoryIconSize;
 
-    private int mDisabledTextColor;
+	private int mDisabledTextColor;
 
-    private int mSecondaryTextColor;
+	private int mSecondaryTextColor;
 
-    public ShortcutDecorator(
-            @NonNull Context context,
-            @NonNull Resources resources,
-            @NonNull Callbacks callbacks) {
-        super(R.id.view_type_shortcut);
+	public ShortcutDecorator(
+			@NonNull Context context,
+			@NonNull Resources resources,
+			@NonNull Callbacks callbacks) {
+		super(R.id.view_type_shortcut);
 
-        mCallbacks = callbacks;
+		mCallbacks = callbacks;
 
-        mCategoryIconSize = resources.getDimensionPixelSize(R.dimen.filters_category_icon_size);
+		mCategoryIconSize = resources.getDimensionPixelSize(R.dimen.filters_category_icon_size);
 
-        mDisabledTextColor = ContextCompat.getColor(context, R.color.text_disabled);
-        mSecondaryTextColor = ContextCompat.getColor(context, R.color.text_secondary);
-    }
+		mDisabledTextColor = ContextCompat.getColor(context, R.color.text_disabled);
+		mSecondaryTextColor = ContextCompat.getColor(context, R.color.text_secondary);
+	}
 
-    @NonNull
-    @Override
-    public ShortcutViewHolder createViewHolder(@NonNull ViewGroup parent) {
-        ShortcutViewHolder holder = new ShortcutViewHolder(parent);
+	@NonNull
+	@Override
+	public ShortcutViewHolder createViewHolder(@NonNull ViewGroup parent) {
+		ShortcutViewHolder holder = new ShortcutViewHolder(parent);
 
-        if (mCallbacks.onLocationClick != null) {
-            holder.locationView.setOnClickListener(view -> mCallbacks.onLocationClick.run());
-        }
+		if (mCallbacks.onLocationClick != null) {
+			holder.locationView.setOnClickListener(view -> mCallbacks.onLocationClick.run());
+		}
 
-        if (mCallbacks.onExchangeOfficeClick != null) {
-            holder.exchangeOfficeView.setOnClickListener(view -> mCallbacks.onExchangeOfficeClick.run());
-        }
+		if (mCallbacks.onExchangeOfficeClick != null) {
+			holder.exchangeOfficeView.setOnClickListener(view -> mCallbacks.onExchangeOfficeClick.run());
+		}
 
-        if (mCallbacks.onHeadquarterClick != null) {
-            holder.headquarterView.setOnClickListener(view -> mCallbacks.onHeadquarterClick.accept((Long) holder.headquarterView.getTag()));
-        }
+		if (mCallbacks.onHeadquarterClick != null) {
+			holder.headquarterView.setOnClickListener(view -> mCallbacks.onHeadquarterClick.accept((Long) holder.headquarterView.getTag()));
+		}
 
-        return holder;
-    }
+		return holder;
+	}
 
-    @Override
-    protected void onBindViewHolder(@Nullable HeadquarterShortcut headquarterShortcut, @NonNull ShortcutViewHolder holder) {
-        if (headquarterShortcut != null) {
-            holder.headquarterView.setTag(headquarterShortcut.locationId);
-            holder.headquarterView.setClickable(true);
-            holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_partner);
-            holder.textHeadquarterView.setTextColor(mSecondaryTextColor);
-            Glide.with(holder.itemView.getContext())
-                    .load(headquarterShortcut.icon)
-                    .asBitmap()
-                    .override(mCategoryIconSize, mCategoryIconSize)
-                    .into(holder.iconHeadquarterView);
-        }
-        else {
-            holder.headquarterView.setTag(Statement.NO_ID);
-            holder.headquarterView.setClickable(false);
-            holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_category);
-            holder.textHeadquarterView.setTextColor(mDisabledTextColor);
-            holder.iconHeadquarterView.setImageBitmap(null);
-        }
-    }
+	@Override
+	protected void onBindViewHolder(
+			@Nullable HeadquarterShortcut headquarterShortcut,
+			@NonNull ShortcutViewHolder holder) {
+		if (headquarterShortcut != null) {
+			holder.headquarterView.setTag(headquarterShortcut.locationId);
+			holder.headquarterView.setClickable(true);
+			holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_partner);
+			holder.textHeadquarterView.setTextColor(mSecondaryTextColor);
+			Glide.with(holder.itemView.getContext())
+					.load(headquarterShortcut.icon)
+					.asBitmap()
+					.override(mCategoryIconSize, mCategoryIconSize)
+					.into(holder.iconHeadquarterView);
+		}
+		else {
+			holder.headquarterView.setTag(Statement.NO_ID);
+			holder.headquarterView.setClickable(false);
+			holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_category);
+			holder.textHeadquarterView.setTextColor(mDisabledTextColor);
+			holder.iconHeadquarterView.setImageBitmap(null);
+		}
+	}
 }

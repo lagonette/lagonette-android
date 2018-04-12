@@ -19,48 +19,48 @@ import java.util.List;
 @Dao
 public interface PartnerDao {
 
-    @Query("SELECT * FROM partner WHERE is_gonette_headquarter = 1")
-    Partner getHeadquarter();
+	@Query("SELECT * FROM partner WHERE is_gonette_headquarter = 1")
+	Partner getHeadquarter();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertPartner(@NonNull Partner partner);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insertPartner(@NonNull Partner partner);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long[] insertPartners(List<Partner> partners);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	long[] insertPartners(List<Partner> partners);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long[] insertLocations(List<Location> locations);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	long[] insertLocations(List<Location> locations);
 
-    @Query("DELETE FROM partner")
-    void deletePartners();
+	@Query("DELETE FROM partner")
+	void deletePartners();
 
-    @Query("DELETE FROM location")
-    void deleteLocations();
+	@Query("DELETE FROM location")
+	void deleteLocations();
 
-    @Query("DELETE FROM partner_side_category")
-    void deletePartnerSideCategories();
+	@Query("DELETE FROM partner_side_category")
+	void deletePartnerSideCategories();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long[] insertLocationsMetadatas(List<LocationMetadata> locationsMetadatas);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	long[] insertLocationsMetadatas(List<LocationMetadata> locationsMetadatas);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long[] insertPartnersSideCategories(List<PartnerSideCategory> partnersSideCategories);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	long[] insertPartnersSideCategories(List<PartnerSideCategory> partnersSideCategories);
 
-    @Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id = :id")
-    int updateLocationVisibility(long id, boolean isVisible);
+	@Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id = :id")
+	int updateLocationVisibility(long id, boolean isVisible);
 
-    @Query("UPDATE location_metadata SET is_visible = :isVisible")
-    int updateLocationVisibilities(boolean isVisible);
+	@Query("UPDATE location_metadata SET is_visible = :isVisible")
+	int updateLocationVisibilities(boolean isVisible);
 
-    @Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id IN (SELECT id FROM location WHERE is_exchange_office <> 0)")
-    int updateExchangeOfficeVisibilities(boolean isVisible);
+	@Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id IN (SELECT id FROM location WHERE is_exchange_office <> 0)")
+	int updateExchangeOfficeVisibilities(boolean isVisible);
 
-    @Query("DELETE FROM location WHERE (street IS NULL OR street = '') AND latitude = 0 AND longitude = 0")
-    void cleanLocation();
+	@Query("DELETE FROM location WHERE (street IS NULL OR street = '') AND latitude = 0 AND longitude = 0")
+	void cleanLocation();
 
-    @Query("DELETE FROM partner WHERE id NOT IN (SELECT partner.id FROM partner JOIN location ON location.partner_id = partner.id)")
-    void cleanPartner();
+	@Query("DELETE FROM partner WHERE id NOT IN (SELECT partner.id FROM partner JOIN location ON location.partner_id = partner.id)")
+	void cleanPartner();
 
-    @Delete
-    void deletePartner(@NonNull Partner headquarter);
+	@Delete
+	void deletePartner(@NonNull Partner headquarter);
 }

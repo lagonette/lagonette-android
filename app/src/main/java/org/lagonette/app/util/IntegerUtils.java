@@ -4,10 +4,10 @@ import android.support.annotation.Nullable;
 
 public final class IntegerUtils {
 
-    private IntegerUtils() {
-    }
+	private IntegerUtils() {
+	}
 
-    public static int intValue(@Nullable Integer integer) {
-        return integer == null ? 0 : integer;
-    }
+	public static int intValue(@Nullable Integer integer) {
+		return integer == null ? 0 : integer;
+	}
 }

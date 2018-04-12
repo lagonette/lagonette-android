@@ -8,63 +8,63 @@ import android.view.ViewGroup;
 import org.lagonette.app.tools.chainadapter.delegate.AdapterDelegate;
 
 public abstract class DelegationAdapter<VH extends RecyclerView.ViewHolder, D extends AdapterDelegate<VH>>
-        extends RecyclerView.Adapter<VH> {
+		extends RecyclerView.Adapter<VH> {
 
-    @Nullable
-    private D mDelegate;
+	@Nullable
+	private D mDelegate;
 
-    @Override
-    public int getItemCount() {
-        if (mDelegate == null) {
-            throw new IllegalStateException("You must provide a delegate !");
-        }
+	@NonNull
+	@Override
+	public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		if (mDelegate == null) {
+			throw new IllegalStateException("You must provide a delegate !");
+		}
 
-        return mDelegate.getItemCount();
-    }
+		return mDelegate.createViewHolder(parent, viewType);
+	}
 
-    @Override
-    public int getItemViewType(int position) {
-        if (mDelegate == null) {
-            throw new IllegalStateException("You must provide a delegate !");
-        }
+	@Override
+	public void onBindViewHolder(@NonNull VH holder, int position) {
+		if (mDelegate == null) {
+			throw new IllegalStateException("You must provide a delegate !");
+		}
 
-        return mDelegate.getItemViewType(position);
-    }
+		mDelegate.bindViewHolder(holder, position);
+	}
 
-    @Override
-    public long getItemId(int position) {
-        if (mDelegate == null) {
-            throw new IllegalStateException("You must provide a delegate !");
-        }
+	@Override
+	public int getItemViewType(int position) {
+		if (mDelegate == null) {
+			throw new IllegalStateException("You must provide a delegate !");
+		}
 
-        return mDelegate.getItemId(position);
-    }
+		return mDelegate.getItemViewType(position);
+	}
 
-    @NonNull
-    @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (mDelegate == null) {
-            throw new IllegalStateException("You must provide a delegate !");
-        }
+	@Override
+	public long getItemId(int position) {
+		if (mDelegate == null) {
+			throw new IllegalStateException("You must provide a delegate !");
+		}
 
-        return mDelegate.createViewHolder(parent, viewType);
-    }
+		return mDelegate.getItemId(position);
+	}
 
-    @Override
-    public void onBindViewHolder(@NonNull VH holder, int position) {
-        if (mDelegate == null) {
-            throw new IllegalStateException("You must provide a delegate !");
-        }
+	@Override
+	public int getItemCount() {
+		if (mDelegate == null) {
+			throw new IllegalStateException("You must provide a delegate !");
+		}
 
-        mDelegate.bindViewHolder(holder, position);
-    }
+		return mDelegate.getItemCount();
+	}
 
-    public void set(@Nullable D delegate) {
-        mDelegate = delegate;
-    }
+	public void set(@Nullable D delegate) {
+		mDelegate = delegate;
+	}
 
-    @Nullable
-    public D get() {
-        return mDelegate;
-    }
+	@Nullable
+	public D get() {
+		return mDelegate;
+	}
 }

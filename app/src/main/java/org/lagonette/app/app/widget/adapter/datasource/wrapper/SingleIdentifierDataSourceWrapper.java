@@ -8,21 +8,23 @@ import org.lagonette.app.tools.identifier.Identifier;
 
 
 public class SingleIdentifierDataSourceWrapper<I, S>
-        extends DataSourceWrapper<I, S> {
+		extends DataSourceWrapper<I, S> {
 
-    @NonNull
-    private final Identifier mIdentifier;
+	@NonNull
+	private final Identifier mIdentifier;
 
-    private final int mIdentifierType;
+	private final int mIdentifierType;
 
-    public SingleIdentifierDataSourceWrapper(@NonNull AdapterDataSource<I, S> dataSource, @NonNull Identifier identifier) {
-        super(dataSource);
-        mIdentifier = identifier;
-        mIdentifierType = mIdentifier.addType();
-    }
+	public SingleIdentifierDataSourceWrapper(
+			@NonNull AdapterDataSource<I, S> dataSource,
+			@NonNull Identifier identifier) {
+		super(dataSource);
+		mIdentifier = identifier;
+		mIdentifierType = mIdentifier.addType();
+	}
 
-    @Override
-    public long getItemId(int position) {
-        return mIdentifier.gen(mIdentifierType, super.getItemId(position));
-    }
+	@Override
+	public long getItemId(int position) {
+		return mIdentifier.gen(mIdentifierType, super.getItemId(position));
+	}
 }

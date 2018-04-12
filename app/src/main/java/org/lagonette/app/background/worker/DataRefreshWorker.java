@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
 import com.squareup.moshi.Moshi;
 
 import org.lagonette.app.BuildConfig;
@@ -150,7 +150,7 @@ public class DataRefreshWorker
 		}
 		catch (WorkerException e) {
 			Log.e(TAG, "Caught: ", e);
-			FirebaseCrash.report(e);
+			Crashlytics.logException(e);
 			return WorkerState.error(e.error);
 		}
 	}

@@ -7,19 +7,19 @@ import org.lagonette.app.room.database.LaGonetteDatabase;
 
 public final class DB {
 
-    @Nullable
-    private static LaGonetteDatabase DB;
+	@Nullable
+	private static LaGonetteDatabase DB;
 
-    @NonNull
-    public static LaGonetteDatabase get() {
-        if (DB == null) throw new IllegalStateException("Database was not set!");
-        return DB;
-    }
+	private DB() {
+	}
 
-    public static void set(@NonNull LaGonetteDatabase db) {
-        DB = db;
-    }
+	@NonNull
+	public static LaGonetteDatabase get() {
+		if (DB == null) throw new IllegalStateException("Database was not set!");
+		return DB;
+	}
 
-    private DB() {
-    }
+	public static void set(@NonNull LaGonetteDatabase db) {
+		DB = db;
+	}
 }

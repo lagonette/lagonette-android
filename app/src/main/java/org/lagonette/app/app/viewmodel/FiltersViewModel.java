@@ -10,65 +10,66 @@ import org.lagonette.app.locator.Repo;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 
-public class FiltersViewModel extends ViewModel {
+public class FiltersViewModel
+		extends ViewModel {
 
-    @NonNull
-    private final MutableLiveData<String> mSearch;
+	@NonNull
+	private final MutableLiveData<String> mSearch;
 
-    @NonNull
-    private final LiveData<PagedList<Filter>> mFilters;
+	@NonNull
+	private final LiveData<PagedList<Filter>> mFilters;
 
-    @NonNull
-    private final LiveData<HeadquarterShortcut> mHeadquarterShortcut;
+	@NonNull
+	private final LiveData<HeadquarterShortcut> mHeadquarterShortcut;
 
-    public FiltersViewModel() {
-        mSearch = new MutableLiveData<>();
-        mFilters = Repo.get().getFilters(mSearch);
-        mHeadquarterShortcut = Repo.get().getHeadquarterShortcut();
-    }
+	public FiltersViewModel() {
+		mSearch = new MutableLiveData<>();
+		mFilters = Repo.get().getFilters(mSearch);
+		mHeadquarterShortcut = Repo.get().getHeadquarterShortcut();
+	}
 
-    @NonNull
-    public MutableLiveData<String> getSearch() {
-        return mSearch;
-    }
+	@NonNull
+	public MutableLiveData<String> getSearch() {
+		return mSearch;
+	}
 
-    @NonNull
-    public LiveData<PagedList<Filter>> getFilters() {
-        return mFilters;
-    }
+	@NonNull
+	public LiveData<PagedList<Filter>> getFilters() {
+		return mFilters;
+	}
 
-    @NonNull
-    public LiveData<HeadquarterShortcut> getHeadquarterShortcut() {
-        return mHeadquarterShortcut;
-    }
+	@NonNull
+	public LiveData<HeadquarterShortcut> getHeadquarterShortcut() {
+		return mHeadquarterShortcut;
+	}
 
-    public void changeLocationVisibility(long locationId, boolean isVisible) {
-        Repo
-                .get()
-                .setLocationVisibility(locationId, isVisible);
-    }
+	public void changeLocationVisibility(long locationId, boolean isVisible) {
+		Repo
+				.get()
+				.setLocationVisibility(locationId, isVisible);
+	}
 
-    public void changeCategoryVisibility(long categoryId, boolean isVisible) {
-        Repo
-                .get()
-                .setCategoryVisibility(categoryId, isVisible);
-    }
+	public void changeCategoryVisibility(long categoryId, boolean isVisible) {
+		Repo
+				.get()
+				.setCategoryVisibility(categoryId, isVisible);
+	}
 
-    public void changeCategoryCollapsed(long categoryId, boolean isCollapsed) {
-        Repo
-                .get()
-                .setCategoryCollapsed(categoryId, isCollapsed);
-    }
+	public void changeCategoryCollapsed(long categoryId, boolean isCollapsed) {
+		Repo
+				.get()
+				.setCategoryCollapsed(categoryId, isCollapsed);
+	}
 
-    public void showAllLocations() {
-        Repo
-                .get()
-                .showAllLocations();
-    }
+	public void showAllLocations() {
+		Repo
+				.get()
+				.showAllLocations();
+	}
 
-    public void showAllExchangeOffices() {
-        Repo
-                .get()
-                .showAllExchangeOffice();
-    }
+	public void showAllExchangeOffices() {
+		Repo
+				.get()
+				.showAllExchangeOffice();
+	}
 }

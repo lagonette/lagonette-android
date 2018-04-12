@@ -26,85 +26,86 @@ import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP_MOVING;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.UPDATE_MAP_LOCATION_UI;
 
-public abstract class MapFragmentPerformer implements ViewPerformer {
+public abstract class MapFragmentPerformer
+		implements ViewPerformer {
 
-    @NonNull
-    protected MainLiveEventBusViewModel mEventBus;
+	@NonNull
+	private final FragmentManager mFragmentManager;
 
-    protected MapsFragment mFragment;
+	@NonNull
+	public Consumer<UiState.MapMovement> onMapMovementChanged = Consumer::doNothing;
 
-    @NonNull
-    private final FragmentManager mFragmentManager;
+	@NonNull
+	protected MainLiveEventBusViewModel mEventBus;
 
-    @NonNull
-    public Consumer<UiState.MapMovement> onMapMovementChanged = Consumer::doNothing;
+	protected MapsFragment mFragment;
 
-    @NonNull
-    protected UiState.MapMovement mMapMovement;
+	@NonNull
+	protected UiState.MapMovement mMapMovement;
 
-    @IdRes
-    protected int mMapFragmentRes;
+	@IdRes
+	protected int mMapFragmentRes;
 
-    public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes) {
-        mEventBus = ViewModelProviders.of(activity).get(MainLiveEventBusViewModel.class);
-        mFragmentManager = activity.getSupportFragmentManager();
-        mMapFragmentRes = mapFragmentRes;
-        mMapMovement = UiState.MapMovement.IDLE;
+	public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes) {
+		mEventBus = ViewModelProviders.of(activity).get(MainLiveEventBusViewModel.class);
+		mFragmentManager = activity.getSupportFragmentManager();
+		mMapFragmentRes = mapFragmentRes;
+		mMapMovement = UiState.MapMovement.IDLE;
 
-        mEventBus.subscribe(
-                NOTIFY_MAP_MOVEMENT,
-                activity,
-                this::notifyMapMovement
-        );
-    }
+		mEventBus.subscribe(
+				NOTIFY_MAP_MOVEMENT,
+				activity,
+				this::notifyMapMovement
+		);
+	}
 
-    public void loadFragment() {
-        mFragment = MapsFragment.newInstance();
-        mFragmentManager.beginTransaction()
-                .add(R.id.content, mFragment, MapsFragment.TAG)
-                .commit();
-    }
+	public void loadFragment() {
+		mFragment = MapsFragment.newInstance();
+		mFragmentManager.beginTransaction()
+				.add(R.id.content, mFragment, MapsFragment.TAG)
+				.commit();
+	}
 
-    public void restoreFragment() {
-        mFragment = (MapsFragment) mFragmentManager.findFragmentByTag(MapsFragment.TAG);
-    }
+	public void restoreFragment() {
+		mFragment = (MapsFragment) mFragmentManager.findFragmentByTag(MapsFragment.TAG);
+	}
 
-    public void openLocation(long locationId) {
-        mEventBus.publish(MainLiveEventBusViewModel.Map.OPEN_LOCATION_ID, locationId);
-    }
+	public void openLocation(long locationId) {
+		mEventBus.publish(MainLiveEventBusViewModel.Map.OPEN_LOCATION_ID, locationId);
+	}
 
-    @NonNull
-    public UiState.MapMovement getMapMovement() {
-        return mMapMovement;
-    }
+	@NonNull
+	public UiState.MapMovement getMapMovement() {
+		return mMapMovement;
+	}
 
-    private void notifyMapMovement(@NonNull UiState.MapMovement mapMovement) {
-        mMapMovement = mapMovement;
-        onMapMovementChanged.accept(mMapMovement);
-    }
+	private void notifyMapMovement(@NonNull UiState.MapMovement mapMovement) {
+		mMapMovement = mapMovement;
+		onMapMovementChanged.accept(mMapMovement);
+	}
 
-    public void moveToMyLocation(@Nullable Location location) {
-        mEventBus.publish(MOVE_TO_MY_LOCATION, location);
-    }
+	public void moveToMyLocation(@Nullable Location location) {
+		mEventBus.publish(MOVE_TO_MY_LOCATION, location);
+	}
 
-    public boolean moveToFootprint() {
-        mEventBus.publish(MOVE_TO_FOOTPRINT);
-        return true;
-    }
+	public boolean moveToFootprint() {
+		mEventBus.publish(MOVE_TO_FOOTPRINT);
+		return true;
+	}
 
-    public void moveToCluster(@NonNull Cluster<LocationItem> cluster) {
-        mEventBus.publish(MOVE_TO_CLUSTER, cluster);
-    }
+	public void moveToCluster(@NonNull Cluster<LocationItem> cluster) {
+		mEventBus.publish(MOVE_TO_CLUSTER, cluster);
+	}
 
-    public void moveToLocation(@NonNull LocationItem item) {
-        mEventBus.publish(MOVE_TO_LOCATION, item);
-    }
+	public void moveToLocation(@NonNull LocationItem item) {
+		mEventBus.publish(MOVE_TO_LOCATION, item);
+	}
 
-    public void stopMoving() {
-        mEventBus.publish(STOP_MOVING);
-    }
+	public void stopMoving() {
+		mEventBus.publish(STOP_MOVING);
+	}
 
-    public void updateLocationUI() {
-        mEventBus.publish(UPDATE_MAP_LOCATION_UI);
-    }
+	public void updateLocationUI() {
+		mEventBus.publish(UPDATE_MAP_LOCATION_UI);
+	}
 }

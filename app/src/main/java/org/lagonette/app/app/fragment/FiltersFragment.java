@@ -23,130 +23,130 @@ import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.O
 
 //TODO Do not show empty fragment when there is no partner.
 public class FiltersFragment
-        extends BaseFragment {
+		extends BaseFragment {
 
-    public static final String TAG = "FiltersFragment";
+	public static final String TAG = "FiltersFragment";
 
-    @NonNull
-    public static FiltersFragment newInstance() {
-        Bundle args = new Bundle(0);
-        FiltersFragment fragment = new FiltersFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+	private MainLiveEventBusViewModel mEventBus;
 
-    // --- View Models --- //
+	// --- View Models --- //
 
-    private MainLiveEventBusViewModel mEventBus;
+	private FiltersViewModel mFiltersViewModel;
 
-    private FiltersViewModel mFiltersViewModel;
+	private DataViewModel mDataViewModel;
 
-    private DataViewModel mDataViewModel;
+	private LiveData<HeadquarterShortcut> mHeadquarterShortcut;
 
-    // --- LiveDatas --- //
+	// --- LiveDatas --- //
 
-    private LiveData<HeadquarterShortcut> mHeadquarterShortcut;
+	private LiveData<PagedList<Filter>> mFilters;
 
-    private LiveData<PagedList<Filter>> mFilters;
+	private MutableLiveData<String> mSearch;
 
-    private MutableLiveData<String> mSearch;
+	// --- Views --- //
+	private View mFilterContainer;
 
-    // --- Views --- //
-    private View mFilterContainer;
+	private RecyclerView mRecyclerView;
 
-    private RecyclerView mRecyclerView;
+	private FilterAdapter mFilterAdapter;
 
-    // --- Widget --- //
+	// --- Widget --- //
 
-    private FilterAdapter mFilterAdapter;
+	@NonNull
+	public static FiltersFragment newInstance() {
+		Bundle args = new Bundle(0);
+		FiltersFragment fragment = new FiltersFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
 
-    //TODO Fix category visibility
+	//TODO Fix category visibility
 
-    @Override
-    protected void construct() {
-        mFiltersViewModel = ViewModelProviders
-                .of(FiltersFragment.this)
-                .get(FiltersViewModel.class);
+	@Override
+	protected void construct() {
+		mFiltersViewModel = ViewModelProviders
+				.of(FiltersFragment.this)
+				.get(FiltersViewModel.class);
 
-        mDataViewModel = ViewModelProviders
-                .of(getActivity())
-                .get(DataViewModel.class);
+		mDataViewModel = ViewModelProviders
+				.of(getActivity())
+				.get(DataViewModel.class);
 
-        mFilters = mFiltersViewModel.getFilters();
-        mHeadquarterShortcut = mFiltersViewModel.getHeadquarterShortcut();
-        mSearch = mDataViewModel.getSearch();
+		mFilters = mFiltersViewModel.getFilters();
+		mHeadquarterShortcut = mFiltersViewModel.getHeadquarterShortcut();
+		mSearch = mDataViewModel.getSearch();
 
-        mFilterAdapter = new FilterAdapter(getContext(), getResources());
-        mFilterAdapter.setHasStableIds(true);
-    }
+		mFilterAdapter = new FilterAdapter(getContext(), getResources());
+		mFilterAdapter.setHasStableIds(true);
+	}
 
-    @Override
-    protected int getContentView() {
-        return R.layout.fragment_filters;
-    }
+	@Override
+	protected int getContentView() {
+		return R.layout.fragment_filters;
+	}
 
-    @Override
-    protected void inject(@NonNull View view) {
-        mFilterContainer = view.findViewById(R.id.filter_container);
-        mRecyclerView = view.findViewById(R.id.filter_list);
-    }
+	@Override
+	protected void inject(@NonNull View view) {
+		mFilterContainer = view.findViewById(R.id.filter_container);
+		mRecyclerView = view.findViewById(R.id.filter_list);
+	}
 
-    @Override
-    protected void construct(@NonNull FragmentActivity activity) {
+	@Override
+	protected void construct(@NonNull FragmentActivity activity) {
 
-        mEventBus = ViewModelProviders
-                .of(activity)
-                .get(MainLiveEventBusViewModel.class);
+		mEventBus = ViewModelProviders
+				.of(activity)
+				.get(MainLiveEventBusViewModel.class);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                getContext(),
-                LinearLayoutManager.VERTICAL,
-                false
-        );
+		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+				getContext(),
+				LinearLayoutManager.VERTICAL,
+				false
+		);
 
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mFilterAdapter);
-        mRecyclerView.setItemAnimator(null); //TODO Remove
-    }
+		mRecyclerView.setLayoutManager(layoutManager);
+		mRecyclerView.setAdapter(mFilterAdapter);
+		mRecyclerView.setItemAnimator(null); //TODO Remove
+	}
 
-    @Override
-    protected void init() {
-        // Do nothing
-    }
+	@Override
+	protected void init() {
+		// Do nothing
+	}
 
-    @Override
-    protected void restore(@NonNull Bundle savedInstanceState) {
-        // Do nothing
-    }
+	@Override
+	protected void restore(@NonNull Bundle savedInstanceState) {
+		// Do nothing
+	}
 
-    @Override
-    protected void onConstructed() {
-        mFilters.observe(
-                FiltersFragment.this,
-                mFilterAdapter::setFilters //TODO manage loading & error
-        );
+	@Override
+	protected void onConstructed() {
+		mFilters.observe(
+				FiltersFragment.this,
+				mFilterAdapter::setFilters //TODO manage loading & error
+		);
 
-        mHeadquarterShortcut.observe(
-                FiltersFragment.this,
-                mFilterAdapter::setHeadquarterShortcut
-        );
+		mHeadquarterShortcut.observe(
+				FiltersFragment.this,
+				mFilterAdapter::setHeadquarterShortcut
+		);
 
-        mSearch.observe(
-                FiltersFragment.this,
-                mFiltersViewModel.getSearch()::setValue //TODO Weird
-        );
+		mSearch.observe(
+				FiltersFragment.this,
+				mFiltersViewModel.getSearch()::setValue //TODO Weird
+		);
 
-        mFilterAdapter.locationCallbacks.onClick = locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
-        mFilterAdapter.locationCallbacks.onVisibilityClick = mFiltersViewModel::changeLocationVisibility;
-        mFilterAdapter.categoryCallbacks.onVisibilityClick = mFiltersViewModel::changeCategoryVisibility;
-        mFilterAdapter.categoryCallbacks.onCollapsedClick = mFiltersViewModel::changeCategoryCollapsed;
-        mFilterAdapter.shortcutCallbacks.onLocationClick = mFiltersViewModel::showAllLocations;
-        mFilterAdapter.shortcutCallbacks.onExchangeOfficeClick = mFiltersViewModel::showAllExchangeOffices;
-        mFilterAdapter.shortcutCallbacks.onHeadquarterClick = (locationId) -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
-    }
+		mFilterAdapter.locationCallbacks.onClick = locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
+		mFilterAdapter.locationCallbacks.onVisibilityClick = mFiltersViewModel::changeLocationVisibility;
+		mFilterAdapter.categoryCallbacks.onVisibilityClick = mFiltersViewModel::changeCategoryVisibility;
+		mFilterAdapter.categoryCallbacks.onCollapsedClick = mFiltersViewModel::changeCategoryCollapsed;
+		mFilterAdapter.shortcutCallbacks.onLocationClick = mFiltersViewModel::showAllLocations;
+		mFilterAdapter.shortcutCallbacks.onExchangeOfficeClick = mFiltersViewModel::showAllExchangeOffices;
+		mFilterAdapter.shortcutCallbacks.onHeadquarterClick = (locationId) -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
+	}
 
-    public void updateTopPadding(int top) {
-        mFilterContainer.setPadding(0, top, 0, 0);
-    }
+	public void updateTopPadding(int top) {
+		mFilterContainer.setPadding(0, top, 0, 0);
+	}
 
 }

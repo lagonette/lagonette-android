@@ -7,28 +7,29 @@ import android.support.annotation.Nullable;
 
 import org.lagonette.app.app.widget.coordinator.state.UiAction;
 
-public class UiActionStore extends ViewModel {
+public class UiActionStore
+		extends ViewModel {
 
-    private final MutableLiveData<UiAction> mActionLiveData;
+	private final MutableLiveData<UiAction> mActionLiveData;
 
-    public UiActionStore() {
-        mActionLiveData = new MutableLiveData<>();
-    }
+	public UiActionStore() {
+		mActionLiveData = new MutableLiveData<>();
+	}
 
-    public LiveData<UiAction> getAction() {
-        return mActionLiveData;
-    }
+	public LiveData<UiAction> getAction() {
+		return mActionLiveData;
+	}
 
-    public void startAction(@Nullable UiAction action) {
-        mActionLiveData.setValue(action);
-    }
+	public void startAction(@Nullable UiAction action) {
+		mActionLiveData.setValue(action);
+	}
 
-    public void finishAction() {
-        UiAction nextAction = null;
-        UiAction currentAction = mActionLiveData.getValue();
-        if (currentAction != null) {
-            nextAction = currentAction.pendingAction;
-        }
-        mActionLiveData.setValue(nextAction);
-    }
+	public void finishAction() {
+		UiAction nextAction = null;
+		UiAction currentAction = mActionLiveData.getValue();
+		if (currentAction != null) {
+			nextAction = currentAction.pendingAction;
+		}
+		mActionLiveData.setValue(nextAction);
+	}
 }

@@ -10,44 +10,45 @@ import android.widget.TextView;
 
 import org.lagonette.app.R;
 
-public class LocationViewHolder extends RecyclerView.ViewHolder {
+public class LocationViewHolder
+		extends RecyclerView.ViewHolder {
 
-    public long locationId;
+	@NonNull
+	public final TextView nameTextView;
 
-    public boolean isVisible;
+	@NonNull
+	public final TextView addressTextView;
 
-    public boolean isCategoryVisible;
+	@NonNull
+	public final ImageView exchangeOfficeIndicatorImage;
 
-    public boolean isMainPartner;
+	@NonNull
+	public final ImageButton visibilityButton;
 
-    public boolean isExchangeOffice;
+	public long locationId;
 
-    @NonNull
-    public final TextView nameTextView;
+	public boolean isVisible;
 
-    @NonNull
-    public final TextView addressTextView;
+	public boolean isCategoryVisible;
 
-    @NonNull
-    public final ImageView exchangeOfficeIndicatorImage;
+	public boolean isMainPartner;
 
-    @NonNull
-    public final ImageButton visibilityButton;
+	public boolean isExchangeOffice;
 
-    public LocationViewHolder(
-            @NonNull ViewGroup parent) {
-        super(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_location,
-                                parent,
-                                false
-                        )
-        );
-        nameTextView = itemView.findViewById(R.id.location_name);
-        addressTextView = itemView.findViewById(R.id.location_address);
-        exchangeOfficeIndicatorImage = itemView.findViewById(R.id.location_exchange_office_indicator);
-        visibilityButton = itemView.findViewById(R.id.location_visibility);
-    }
+	public LocationViewHolder(
+			@NonNull ViewGroup parent) {
+		super(
+				LayoutInflater
+						.from(parent.getContext())
+						.inflate(
+								R.layout.row_location,
+								parent,
+								false
+						)
+		);
+		nameTextView = itemView.findViewById(R.id.location_name);
+		addressTextView = itemView.findViewById(R.id.location_address);
+		exchangeOfficeIndicatorImage = itemView.findViewById(R.id.location_exchange_office_indicator);
+		visibilityButton = itemView.findViewById(R.id.location_visibility);
+	}
 }

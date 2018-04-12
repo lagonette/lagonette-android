@@ -8,14 +8,14 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DataTypeConverters {
 
-    @TypeConverter
-    public static LatLng toLocation(@Nullable String position) {
-        if (position == null) {
-            return null;
-        }
+	@TypeConverter
+	public static LatLng toLocation(@Nullable String position) {
+		if (position == null) {
+			return null;
+		}
 
-        String[] pieces= position.split(",");
+		String[] pieces = position.split(",");
 
-        return new LatLng(Double.parseDouble(pieces[0]), Double.parseDouble(pieces[1]));
-    }
+		return new LatLng(Double.parseDouble(pieces[0]), Double.parseDouble(pieces[1]));
+	}
 }

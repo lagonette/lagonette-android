@@ -6,15 +6,15 @@ import android.view.ViewGroup;
 
 public interface AdapterDelegate<VH extends RecyclerView.ViewHolder> {
 
-    int getItemCount();
+	int getItemCount();
 
-    int getItemViewType(int position);
+	int getItemViewType(int position);
 
-    long getItemId(int position);
+	long getItemId(int position);
 
-    @NonNull
-    VH createViewHolder(@NonNull ViewGroup parent, int viewType);
+	@NonNull
+	VH createViewHolder(@NonNull ViewGroup parent, int viewType);
 
-    void bindViewHolder(@NonNull VH holder, int position);
+	void bindViewHolder(@NonNull VH holder, int position);
 
 }

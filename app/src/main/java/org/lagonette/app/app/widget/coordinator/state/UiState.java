@@ -17,71 +17,73 @@ import static android.support.design.widget.BottomSheetBehavior.STATE_SETTLING;
 
 public class UiState {
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({
-            STATE_EXPANDED,
-            STATE_COLLAPSED,
-            STATE_DRAGGING,
-            STATE_SETTLING,
-            STATE_HIDDEN
-    })
-    public @interface BottomSheetState {}
+	@Retention(RetentionPolicy.SOURCE)
+	@IntDef({
+			STATE_EXPANDED,
+			STATE_COLLAPSED,
+			STATE_DRAGGING,
+			STATE_SETTLING,
+			STATE_HIDDEN
+	})
+	public @interface BottomSheetState {
 
-    public enum MapMovement {
-        IDLE,
-        MOVE
-    }
+	}
 
-    @Nullable
-    public final UiAction action;
+	@Nullable
+	public final UiAction action;
 
-    @NonNull
-    public final MapMovement mapMovement;
+	@NonNull
+	public final MapMovement mapMovement;
 
-    @BottomSheetState
-    public final int bottomSheetState;
+	@BottomSheetState
+	public final int bottomSheetState;
 
-    public final boolean isFiltersLoaded;
+	public final boolean isFiltersLoaded;
 
-    public final long loadedLocationId;
+	public final long loadedLocationId;
 
-    public final boolean isLocationDetailLoaded;
+	public final boolean isLocationDetailLoaded;
 
-    public UiState(
-            @Nullable UiAction action,
-            @NonNull MapMovement mapMovement,
-            @BottomSheetState  int bottomSheetState,
-            boolean isFiltersLoaded,
-            boolean isLocationDetailLoaded,
-            long loadedLocationId) {
-        this.action = action;
-        this.mapMovement = mapMovement;
-        this.bottomSheetState = bottomSheetState;
-        this.isFiltersLoaded = isFiltersLoaded;
-        this.isLocationDetailLoaded = isLocationDetailLoaded;
-        this.loadedLocationId = loadedLocationId;
-    }
+	public UiState(
+			@Nullable UiAction action,
+			@NonNull MapMovement mapMovement,
+			@BottomSheetState int bottomSheetState,
+			boolean isFiltersLoaded,
+			boolean isLocationDetailLoaded,
+			long loadedLocationId) {
+		this.action = action;
+		this.mapMovement = mapMovement;
+		this.bottomSheetState = bottomSheetState;
+		this.isFiltersLoaded = isFiltersLoaded;
+		this.isLocationDetailLoaded = isLocationDetailLoaded;
+		this.loadedLocationId = loadedLocationId;
+	}
 
-    @Override
-    public String toString() {
-        String string = "MainState: [\n";
-        string += "\tMap movement: ";
-        switch (mapMovement) {
-            case IDLE:
-                string += "IDLE\n";
-                break;
-            case MOVE:
-                string += "MOVE\n";
-                break;
-        }
-        string += "\tBottom sheet state: ";
-        string += BottomSheetUtils.toString(bottomSheetState) + "\n";
-        string += "\tBottom sheet fragment state: [\n";
-        string += "\t\tis filters loaded: " + isFiltersLoaded + "\n";
-        string += "\t\tis location detail loaded: " + isLocationDetailLoaded + "\n";
-        string += "\t]\n";
-        string += "]";
-        return string;
-    }
+	@Override
+	public String toString() {
+		String string = "MainState: [\n";
+		string += "\tMap movement: ";
+		switch (mapMovement) {
+			case IDLE:
+				string += "IDLE\n";
+				break;
+			case MOVE:
+				string += "MOVE\n";
+				break;
+		}
+		string += "\tBottom sheet state: ";
+		string += BottomSheetUtils.toString(bottomSheetState) + "\n";
+		string += "\tBottom sheet fragment state: [\n";
+		string += "\t\tis filters loaded: " + isFiltersLoaded + "\n";
+		string += "\t\tis location detail loaded: " + isLocationDetailLoaded + "\n";
+		string += "\t]\n";
+		string += "]";
+		return string;
+	}
+
+	public enum MapMovement {
+		IDLE,
+		MOVE
+	}
 }
 

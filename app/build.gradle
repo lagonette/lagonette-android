@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 // Create a variable called keystorePropertiesFile, and initialize it to your
 // keystore.properties file, in the rootProject folder.
@@ -89,7 +90,7 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:design:27.1.0'
@@ -97,10 +98,12 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-maps:11.8.0'
     implementation 'com.google.android.gms:play-services-location:11.8.0'
-    implementation 'com.google.firebase:firebase-crash:11.8.0'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
 
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.4.2'
+
+    // For Crashlytics
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
 
     // For Lifecycles, LiveData, and ViewModel
     implementation 'android.arch.lifecycle:runtime:1.1.0'

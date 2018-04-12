@@ -15,52 +15,53 @@ import org.lagonette.app.tools.arch.MutableLiveEvent;
 
 import static org.lagonette.app.background.worker.WorkerState.ERROR;
 
-public class DataViewModel extends AndroidViewModel {
+public class DataViewModel
+		extends AndroidViewModel {
 
-    @NonNull
-    private final MutableLiveData<String> mSearch;
+	@NonNull
+	private final MutableLiveData<String> mSearch;
 
-    @NonNull
-    private final LiveData<Integer> mWorkStatus;
+	@NonNull
+	private final LiveData<Integer> mWorkStatus;
 
-    @NonNull
-    private final LiveEvent<Error> mWorkError;
+	@NonNull
+	private final LiveEvent<Error> mWorkError;
 
-    public DataViewModel(Application application) {
-        super(application);
+	public DataViewModel(Application application) {
+		super(application);
 
-        LiveData<WorkerState> workerState = Repo.get().updateDatas();
+		LiveData<WorkerState> workerState = Repo.get().updateDatas();
 
-        mWorkStatus = Transformations.map(
-                workerState,
-                state -> state.status
-        );
+		mWorkStatus = Transformations.map(
+				workerState,
+				state -> state.status
+		);
 
-        MutableLiveEvent<Error> workError = new MutableLiveEvent<>();
-        workerState.observeForever(state -> {
-            if (state != null && state.status == ERROR) {
-                workError.sendEvent(state.error);
-            }
-        });
-        mWorkError = workError;
+		MutableLiveEvent<Error> workError = new MutableLiveEvent<>();
+		workerState.observeForever(state -> {
+			if (state != null && state.status == ERROR) {
+				workError.sendEvent(state.error);
+			}
+		});
+		mWorkError = workError;
 
-        mSearch = new MutableLiveData<>();
-        mSearch.setValue("");
-    }
+		mSearch = new MutableLiveData<>();
+		mSearch.setValue("");
+	}
 
-    @NonNull
-    public MutableLiveData<String> getSearch() {
-        return mSearch;
-    }
+	@NonNull
+	public MutableLiveData<String> getSearch() {
+		return mSearch;
+	}
 
-    @NonNull
-    public LiveData<Integer> getWorkStatus() {
-        return mWorkStatus;
-    }
+	@NonNull
+	public LiveData<Integer> getWorkStatus() {
+		return mWorkStatus;
+	}
 
-    @NonNull
-    public LiveData<Error> getWorkError() {
-        return mWorkError;
-    }
+	@NonNull
+	public LiveData<Error> getWorkError() {
+		return mWorkError;
+	}
 
 }

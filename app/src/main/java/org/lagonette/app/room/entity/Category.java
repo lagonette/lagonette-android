@@ -4,26 +4,26 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 
 @Entity(
-        tableName = "category",
-        primaryKeys = {
-                "id"
-        }
+		tableName = "category",
+		primaryKeys = {
+				"id"
+		}
 )
 public class Category {
 
-    @ColumnInfo(name = "id")
-    public long id;
+	@ColumnInfo(name = "id")
+	public long id;
 
-    @ColumnInfo(name = "label")
-    public String label;
+	@ColumnInfo(name = "label")
+	public String label;
 
-    @ColumnInfo(name = "icon")
-    public String icon;
+	@ColumnInfo(name = "icon")
+	public String icon;
 
-    @ColumnInfo(name = "display_order")
-    public int displayOrder;
+	@ColumnInfo(name = "display_order")
+	public int displayOrder;
 
-    @ColumnInfo(name = "hidden")
-    public boolean hidden = false;
+	@ColumnInfo(name = "hidden")
+	public boolean hidden = false;
 
 }

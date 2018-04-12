@@ -8,39 +8,40 @@ import android.view.View;
 
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 
-public class PortraitFabButtonsPerformer extends FabButtonsPerformer {
+public class PortraitFabButtonsPerformer
+		extends FabButtonsPerformer {
 
-    public interface OnFiltersClickCommand {
+	public interface OnFiltersClickCommand {
 
-        void notifyFiltersButtonClick();
-    }
+		void notifyFiltersButtonClick();
+	}
 
-    @Nullable
-    private OnFiltersClickCommand mOnFiltersClickCommand;
+	@Nullable
+	private OnFiltersClickCommand mOnFiltersClickCommand;
 
-    @IdRes
-    private int mFiltersButtonRes;
+	@IdRes
+	private int mFiltersButtonRes;
 
-    public PortraitFabButtonsPerformer(int positionRes, int filtersRes) {
-        super(positionRes);
-        mFiltersButtonRes = filtersRes;
-    }
+	public PortraitFabButtonsPerformer(int positionRes, int filtersRes) {
+		super(positionRes);
+		mFiltersButtonRes = filtersRes;
+	}
 
-    @Override
-    public void inject(@NonNull View view) {
-        super.inject(view);
+	@Override
+	public void inject(@NonNull View view) {
+		super.inject(view);
 
-        FloatingActionButton filtersFab = view.findViewById(mFiltersButtonRes);
-        filtersFab.setOnClickListener(
-                button -> {
-                    if (mOnFiltersClickCommand != null) {
-                        mOnFiltersClickCommand.notifyFiltersButtonClick();
-                    }
-                }
-        );
-    }
+		FloatingActionButton filtersFab = view.findViewById(mFiltersButtonRes);
+		filtersFab.setOnClickListener(
+				button -> {
+					if (mOnFiltersClickCommand != null) {
+						mOnFiltersClickCommand.notifyFiltersButtonClick();
+					}
+				}
+		);
+	}
 
-    public void onFiltersClick(@Nullable OnFiltersClickCommand command) {
-        mOnFiltersClickCommand = command;
-    }
+	public void onFiltersClick(@Nullable OnFiltersClickCommand command) {
+		mOnFiltersClickCommand = command;
+	}
 }

@@ -30,180 +30,180 @@ import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.UPDATE_MAP_LOCATION_UI;
 
 public class MapsFragment
-        extends BaseFragment {
+		extends BaseFragment {
 
-    public static final String TAG = "MapsFragment";
+	public static final String TAG = "MapsFragment";
 
-    // --- View Models --- //
+	// --- View Models --- //
 
-    private MapViewModel mMapViewModel;
+	private MapViewModel mMapViewModel;
 
-    private DataViewModel mDataViewModel;
+	private DataViewModel mDataViewModel;
 
-    private MainLiveEventBusViewModel mEventBus;
+	private MainLiveEventBusViewModel mEventBus;
 
-    private MapLocationViewModel mMapLocationViewModel;
+	private MapLocationViewModel mMapLocationViewModel;
 
-    // --- Performers --- //
+	// --- Performers --- //
 
-    private MapMovementPerformer mMapMovementPerformer;
+	private MapMovementPerformer mMapMovementPerformer;
 
-    private MapPerformer mMapPerformer;
+	private MapPerformer mMapPerformer;
 
-    // --- Fragments --- //
+	// --- Fragments --- //
 
-    private SupportMapFragment mMapFragment;
+	private SupportMapFragment mMapFragment;
 
-    public static MapsFragment newInstance() {
-        return new MapsFragment();
-    }
+	public static MapsFragment newInstance() {
+		return new MapsFragment();
+	}
 
-    //TODO Use firebase to find broken data
+	//TODO Use firebase to find broken data
 
-    @Override
-    protected void construct() {
-        mMapPerformer = new MapPerformer(getContext());
+	@Override
+	protected void construct() {
+		mMapPerformer = new MapPerformer(getContext());
 
-        mMapMovementPerformer = new MapMovementPerformer();
+		mMapMovementPerformer = new MapMovementPerformer();
 
-        mMapLocationViewModel = ViewModelProviders
-                .of(MapsFragment.this)
-                .get(MapLocationViewModel.class);
+		mMapLocationViewModel = ViewModelProviders
+				.of(MapsFragment.this)
+				.get(MapLocationViewModel.class);
 
-        mMapViewModel = ViewModelProviders
-                .of(MapsFragment.this)
-                .get(MapViewModel.class);
+		mMapViewModel = ViewModelProviders
+				.of(MapsFragment.this)
+				.get(MapViewModel.class);
 
-        mDataViewModel = ViewModelProviders
-                .of(getActivity())
-                .get(DataViewModel.class);
+		mDataViewModel = ViewModelProviders
+				.of(getActivity())
+				.get(DataViewModel.class);
 
-        mEventBus = ViewModelProviders
-                .of(getActivity())
-                .get(MainLiveEventBusViewModel.class);
+		mEventBus = ViewModelProviders
+				.of(getActivity())
+				.get(MainLiveEventBusViewModel.class);
 
-        mDataViewModel
-                .getSearch()
-                .observe(
-                        MapsFragment.this,
-                        mMapViewModel.getSearch()::setValue
-                );
-    }
+		mDataViewModel
+				.getSearch()
+				.observe(
+						MapsFragment.this,
+						mMapViewModel.getSearch()::setValue
+				);
+	}
 
-    @Override
-    protected int getContentView() {
-        return R.layout.fragment_maps;
-    }
+	@Override
+	protected int getContentView() {
+		return R.layout.fragment_maps;
+	}
 
-    @Override
-    protected void inject(@NonNull View view) {
-        // Obtain the SupportMapFragment and create notification when the map is ready to be used.
-        mMapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
-    }
+	@Override
+	protected void inject(@NonNull View view) {
+		// Obtain the SupportMapFragment and create notification when the map is ready to be used.
+		mMapFragment = (SupportMapFragment) getChildFragmentManager()
+				.findFragmentById(R.id.map);
+	}
 
-    @Override
-    protected void construct(@NonNull FragmentActivity activity) {
+	@Override
+	protected void construct(@NonNull FragmentActivity activity) {
 
-    }
+	}
 
-    @Override
-    protected void init() {
+	@Override
+	protected void init() {
 
-    }
+	}
 
-    @Override
-    protected void restore(@NonNull Bundle savedInstanceState) {
+	@Override
+	protected void restore(@NonNull Bundle savedInstanceState) {
 
-    }
+	}
 
-    @Override
-    protected void onConstructed() {
-        mMapFragment.getMapAsync(googleMap -> {
-            mMapPerformer.onMapReady(googleMap);
-            mMapMovementPerformer.onMapReady(googleMap);
-            mMapLocationViewModel.getCameraPosition().observe(
-                    MapsFragment.this,
-                    mMapMovementPerformer::setCameraPosition
-            );
+	@Override
+	protected void onConstructed() {
+		mMapFragment.getMapAsync(googleMap -> {
+			mMapPerformer.onMapReady(googleMap);
+			mMapMovementPerformer.onMapReady(googleMap);
+			mMapLocationViewModel.getCameraPosition().observe(
+					MapsFragment.this,
+					mMapMovementPerformer::setCameraPosition
+			);
 
-            mMapViewModel.getMapPartners().observe(
-                    MapsFragment.this,
-                    mMapPerformer::showPartners
-            );
-        });
+			mMapViewModel.getMapPartners().observe(
+					MapsFragment.this,
+					mMapPerformer::showPartners
+			);
+		});
 
-        mMapPerformer.showFullMap       = ()       -> mEventBus.publish(SHOW_FULL_MAP                );
-        mMapPerformer.notifyMapMovement = movement -> mEventBus.publish(NOTIFY_MAP_MOVEMENT, movement);
-        mMapPerformer.moveToCluster     = cluster  -> mEventBus.publish(MOVE_TO_CLUSTER,     cluster );
-        mMapPerformer.openLocationItem  = item     -> mEventBus.publish(OPEN_LOCATION_ITEM,  item    );
+		mMapPerformer.showFullMap = () -> mEventBus.publish(SHOW_FULL_MAP);
+		mMapPerformer.notifyMapMovement = movement -> mEventBus.publish(NOTIFY_MAP_MOVEMENT, movement);
+		mMapPerformer.moveToCluster = cluster -> mEventBus.publish(MOVE_TO_CLUSTER, cluster);
+		mMapPerformer.openLocationItem = item -> mEventBus.publish(OPEN_LOCATION_ITEM, item);
 
-        mEventBus.subscribe(
-                MOVE_TO_MY_LOCATION,
-                MapsFragment.this,
-                mMapMovementPerformer::moveToMyLocation
-        );
+		mEventBus.subscribe(
+				MOVE_TO_MY_LOCATION,
+				MapsFragment.this,
+				mMapMovementPerformer::moveToMyLocation
+		);
 
-        mEventBus.subscribe(
-                MOVE_TO_FOOTPRINT,
-                MapsFragment.this,
-                mMapMovementPerformer::moveToFootprint
-        );
+		mEventBus.subscribe(
+				MOVE_TO_FOOTPRINT,
+				MapsFragment.this,
+				mMapMovementPerformer::moveToFootprint
+		);
 
-        mEventBus.subscribe(
-                MOVE_TO_LOCATION,
-                MapsFragment.this,
-                locationItem -> {
-                    mMapPerformer.selectLocation(locationItem);
-                    mMapMovementPerformer.moveToLocation(locationItem);
-                }
-        );
+		mEventBus.subscribe(
+				MOVE_TO_LOCATION,
+				MapsFragment.this,
+				locationItem -> {
+					mMapPerformer.selectLocation(locationItem);
+					mMapMovementPerformer.moveToLocation(locationItem);
+				}
+		);
 
-        mEventBus.subscribe(
-                MOVE_TO_CLUSTER,
-                MapsFragment.this,
-                mMapMovementPerformer::moveToCluster
-        );
+		mEventBus.subscribe(
+				MOVE_TO_CLUSTER,
+				MapsFragment.this,
+				mMapMovementPerformer::moveToCluster
+		);
 
-        mEventBus.subscribe(
-                STOP_MOVING,
-                MapsFragment.this,
-                mMapMovementPerformer::stopMoving
-        );
+		mEventBus.subscribe(
+				STOP_MOVING,
+				MapsFragment.this,
+				mMapMovementPerformer::stopMoving
+		);
 
-        mEventBus.subscribe(
-                OPEN_LOCATION_ID,
-                MapsFragment.this,
-                this::openLocation
-        );
+		mEventBus.subscribe(
+				OPEN_LOCATION_ID,
+				MapsFragment.this,
+				this::openLocation
+		);
 
-        mEventBus.subscribe(
-                UPDATE_MAP_LOCATION_UI,
-                MapsFragment.this,
-                mMapPerformer::updateLocationUI
-        );
+		mEventBus.subscribe(
+				UPDATE_MAP_LOCATION_UI,
+				MapsFragment.this,
+				mMapPerformer::updateLocationUI
+		);
 
-    }
+	}
 
-    @Override
-    public void onPause() {
-        CameraPosition cameraPosition = mMapMovementPerformer.getCameraPosition();
-        if (cameraPosition != null) {
-            mMapLocationViewModel.save(cameraPosition);
-        }
-        super.onPause();
-    }
+	@Override
+	public void onPause() {
+		CameraPosition cameraPosition = mMapMovementPerformer.getCameraPosition();
+		if (cameraPosition != null) {
+			mMapLocationViewModel.save(cameraPosition);
+		}
+		super.onPause();
+	}
 
-    private void openLocation(long locationId) {
-        LocationItem locationItem = mMapPerformer.retrieveLocationItem(locationId);
-        mEventBus.publish(OPEN_LOCATION_ITEM, locationItem);
-    }
+	private void openLocation(long locationId) {
+		LocationItem locationItem = mMapPerformer.retrieveLocationItem(locationId);
+		mEventBus.publish(OPEN_LOCATION_ITEM, locationItem);
+	}
 
-    /**
-     * Do not pass through LiveData for optimisation purpose.
-     */
-    public void setMapPadding(int left, int top, int right, int bottom) {
-        mMapPerformer.setMapPadding(left, top, right, bottom);
-    }
+	/**
+	 * Do not pass through LiveData for optimisation purpose.
+	 */
+	public void setMapPadding(int left, int top, int right, int bottom) {
+		mMapPerformer.setMapPadding(left, top, right, bottom);
+	}
 
 }

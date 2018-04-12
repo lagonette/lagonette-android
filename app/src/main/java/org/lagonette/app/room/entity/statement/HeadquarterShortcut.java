@@ -5,15 +5,15 @@ import android.support.annotation.NonNull;
 
 public class HeadquarterShortcut {
 
-    @ColumnInfo(name = "location_id")
-    public final long locationId;
+	@ColumnInfo(name = "location_id")
+	public final long locationId;
 
-    @NonNull
-    @ColumnInfo(name = "icon")
-    public final String icon;
+	@NonNull
+	@ColumnInfo(name = "icon")
+	public final String icon;
 
-    public HeadquarterShortcut(long locationId, @NonNull String icon) {
-        this.locationId = locationId;
-        this.icon = icon;
-    }
+	public HeadquarterShortcut(long locationId, @NonNull String icon) {
+		this.locationId = locationId;
+		this.icon = icon;
+	}
 }

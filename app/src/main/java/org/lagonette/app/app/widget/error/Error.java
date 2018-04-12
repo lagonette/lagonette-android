@@ -7,24 +7,24 @@ import org.lagonette.app.R;
 
 public enum Error {
 
-    NO_DIRECTION_APP_FOUND(R.string.snackbar_error_no_direction_app_found),
+	NO_DIRECTION_APP_FOUND(R.string.snackbar_error_no_direction_app_found),
 
-    NO_CALL_APP_FOUND(R.string.snackbar_error_no_call_app_found),
+	NO_CALL_APP_FOUND(R.string.snackbar_error_no_call_app_found),
 
-    NO_EMAIL_APP_FOUND(R.string.snackbar_error_no_email_app_found),
+	NO_EMAIL_APP_FOUND(R.string.snackbar_error_no_email_app_found),
 
-    NO_BROWSER_APP_FOUND(R.string.snackbar_error_no_browser_app_found),
+	NO_BROWSER_APP_FOUND(R.string.snackbar_error_no_browser_app_found),
 
-    CATEGORIES_NOT_UPDATED(R.string.snackbar_error_getting_categories),
+	CATEGORIES_NOT_UPDATED(R.string.snackbar_error_getting_categories),
 
-    PARTNERS_NOT_UPDATED(R.string.snackbar_error_getting_partners),
+	PARTNERS_NOT_UPDATED(R.string.snackbar_error_getting_partners),
 
-    UNKNOWN_ERROR(R.string.snackbar_error_unknown);
+	UNKNOWN_ERROR(R.string.snackbar_error_unknown);
 
-    @StringRes
-    public final int stringRes;
+	@StringRes
+	public final int stringRes;
 
-    Error(@StringRes int stringRes) {
-        this.stringRes = stringRes;
-    }
+	Error(@StringRes int stringRes) {
+		this.stringRes = stringRes;
+	}
 }

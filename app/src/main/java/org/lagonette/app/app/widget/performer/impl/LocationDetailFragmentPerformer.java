@@ -9,127 +9,128 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import org.lagonette.app.app.fragment.LocationDetailFragment;
-import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.app.widget.performer.base.FragmentPerformer;
+import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.functions.main.LongConsumer;
 
 import java.util.ArrayList;
 
-public class LocationDetailFragmentPerformer implements FragmentPerformer {
+public class LocationDetailFragmentPerformer
+		implements FragmentPerformer {
 
-    @Nullable
-    private LocationDetailFragment mFragment;
+	@NonNull
+	private final ArrayList<Runnable> mFragmentUnloadedCommands;
 
-    @NonNull
-    private FragmentManager mFragmentManager;
+	@NonNull
+	private final ArrayList<LongConsumer> mFragmentLoadedCommands;
 
-    @NonNull
-    private final ArrayList<Runnable> mFragmentUnloadedCommands;
+	@NonNull
+	private final MutableLiveData<Integer> mTopPadding;
 
-    @NonNull
-    private final ArrayList<LongConsumer> mFragmentLoadedCommands;
+	@NonNull
+	private final MutableLiveData<Void> mLoadedNotifier;
 
-    @NonNull
-    private final MutableLiveData<Integer> mTopPadding;
+	@IdRes
+	private final int mLocationDetailContainerRes;
 
-    @NonNull
-    private final MutableLiveData<Void> mLoadedNotifier;
+	@Nullable
+	private LocationDetailFragment mFragment;
 
-    @IdRes
-    private final int mLocationDetailContainerRes;
+	@NonNull
+	private FragmentManager mFragmentManager;
 
-    public LocationDetailFragmentPerformer(
-            @NonNull AppCompatActivity activity,
-            @IdRes int locationDetailContainerRed) {
-        mFragmentManager = activity.getSupportFragmentManager();
-        mFragmentLoadedCommands = new ArrayList<>();
-        mFragmentUnloadedCommands = new ArrayList<>();
-        mLocationDetailContainerRes = locationDetailContainerRed;
-        mTopPadding = new MutableLiveData<>();
-        mLoadedNotifier = new MutableLiveData<>();
-        mLoadedNotifier.setValue(null);
-    }
+	public LocationDetailFragmentPerformer(
+			@NonNull AppCompatActivity activity,
+			@IdRes int locationDetailContainerRed) {
+		mFragmentManager = activity.getSupportFragmentManager();
+		mFragmentLoadedCommands = new ArrayList<>();
+		mFragmentUnloadedCommands = new ArrayList<>();
+		mLocationDetailContainerRes = locationDetailContainerRed;
+		mTopPadding = new MutableLiveData<>();
+		mLoadedNotifier = new MutableLiveData<>();
+		mLoadedNotifier.setValue(null);
+	}
 
-    public void restoreFragment() {
-        mFragment = (LocationDetailFragment) mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
-        if (mFragment != null) {
-            mTopPadding.observe(
-                    mFragment,
-                    mFragment::updateTopPadding
-            );
-        }
-    }
+	public void restoreFragment() {
+		mFragment = (LocationDetailFragment) mFragmentManager.findFragmentByTag(LocationDetailFragment.TAG);
+		if (mFragment != null) {
+			mTopPadding.observe(
+					mFragment,
+					mFragment::updateTopPadding
+			);
+		}
+	}
 
-    @Override
-    public void unloadFragment() {
-        if (mFragment != null) {
-            mFragmentManager.beginTransaction()
-                    .remove(mFragment)
-                    .commit();
-            mFragment = null;
-        }
+	@Override
+	public void unloadFragment() {
+		if (mFragment != null) {
+			mFragmentManager.beginTransaction()
+					.remove(mFragment)
+					.commit();
+			mFragment = null;
+		}
 
-        for (Runnable command : mFragmentUnloadedCommands) {
-            command.run();
-        }
-    }
+		for (Runnable command : mFragmentUnloadedCommands) {
+			command.run();
+		}
+	}
 
-    public boolean isLoaded() {
-        return mFragment != null;
-    }
+	public boolean isLoaded() {
+		return mFragment != null;
+	}
 
-    public boolean isLoaded(long locationId) {
-        return isLoaded() && mFragment.isLoaded(locationId);
-    }
+	public boolean isLoaded(long locationId) {
+		return isLoaded() && mFragment.isLoaded(locationId);
+	}
 
-    public long getLoadedId() {
-        return isLoaded() ? mFragment.getLocationId() : Statement.NO_ID;
-    }
+	public long getLoadedId() {
+		return isLoaded() ? mFragment.getLocationId() : Statement.NO_ID;
+	}
 
-    public void loadFragment(long locationId) {
-        mFragment = LocationDetailFragment.newInstance(locationId);
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+	public void loadFragment(long locationId) {
+		mFragment = LocationDetailFragment.newInstance(locationId);
+		FragmentTransaction transaction = mFragmentManager.beginTransaction();
 
-        if (isLoaded()) {
-            transaction.setCustomAnimations(
-                    android.R.anim.fade_in,
-                    android.R.anim.fade_out
-            );
-        }
+		if (isLoaded()) {
+			transaction.setCustomAnimations(
+					android.R.anim.fade_in,
+					android.R.anim.fade_out
+			);
+		}
 
-        transaction.replace(
-                mLocationDetailContainerRes,
-                mFragment,
-                LocationDetailFragment.TAG
-        );
+		transaction.replace(
+				mLocationDetailContainerRes,
+				mFragment,
+				LocationDetailFragment.TAG
+		);
 
-        transaction.commit();
+		transaction.commit();
 
-        mTopPadding.observe(
-                mFragment,
-                mFragment::updateTopPadding
-        );
+		mTopPadding.observe(
+				mFragment,
+				mFragment::updateTopPadding
+		);
 
 
-        mLoadedNotifier.observe(
-                mFragment,
-                aVoid -> {
-                    for (LongConsumer command : mFragmentLoadedCommands) {
-                        command.accept(locationId);
-                    }
-                }
-        );
-    }
+		mLoadedNotifier.observe(
+				mFragment,
+				aVoid -> {
+					for (LongConsumer command : mFragmentLoadedCommands) {
+						command.accept(locationId);
+					}
+				}
+		);
+	}
 
-    public void updateTopPadding(int topPadding) {
-        mTopPadding.setValue(topPadding);
-    }
+	public void updateTopPadding(int topPadding) {
+		mTopPadding.setValue(topPadding);
+	}
 
-    public void onFragmentLoaded(@NonNull LongConsumer command) {
-        mFragmentLoadedCommands.add(command);
-    }
+	public void onFragmentLoaded(@NonNull LongConsumer command) {
+		mFragmentLoadedCommands.add(command);
+	}
 
-    public void onFragmentUnloaded(@NonNull Runnable command) {
-        mFragmentUnloadedCommands.add(command);
-    }
+	public void onFragmentUnloaded(@NonNull Runnable command) {
+		mFragmentUnloadedCommands.add(command);
+	}
 }

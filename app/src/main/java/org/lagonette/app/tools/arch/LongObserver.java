@@ -6,28 +6,29 @@ import android.support.annotation.Nullable;
 
 import org.lagonette.app.tools.functions.main.LongConsumer;
 
-public class LongObserver implements Observer<Long> {
+public class LongObserver
+		implements Observer<Long> {
 
-    public static LongObserver unbox(long defaultValue, @NonNull LongConsumer observer) {
-        return new LongObserver(defaultValue, observer);
-    }
+	@NonNull
+	private final LongConsumer mObserver;
 
-    @NonNull
-    private final LongConsumer mObserver;
+	private final long mDefaultValue;
 
-    private final long mDefaultValue;
+	public LongObserver(long defaultValue, @NonNull LongConsumer observer) {
+		mDefaultValue = defaultValue;
+		mObserver = observer;
+	}
 
-    public LongObserver(long defaultValue, @NonNull LongConsumer observer) {
-        mDefaultValue = defaultValue;
-        mObserver = observer;
-    }
+	public LongObserver(@NonNull LongConsumer observer) {
+		this(0, observer);
+	}
 
-    public LongObserver(@NonNull LongConsumer observer) {
-        this(0, observer);
-    }
+	public static LongObserver unbox(long defaultValue, @NonNull LongConsumer observer) {
+		return new LongObserver(defaultValue, observer);
+	}
 
-    @Override
-    public void onChanged(@Nullable Long objValue) {
-        mObserver.accept(objValue != null ? objValue : mDefaultValue);
-    }
+	@Override
+	public void onChanged(@Nullable Long objValue) {
+		mObserver.accept(objValue != null ? objValue : mDefaultValue);
+	}
 }

@@ -4,18 +4,19 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
-public class LocationViewModel extends AndroidViewModel {
+public class LocationViewModel
+		extends AndroidViewModel {
 
-    @NonNull
-    private final LocationLiveData mLocationLiveData;
+	@NonNull
+	private final LocationLiveData mLocationLiveData;
 
-    public LocationViewModel(@NonNull Application application) {
-        super(application);
-        mLocationLiveData = new LocationLiveData(application);
-    }
+	public LocationViewModel(@NonNull Application application) {
+		super(application);
+		mLocationLiveData = new LocationLiveData(application);
+	}
 
-    @NonNull
-    public LocationLiveData getLocation() {
-        return mLocationLiveData;
-    }
+	@NonNull
+	public LocationLiveData getLocation() {
+		return mLocationLiveData;
+	}
 }

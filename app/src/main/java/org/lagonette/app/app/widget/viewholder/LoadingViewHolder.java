@@ -7,17 +7,18 @@ import android.view.ViewGroup;
 
 import org.lagonette.app.R;
 
-public class LoadingViewHolder extends RecyclerView.ViewHolder {
+public class LoadingViewHolder
+		extends RecyclerView.ViewHolder {
 
-    public LoadingViewHolder(@NonNull ViewGroup parent) {
-        super(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(
-                                R.layout.row_loading,
-                                parent,
-                                false
-                        )
-        );
-    }
+	public LoadingViewHolder(@NonNull ViewGroup parent) {
+		super(
+				LayoutInflater
+						.from(parent.getContext())
+						.inflate(
+								R.layout.row_loading,
+								parent,
+								false
+						)
+		);
+	}
 }

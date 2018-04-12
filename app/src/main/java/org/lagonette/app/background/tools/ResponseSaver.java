@@ -30,7 +30,9 @@ public class ResponseSaver {
 		mSavePartnerSignature = savePartnerSignature;
 	}
 
-	public void save(@Nullable CategoriesResponse categoriesResponse, @Nullable PartnersResponse partnersResponse) {
+	public void save(
+			@Nullable CategoriesResponse categoriesResponse,
+			@Nullable PartnersResponse partnersResponse) {
 
 		mSaveEntities.accept(
 				convertEntity(categoriesResponse),

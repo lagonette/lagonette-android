@@ -18,19 +18,19 @@ import java.util.List;
 @Dao
 public interface UiDao {
 
-    @Query(PartnerDetailStatement.SQL)
-    LiveData<LocationDetail> getLocationsDetail(long id); //TODO Use LiveData to update fragment ?
+	@Query(PartnerDetailStatement.SQL)
+	LiveData<LocationDetail> getLocationsDetail(long id); //TODO Use LiveData to update fragment ?
 
-    @Query(MapPartnerStatement.SQL)
-    LiveData<List<LocationItem>> getMapLocations(String search);
+	@Query(MapPartnerStatement.SQL)
+	LiveData<List<LocationItem>> getMapLocations(String search);
 
-    @Query(FilterStatement.SQL)
-    DataSource.Factory<Integer, Filter> getFilters(String search);
+	@Query(FilterStatement.SQL)
+	DataSource.Factory<Integer, Filter> getFilters(String search);
 
-    @Query("SELECT location.id AS location_id, partner.logo AS icon " +
-            "FROM partner " +
-            "JOIN location ON partner.id = location.partner_id " +
-            "WHERE partner.is_gonette_headquarter = 1 " +
-            "LIMIT 1")
-    LiveData<HeadquarterShortcut> getHeadquarterShortcut();
+	@Query("SELECT location.id AS location_id, partner.logo AS icon " +
+			"FROM partner " +
+			"JOIN location ON partner.id = location.partner_id " +
+			"WHERE partner.is_gonette_headquarter = 1 " +
+			"LIMIT 1")
+	LiveData<HeadquarterShortcut> getHeadquarterShortcut();
 }

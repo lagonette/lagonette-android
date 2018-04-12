@@ -10,31 +10,38 @@ import org.lagonette.app.tools.arch.LiveEventBus;
 import org.lagonette.app.tools.arch.LiveEventBus.Event;
 import org.lagonette.app.tools.arch.LiveEventBus.VoidObserver;
 
-public class LiveEventBusViewModel extends ViewModel {
+public class LiveEventBusViewModel
+		extends ViewModel {
 
-    private final LiveEventBus mLiveEventBus;
+	private final LiveEventBus mLiveEventBus;
 
-    public LiveEventBusViewModel() {
-        mLiveEventBus = new LiveEventBus();
-    }
+	public LiveEventBusViewModel() {
+		mLiveEventBus = new LiveEventBus();
+	}
 
-    public <Payload> void publish(@NonNull Event<Payload> event, @Nullable Payload payload) {
-        mLiveEventBus.publish(event, payload);
-    }
+	public <Payload> void publish(@NonNull Event<Payload> event, @Nullable Payload payload) {
+		mLiveEventBus.publish(event, payload);
+	}
 
-    public void publish(@NonNull Event<Void> event) {
-        mLiveEventBus.publish(event);
-    }
+	public void publish(@NonNull Event<Void> event) {
+		mLiveEventBus.publish(event);
+	}
 
-    public <Payload> void subscribe(@NonNull Event<Payload> event, @NonNull LifecycleOwner owner, @NonNull Observer<Payload> observer) {
-        mLiveEventBus.subscribe(event, owner, observer);
-    }
+	public <Payload> void subscribe(
+			@NonNull Event<Payload> event,
+			@NonNull LifecycleOwner owner,
+			@NonNull Observer<Payload> observer) {
+		mLiveEventBus.subscribe(event, owner, observer);
+	}
 
-    public void subscribe(@NonNull Event<Void> event, @NonNull LifecycleOwner owner, @NonNull VoidObserver observer) {
-        mLiveEventBus.subscribe(event, owner, observer);
-    }
+	public void subscribe(
+			@NonNull Event<Void> event,
+			@NonNull LifecycleOwner owner,
+			@NonNull VoidObserver observer) {
+		mLiveEventBus.subscribe(event, owner, observer);
+	}
 
-    public <T> void unregister(@NonNull Event<T> event, @NonNull LifecycleOwner owner) {
-        mLiveEventBus.unregister(event, owner);
-    }
+	public <T> void unregister(@NonNull Event<T> event, @NonNull LifecycleOwner owner) {
+		mLiveEventBus.unregister(event, owner);
+	}
 }

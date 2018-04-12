@@ -9,52 +9,52 @@ import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 
 public class PortraitSearchBarPerformer
-        extends SearchBarPerformer {
+		extends SearchBarPerformer {
 
-    public interface OnBehaviorEnabledCommand {
+	public interface OnBehaviorEnabledCommand {
 
-        void notifyBehaviorEnabled(boolean enable);
-    }
+		void notifyBehaviorEnabled(boolean enable);
+	}
 
-    @Nullable
-    private OnBehaviorEnabledCommand mOnBehaviorEnabledCommand;
+	@Nullable
+	private OnBehaviorEnabledCommand mOnBehaviorEnabledCommand;
 
-    @Nullable
-    private TopEscapeBehavior mBehavior;
+	@Nullable
+	private TopEscapeBehavior mBehavior;
 
-    public PortraitSearchBarPerformer(
-            @IdRes int searchBarRes,
-            @IdRes int progressBarRes,
-            @IdRes int searchTextRes) {
-        super(searchBarRes, progressBarRes, searchTextRes);
-    }
+	public PortraitSearchBarPerformer(
+			@IdRes int searchBarRes,
+			@IdRes int progressBarRes,
+			@IdRes int searchTextRes) {
+		super(searchBarRes, progressBarRes, searchTextRes);
+	}
 
-    @Override
-    public void inject(@NonNull View view) {
-        super.inject(view);
+	@Override
+	public void inject(@NonNull View view) {
+		super.inject(view);
 
-        mBehavior = TopEscapeBehavior.from(mSearchBar);
-        mBehavior.setOnMoveListener(
-                (child, translationY) -> onBottomChanged(child)
-        );
-    }
+		mBehavior = TopEscapeBehavior.from(mSearchBar);
+		mBehavior.setOnMoveListener(
+				(child, translationY) -> onBottomChanged(child)
+		);
+	}
 
-    public void onBehaviorEnabled(@Nullable OnBehaviorEnabledCommand command) {
-        mOnBehaviorEnabledCommand = command;
-    }
+	public void onBehaviorEnabled(@Nullable OnBehaviorEnabledCommand command) {
+		mOnBehaviorEnabledCommand = command;
+	}
 
-    public void enableBehavior(boolean enable) {
-        if (mBehavior != null) {
-            if (enable) {
-                mBehavior.enable();
-            }
-            else {
-                mBehavior.disable();
-            }
+	public void enableBehavior(boolean enable) {
+		if (mBehavior != null) {
+			if (enable) {
+				mBehavior.enable();
+			}
+			else {
+				mBehavior.disable();
+			}
 
-            if (mOnBehaviorEnabledCommand != null) {
-                mOnBehaviorEnabledCommand.notifyBehaviorEnabled(enable);
-            }
-        }
-    }
+			if (mOnBehaviorEnabledCommand != null) {
+				mOnBehaviorEnabledCommand.notifyBehaviorEnabled(enable);
+			}
+		}
+	}
 }

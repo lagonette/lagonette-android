@@ -18,92 +18,96 @@ import org.lagonette.app.tools.functions.main.LongBooleanConsumer;
 import org.lagonette.app.tools.functions.main.LongConsumer;
 
 public class LocationDecorator
-        extends AbstractAdapterDecorator<LocationViewHolder, Filter> {
+		extends AbstractAdapterDecorator<LocationViewHolder, Filter> {
 
-    public static class Callbacks {
+	public static class Callbacks {
 
-        @Nullable
-        public LongConsumer onClick = LongConsumer::doNothing;
+		@Nullable
+		public LongConsumer onClick = LongConsumer::doNothing;
 
-        @Nullable
-        public LongBooleanConsumer onVisibilityClick = LongBooleanConsumer::doNothing;
+		@Nullable
+		public LongBooleanConsumer onVisibilityClick = LongBooleanConsumer::doNothing;
 
-    }
+	}
 
-    @NonNull
-    private final Callbacks mCallbacks;
+	@NonNull
+	private final Callbacks mCallbacks;
 
-    @NonNull
-    private final Drawable mPartnerIndicatorImage;
+	@NonNull
+	private final Drawable mPartnerIndicatorImage;
 
-    @NonNull
-    private final Drawable mExchangeOfficeIndicatorImage;
+	@NonNull
+	private final Drawable mExchangeOfficeIndicatorImage;
 
-    public LocationDecorator(
-            @NonNull Context context,
-            @NonNull Callbacks callbacks) {
-        super(R.id.view_type_location);
+	public LocationDecorator(
+			@NonNull Context context,
+			@NonNull Callbacks callbacks) {
+		super(R.id.view_type_location);
 
-        mCallbacks = callbacks;
+		mCallbacks = callbacks;
 
-        mPartnerIndicatorImage = ContextCompat.getDrawable(context, R.drawable.img_partner_indicator);
-        mExchangeOfficeIndicatorImage = ContextCompat.getDrawable(context, R.drawable.img_exchange_office_indicator);
-    }
+		mPartnerIndicatorImage = ContextCompat.getDrawable(context, R.drawable.img_partner_indicator);
+		mExchangeOfficeIndicatorImage = ContextCompat.getDrawable(context, R.drawable.img_exchange_office_indicator);
+	}
 
-    @NonNull
-    @Override
-    public LocationViewHolder createViewHolder(@NonNull ViewGroup parent) {
-        LocationViewHolder holder = new LocationViewHolder(parent);
+	@NonNull
+	@Override
+	public LocationViewHolder createViewHolder(@NonNull ViewGroup parent) {
+		LocationViewHolder holder = new LocationViewHolder(parent);
 
-        if (mCallbacks.onClick != null) {
-            holder.itemView.setOnClickListener(view -> mCallbacks.onClick.accept(holder.locationId));
-        }
+		if (mCallbacks.onClick != null) {
+			holder.itemView.setOnClickListener(view -> mCallbacks.onClick.accept(holder.locationId));
+		}
 
-        if (mCallbacks.onVisibilityClick != null) {
-            holder.visibilityButton.setOnClickListener(view -> mCallbacks.onVisibilityClick.accept(holder.locationId, !holder.isVisible));
-        }
+		if (mCallbacks.onVisibilityClick != null) {
+			holder.visibilityButton.setOnClickListener(view -> mCallbacks.onVisibilityClick.accept(holder.locationId, !holder.isVisible));
+		}
 
-        return holder;
-    }
+		return holder;
+	}
 
-    @Override
-    protected void onBindViewHolder(@Nullable Filter filter, @NonNull LocationViewHolder holder) {
-        if (filter != null) {
-            holder.locationId = filter.locationId;
-            holder.isVisible = filter.isLocationVisible;
-            holder.isCategoryVisible = filter.isCategoryVisible;
-            holder.isExchangeOffice = filter.isLocationExchangeOffice;
-            holder.isMainPartner = filter.rowType == FilterStatement.VALUE_ROW_MAIN_PARTNER;
+	@Override
+	public boolean handleItem(@Nullable Filter filter) {
+		return filter != null && filter.rowType == FilterStatement.VALUE_ROW_MAIN_PARTNER;
+	}
 
-            holder.nameTextView.setText(filter.partnerName);
-            holder.itemView.setClickable(holder.isVisible);
+	@Override
+	protected void onBindViewHolder(@Nullable Filter filter, @NonNull LocationViewHolder holder) {
+		if (filter != null) {
+			holder.locationId = filter.locationId;
+			holder.isVisible = filter.isLocationVisible;
+			holder.isCategoryVisible = filter.isCategoryVisible;
+			holder.isExchangeOffice = filter.isLocationExchangeOffice;
+			holder.isMainPartner = filter.rowType == FilterStatement.VALUE_ROW_MAIN_PARTNER;
 
-            String address = filter.address.format(holder.itemView.getResources());
-            if (!TextUtils.isEmpty(address)) {
-                holder.addressTextView.setText(address);
-                holder.addressTextView.setVisibility(View.VISIBLE);
-            } else {
-                holder.addressTextView.setVisibility(View.GONE);
-            }
+			holder.nameTextView.setText(filter.partnerName);
+			holder.itemView.setClickable(holder.isVisible);
 
-            if (holder.isVisible && holder.isCategoryVisible) {
-                holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
-            } else if (holder.isVisible) {
-                holder.visibilityButton.setImageResource(R.drawable.ic_visibility_grey_24dp);
-            } else {
-                holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
-            }
+			String address = filter.address.format(holder.itemView.getResources());
+			if (!TextUtils.isEmpty(address)) {
+				holder.addressTextView.setText(address);
+				holder.addressTextView.setVisibility(View.VISIBLE);
+			}
+			else {
+				holder.addressTextView.setVisibility(View.GONE);
+			}
 
-            if (holder.isExchangeOffice) {
-                holder.exchangeOfficeIndicatorImage.setImageDrawable(mExchangeOfficeIndicatorImage);
-            } else {
-                holder.exchangeOfficeIndicatorImage.setImageDrawable(mPartnerIndicatorImage);
-            }
-        }
-    }
+			if (holder.isVisible && holder.isCategoryVisible) {
+				holder.visibilityButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
+			}
+			else if (holder.isVisible) {
+				holder.visibilityButton.setImageResource(R.drawable.ic_visibility_grey_24dp);
+			}
+			else {
+				holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
+			}
 
-    @Override
-    public boolean handleItem(@Nullable Filter filter) {
-        return filter != null && filter.rowType == FilterStatement.VALUE_ROW_MAIN_PARTNER;
-    }
+			if (holder.isExchangeOffice) {
+				holder.exchangeOfficeIndicatorImage.setImageDrawable(mExchangeOfficeIndicatorImage);
+			}
+			else {
+				holder.exchangeOfficeIndicatorImage.setImageDrawable(mPartnerIndicatorImage);
+			}
+		}
+	}
 }

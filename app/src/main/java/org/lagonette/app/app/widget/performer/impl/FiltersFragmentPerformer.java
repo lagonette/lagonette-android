@@ -12,117 +12,117 @@ import org.lagonette.app.app.widget.performer.base.FragmentPerformer;
 
 import java.util.ArrayList;
 
-public class FiltersFragmentPerformer implements FragmentPerformer {
+public class FiltersFragmentPerformer
+		implements FragmentPerformer {
 
-    public interface FragmentLoadedCommand {
+	public interface FragmentLoadedCommand {
 
-        void onFiltersLoaded();
-    }
+		void onFiltersLoaded();
+	}
 
-    public interface FragmentUnloadedCommand {
+	public interface FragmentUnloadedCommand {
 
-        void onFiltersUnloaded();
-    }
+		void onFiltersUnloaded();
+	}
 
+	@NonNull
+	private final ArrayList<FragmentUnloadedCommand> mFragmentUnloadedCommands;
 
-    @Nullable
-    private FiltersFragment mFragment;
+	@NonNull
+	private final ArrayList<FragmentLoadedCommand> mFragmentLoadedCommands;
 
-    @NonNull
-    private FragmentManager mFragmentManager;
+	//TODO Use EventBus ? Or maybe all performer>fragment com' should be done with public method ?
+	@NonNull
+	private final MutableLiveData<Integer> mTopPadding;
 
-    @NonNull
-    private final ArrayList<FragmentUnloadedCommand> mFragmentUnloadedCommands;
+	@NonNull
+	private final MutableLiveData<Void> mLoadedNotifier;
 
-    @NonNull
-    private final ArrayList<FragmentLoadedCommand> mFragmentLoadedCommands;
+	@IdRes
+	private final int mFiltersContainerRes;
 
-    //TODO Use EventBus ? Or maybe all performer>fragment com' should be done with public method ?
-    @NonNull
-    private final MutableLiveData<Integer> mTopPadding;
+	@Nullable
+	private FiltersFragment mFragment;
 
-    @NonNull
-    private final MutableLiveData<Void> mLoadedNotifier;
+	@NonNull
+	private FragmentManager mFragmentManager;
 
-    @IdRes
-    private final int mFiltersContainerRes;
+	public FiltersFragmentPerformer(
+			@NonNull AppCompatActivity activity,
+			@IdRes int filtersContainerRes) {
+		mFragmentManager = activity.getSupportFragmentManager();
+		mFragmentLoadedCommands = new ArrayList<>();
+		mFragmentUnloadedCommands = new ArrayList<>();
+		mLoadedNotifier = new MutableLiveData<>();
+		mLoadedNotifier.setValue(null);
+		mFiltersContainerRes = filtersContainerRes;
+		mTopPadding = new MutableLiveData<>();
+	}
 
-    public FiltersFragmentPerformer(
-            @NonNull AppCompatActivity activity,
-            @IdRes int filtersContainerRes) {
-        mFragmentManager = activity.getSupportFragmentManager();
-        mFragmentLoadedCommands = new ArrayList<>();
-        mFragmentUnloadedCommands = new ArrayList<>();
-        mLoadedNotifier = new MutableLiveData<>();
-        mLoadedNotifier.setValue(null);
-        mFiltersContainerRes = filtersContainerRes;
-        mTopPadding = new MutableLiveData<>();
-    }
+	@Override
+	public void restoreFragment() {
+		mFragment = (FiltersFragment) mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
+		if (mFragment != null) {
+			mTopPadding.observe(
+					mFragment,
+					mFragment::updateTopPadding
+			);
+		}
+	}
 
-    @Override
-    public void restoreFragment() {
-        mFragment = (FiltersFragment) mFragmentManager.findFragmentByTag(FiltersFragment.TAG);
-        if (mFragment != null) {
-            mTopPadding.observe(
-                    mFragment,
-                    mFragment::updateTopPadding
-            );
-        }
-    }
+	@Override
+	public void unloadFragment() {
+		if (mFragment != null) {
+			mFragmentManager.beginTransaction()
+					.remove(mFragment)
+					.commit();
+			mFragment = null;
+		}
 
-    @Override
-    public void unloadFragment() {
-        if (mFragment != null) {
-            mFragmentManager.beginTransaction()
-                    .remove(mFragment)
-                    .commit();
-            mFragment = null;
-        }
+		for (FragmentUnloadedCommand command : mFragmentUnloadedCommands) {
+			command.onFiltersUnloaded();
+		}
+	}
 
-        for (FragmentUnloadedCommand command : mFragmentUnloadedCommands) {
-            command.onFiltersUnloaded();
-        }
-    }
+	public void loadFragment() {
+		mFragment = FiltersFragment.newInstance();
+		mFragmentManager
+				.beginTransaction()
+				.add(
+						mFiltersContainerRes,
+						mFragment,
+						FiltersFragment.TAG
+				)
+				.commit();
 
-    public void loadFragment() {
-        mFragment = FiltersFragment.newInstance();
-        mFragmentManager
-                .beginTransaction()
-                .add(
-                        mFiltersContainerRes,
-                        mFragment,
-                        FiltersFragment.TAG
-                )
-                .commit();
+		mTopPadding.observe(
+				mFragment,
+				mFragment::updateTopPadding
+		);
 
-        mTopPadding.observe(
-                mFragment,
-                mFragment::updateTopPadding
-        );
+		mLoadedNotifier.observe(
+				mFragment,
+				aVoid -> {
+					for (FragmentLoadedCommand command : mFragmentLoadedCommands) {
+						command.onFiltersLoaded();
+					}
+				}
+		);
+	}
 
-        mLoadedNotifier.observe(
-                mFragment,
-                aVoid -> {
-                    for (FragmentLoadedCommand command : mFragmentLoadedCommands) {
-                        command.onFiltersLoaded();
-                    }
-                }
-        );
-    }
+	public boolean isLoaded() {
+		return mFragment != null;
+	}
 
-    public boolean isLoaded() {
-        return mFragment != null;
-    }
+	public void updateTopPadding(int topPadding) {
+		mTopPadding.setValue(topPadding);
+	}
 
-    public void updateTopPadding(int topPadding) {
-        mTopPadding.setValue(topPadding);
-    }
+	public void onFragmentLoaded(@Nullable FragmentLoadedCommand command) {
+		mFragmentLoadedCommands.add(command);
+	}
 
-    public void onFragmentLoaded(@Nullable FragmentLoadedCommand command) {
-        mFragmentLoadedCommands.add(command);
-    }
-
-    public void onFragmentUnloaded(@Nullable FragmentUnloadedCommand command) {
-        mFragmentUnloadedCommands.add(command);
-    }
+	public void onFragmentUnloaded(@Nullable FragmentUnloadedCommand command) {
+		mFragmentUnloadedCommands.add(command);
+	}
 }

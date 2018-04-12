@@ -8,17 +8,17 @@ import android.support.design.widget.BottomSheetBehavior;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 
 public class PortraitBottomSheetPerformer
-        extends BottomSheetPerformer {
+		extends BottomSheetPerformer {
 
-    public PortraitBottomSheetPerformer(
-            @NonNull Resources resources,
-            @IdRes int bottomSheetRes) {
-        super(resources, bottomSheetRes);
-    }
+	public PortraitBottomSheetPerformer(
+			@NonNull Resources resources,
+			@IdRes int bottomSheetRes) {
+		super(resources, bottomSheetRes);
+	}
 
-    @Override
-    public int getOpenBottomSheetState() {
-        return BottomSheetBehavior.STATE_COLLAPSED;
-    }
+	@Override
+	public int getOpenBottomSheetState() {
+		return BottomSheetBehavior.STATE_COLLAPSED;
+	}
 
 }
