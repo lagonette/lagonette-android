@@ -8,14 +8,13 @@ import android.view.View;
 
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 
-import javax.inject.Inject;
-
 public class LandscapeBottomSheetPerformer
         extends BottomSheetPerformer {
 
-    @Inject
-    public LandscapeBottomSheetPerformer(@NonNull Resources resources) {
-        super(resources);
+    public LandscapeBottomSheetPerformer(
+            @NonNull Resources resources,
+            @IdRes int bottomSheetRes) {
+        super(resources, bottomSheetRes);
     }
 
     @Override

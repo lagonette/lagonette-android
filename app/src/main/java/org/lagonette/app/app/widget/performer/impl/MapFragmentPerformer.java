@@ -42,9 +42,13 @@ public abstract class MapFragmentPerformer implements ViewPerformer {
     @NonNull
     protected UiState.MapMovement mMapMovement;
 
-    public MapFragmentPerformer(@NonNull AppCompatActivity activity) {
+    @IdRes
+    protected int mMapFragmentRes;
+
+    public MapFragmentPerformer(@NonNull AppCompatActivity activity, @IdRes int mapFragmentRes) {
         mEventBus = ViewModelProviders.of(activity).get(MainLiveEventBusViewModel.class);
         mFragmentManager = activity.getSupportFragmentManager();
+        mMapFragmentRes = mapFragmentRes;
         mMapMovement = UiState.MapMovement.IDLE;
 
         mEventBus.subscribe(

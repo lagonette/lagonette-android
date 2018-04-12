@@ -5,12 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import org.lagonette.app.R;
 import org.lagonette.app.app.widget.behavior.ParallaxBehavior;
 import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.util.UiUtils;
-
-import javax.inject.Inject;
 
 public class PortraitMapFragmentPerformer
         extends MapFragmentPerformer {
@@ -34,9 +31,8 @@ public class PortraitMapFragmentPerformer
     @Nullable
     private ParallaxBehavior<View> mBehavior;
 
-    @Inject
-    public PortraitMapFragmentPerformer(@NonNull AppCompatActivity activity) {
-        super(activity);
+    public PortraitMapFragmentPerformer(@NonNull AppCompatActivity activity, int mapFragmentRes) {
+        super(activity, mapFragmentRes);
         mPadding = new Padding();
         mPadding.statusBarHeight = UiUtils.getStatusBarHeight(activity.getResources());
         mPadding.searchBarBottom = 0;
@@ -44,7 +40,7 @@ public class PortraitMapFragmentPerformer
 
     @Override
     public void inject(@NonNull View view) {
-        View mapFragmentView = view.findViewById(R.id.content);
+        View mapFragmentView = view.findViewById(mMapFragmentRes);
         mBehavior = ParallaxBehavior.from(mapFragmentView);
         mBehavior.setOnParallaxTranslationListener(this::notifyParallaxOffsetChanged);
     }

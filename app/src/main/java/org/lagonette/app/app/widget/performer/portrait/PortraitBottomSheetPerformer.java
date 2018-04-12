@@ -7,14 +7,13 @@ import android.support.design.widget.BottomSheetBehavior;
 
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 
-import javax.inject.Inject;
-
 public class PortraitBottomSheetPerformer
         extends BottomSheetPerformer {
 
-    @Inject
-    public PortraitBottomSheetPerformer(@NonNull Resources resources) {
-        super(resources);
+    public PortraitBottomSheetPerformer(
+            @NonNull Resources resources,
+            @IdRes int bottomSheetRes) {
+        super(resources, bottomSheetRes);
     }
 
     @Override

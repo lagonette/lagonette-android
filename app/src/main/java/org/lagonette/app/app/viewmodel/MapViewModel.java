@@ -10,14 +10,13 @@ import org.lagonette.app.room.entity.statement.LocationItem;
 
 import java.util.List;
 
-public class MapDataViewModel
-        extends ViewModel {
+public class MapViewModel extends ViewModel {
 
     private final LiveData<List<LocationItem>> mMapPartners;
 
     private final MutableLiveData<String> mSearch;
 
-    public MapDataViewModel() {
+    public MapViewModel() {
         mSearch = new MutableLiveData<>();
         mMapPartners = Repo.get().getMapPartners(mSearch);
     }

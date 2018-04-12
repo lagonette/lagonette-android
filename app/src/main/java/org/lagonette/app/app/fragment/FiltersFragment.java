@@ -49,6 +49,8 @@ public class FiltersFragment
 
     private LiveData<PagedList<Filter>> mFilters;
 
+    private MutableLiveData<String> mSearch;
+
     // --- Views --- //
     private View mFilterContainer;
 
@@ -72,6 +74,7 @@ public class FiltersFragment
 
         mFilters = mFiltersViewModel.getFilters();
         mHeadquarterShortcut = mFiltersViewModel.getHeadquarterShortcut();
+        mSearch = mDataViewModel.getSearch();
 
         mFilterAdapter = new FilterAdapter(getContext(), getResources());
         mFilterAdapter.setHasStableIds(true);
@@ -128,7 +131,7 @@ public class FiltersFragment
                 mFilterAdapter::setHeadquarterShortcut
         );
 
-        mDataViewModel.getSearch().observe(
+        mSearch.observe(
                 FiltersFragment.this,
                 mFiltersViewModel.getSearch()::setValue //TODO Weird
         );

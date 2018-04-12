@@ -8,15 +8,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.LocationDetailFragment;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.app.widget.performer.base.FragmentPerformer;
 import org.lagonette.app.tools.functions.main.LongConsumer;
 
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 public class LocationDetailFragmentPerformer implements FragmentPerformer {
 
@@ -38,11 +35,16 @@ public class LocationDetailFragmentPerformer implements FragmentPerformer {
     @NonNull
     private final MutableLiveData<Void> mLoadedNotifier;
 
-    @Inject
-    public LocationDetailFragmentPerformer(@NonNull AppCompatActivity activity) {
+    @IdRes
+    private final int mLocationDetailContainerRes;
+
+    public LocationDetailFragmentPerformer(
+            @NonNull AppCompatActivity activity,
+            @IdRes int locationDetailContainerRed) {
         mFragmentManager = activity.getSupportFragmentManager();
         mFragmentLoadedCommands = new ArrayList<>();
         mFragmentUnloadedCommands = new ArrayList<>();
+        mLocationDetailContainerRes = locationDetailContainerRed;
         mTopPadding = new MutableLiveData<>();
         mLoadedNotifier = new MutableLiveData<>();
         mLoadedNotifier.setValue(null);
@@ -96,7 +98,7 @@ public class LocationDetailFragmentPerformer implements FragmentPerformer {
         }
 
         transaction.replace(
-                R.id.fragment_location_detail,
+                mLocationDetailContainerRes,
                 mFragment,
                 LocationDetailFragment.TAG
         );

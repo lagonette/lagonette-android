@@ -1,13 +1,16 @@
 package org.lagonette.app.app.widget.performer.landscape;
 
-import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
+import android.support.annotation.IdRes;
 
-import javax.inject.Inject;
+import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 
 public class LandscapeSearchBarPerformer
         extends SearchBarPerformer {
 
-    @Inject
-    public LandscapeSearchBarPerformer() {
+    public LandscapeSearchBarPerformer(
+            @IdRes int searchBarRes,
+            @IdRes int progressBarRes,
+            @IdRes int searchTextRes) {
+        super(searchBarRes, progressBarRes, searchTextRes);
     }
 }

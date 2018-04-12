@@ -114,12 +114,6 @@ dependencies {
     // For Paging library
     implementation "android.arch.paging:runtime:1.0.0-alpha6"
 
-    // For Dagger 2
-    implementation 'com.google.dagger:dagger:2.11'
-    implementation 'com.google.dagger:dagger-android:2.11'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-
     // For Moshi
     implementation 'com.squareup.moshi:moshi:1.5.0'
 

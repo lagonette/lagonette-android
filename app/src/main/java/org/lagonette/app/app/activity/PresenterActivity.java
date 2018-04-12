@@ -5,8 +5,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import javax.inject.Inject;
-
 public abstract class PresenterActivity<Presenter extends PresenterActivity.Lifecycle> extends BaseActivity {
 
     public interface Lifecycle {
@@ -27,13 +25,16 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
         void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
     }
 
-    @Inject
     protected Presenter mPresenter;
 
     @Override
     protected void construct() {
+        mPresenter = getPresenter();
         mPresenter.construct(PresenterActivity.this);
     }
+
+    @NonNull
+    protected abstract Presenter getPresenter();
 
     @Override
     @LayoutRes

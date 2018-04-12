@@ -48,12 +48,8 @@ public class DataViewModel extends AndroidViewModel {
         mSearch.setValue("");
     }
 
-    public void setSearch(@NonNull String search) {
-        mSearch.setValue(search);
-    }
-
     @NonNull
-    public LiveData<String> getSearch() {
+    public MutableLiveData<String> getSearch() {
         return mSearch;
     }
 

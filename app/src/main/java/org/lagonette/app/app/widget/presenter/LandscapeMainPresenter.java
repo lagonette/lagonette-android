@@ -12,16 +12,40 @@ import org.lagonette.app.app.widget.performer.landscape.LandscapeFabButtonsPerfo
 import org.lagonette.app.app.widget.performer.landscape.LandscapeMapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeSearchBarPerformer;
 
-import javax.inject.Inject;
-
 public class LandscapeMainPresenter
         extends MainPresenter<
         LandscapeFabButtonsPerformer,
         LandscapeMapFragmentPerformer,
         LandscapeSearchBarPerformer> {
 
-    @Inject
-    public LandscapeMainPresenter() {
+    @NonNull
+    @Override
+    protected MainCoordinator createCoordinator() {
+        return new LandscapeMainCoordinator();
+    }
+
+    @NonNull
+    @Override
+    protected BottomSheetPerformer createBottomSheetPerformer(@NonNull PresenterActivity activity) {
+        return new LandscapeBottomSheetPerformer(activity.getResources(), R.id.bottom_sheet);
+    }
+
+    @NonNull
+    @Override
+    protected LandscapeSearchBarPerformer createSearchBarPerformer(@NonNull PresenterActivity activity) {
+        return new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
+    }
+
+    @NonNull
+    @Override
+    protected LandscapeFabButtonsPerformer createFabButtonPerformer(@NonNull PresenterActivity activity) {
+        return new LandscapeFabButtonsPerformer(R.id.my_location_fab);
+    }
+
+    @NonNull
+    @Override
+    protected LandscapeMapFragmentPerformer createMapFragmentPerformer(@NonNull PresenterActivity activity) {
+        return new LandscapeMapFragmentPerformer(activity, R.id.content);
     }
 
     @Override

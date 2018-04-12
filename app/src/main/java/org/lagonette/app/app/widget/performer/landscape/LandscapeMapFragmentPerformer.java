@@ -6,13 +6,10 @@ import android.view.View;
 
 import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 
-import javax.inject.Inject;
-
 public class LandscapeMapFragmentPerformer extends MapFragmentPerformer {
 
-    @Inject
-    public LandscapeMapFragmentPerformer(@NonNull AppCompatActivity activity) {
-        super(activity);
+    public LandscapeMapFragmentPerformer(@NonNull AppCompatActivity activity, int mapFragmentRes) {
+        super(activity, mapFragmentRes);
     }
 
     @Override

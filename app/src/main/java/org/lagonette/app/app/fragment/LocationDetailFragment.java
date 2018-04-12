@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import org.lagonette.app.R;
@@ -68,7 +67,7 @@ public class LocationDetailFragment
 
     @Override
     protected void construct(@NonNull FragmentActivity activity) {
-        mSnackbarPerformer = new SnackbarPerformer((AppCompatActivity) activity);
+        mSnackbarPerformer = new SnackbarPerformer(activity);
     }
 
     @Override

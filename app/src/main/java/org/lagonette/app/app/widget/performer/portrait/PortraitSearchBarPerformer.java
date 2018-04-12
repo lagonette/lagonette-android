@@ -1,13 +1,12 @@
 package org.lagonette.app.app.widget.performer.portrait;
 
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import org.lagonette.app.app.widget.behavior.TopEscapeBehavior;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
-
-import javax.inject.Inject;
 
 public class PortraitSearchBarPerformer
         extends SearchBarPerformer {
@@ -23,8 +22,11 @@ public class PortraitSearchBarPerformer
     @Nullable
     private TopEscapeBehavior mBehavior;
 
-    @Inject
-    public PortraitSearchBarPerformer() {
+    public PortraitSearchBarPerformer(
+            @IdRes int searchBarRes,
+            @IdRes int progressBarRes,
+            @IdRes int searchTextRes) {
+        super(searchBarRes, progressBarRes, searchTextRes);
     }
 
     @Override
