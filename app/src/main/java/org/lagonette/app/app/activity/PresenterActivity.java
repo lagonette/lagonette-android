@@ -4,71 +4,74 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.crashlytics.android.Crashlytics;
+public abstract class PresenterActivity<Presenter extends PresenterActivity.Lifecycle>
+		extends BaseActivity {
 
-public abstract class PresenterActivity<Presenter extends PresenterActivity.Lifecycle> extends BaseActivity {
+	public interface Lifecycle {
 
-    public interface Lifecycle {
+		void construct(@NonNull PresenterActivity owner);
 
-        void construct(@NonNull PresenterActivity owner);
+		@LayoutRes
+		int getContentView();
 
-        @LayoutRes
-        int getContentView();
+		void inject(@NonNull View view);
 
-        void inject(@NonNull View view);
+		void init(@NonNull PresenterActivity owner);
 
-        void init(@NonNull PresenterActivity owner);
+		void restore(@NonNull PresenterActivity owner, @NonNull Bundle savedInstanceState);
 
-        void restore(@NonNull PresenterActivity owner, @NonNull Bundle savedInstanceState);
+		void onConstructed(@NonNull PresenterActivity owner);
 
-        void onConstructed(@NonNull PresenterActivity owner);
+		void onRequestPermissionsResult(
+				int requestCode,
+				@NonNull String[] permissions,
+				@NonNull int[] grantResults);
+	}
 
-        void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
-    }
+	protected Presenter mPresenter;
 
-    protected Presenter mPresenter;
+	@Override
+	protected void construct() {
+		mPresenter = getPresenter();
+		mPresenter.construct(PresenterActivity.this);
+	}
 
-    @Override
-    protected void construct() {
-        mPresenter = getPresenter();
-        mPresenter.construct(PresenterActivity.this);
-    }
+	@Override
+	@LayoutRes
+	protected int getContentView() {
+		return mPresenter.getContentView();
+	}
 
-    @NonNull
-    protected abstract Presenter getPresenter();
+	@Override
+	protected void inject(@NonNull View view) {
+		mPresenter.inject(view);
+	}
 
-    @Override
-    @LayoutRes
-    protected int getContentView() {
-        return mPresenter.getContentView();
-    }
+	@Override
+	protected void init() {
+		mPresenter.init(PresenterActivity.this);
+	}
 
-    @Override
-    protected void inject(@NonNull View view) {
-        mPresenter.inject(view);
-    }
+	@Override
+	protected void restore(@NonNull Bundle savedInstanceState) {
+		mPresenter.restore(PresenterActivity.this, savedInstanceState);
+	}
 
-    @Override
-    protected void init() {
-        mPresenter.init(PresenterActivity.this);
-    }
+	@Override
+	protected void onConstructed() {
+		mPresenter.onConstructed(PresenterActivity.this);
+	}
 
-    @Override
-    protected void restore(@NonNull Bundle savedInstanceState) {
-        mPresenter.restore(PresenterActivity.this, savedInstanceState);
-    }
+	@NonNull
+	protected abstract Presenter getPresenter();
 
-    @Override
-    protected void onConstructed() {
-        mPresenter.onConstructed(PresenterActivity.this);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+	@Override
+	public void onRequestPermissionsResult(
+			int requestCode,
+			@NonNull String[] permissions,
+			@NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	}
 }
