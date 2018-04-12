@@ -33,6 +33,8 @@ import org.lagonette.app.util.UiUtils;
 import java.io.IOException;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class MapPerformer implements OnMapReadyCallback {
 
     private static final String TAG = "MapPerformer";
@@ -66,6 +68,7 @@ public class MapPerformer implements OnMapReadyCallback {
     @Nullable
     private Marker mSelectedMarker;
 
+    @Inject
     public MapPerformer(@NonNull Context context) {
         mContext = context;
         mStatusBarHeight = UiUtils.getStatusBarHeight(mContext.getResources());

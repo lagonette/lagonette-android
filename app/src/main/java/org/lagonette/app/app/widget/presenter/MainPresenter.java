@@ -1,8 +1,5 @@
 package org.lagonette.app.app.widget.presenter;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
@@ -19,7 +16,6 @@ import org.lagonette.app.app.viewmodel.UiActionStore;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
-import org.lagonette.app.app.widget.error.Error;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
@@ -31,6 +27,8 @@ import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.arch.LocationViewModel;
 import org.lagonette.app.tools.arch.LongObserver;
+
+import javax.inject.Inject;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
@@ -47,75 +45,50 @@ public abstract class MainPresenter<
 
     // --- View Model --- //
 
+	@Inject
     protected UiActionStore mUiActionStore;
 
-    protected DataViewModel mStateViewModel;
+	@Inject
+    protected DataViewModel mDataViewModel;
 
+	@Inject
     protected MainLiveEventBusViewModel mEventBus;
 
+	@Inject
     protected LocationViewModel mLocationViewModel;
-
-    // --- Live Data --- //
-
-    protected MutableLiveData<String> mSearch;
-
-    protected LiveData<Integer> mWorkStatus;
-
-    protected LiveData<Error> mWorkError;
 
     // --- Performers --- //
 
-    protected MainCoordinator mCoordinator;
+    @Inject
+    public MainCoordinator mCoordinator;
 
+    @Inject
     protected BottomSheetPerformer mBottomSheetPerformer;
 
+    @Inject
     protected FBP mFabButtonsPerformer;
 
+    @Inject
     protected MFP mMapFragmentPerformer;
 
+    @Inject
     protected SBP mSearchBarPerformer;
 
+    @Inject
     protected FiltersFragmentPerformer mFiltersFragmentPerformer;
 
+    @Inject
     protected LocationDetailFragmentPerformer mLocationDetailFragmentPerformer;
 
+    @Inject
     protected PermissionsPerformer mPermissionsPerformer;
 
+    @Inject
     protected SnackbarPerformer mSnackbarPerformer;
 
     @Override
     @CallSuper
     public void construct(@NonNull PresenterActivity activity) {
-
-        mStateViewModel = ViewModelProviders
-                .of(activity)
-                .get(DataViewModel.class);
-
-        mEventBus = ViewModelProviders
-                .of(activity)
-                .get(MainLiveEventBusViewModel.class);
-
-        mUiActionStore = ViewModelProviders
-                .of(activity)
-                .get(UiActionStore.class);
-
-        mLocationViewModel = ViewModelProviders
-                .of(activity)
-                .get(LocationViewModel.class);
-
-        mSearch = mStateViewModel.getSearch();
-        mWorkStatus = mStateViewModel.getWorkStatus();
-        mWorkError = mStateViewModel.getWorkError();
-
-        mCoordinator = createCoordinator();
-        mMapFragmentPerformer = createMapFragmentPerformer(activity);
-        mFabButtonsPerformer = createFabButtonPerformer(activity);
-        mSearchBarPerformer = createSearchBarPerformer(activity);
-        mBottomSheetPerformer = createBottomSheetPerformer(activity);
-        mFiltersFragmentPerformer = new FiltersFragmentPerformer(activity, R.id.fragment_filters);
-        mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity, R.id.fragment_location_detail);
-        mPermissionsPerformer = new PermissionsPerformer(activity);
-        mSnackbarPerformer = new SnackbarPerformer(activity);
 
         // === Coordinator > Performer === //
         mCoordinator.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
@@ -241,11 +214,11 @@ public abstract class MainPresenter<
         // ------------------------------- //
 
         // User > ViewModels
-        mSearchBarPerformer.onSearch = mSearch::setValue;
+        mSearchBarPerformer.onSearch = mDataViewModel::setSearch;
 
         // ViewModels > View
-        mWorkStatus.observe(activity, mSearchBarPerformer::setWorkStatus);
-        mWorkError.observe(activity, mSnackbarPerformer::show);
+        mDataViewModel.getWorkStatus().observe(activity, mSearchBarPerformer::setWorkStatus);
+		mDataViewModel.getWorkError().observe(activity, mSnackbarPerformer::show);
 
 
         // --- Start --- //
@@ -282,20 +255,5 @@ public abstract class MainPresenter<
                 mLocationDetailFragmentPerformer.getLoadedId()
         );
     }
-
-    @NonNull
-    protected abstract MainCoordinator createCoordinator();
-
-    @NonNull
-    protected abstract BottomSheetPerformer createBottomSheetPerformer(@NonNull PresenterActivity activity);
-
-    @NonNull
-    protected abstract SBP createSearchBarPerformer(@NonNull PresenterActivity activity);
-
-    @NonNull
-    protected abstract FBP createFabButtonPerformer(@NonNull PresenterActivity activity);
-
-    @NonNull
-    protected abstract MFP createMapFragmentPerformer(@NonNull PresenterActivity activity);
 
 }

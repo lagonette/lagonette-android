@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.background.worker.WorkerState;
 import org.lagonette.app.tools.functions.main.Consumer;
@@ -34,29 +35,11 @@ public abstract class SearchBarPerformer implements ViewPerformer {
     @Nullable
     private TextView mSearchTextView;
 
-    @IdRes
-    private int mSearchBarRes;
-
-    @IdRes
-    private final int mProgressBarRes;
-
-    @IdRes
-    private final int mSearchTextRes;
-
-    public SearchBarPerformer(
-            @IdRes int searchBarRes,
-            @IdRes int progressBarRes,
-            @IdRes int searchTextRes) {
-        mSearchBarRes = searchBarRes;
-        mProgressBarRes = progressBarRes;
-        mSearchTextRes = searchTextRes;
-    }
-
     @Override
     public void inject(@NonNull View view) {
-        mSearchBar = view.findViewById(mSearchBarRes);
-        mProgressBar = view.findViewById(mProgressBarRes);
-        mSearchTextView = view.findViewById(mSearchTextRes);
+        mSearchBar = view.findViewById(R.id.search_bar);
+        mProgressBar = view.findViewById(R.id.progress_bar);
+        mSearchTextView = view.findViewById(R.id.search_text);
 
         setupSearchBarMarginTop(mSearchBar);
         setupSearchTextView(mSearchTextView);

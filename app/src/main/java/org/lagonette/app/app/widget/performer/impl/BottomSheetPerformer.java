@@ -7,9 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
+import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.tools.functions.main.IntConsumer;
 import org.lagonette.app.util.UiUtils;
+
+import javax.inject.Inject;
 
 public abstract class BottomSheetPerformer
         extends BottomSheetBehavior.BottomSheetCallback
@@ -53,16 +56,10 @@ public abstract class BottomSheetPerformer
     @Nullable
     protected View mBottomSheet;
 
-    @IdRes
-    private int mBottomSheetRes;
-
     @NonNull
     protected Padding mPadding;
 
-    public BottomSheetPerformer(
-            @NonNull Resources resources,
-            @IdRes int bottomSheetRes) {
-        mBottomSheetRes = bottomSheetRes;
+    public BottomSheetPerformer(@NonNull Resources resources) {
         mPadding = new Padding();
         mPadding.statusBarHeight = UiUtils.getStatusBarHeight(resources);
         mPadding.searchBarBottom = 0;
@@ -71,7 +68,7 @@ public abstract class BottomSheetPerformer
 
     @Override
     public void inject(@NonNull View view) {
-        mBottomSheet = view.findViewById(mBottomSheetRes);
+        mBottomSheet = view.findViewById(R.id.bottom_sheet);
         mBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBehavior.setBottomSheetCallback(BottomSheetPerformer.this);
     }

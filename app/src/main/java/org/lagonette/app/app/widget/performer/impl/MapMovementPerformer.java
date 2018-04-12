@@ -15,6 +15,8 @@ import com.google.maps.android.clustering.Cluster;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.util.SharedPreferencesUtils;
 
+import javax.inject.Inject;
+
 public class MapMovementPerformer
         implements OnMapReadyCallback {
 
@@ -28,6 +30,10 @@ public class MapMovementPerformer
 
     @Nullable
     private GoogleMap mMap;
+
+    @Inject
+    public MapMovementPerformer() {
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

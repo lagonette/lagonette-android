@@ -13,10 +13,13 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapLocationViewModel;
-import org.lagonette.app.app.viewmodel.MapViewModel;
+import org.lagonette.app.app.viewmodel.MapDataViewModel;
 import org.lagonette.app.app.widget.performer.impl.MapMovementPerformer;
 import org.lagonette.app.app.widget.performer.impl.MapPerformer;
+import org.lagonette.app.di.Injector;
 import org.lagonette.app.room.entity.statement.LocationItem;
+
+import javax.inject.Inject;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
@@ -36,19 +39,25 @@ public class MapsFragment
 
     // --- View Models --- //
 
-    private MapViewModel mMapViewModel;
+    @Inject
+    protected MapDataViewModel mMapViewModel;
 
-    private DataViewModel mDataViewModel;
+    @Inject
+    protected DataViewModel mDataViewModel;
 
-    private MainLiveEventBusViewModel mEventBus;
+    @Inject
+    protected MainLiveEventBusViewModel mEventBus;
 
-    private MapLocationViewModel mMapLocationViewModel;
+    @Inject
+    protected MapLocationViewModel mMapLocationViewModel;
 
     // --- Performers --- //
 
-    private MapMovementPerformer mMapMovementPerformer;
+    @Inject
+    protected MapMovementPerformer mMapMovementPerformer;
 
-    private MapPerformer mMapPerformer;
+    @Inject
+    protected MapPerformer mMapPerformer;
 
     // --- Fragments --- //
 
@@ -62,25 +71,7 @@ public class MapsFragment
 
     @Override
     protected void construct() {
-        mMapPerformer = new MapPerformer(getContext());
-
-        mMapMovementPerformer = new MapMovementPerformer();
-
-        mMapLocationViewModel = ViewModelProviders
-                .of(MapsFragment.this)
-                .get(MapLocationViewModel.class);
-
-        mMapViewModel = ViewModelProviders
-                .of(MapsFragment.this)
-                .get(MapViewModel.class);
-
-        mDataViewModel = ViewModelProviders
-                .of(getActivity())
-                .get(DataViewModel.class);
-
-        mEventBus = ViewModelProviders
-                .of(getActivity())
-                .get(MainLiveEventBusViewModel.class);
+        Injector.inject(this);
 
         mDataViewModel
                 .getSearch()

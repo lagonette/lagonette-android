@@ -2,6 +2,8 @@ package org.lagonette.app.app;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 
@@ -11,6 +13,9 @@ import org.lagonette.app.BuildConfig;
 import org.lagonette.app.api.adapter.BooleanAdapter;
 import org.lagonette.app.api.adapter.LongAdapter;
 import org.lagonette.app.api.service.LaGonetteService;
+import org.lagonette.app.di.component.AppComponent;
+import org.lagonette.app.di.component.DaggerAppComponent;
+import org.lagonette.app.di.module.AppModule;
 import org.lagonette.app.locator.Api;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.locator.Repo;
@@ -29,6 +34,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 public class LaGonetteApplication
 		extends Application {
 
+	public static LaGonetteApplication get(@NonNull Context context) {
+		return (LaGonetteApplication) context.getApplicationContext();
+	}
+
+	private AppComponent mAppComponent;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -39,9 +50,17 @@ public class LaGonetteApplication
 			StrictModeUtils.enableStrictMode();
 		}
 
+		setUpComponent();
 		setUpDb();
 		setUpApi();
 		setUpRepo();
+	}
+
+	private void setUpComponent() {
+		mAppComponent = DaggerAppComponent
+				.builder()
+				.appModule(new AppModule(this))
+				.build();
 	}
 
 	private void setUpDb() {
@@ -98,5 +117,9 @@ public class LaGonetteApplication
 						Executors.newCachedThreadPool()
 				)
 		);
+	}
+
+	public AppComponent getAppComponent() {
+		return mAppComponent;
 	}
 }

@@ -1,12 +1,14 @@
 package org.lagonette.app.app.widget.performer.portrait;
 
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
+import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
+
+import javax.inject.Inject;
 
 public class PortraitFabButtonsPerformer extends FabButtonsPerformer {
 
@@ -18,19 +20,16 @@ public class PortraitFabButtonsPerformer extends FabButtonsPerformer {
     @Nullable
     private OnFiltersClickCommand mOnFiltersClickCommand;
 
-    @IdRes
-    private int mFiltersButtonRes;
-
-    public PortraitFabButtonsPerformer(int positionRes, int filtersRes) {
-        super(positionRes);
-        mFiltersButtonRes = filtersRes;
+    @Inject
+    public PortraitFabButtonsPerformer() {
+        super();
     }
 
     @Override
     public void inject(@NonNull View view) {
         super.inject(view);
 
-        FloatingActionButton filtersFab = view.findViewById(mFiltersButtonRes);
+        FloatingActionButton filtersFab = view.findViewById(R.id.filters_fab);
         filtersFab.setOnClickListener(
                 button -> {
                     if (mOnFiltersClickCommand != null) {

@@ -8,8 +8,14 @@ import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.room.statement.Statement;
 
+import javax.inject.Inject;
+
 public class PortraitMainCoordinator
         extends MainCoordinator {
+
+    @Inject
+    public PortraitMainCoordinator() {
+    }
 
     @Override
     protected void computeMovementToAndOpeningLocation(@NonNull UiAction action, @NonNull UiState state) {

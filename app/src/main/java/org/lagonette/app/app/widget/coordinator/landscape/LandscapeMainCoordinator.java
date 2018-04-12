@@ -8,8 +8,14 @@ import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.room.statement.Statement;
 
+import javax.inject.Inject;
+
 public class LandscapeMainCoordinator
         extends MainCoordinator {
+
+    @Inject
+    public LandscapeMainCoordinator() {
+    }
 
     @Override
     public void init(@NonNull UiState state) {

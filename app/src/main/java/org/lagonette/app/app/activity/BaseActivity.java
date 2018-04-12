@@ -6,32 +6,38 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import dagger.android.AndroidInjection;
+
 public abstract class BaseActivity
-        extends AppCompatActivity {
+		extends AppCompatActivity {
 
-    protected final void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        construct();
-        setContentView(getContentView());
-        inject(getWindow().getDecorView().getRootView());
-        if (savedInstanceState == null) {
-            init();
-        } else {
-            restore(savedInstanceState);
-        }
-        onConstructed();
-    }
+	protected final void onCreate(Bundle savedInstanceState) {
+		injectDependencies();
+		super.onCreate(savedInstanceState);
+		construct();
+		setContentView(getContentView());
+		inject(getWindow().getDecorView().getRootView());
+		if (savedInstanceState == null) {
+			init();
+		}
+		else {
+			restore(savedInstanceState);
+		}
+		onConstructed();
+	}
 
-    protected abstract void construct();
+	protected abstract void injectDependencies();
 
-    @LayoutRes
-    protected abstract int getContentView();
+	protected abstract void construct();
 
-    protected abstract void inject(@NonNull View view);
+	@LayoutRes
+	protected abstract int getContentView();
 
-    protected abstract void init();
+	protected abstract void inject(@NonNull View view);
 
-    protected abstract void restore(@NonNull Bundle savedInstanceState);
+	protected abstract void init();
 
-    protected abstract void onConstructed();
+	protected abstract void restore(@NonNull Bundle savedInstanceState);
+
+	protected abstract void onConstructed();
 }

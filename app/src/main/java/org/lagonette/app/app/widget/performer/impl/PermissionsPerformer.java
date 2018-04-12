@@ -9,6 +9,8 @@ import android.support.v4.app.ActivityCompat;
 import org.lagonette.app.tools.functions.main.ObjIntConsumer;
 import org.lagonette.app.tools.functions.main.Runnable;
 
+import javax.inject.Inject;
+
 public class PermissionsPerformer {
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 666;
@@ -22,6 +24,7 @@ public class PermissionsPerformer {
     @NonNull
     private final Context mContext;
 
+    @Inject
     public PermissionsPerformer(@NonNull Context context) {
         mContext = context;
     }
