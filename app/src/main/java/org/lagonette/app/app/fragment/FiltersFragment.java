@@ -60,8 +60,6 @@ public class FiltersFragment
 		return fragment;
 	}
 
-	//TODO Fix category visibility
-
 	@Override
 	protected void construct() {
 		mFiltersViewModel = ViewModelProviders

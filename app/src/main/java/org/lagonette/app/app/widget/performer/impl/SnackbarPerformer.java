@@ -11,7 +11,6 @@ public class SnackbarPerformer {
 
 	private final Activity mActivity;
 
-	//TODO do not use activity
 	public SnackbarPerformer(Activity activity) {
 		mActivity = activity;
 	}
