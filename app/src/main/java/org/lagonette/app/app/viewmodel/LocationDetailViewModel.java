@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.room.entity.statement.LocationDetail;
+import org.lagonette.app.room.statement.Statement;
+import org.lagonette.app.tools.PrimitiveUtils;
 
 public class LocationDetailViewModel
 		extends ViewModel {
@@ -22,13 +24,16 @@ public class LocationDetailViewModel
 		mLocationDetail = Repo.get().getLocationDetail(mLocationId);
 	}
 
-	@NonNull
-	public MutableLiveData<Long> getLocationId() {
-		return mLocationId;
+	public void setLocationId(long locationId) {
+		mLocationId.setValue(locationId);
 	}
 
 	@NonNull
 	public LiveData<LocationDetail> getLocationDetail() {
 		return mLocationDetail;
+	}
+
+	public long getLoadedLocationId() {
+		return PrimitiveUtils.unbox(mLocationId.getValue(), Statement.NO_ID);
 	}
 }

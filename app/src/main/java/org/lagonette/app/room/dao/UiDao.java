@@ -19,7 +19,7 @@ import java.util.List;
 public interface UiDao {
 
 	@Query(PartnerDetailStatement.SQL)
-	LiveData<LocationDetail> getLocationsDetail(long id); //TODO Use LiveData to update fragment ?
+	LiveData<LocationDetail> getLocationsDetail(long id);
 
 	@Query(MapPartnerStatement.SQL)
 	LiveData<List<LocationItem>> getMapLocations(String search);

@@ -1,7 +1,6 @@
 package org.lagonette.app.app.fragment;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,8 +22,6 @@ public class LocationDetailFragment
 
 	private static final String ARG_LOCATION_ID = "arg:location_id";
 
-	private MutableLiveData<Long> mLocationId;
-
 	private LiveData<LocationDetail> mLocationDetail;
 
 	private LocationDetailPerformer mLocationPerformer;
@@ -32,6 +29,8 @@ public class LocationDetailFragment
 	private IntentPerformer mIntentPerformer;
 
 	private SnackbarPerformer mSnackbarPerformer;
+
+	private LocationDetailViewModel mViewModel;
 
 	@NonNull
 	public static LocationDetailFragment newInstance(long locationId) {
@@ -44,12 +43,12 @@ public class LocationDetailFragment
 
 	@Override
 	protected void construct() {
-		LocationDetailViewModel viewModel = ViewModelProviders
+		mViewModel = ViewModelProviders
 				.of(LocationDetailFragment.this)
 				.get(LocationDetailViewModel.class);
 
-		mLocationId = viewModel.getLocationId();
-		mLocationDetail = viewModel.getLocationDetail();
+		// Maybe we could use LocationDetail LiveData to notify than partner has changed rather than reload another fragment
+		mLocationDetail = mViewModel.getLocationDetail();
 
 		mIntentPerformer = new IntentPerformer(getContext());
 		mLocationPerformer = new LocationDetailPerformer();
@@ -74,7 +73,7 @@ public class LocationDetailFragment
 	protected void init() {
 		//TODO Check
 		long locationId = getArguments().getLong(ARG_LOCATION_ID, Statement.NO_ID);
-		mLocationId.setValue(locationId);
+		mViewModel.setLocationId(locationId);
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class LocationDetailFragment
 		mLocationPerformer.onPhoneClick = mIntentPerformer::makeCall;
 		mLocationPerformer.onWebsiteClick = mIntentPerformer::goToWebsite;
 
-		mLocationDetail.observe(
+		mViewModel.getLocationDetail().observe(
 				LocationDetailFragment.this,
 				mLocationPerformer::displayLocation
 		);
@@ -102,22 +101,11 @@ public class LocationDetailFragment
 	}
 
 	public boolean isLoaded(long locationId) {
-		Long loadedId = mLocationId.getValue();
-		if (loadedId != null) {
-			return locationId == loadedId;
-		}
-		else {
-			return false;
-		}
+		long loadedId = mViewModel.getLoadedLocationId();
+		return loadedId > Statement.NO_ID && loadedId == locationId;
 	}
 
 	public long getLocationId() {
-		Long id = mLocationId.getValue();
-		if (id != null) {
-			return id;
-		}
-		else {
-			return Statement.NO_ID;
-		}
+		return mViewModel.getLoadedLocationId();
 	}
 }
