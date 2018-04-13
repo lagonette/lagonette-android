@@ -35,6 +35,7 @@ public abstract class FilterStatement
 					"NULL AS location_city, " +
 					"NULL AS location_is_exchange_office, " +
 					"NULL AS location_is_visible, " +
+					"NULL AS partner_is_gonette_headquarter, " +
 					"NULL AS partner_name" +
 					FROM_CATEGORY_AND_METADATA +
 					LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
@@ -59,6 +60,7 @@ public abstract class FilterStatement
 					"NULL AS location_city, " +
 					"NULL AS location_is_exchange_office, " +
 					"NULL AS location_is_visible, " +
+					"NULL AS partner_is_gonette_headquarter, " +
 					"NULL AS partner_name" +
 					FROM_CATEGORY +
 					LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
@@ -83,6 +85,7 @@ public abstract class FilterStatement
 					"main_location.city AS location_city, " +
 					"main_location.is_exchange_office AS location_is_exchange_office, " +
 					"main_location_metadata.is_visible AS location_is_visible, " +
+					"main_partner.is_gonette_headquarter AS partner_is_gonette_headquarter, " +
 					"main_partner.name AS partner_name" +
 					FROM_CATEGORY_AND_METADATA +
 					JOIN_MAIN_PARTNER_ON_CATEGORY +

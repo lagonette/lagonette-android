@@ -36,12 +36,15 @@ public class LocationViewHolder
 	public boolean isExchangeOffice;
 
 	public LocationViewHolder(
-			@NonNull ViewGroup parent) {
+			@NonNull ViewGroup parent,
+			boolean isAlone) {
 		super(
 				LayoutInflater
 						.from(parent.getContext())
 						.inflate(
-								R.layout.row_location,
+								isAlone
+										? R.layout.row_location_alone
+										: R.layout.row_location,
 								parent,
 								false
 						)

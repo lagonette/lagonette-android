@@ -13,11 +13,11 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.viewholder.ShortcutViewHolder;
 import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.room.statement.Statement;
-import org.lagonette.app.tools.chainadapter.decorator.AbstractAdapterDecorator;
+import org.lagonette.app.tools.chainadapter.decorator.SimpleAdapterDecorator;
 import org.lagonette.app.tools.functions.main.Consumer;
 
 public class ShortcutDecorator
-		extends AbstractAdapterDecorator<ShortcutViewHolder, HeadquarterShortcut> {
+		extends SimpleAdapterDecorator<ShortcutViewHolder, HeadquarterShortcut> {
 
 	public static class Callbacks {
 
@@ -57,7 +57,7 @@ public class ShortcutDecorator
 
 	@NonNull
 	@Override
-	public ShortcutViewHolder createViewHolder(@NonNull ViewGroup parent) {
+	public ShortcutViewHolder createViewHolder(@NonNull ViewGroup parent, int viewType) {
 		ShortcutViewHolder holder = new ShortcutViewHolder(parent);
 
 		if (mCallbacks.onLocationClick != null) {

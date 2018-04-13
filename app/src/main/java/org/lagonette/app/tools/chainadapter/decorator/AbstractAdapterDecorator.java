@@ -8,23 +8,9 @@ import android.support.v7.widget.RecyclerView;
 public abstract class AbstractAdapterDecorator<VH extends RecyclerView.ViewHolder, I>
 		implements AdapterDecorator<VH, I> {
 
-	private final int mViewType;
-
-	protected AbstractAdapterDecorator(int viewType) {
-		mViewType = viewType;
-	}
-
 	public final void bindViewHolder(@Nullable I item, @NonNull RecyclerView.ViewHolder holder) {
 		//noinspection unchecked
 		onBindViewHolder(item, (VH) holder);
-	}
-
-	public final boolean handleViewType(int viewType) {
-		return viewType == mViewType;
-	}
-
-	public final int getViewType() {
-		return mViewType;
 	}
 
 	@Override

@@ -70,6 +70,9 @@ public class Filter {
 	@ColumnInfo(name = "location_is_visible")
 	public final boolean isLocationVisible;
 
+	@ColumnInfo(name = "partner_is_gonette_headquarter")
+	public final boolean isGonetteHeadquarter;
+
 	@ColumnInfo(name = "partner_name")
 	public final String partnerName;
 
@@ -88,6 +91,7 @@ public class Filter {
 			Address address,
 			boolean isLocationExchangeOffice,
 			boolean isLocationVisible,
+			boolean isGonetteHeadquarter,
 			String partnerName) {
 		this.rowType = rowType;
 		this.categoryId = categoryId;
@@ -101,6 +105,7 @@ public class Filter {
 		this.address = address;
 		this.isLocationExchangeOffice = isLocationExchangeOffice;
 		this.isLocationVisible = isLocationVisible;
+		this.isGonetteHeadquarter = isGonetteHeadquarter;
 		this.partnerName = partnerName;
 
 		mHashCode = createHashCode();
@@ -124,6 +129,7 @@ public class Filter {
 		result = 31 * result + (address != null ? address.hashCode() : 0);
 		result = 31 * result + (isLocationExchangeOffice ? 1 : 0);
 		result = 31 * result + (isLocationVisible ? 1 : 0);
+		result = 31 * result + (isGonetteHeadquarter ? 1 : 0);
 		result = 31 * result + (partnerName != null ? partnerName.hashCode() : 0);
 		return result;
 	}

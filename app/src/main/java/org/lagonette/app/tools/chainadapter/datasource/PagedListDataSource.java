@@ -19,6 +19,9 @@ public abstract class PagedListDataSource<Item>
 	public PagedListDataSource(
 			@NonNull RecyclerView.Adapter adapter,
 			@NonNull DiffUtil.ItemCallback<Item> diffCallback) {
+		// We use WholeListUpdateCallback to notify all items have changed
+		// rather than the specified range
+		// because with chained links the range may be wrong.
 		mDiffer = new AsyncPagedListDiffer<>(
 				new WholeListUpdateCallback(adapter),
 				new AsyncDifferConfig.Builder<>(diffCallback).build()

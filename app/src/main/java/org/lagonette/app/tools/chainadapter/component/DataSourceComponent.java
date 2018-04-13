@@ -43,7 +43,7 @@ public class DataSourceComponent<VH extends RecyclerView.ViewHolder, I, S>
 		I item = mDataSource.getItem(position);
 		for (AdapterDecorator<? extends VH, I> decorator : mDecorators) {
 			if (decorator.handleItem(item)) {
-				return decorator.getViewType();
+				return decorator.getViewType(item);
 			}
 		}
 		throw new IllegalStateException("There no decorator to handle position " + position);
@@ -59,7 +59,7 @@ public class DataSourceComponent<VH extends RecyclerView.ViewHolder, I, S>
 	public VH createViewHolder(@NonNull ViewGroup parent, int viewType) {
 		for (AdapterDecorator<? extends VH, I> decorator : mDecorators) {
 			if (decorator.handleViewType(viewType)) {
-				return decorator.createViewHolder(parent);
+				return decorator.createViewHolder(parent, viewType);
 			}
 		}
 		throw new IllegalStateException("There no decorator to handle view type " + viewType);

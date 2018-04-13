@@ -11,11 +11,11 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.viewholder.CategoryViewHolder;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
-import org.lagonette.app.tools.chainadapter.decorator.AbstractAdapterDecorator;
+import org.lagonette.app.tools.chainadapter.decorator.SimpleAdapterDecorator;
 import org.lagonette.app.tools.functions.main.LongBooleanConsumer;
 
 public class CategoryDecorator
-		extends AbstractAdapterDecorator<CategoryViewHolder, Filter> {
+		extends SimpleAdapterDecorator<CategoryViewHolder, Filter> {
 
 	public static class Callbacks {
 
@@ -44,7 +44,7 @@ public class CategoryDecorator
 
 	@NonNull
 	@Override
-	public CategoryViewHolder createViewHolder(@NonNull ViewGroup parent) {
+	public CategoryViewHolder createViewHolder(@NonNull ViewGroup parent, int viewType) {
 		CategoryViewHolder holder = new CategoryViewHolder(parent);
 
 		if (mCallbacks.onCollapsedClick != null) {

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="view_type_loading" type="id"/>
-    <item name="view_type_shortcut" type="id"/>
-    <item name="view_type_category" type="id"/>
-    <item name="view_type_location" type="id"/>
-    <item name="view_type_footer" type="id"/>
+    <item name="view_type_loading" type="id" />
+    <item name="view_type_shortcut" type="id" />
+    <item name="view_type_category" type="id" />
+    <item name="view_type_location" type="id" />
+    <item name="view_type_headquarter" type="id" />
+    <item name="view_type_footer" type="id" />
 
 </resources>

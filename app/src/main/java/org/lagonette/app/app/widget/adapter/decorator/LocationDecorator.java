@@ -42,7 +42,6 @@ public class LocationDecorator
 	public LocationDecorator(
 			@NonNull Context context,
 			@NonNull Callbacks callbacks) {
-		super(R.id.view_type_location);
 
 		mCallbacks = callbacks;
 
@@ -52,8 +51,8 @@ public class LocationDecorator
 
 	@NonNull
 	@Override
-	public LocationViewHolder createViewHolder(@NonNull ViewGroup parent) {
-		LocationViewHolder holder = new LocationViewHolder(parent);
+	public LocationViewHolder createViewHolder(@NonNull ViewGroup parent, int viewType) {
+		LocationViewHolder holder = new LocationViewHolder(parent, viewType == R.id.view_type_headquarter);
 
 		if (mCallbacks.onClick != null) {
 			holder.itemView.setOnClickListener(view -> mCallbacks.onClick.accept(holder.locationId));
@@ -64,6 +63,18 @@ public class LocationDecorator
 		}
 
 		return holder;
+	}
+
+	@Override
+	public boolean handleViewType(int viewType) {
+		return viewType == R.id.view_type_location || viewType == R.id.view_type_headquarter;
+	}
+
+	@Override
+	public int getViewType(@Nullable Filter filter) {
+		return filter.isGonetteHeadquarter
+				? R.id.view_type_headquarter
+				: R.id.view_type_location;
 	}
 
 	@Override

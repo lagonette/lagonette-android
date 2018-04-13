@@ -17,7 +17,7 @@ public class LoadingDecorator
 
 	@NonNull
 	@Override
-	public LoadingViewHolder createViewHolder(@NonNull ViewGroup parent) {
+	public LoadingViewHolder createViewHolder(@NonNull ViewGroup parent, int viewType) {
 		return new LoadingViewHolder(parent);
 	}
 

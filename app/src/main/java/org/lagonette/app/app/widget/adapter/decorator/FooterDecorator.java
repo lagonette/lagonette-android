@@ -8,10 +8,10 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.viewholder.FooterViewHolder;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
-import org.lagonette.app.tools.chainadapter.decorator.AbstractAdapterDecorator;
+import org.lagonette.app.tools.chainadapter.decorator.SimpleAdapterDecorator;
 
 public class FooterDecorator
-		extends AbstractAdapterDecorator<FooterViewHolder, Filter> {
+		extends SimpleAdapterDecorator<FooterViewHolder, Filter> {
 
 	public FooterDecorator() {
 		super(R.id.view_type_footer);
@@ -19,7 +19,7 @@ public class FooterDecorator
 
 	@NonNull
 	@Override
-	public FooterViewHolder createViewHolder(@NonNull ViewGroup parent) {
+	public FooterViewHolder createViewHolder(@NonNull ViewGroup parent, int viewType) {
 		return new FooterViewHolder(parent);
 	}
 
