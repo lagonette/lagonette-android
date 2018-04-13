@@ -65,13 +65,13 @@ public abstract class WriterDao {
 			@NonNull LaGonetteDatabase database,
 			@NonNull PartnerEntities partnerEntities) {
 		if (partnerEntities.hasValues) {
-			//TODO Make a better clean
 			database.partnerDao().deletePartners();
 			database.partnerDao().deleteLocations();
 			database.partnerDao().deletePartnerSideCategories();
 
 			database.partnerDao().insertLocations(partnerEntities.locations);
-			database.partnerDao().insertLocationsMetadatas(partnerEntities.locationMetadata); //TODO Make metadata insert only by SQL
+			// When INSERT query will be available with Room, insert directly default metadata rather than create objects.
+			database.partnerDao().insertLocationsMetadatas(partnerEntities.locationMetadata);
 			database.partnerDao().insertPartners(partnerEntities.partners);
 			database.partnerDao().insertPartnersSideCategories(partnerEntities.partnerSideCategories);
 		}
@@ -82,8 +82,10 @@ public abstract class WriterDao {
 			@NonNull CategoryEntities categoryEntities) {
 		if (categoryEntities.hasValues) {
 			database.categoryDao().deleteCategories();
+
 			database.categoryDao().insertCategories(categoryEntities.categories);
-			database.categoryDao().insertCategoriesMetadatas(categoryEntities.categoryMetadata); //TODO Make metadata insert only by SQL
+			// When INSERT query will be available with Room, insert directly default metadata rather than create objects.
+			database.categoryDao().insertCategoriesMetadatas(categoryEntities.categoryMetadata);
 		}
 	}
 
@@ -116,11 +118,13 @@ public abstract class WriterDao {
 		}
 	}
 
-	private void cleanUp(LaGonetteDatabase database) {
-		database.partnerDao().cleanLocation();
-		database.partnerDao().cleanPartner();
-//        db.partnerDao().cleanPartnerMetadata(); //TODO clean partner metadata
-//        database.categoryDao().cleanCategories(); //TODO clean categories and metadata
+	private void cleanUp(@NonNull LaGonetteDatabase database) {
+		database.partnerDao().cleanLocationWithoutPosition();
+		database.partnerDao().cleanOrphanLocationMetadata();
+		database.partnerDao().cleanPartnerWithoutLocation();
+		database.partnerDao().cleanOrphanPartnerSideCategory();
+
+        database.categoryDao().cleanOrphanCategoryMetadata();
 	}
 
 }

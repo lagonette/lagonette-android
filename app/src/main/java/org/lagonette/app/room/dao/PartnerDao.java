@@ -56,10 +56,16 @@ public interface PartnerDao {
 	int updateExchangeOfficeVisibilities(boolean isVisible);
 
 	@Query("DELETE FROM location WHERE (street IS NULL OR street = '') AND latitude = 0 AND longitude = 0")
-	void cleanLocation();
+	void cleanLocationWithoutPosition();
 
 	@Query("DELETE FROM partner WHERE id NOT IN (SELECT partner.id FROM partner JOIN location ON location.partner_id = partner.id)")
-	void cleanPartner();
+	void cleanPartnerWithoutLocation();
+
+	@Query("DELETE FROM location_metadata WHERE location_id NOT IN (SELECT id FROM location)")
+	void cleanOrphanLocationMetadata();
+
+	@Query("DELETE FROM partner_side_category WHERE category_id NOT IN (SELECT category.id FROM category) OR partner_id NOT IN (SELECT partner.id FROM partner) ")
+	void cleanOrphanPartnerSideCategory();
 
 	@Delete
 	void deletePartner(@NonNull Partner headquarter);
