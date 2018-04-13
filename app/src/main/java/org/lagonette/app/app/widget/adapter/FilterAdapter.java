@@ -117,6 +117,7 @@ public class FilterAdapter
 	}
 
 	public void setFilters(@Nullable PagedList<Filter> filters) {
+		// There is no need to notify adapter data set changed because PagedList already do this.
 		mFilterComponent.setSource(filters);
 		if (filters != null) {
 			if (isChained(RANK_LOADING)) {

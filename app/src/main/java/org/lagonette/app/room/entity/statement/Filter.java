@@ -125,7 +125,6 @@ public class Filter {
 		result = 31 * result + (isLocationExchangeOffice ? 1 : 0);
 		result = 31 * result + (isLocationVisible ? 1 : 0);
 		result = 31 * result + (partnerName != null ? partnerName.hashCode() : 0);
-		result = 31 * result + mHashCode;
 		return result;
 	}
 }

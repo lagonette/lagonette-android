@@ -4,7 +4,11 @@ import android.arch.paging.AsyncPagedListDiffer;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.recyclerview.extensions.AsyncDifferConfig;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+
+import org.lagonette.app.tools.chainadapter.adapter.WholeListUpdateCallback;
 
 public abstract class PagedListDataSource<Item>
 		implements AdapterDataSource<Item, PagedList<Item>> {
@@ -12,11 +16,14 @@ public abstract class PagedListDataSource<Item>
 	@NonNull
 	private AsyncPagedListDiffer<Item> mDiffer;
 
-	public PagedListDataSource(@NonNull RecyclerView.Adapter adapter) {
-		mDiffer = createDiffer(adapter);
+	public PagedListDataSource(
+			@NonNull RecyclerView.Adapter adapter,
+			@NonNull DiffUtil.ItemCallback<Item> diffCallback) {
+		mDiffer = new AsyncPagedListDiffer<>(
+				new WholeListUpdateCallback(adapter),
+				new AsyncDifferConfig.Builder<>(diffCallback).build()
+		);
 	}
-
-	protected abstract AsyncPagedListDiffer<Item> createDiffer(@NonNull RecyclerView.Adapter adapter);
 
 	@Override
 	public long getItemId(int position) {

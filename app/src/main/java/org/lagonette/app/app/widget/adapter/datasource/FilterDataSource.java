@@ -1,6 +1,5 @@
 package org.lagonette.app.app.widget.adapter.datasource;
 
-import android.arch.paging.AsyncPagedListDiffer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
@@ -21,20 +20,14 @@ public class FilterDataSource
 
 	private final int mFooterType;
 
-	public FilterDataSource(@NonNull RecyclerView.Adapter adapter, @NonNull Identifier identifier) {
-		super(adapter);
+	public FilterDataSource(
+			@NonNull RecyclerView.Adapter adapter,
+			@NonNull Identifier identifier) {
+		super(adapter, Filter.DIFF_CALLBACK);
 		mIdentifier = identifier;
 		mCategoryType = mIdentifier.addType();
 		mLocationType = mIdentifier.addType();
 		mFooterType = mIdentifier.addType();
-	}
-
-	@Override
-	protected AsyncPagedListDiffer<Filter> createDiffer(@NonNull RecyclerView.Adapter adapter) {
-		return new AsyncPagedListDiffer<>(
-				adapter,
-				Filter.DIFF_CALLBACK
-		);
 	}
 
 	@Override
