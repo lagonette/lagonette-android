@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import org.lagonette.app.app.widget.adapter.datasource.FilterDataSource;
 import org.lagonette.app.app.widget.adapter.datasource.wrapper.SingleIdentifierDataSourceWrapper;
 import org.lagonette.app.app.widget.adapter.decorator.CategoryDecorator;
+import org.lagonette.app.app.widget.adapter.decorator.EmptyViewDecorator;
 import org.lagonette.app.app.widget.adapter.decorator.FooterDecorator;
 import org.lagonette.app.app.widget.adapter.decorator.LoadingDecorator;
 import org.lagonette.app.app.widget.adapter.decorator.LocationDecorator;
@@ -28,11 +29,13 @@ public class FilterAdapter
 
 	public final static int RANK_FILTERS = 0;
 
-	public final static int RANK_LOADING = 1;
+	public final static int RANK_EMPTY_VIEW = 1;
 
-	public final static int RANK_SHORTCUT = 2;
+	public final static int RANK_LOADING = 2;
 
-	public final static int TYPE_COUNT = 5;
+	public final static int RANK_SHORTCUT = 3;
+
+	public final static int TYPE_COUNT = 6;
 
 	@NonNull
 	public final ShortcutDecorator.Callbacks shortcutCallbacks;
@@ -54,6 +57,9 @@ public class FilterAdapter
 
 	@NonNull
 	private final AdapterLink<RecyclerView.ViewHolder> mLoadingLink;
+
+	@NonNull
+	private final AdapterLink<RecyclerView.ViewHolder> mEmptyViewLink;
 
 	public FilterAdapter(@NonNull Context context, @NonNull Resources resources) {
 
@@ -104,6 +110,17 @@ public class FilterAdapter
 				)
 		);
 
+		mEmptyViewLink = chainUp(
+				RANK_EMPTY_VIEW,
+				new DataSourceComponent<>(
+						new SingleIdentifierDataSourceWrapper<>(
+								new SingleItemDataSource<>(true),
+								mIdentifier
+						),
+						new EmptyViewDecorator()
+				)
+		);
+
 		chainUp(
 				RANK_FILTERS,
 				mFilterComponent
@@ -120,15 +137,32 @@ public class FilterAdapter
 		// There is no need to notify adapter data set changed because PagedList already do this.
 		mFilterComponent.setSource(filters);
 		if (filters != null) {
-			if (isChained(RANK_LOADING)) {
-				unchain(RANK_LOADING);
+			ensureLoadingLinkIsUnchained();
+
+			if (filters.size() > 0) {
+				ensureEmptyViewLinkIsUnchained();
+			}
+			else {
+				ensureEmptyViewLinkIsChained();
 			}
 		}
-		else {
-			if (!isChained(RANK_LOADING)) {
-				chainUp(mLoadingLink);
-				notifyDataSetChanged();
-			}
+	}
+
+	public void ensureLoadingLinkIsUnchained() {
+		if (isChained(RANK_LOADING)) {
+			unchain(RANK_LOADING);
+		}
+	}
+
+	public void ensureEmptyViewLinkIsUnchained() {
+		if (isChained(RANK_EMPTY_VIEW)) {
+			unchain(RANK_EMPTY_VIEW);
+		}
+	}
+
+	public void ensureEmptyViewLinkIsChained() {
+		if (!isChained(RANK_EMPTY_VIEW)) {
+			unchain(RANK_EMPTY_VIEW);
 		}
 	}
 

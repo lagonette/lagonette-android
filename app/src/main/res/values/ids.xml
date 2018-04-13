@@ -2,6 +2,7 @@
 <resources>
 
     <item name="view_type_loading" type="id" />
+    <item name="view_type_empty_view" type="id" />
     <item name="view_type_shortcut" type="id" />
     <item name="view_type_category" type="id" />
     <item name="view_type_location" type="id" />
