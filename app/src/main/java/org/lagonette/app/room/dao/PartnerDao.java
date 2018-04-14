@@ -46,6 +46,9 @@ public interface PartnerDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	long[] insertPartnersSideCategories(List<PartnerSideCategory> partnersSideCategories);
 
+	@Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id IN (SELECT location.id FROM partner JOIN location ON location.partner_id = partner.id WHERE is_gonette_headquarter <> 0)")
+	int updateHeadquarterVisibility(boolean isVisible);
+
 	@Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id = :id")
 	int updateLocationVisibility(long id, boolean isVisible);
 

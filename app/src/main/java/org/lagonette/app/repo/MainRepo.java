@@ -27,11 +27,15 @@ public class MainRepo {
 	private final Executor mExecutor;
 
 	@NonNull
-	private Context mContext;
+	private final Context mContext;
+
+	@NonNull
+	private final LaGonetteDatabase mDatabase;
 
 	public MainRepo(@NonNull Context context, @NonNull Executor executor) {
 		mContext = context;
 		mExecutor = executor;
+		mDatabase = DB.get();
 	}
 
 	public LiveData<WorkerState> updateDatas() {
@@ -43,8 +47,7 @@ public class MainRepo {
 	public LiveData<List<LocationItem>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
 		return Transformations.switchMap(
 				searchLiveData,
-				search -> DB
-						.get()
+				search -> mDatabase
 						.uiDao()
 						.getMapLocations(SearchUtils.formatSearch(search))
 		);
@@ -54,7 +57,7 @@ public class MainRepo {
 		return Transformations.switchMap(
 				locationIdLiveData,
 				locationId -> locationId > Statement.NO_ID
-						? DB.get().uiDao().getLocationsDetail(locationId)
+						? mDatabase.uiDao().getLocationsDetail(locationId)
 						: null
 		);
 	}
@@ -63,7 +66,7 @@ public class MainRepo {
 		return Transformations.switchMap(
 				searchLiveData,
 				search -> new LivePagedListBuilder<>(
-						DB.get().uiDao().getFilters(SearchUtils.formatSearch(search)),
+						mDatabase.uiDao().getFilters(SearchUtils.formatSearch(search)),
 						20
 				)
 						.build()
@@ -71,12 +74,12 @@ public class MainRepo {
 	}
 
 	public LiveData<HeadquarterShortcut> getHeadquarterShortcut() {
-		return DB.get().uiDao().getHeadquarterShortcut();
+		return mDatabase.uiDao().getHeadquarterShortcut();
 	}
 
 	public void setLocationVisibility(long locationId, boolean isVisible) {
 		mExecutor.execute(
-				() -> DB.get()
+				() -> mDatabase
 						.partnerDao()
 						.updateLocationVisibility(locationId, isVisible)
 		);
@@ -84,15 +87,39 @@ public class MainRepo {
 
 	public void setCategoryVisibility(long categoryId, boolean isVisible) {
 		mExecutor.execute(
-				() -> DB.get()
+				() -> mDatabase
 						.categoryDao()
 						.updateCategoryVisibility(categoryId, isVisible)
 		);
 	}
 
+	public void makeVisibleOneCategory(long categoryId) {
+		mExecutor.execute(
+				() -> {
+					LaGonetteDatabase database = mDatabase;
+					try {
+						database.beginTransaction();
+						database
+								.categoryDao()
+								.makeVisibleOneCategory(categoryId);
+						mDatabase
+								.categoryDao()
+								.updateHiddenCategoryVisibility(true);
+						database
+								.partnerDao()
+								.updateHeadquarterVisibility(false);
+						database.setTransactionSuccessful();
+					}
+					finally {
+						database.endTransaction();
+					}
+				}
+		);
+	}
+
 	public void setCategoryCollapsed(long categoryId, boolean isCollapsed) {
 		mExecutor.execute(
-				() -> DB.get()
+				() -> mDatabase
 						.categoryDao()
 						.updateCategoryCollapsed(categoryId, isCollapsed)
 		);
@@ -101,14 +128,17 @@ public class MainRepo {
 	public void showAllLocations() {
 		mExecutor.execute(
 				() -> {
-					LaGonetteDatabase database = DB.get();
-					database.beginTransaction();
-					database.categoryDao()
-							.updateCategoryVisibilities(true);
-					database.partnerDao()
-							.updateLocationVisibilities(true);
-					database.setTransactionSuccessful();
-					database.endTransaction();
+					try {
+						mDatabase.beginTransaction();
+						mDatabase.categoryDao()
+								.updateCategoryVisibilities(true);
+						mDatabase.partnerDao()
+								.updateLocationVisibilities(true);
+						mDatabase.setTransactionSuccessful();
+					}
+					finally {
+						mDatabase.endTransaction();
+					}
 				}
 		);
 	}
@@ -116,16 +146,19 @@ public class MainRepo {
 	public void showAllExchangeOffice() {
 		mExecutor.execute(
 				() -> {
-					LaGonetteDatabase database = DB.get();
-					database.beginTransaction();
-					database.categoryDao()
-							.updateCategoryVisibilities(true);
-					database.partnerDao()
-							.updateLocationVisibilities(false);
-					database.partnerDao()
-							.updateExchangeOfficeVisibilities(true);
-					database.setTransactionSuccessful();
-					database.endTransaction();
+					try {
+						mDatabase.beginTransaction();
+						mDatabase.categoryDao()
+								.updateCategoryVisibilities(true);
+						mDatabase.partnerDao()
+								.updateLocationVisibilities(false);
+						mDatabase.partnerDao()
+								.updateExchangeOfficeVisibilities(true);
+						mDatabase.setTransactionSuccessful();
+					}
+					finally {
+						mDatabase.endTransaction();
+					}
 				}
 		);
 	}

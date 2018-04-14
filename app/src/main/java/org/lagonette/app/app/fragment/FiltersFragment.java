@@ -21,7 +21,6 @@ import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
 
-//TODO Do not show empty fragment when there is no partner.
 public class FiltersFragment
 		extends BaseFragment {
 
@@ -104,7 +103,8 @@ public class FiltersFragment
 
 		mRecyclerView.setLayoutManager(layoutManager);
 		mRecyclerView.setAdapter(mFilterAdapter);
-		mRecyclerView.setItemAnimator(null); //TODO Remove
+		// Too avoid weird animations, we disable them.
+		mRecyclerView.setItemAnimator(null);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class FiltersFragment
 	protected void onConstructed() {
 		mFilters.observe(
 				FiltersFragment.this,
-				mFilterAdapter::setFilters //TODO manage loading & error
+				mFilterAdapter::setFilters
 		);
 
 		mHeadquarterShortcut.observe(
@@ -137,6 +137,7 @@ public class FiltersFragment
 		mFilterAdapter.locationCallbacks.onClick = locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
 		mFilterAdapter.locationCallbacks.onVisibilityClick = mFiltersViewModel::changeLocationVisibility;
 		mFilterAdapter.categoryCallbacks.onVisibilityClick = mFiltersViewModel::changeCategoryVisibility;
+		mFilterAdapter.categoryCallbacks.onVisibilityLongClick = mFiltersViewModel::makeVisibleOneCategory;
 		mFilterAdapter.categoryCallbacks.onCollapsedClick = mFiltersViewModel::changeCategoryCollapsed;
 		mFilterAdapter.shortcutCallbacks.onLocationClick = mFiltersViewModel::showAllLocations;
 		mFilterAdapter.shortcutCallbacks.onExchangeOfficeClick = mFiltersViewModel::showAllExchangeOffices;

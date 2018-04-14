@@ -55,6 +55,12 @@ public class FiltersViewModel
 				.setCategoryVisibility(categoryId, isVisible);
 	}
 
+	public void makeVisibleOneCategory(long categoryId) {
+		Repo
+				.get()
+				.makeVisibleOneCategory(categoryId);
+	}
+
 	public void changeCategoryCollapsed(long categoryId, boolean isCollapsed) {
 		Repo
 				.get()

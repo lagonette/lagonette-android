@@ -13,6 +13,7 @@ import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.tools.chainadapter.decorator.SimpleAdapterDecorator;
 import org.lagonette.app.tools.functions.main.LongBooleanConsumer;
+import org.lagonette.app.tools.functions.main.LongConsumer;
 
 public class CategoryDecorator
 		extends SimpleAdapterDecorator<CategoryViewHolder, Filter> {
@@ -24,6 +25,9 @@ public class CategoryDecorator
 
 		@Nullable
 		public LongBooleanConsumer onVisibilityClick;
+
+		@Nullable
+		public LongConsumer onVisibilityLongClick;
 
 	}
 
@@ -53,6 +57,13 @@ public class CategoryDecorator
 
 		if (mCallbacks.onVisibilityClick != null) {
 			holder.visibilityButton.setOnClickListener(view -> mCallbacks.onVisibilityClick.accept(holder.categoryId, !holder.isVisible));
+		}
+
+		if (mCallbacks.onVisibilityLongClick != null) {
+			holder.visibilityButton.setOnLongClickListener(view -> {
+				mCallbacks.onVisibilityLongClick.accept(holder.categoryId);
+				return true;
+			});
 		}
 
 		return holder;

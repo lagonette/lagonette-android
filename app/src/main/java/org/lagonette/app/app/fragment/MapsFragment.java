@@ -58,8 +58,6 @@ public class MapsFragment
 		return new MapsFragment();
 	}
 
-	//TODO Use firebase to find broken data
-
 	@Override
 	protected void construct() {
 		mMapPerformer = new MapPerformer(getContext());

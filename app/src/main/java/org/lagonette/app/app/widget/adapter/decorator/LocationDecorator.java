@@ -23,10 +23,10 @@ public class LocationDecorator
 	public static class Callbacks {
 
 		@Nullable
-		public LongConsumer onClick = LongConsumer::doNothing;
+		public LongConsumer onClick;
 
 		@Nullable
-		public LongBooleanConsumer onVisibilityClick = LongBooleanConsumer::doNothing;
+		public LongBooleanConsumer onVisibilityClick;
 
 	}
 
