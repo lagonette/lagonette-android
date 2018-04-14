@@ -31,6 +31,12 @@ public class ShortcutViewHolder
 	@NonNull
 	public final TextView textHeadquarterView;
 
+	@NonNull
+	public final ImageView locationImageView;
+
+	@NonNull
+	public final ImageView exchangeOfficeImageView;
+
 	public ShortcutViewHolder(
 			@NonNull ViewGroup parent) {
 		super(
@@ -44,8 +50,10 @@ public class ShortcutViewHolder
 		);
 
 		locationView = itemView.findViewById(R.id.layout_shortcut_location);
+		locationImageView = itemView.findViewById(R.id.layout_shortcut_location_icon);
 
 		exchangeOfficeView = itemView.findViewById(R.id.layout_shortcut_exchange_office);
+		exchangeOfficeImageView = itemView.findViewById(R.id.layout_shortcut_exchange_office_icon);
 
 		headquarterView = itemView.findViewById(R.id.layout_shortcut_headquarter);
 		backgroundHeadquarterView = itemView.findViewById(R.id.layout_shortcut_headquarter_background);

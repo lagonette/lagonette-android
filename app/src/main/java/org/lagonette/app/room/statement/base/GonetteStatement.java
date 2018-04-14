@@ -2,6 +2,8 @@ package org.lagonette.app.room.statement.base;
 
 public interface GonetteStatement {
 
+	String FROM_LOCATION = " FROM location ";
+
 	String FROM_PARTNER = " FROM partner ";
 
 	String FROM_CATEGORY = " FROM category ";

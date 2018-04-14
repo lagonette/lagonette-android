@@ -16,7 +16,7 @@ import org.lagonette.app.app.widget.adapter.decorator.LoadingDecorator;
 import org.lagonette.app.app.widget.adapter.decorator.LocationDecorator;
 import org.lagonette.app.app.widget.adapter.decorator.ShortcutDecorator;
 import org.lagonette.app.room.entity.statement.Filter;
-import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
+import org.lagonette.app.room.entity.statement.Shortcut;
 import org.lagonette.app.tools.chainadapter.adapter.ChainAdapter;
 import org.lagonette.app.tools.chainadapter.component.DataSourceComponent;
 import org.lagonette.app.tools.chainadapter.datasource.SingleItemDataSource;
@@ -50,7 +50,7 @@ public class FilterAdapter
 	private final DataSourceComponent<RecyclerView.ViewHolder, Filter, PagedList<Filter>> mFilterComponent;
 
 	@NonNull
-	private final DataSourceComponent<RecyclerView.ViewHolder, HeadquarterShortcut, HeadquarterShortcut> mShortcutComponent;
+	private final DataSourceComponent<RecyclerView.ViewHolder, Shortcut, Shortcut> mShortcutComponent;
 
 	@NonNull
 	private final Identifier mIdentifier;
@@ -166,8 +166,8 @@ public class FilterAdapter
 		}
 	}
 
-	public void setHeadquarterShortcut(@Nullable HeadquarterShortcut headquarterShortcut) {
-		mShortcutComponent.setSource(headquarterShortcut);
+	public void setShortcut(@Nullable Shortcut Shortcut) {
+		mShortcutComponent.setSource(Shortcut);
 		notifyDataSetChanged();
 	}
 }

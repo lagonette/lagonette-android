@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.room.entity.statement.Filter;
-import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
+import org.lagonette.app.room.entity.statement.Shortcut;
 
 public class FiltersViewModel
 		extends ViewModel {
@@ -20,12 +20,12 @@ public class FiltersViewModel
 	private final LiveData<PagedList<Filter>> mFilters;
 
 	@NonNull
-	private final LiveData<HeadquarterShortcut> mHeadquarterShortcut;
+	private final LiveData<Shortcut> mShortcut;
 
 	public FiltersViewModel() {
 		mSearch = new MutableLiveData<>();
 		mFilters = Repo.get().getFilters(mSearch);
-		mHeadquarterShortcut = Repo.get().getHeadquarterShortcut();
+		mShortcut = Repo.get().getShortcut();
 	}
 
 	@NonNull
@@ -39,8 +39,8 @@ public class FiltersViewModel
 	}
 
 	@NonNull
-	public LiveData<HeadquarterShortcut> getHeadquarterShortcut() {
-		return mHeadquarterShortcut;
+	public LiveData<Shortcut> getShortcut() {
+		return mShortcut;
 	}
 
 	public void changeLocationVisibility(long locationId, boolean isVisible) {

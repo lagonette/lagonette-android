@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -24,15 +23,17 @@
         android:layout_weight="1"
         android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
+        android:focusable="true"
         android:orientation="vertical"
         android:padding="8dp">
 
         <ImageView
+            android:id="@+id/layout_shortcut_location_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:padding="8dp"
-            android:src="@drawable/bg_item_partner"/>
+            android:src="@drawable/bg_item_partner" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,7 +41,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/shortcut_partner"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
 
     </LinearLayout>
 
@@ -51,15 +52,17 @@
         android:layout_weight="1"
         android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
+        android:focusable="true"
         android:orientation="vertical"
         android:padding="8dp">
 
         <ImageView
+            android:id="@+id/layout_shortcut_exchange_office_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:padding="8dp"
-            android:src="@drawable/bg_item_exchange_office"/>
+            android:src="@drawable/bg_item_exchange_office" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,7 +70,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/shortcut_exchange_office"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
 
     </LinearLayout>
 
@@ -95,7 +98,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:background="@drawable/bg_item_category"
-                android:src="@drawable/img_item_default"/>
+                android:src="@drawable/img_item_default" />
 
         </FrameLayout>
 
@@ -106,7 +109,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/shortcut_la_gonette"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
 
     </LinearLayout>
 

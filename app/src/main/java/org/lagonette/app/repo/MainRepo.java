@@ -12,9 +12,9 @@ import org.lagonette.app.background.worker.WorkerState;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
 import org.lagonette.app.room.entity.statement.Filter;
-import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.entity.statement.LocationItem;
+import org.lagonette.app.room.entity.statement.Shortcut;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.SearchUtils;
 
@@ -73,8 +73,8 @@ public class MainRepo {
 		);
 	}
 
-	public LiveData<HeadquarterShortcut> getHeadquarterShortcut() {
-		return mDatabase.uiDao().getHeadquarterShortcut();
+	public LiveData<Shortcut> getShortcut() {
+		return mDatabase.uiDao().getShortcut();
 	}
 
 	public void setLocationVisibility(long locationId, boolean isVisible) {

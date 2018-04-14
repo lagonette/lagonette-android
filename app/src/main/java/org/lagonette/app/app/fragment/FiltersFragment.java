@@ -17,7 +17,7 @@ import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
 import org.lagonette.app.room.entity.statement.Filter;
-import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
+import org.lagonette.app.room.entity.statement.Shortcut;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
 
@@ -34,7 +34,7 @@ public class FiltersFragment
 
 	private DataViewModel mDataViewModel;
 
-	private LiveData<HeadquarterShortcut> mHeadquarterShortcut;
+	private LiveData<Shortcut> mShortcut;
 
 	// --- LiveDatas --- //
 
@@ -70,7 +70,7 @@ public class FiltersFragment
 				.get(DataViewModel.class);
 
 		mFilters = mFiltersViewModel.getFilters();
-		mHeadquarterShortcut = mFiltersViewModel.getHeadquarterShortcut();
+		mShortcut = mFiltersViewModel.getShortcut();
 		mSearch = mDataViewModel.getSearch();
 
 		mFilterAdapter = new FilterAdapter(getContext(), getResources());
@@ -124,9 +124,9 @@ public class FiltersFragment
 				mFilterAdapter::setFilters
 		);
 
-		mHeadquarterShortcut.observe(
+		mShortcut.observe(
 				FiltersFragment.this,
-				mFilterAdapter::setHeadquarterShortcut
+				mFilterAdapter::setShortcut
 		);
 
 		mSearch.observe(

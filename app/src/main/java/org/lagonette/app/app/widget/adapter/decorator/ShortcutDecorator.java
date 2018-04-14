@@ -11,13 +11,13 @@ import com.bumptech.glide.Glide;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.viewholder.ShortcutViewHolder;
-import org.lagonette.app.room.entity.statement.HeadquarterShortcut;
+import org.lagonette.app.room.entity.statement.Shortcut;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.chainadapter.decorator.SimpleAdapterDecorator;
 import org.lagonette.app.tools.functions.main.Consumer;
 
 public class ShortcutDecorator
-		extends SimpleAdapterDecorator<ShortcutViewHolder, HeadquarterShortcut> {
+		extends SimpleAdapterDecorator<ShortcutViewHolder, Shortcut> {
 
 	public static class Callbacks {
 
@@ -77,21 +77,33 @@ public class ShortcutDecorator
 
 	@Override
 	protected void onBindViewHolder(
-			@Nullable HeadquarterShortcut headquarterShortcut,
+			@Nullable Shortcut shortcut,
 			@NonNull ShortcutViewHolder holder) {
-		if (headquarterShortcut != null) {
-			holder.headquarterView.setTag(headquarterShortcut.locationId);
+		if (shortcut != null) {
+			holder.locationImageView.setImageResource(
+					shortcut.isPartnerShortcutSelected()
+							? R.drawable.bg_item_partner
+							: R.drawable.bg_item_partner_unselected
+			);
+			holder.exchangeOfficeImageView.setImageResource(
+					shortcut.isExchangeOfficeShortcutSelected()
+							? R.drawable.bg_item_exchange_office
+							: R.drawable.bg_item_exchange_office_unselected
+			);
+			holder.headquarterView.setTag(shortcut.headquarterLocationId);
 			holder.headquarterView.setClickable(true);
 			holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_partner);
 			holder.textHeadquarterView.setTextColor(mSecondaryTextColor);
 			Glide.with(holder.itemView.getContext())
-					.load(headquarterShortcut.icon)
+					.load(shortcut.headquarterIcon)
 					.asBitmap()
 					.placeholder(R.drawable.img_item_default)
 					.override(mCategoryIconSize, mCategoryIconSize)
 					.into(holder.iconHeadquarterView);
 		}
 		else {
+			holder.locationImageView.setImageResource(R.drawable.bg_item_category);
+			holder.exchangeOfficeImageView.setImageResource(R.drawable.bg_item_category);
 			holder.headquarterView.setTag(Statement.NO_ID);
 			holder.headquarterView.setClickable(false);
 			holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_category);
