@@ -5,7 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
@@ -61,11 +64,13 @@ public class LocationDetailPerformer
 
 	private TextView mOpeningHoursTextView;
 
+	private View mCategoriesLayout;
+
 	private TextView mMainCategoryLabelTextView;
 
-//    private ImageView mLogoImageView;
+	private ImageView mMainCategoryLogoImageView;
 
-//    private ImageView mMainCategoryLogoImageView;
+	private View mMainCategoryLogoLayout;
 
 	private double mLatitude;
 
@@ -74,7 +79,6 @@ public class LocationDetailPerformer
 
 	@Override
 	public void inject(@NonNull View view) {
-//        mBackImageButton = view.findViewById(R.id.back);
 
 		mHeaderView = view.findViewById(R.id.fragment_header);
 
@@ -100,10 +104,10 @@ public class LocationDetailPerformer
 		mOpeningHoursLayout = view.findViewById(R.id.container_opening_hours);
 
 		mMainCategoryLabelTextView = view.findViewById(R.id.main_category_label);
-//        mLogoImageView = view.findViewById(R.id.logo);
-//        mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
+		mCategoriesLayout = view.findViewById(R.id.container_categories);
+		mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
+		mMainCategoryLogoLayout = view.findViewById(R.id.main_category_logo_container);
 
-//        mBackImageButton.setOnClickListener(LocationDetailFragment.this);
 		mAddressLayout.setOnClickListener(v -> onAddressClick.accept(mNameTextView.getText().toString(), mLatitude, mLongitude));
 		mPhoneLayout.setOnClickListener(v -> onPhoneClick.accept(mPhoneTextView.getText().toString()));
 		mWebsiteLayout.setOnClickListener(v -> onWebsiteClick.accept(mWebsiteTextView.getText().toString()));
@@ -128,10 +132,9 @@ public class LocationDetailPerformer
 			mDescriptionTextView.setText(locationDetail.description);
 
 			// OPENING HOURS
-			String openingHours = locationDetail.openingHours;
-			if (!TextUtils.isEmpty(openingHours)) {
+			if (!TextUtils.isEmpty(locationDetail.openingHours)) {
 				mOpeningHoursLayout.setVisibility(View.VISIBLE);
-				mOpeningHoursTextView.setText(openingHours);
+				mOpeningHoursTextView.setText(locationDetail.openingHours);
 			}
 			else {
 				mOpeningHoursLayout.setVisibility(View.GONE);
@@ -148,46 +151,56 @@ public class LocationDetailPerformer
 			}
 
 			// PHONE
-			String phone = locationDetail.phone;
-			if (!TextUtils.isEmpty(phone)) {
+			if (!TextUtils.isEmpty(locationDetail.phone)) {
 				mPhoneLayout.setVisibility(View.VISIBLE);
-				mPhoneTextView.setText(PhoneUtils.format(phone));
+				mPhoneTextView.setText(PhoneUtils.format(locationDetail.phone));
 			}
 			else {
 				mPhoneLayout.setVisibility(View.GONE);
 			}
 
 			// WEBSITE
-			String website = locationDetail.website;
-			if (!TextUtils.isEmpty(website)) {
+			if (!TextUtils.isEmpty(locationDetail.website)) {
 				mWebsiteLayout.setVisibility(View.VISIBLE);
-				mWebsiteTextView.setText(website);
+				mWebsiteTextView.setText(locationDetail.website);
 			}
 			else {
 				mWebsiteLayout.setVisibility(View.GONE);
 			}
 
-			// WEBSITE
-			String email = locationDetail.email;
-			if (!TextUtils.isEmpty(email)) {
+			// EMAIL
+			if (!TextUtils.isEmpty(locationDetail.email)) {
 				mEmailLayout.setVisibility(View.VISIBLE);
-				mEmailTextView.setText(email);
+				mEmailTextView.setText(locationDetail.email);
 			}
 			else {
 				mEmailLayout.setVisibility(View.GONE);
 			}
 
-			mMainCategoryLabelTextView.setText(locationDetail.label);
+			// CATEGORY
+			if (locationDetail.isGonetteHeadquarter) {
+				mCategoriesLayout.setVisibility(View.GONE);
+			}
+			else {
+				mCategoriesLayout.setVisibility(View.VISIBLE);
+				mMainCategoryLabelTextView.setText(locationDetail.label);
+			}
 
-//            Glide.with(getContext())
-//                    .load(reader.getLogo())
-//                    .asBitmap()
-//                    .into(mLogoImageView);
+			if (locationDetail.isExchangeOffice) {
+				mMainCategoryLogoLayout.setBackgroundResource(R.drawable.bg_item_exchange_office);
+			}
+			else {
+				mMainCategoryLogoLayout.setBackgroundResource(R.drawable.bg_item_partner);
+			}
 
-//            Glide.with(getContext())
-//                    .load(reader.getCategoryIcon())
-//                    .asBitmap()
-//                    .into(mMainCategoryLogoImageView);
+			int size = resources.getDimensionPixelSize(R.dimen.map_item_size);
+
+			Glide.with(mMainCategoryLogoImageView.getContext())
+					.load(locationDetail.mainCategoryIcon)
+					.asBitmap()
+					.override(size, size)
+					.placeholder(R.drawable.img_item_default)
+					.into(mMainCategoryLogoImageView);
 		}
 	}
 

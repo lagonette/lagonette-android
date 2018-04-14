@@ -16,6 +16,9 @@ public class LocationDetail {
 	@ColumnInfo(name = "description")
 	public String description;
 
+	@ColumnInfo(name = "is_gonette_headquarter")
+	public boolean isGonetteHeadquarter;
+
 	@ColumnInfo(name = "latitude")
 	public double latitude;
 
@@ -48,6 +51,9 @@ public class LocationDetail {
 
 	@ColumnInfo(name = "main_category_id")
 	public String mainCategoryId;
+
+	@ColumnInfo(name = "main_category_icon")
+	public String mainCategoryIcon;
 
 	@Embedded
 	public Address address;

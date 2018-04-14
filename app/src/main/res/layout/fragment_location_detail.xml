@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<android.support.v4.widget.NestedScrollView-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="wrap_content">-->
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@android:color/background_light"
     android:layout_height="match_parent"
+    android:background="@android:color/background_light"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,19 +12,6 @@
         android:layout_height="96dp"
         android:background="@color/colorAccent"
         android:orientation="horizontal">
-
-        <!--<ImageButton-->
-            <!--android:id="@+id/back"-->
-            <!--style="@style/Widget.AppCompat.Button.Borderless"-->
-            <!--android:layout_width="48dp"-->
-            <!--android:layout_height="48dp"-->
-            <!--android:layout_gravity="center_vertical"-->
-            <!--android:layout_marginEnd="4dp"-->
-            <!--android:layout_marginLeft="4dp"-->
-            <!--android:layout_marginRight="4dp"-->
-            <!--android:layout_marginStart="4dp"-->
-            <!--android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--android:src="@drawable/ic_arrow_back_white_24dp"/>-->
 
         <LinearLayout
             android:layout_width="0dp"
@@ -50,7 +32,7 @@
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textColor="@android:color/white"
-                tools:text="La Gonette Gonette"/>
+                tools:text="La Gonette" />
 
             <TextView
                 android:id="@+id/short_description"
@@ -60,19 +42,9 @@
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textColor="@android:color/white"
-                tools:text="@string/location_detail_exchange_office"/>
+                tools:text="@string/location_detail_exchange_office" />
 
         </LinearLayout>
-
-        <!--<ImageView-->
-            <!--android:id="@+id/logo"-->
-            <!--android:layout_width="72dp"-->
-            <!--android:layout_height="72dp"-->
-            <!--android:layout_margin="12dp"-->
-            <!--android:background="@drawable/bg_partner_logo"-->
-            <!--android:minHeight="48dp"-->
-            <!--android:padding="4dp"/>-->
-
 
     </LinearLayout>
 
@@ -99,7 +71,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                tools:text="Partenaire + Comptoir de change"/>
+                tools:text="Partenaire + Comptoir de change" />
 
             <RelativeLayout
                 android:id="@+id/container_description"
@@ -115,7 +87,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_description_grey_24dp"/>
+                    android:src="@drawable/ic_description_grey_24dp" />
 
                 <TextView
                     android:id="@+id/description"
@@ -129,7 +101,7 @@
                     android:layout_marginStart="72dp"
                     android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    tools:text="Lorem ipsum dolor sit amet"/>
+                    tools:text="Lorem ipsum dolor sit amet" />
 
             </RelativeLayout>
 
@@ -147,7 +119,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_access_time_grey_24dp"/>
+                    android:src="@drawable/ic_access_time_grey_24dp" />
 
                 <TextView
                     android:id="@+id/opening_hours"
@@ -161,7 +133,7 @@
                     android:layout_marginStart="72dp"
                     android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    tools:text="de 8h à 10h"/>
+                    tools:text="de 8h à 10h" />
 
             </RelativeLayout>
 
@@ -170,7 +142,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@color/divider"/>
+                android:background="@color/divider" />
 
             <RelativeLayout
                 android:id="@+id/container_address"
@@ -188,7 +160,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_directions_accent_24dp"/>
+                    android:src="@drawable/ic_directions_accent_24dp" />
 
                 <TextView
                     android:id="@+id/address"
@@ -202,7 +174,7 @@
                     android:layout_marginStart="72dp"
                     android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    tools:text="34 rue Tupin, 69002 Lyon"/>
+                    tools:text="34 rue Tupin, 69002 Lyon" />
 
             </RelativeLayout>
 
@@ -221,7 +193,7 @@
                     android:layout_marginBottom="1dp"
                     android:layout_marginLeft="72dp"
                     android:layout_marginStart="72dp"
-                    android:background="@color/divider"/>
+                    android:background="@color/divider" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -231,7 +203,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_phone_accent_24dp"/>
+                    android:src="@drawable/ic_phone_accent_24dp" />
 
                 <TextView
                     android:id="@+id/phone"
@@ -245,7 +217,7 @@
                     android:layout_marginStart="72dp"
                     android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    tools:text="0698234104"/>
+                    tools:text="0698234104" />
 
             </RelativeLayout>
 
@@ -264,7 +236,7 @@
                     android:layout_marginBottom="1dp"
                     android:layout_marginLeft="72dp"
                     android:layout_marginStart="72dp"
-                    android:background="@color/divider"/>
+                    android:background="@color/divider" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -274,7 +246,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_public_accent_24dp"/>
+                    android:src="@drawable/ic_public_accent_24dp" />
 
                 <TextView
                     android:id="@+id/website"
@@ -288,7 +260,7 @@
                     android:layout_marginStart="72dp"
                     android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    tools:text="www.lagonette.org"/>
+                    tools:text="www.lagonette.org" />
 
             </RelativeLayout>
 
@@ -307,7 +279,7 @@
                     android:layout_marginBottom="1dp"
                     android:layout_marginLeft="72dp"
                     android:layout_marginStart="72dp"
-                    android:background="@color/divider"/>
+                    android:background="@color/divider" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -317,7 +289,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_email_accent_24dp"/>
+                    android:src="@drawable/ic_email_accent_24dp" />
 
                 <TextView
                     android:id="@+id/email"
@@ -331,7 +303,7 @@
                     android:layout_marginStart="72dp"
                     android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    tools:text="zxcv@lagonette.com"/>
+                    tools:text="zxcv@lagonette.com" />
 
             </RelativeLayout>
 
@@ -340,7 +312,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@color/divider"/>
+                android:background="@color/divider" />
 
             <!--TODO Make custom view-->
             <RelativeLayout
@@ -348,9 +320,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
+                android:focusable="true"
                 android:minHeight="48dp">
 
-                <ImageView
+                <FrameLayout
+                    android:id="@+id/main_category_logo_container"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="top"
@@ -358,7 +332,16 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_filter_list_grey_24dp"/>
+                    android:background="@drawable/bg_item_partner"
+                    android:padding="2dp">
+
+                    <ImageView
+                        android:id="@+id/main_category_logo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/img_item_default" />
+
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/main_category_label"
@@ -372,15 +355,9 @@
                     android:layout_marginStart="72dp"
                     android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    tools:text="Restaurants"/>
+                    tools:text="Restaurants" />
 
             </RelativeLayout>
-
-            <!--<ImageView-->
-                <!--android:id="@+id/main_category_logo"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:minHeight="48dp"/>-->
 
 
         </LinearLayout>
@@ -388,5 +365,3 @@
     </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>
-
-    <!--</android.support.v4.widget.NestedScrollView>-->

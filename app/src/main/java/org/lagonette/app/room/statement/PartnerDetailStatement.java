@@ -17,6 +17,7 @@ public interface PartnerDetailStatement
 					"partner.website, " +
 					"partner.email, " +
 					"partner.main_category_id, " +
+					"partner.is_gonette_headquarter, " +
 					"location.latitude, " +
 					"location.longitude, " +
 					"location.opening_hours, " +
