@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import org.lagonette.app.util.LocationUtils;
+
 public class LocationItem
 		implements ClusterItem {
 
@@ -85,6 +87,6 @@ public class LocationItem
 	}
 
 	public boolean displayAsExchangeOffice() {
-		return mIsExchangeOffice && !mIsGonetteHeadquarter;
+		return LocationUtils.displayAsExchangeOffice(mIsExchangeOffice, mIsGonetteHeadquarter);
 	}
 }

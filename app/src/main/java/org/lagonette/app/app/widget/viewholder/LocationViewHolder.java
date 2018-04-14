@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.lagonette.app.R;
+import org.lagonette.app.util.LocationUtils;
 
 public class LocationViewHolder
 		extends RecyclerView.ViewHolder {
@@ -35,6 +36,8 @@ public class LocationViewHolder
 
 	public boolean isExchangeOffice;
 
+	public boolean isGonetteHeadquarter;
+
 	public LocationViewHolder(
 			@NonNull ViewGroup parent,
 			boolean isAlone) {
@@ -53,5 +56,9 @@ public class LocationViewHolder
 		addressTextView = itemView.findViewById(R.id.location_address);
 		exchangeOfficeIndicatorImage = itemView.findViewById(R.id.location_exchange_office_indicator);
 		visibilityButton = itemView.findViewById(R.id.location_visibility);
+	}
+
+	public boolean displayAsExchangeOffice() {
+		return LocationUtils.displayAsExchangeOffice(isExchangeOffice, isGonetteHeadquarter);
 	}
 }

@@ -89,6 +89,7 @@ public class LocationDecorator
 			holder.isVisible = filter.isLocationVisible;
 			holder.isCategoryVisible = filter.isCategoryVisible;
 			holder.isExchangeOffice = filter.isLocationExchangeOffice;
+			holder.isGonetteHeadquarter = filter.isGonetteHeadquarter;
 			holder.isMainPartner = filter.rowType == FilterStatement.VALUE_ROW_MAIN_PARTNER;
 
 			holder.nameTextView.setText(filter.partnerName);
@@ -113,7 +114,7 @@ public class LocationDecorator
 				holder.visibilityButton.setImageResource(R.drawable.ic_visibility_off_grey_24dp);
 			}
 
-			if (holder.isExchangeOffice) {
+			if (holder.displayAsExchangeOffice()) {
 				holder.exchangeOfficeIndicatorImage.setImageDrawable(mExchangeOfficeIndicatorImage);
 			}
 			else {

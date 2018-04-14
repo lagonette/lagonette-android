@@ -62,7 +62,7 @@ public class MapPerformer
 
 	private int mStatusBarHeight;
 
-	private LongSparseArray<LocationItem> mPartnerItems;
+	private LongSparseArray<LocationItem> mLocationItems;
 
 	@Nullable
 	private Marker mSelectedMarker;
@@ -70,7 +70,7 @@ public class MapPerformer
 	public MapPerformer(@NonNull Context context) {
 		mContext = context;
 		mStatusBarHeight = UiUtils.getStatusBarHeight(mContext.getResources());
-		mPartnerItems = new LongSparseArray<>();
+		mLocationItems = new LongSparseArray<>();
 	}
 
 	@Override
@@ -145,11 +145,11 @@ public class MapPerformer
 	}
 
 	public void showPartners(@Nullable List<LocationItem> locationItems) {
-		mPartnerItems.clear();
+		mLocationItems.clear();
 		mClusterManager.clearItems();
 		if (locationItems != null) {
 			for (LocationItem item : locationItems) { //TODO Improve -> Pass the item or keep in the ViewModel
-				mPartnerItems.put(item.getId(), item);
+				mLocationItems.put(item.getId(), item);
 			}
 			mClusterManager.addItems(locationItems);
 		}
@@ -181,7 +181,7 @@ public class MapPerformer
 
 	@Nullable
 	public LocationItem retrieveLocationItem(long locationId) {
-		return mPartnerItems.get(locationId);
+		return mLocationItems.get(locationId);
 	}
 
 	public void selectLocation(@NonNull LocationItem selected) {
