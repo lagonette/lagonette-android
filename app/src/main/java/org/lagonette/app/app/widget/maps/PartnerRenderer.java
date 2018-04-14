@@ -158,8 +158,6 @@ public class PartnerRenderer
 		return BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon());
 	}
 
-	//TODO Display just a point instead of logo when zoom is huge
-
 	@Override
 	protected void onBeforeClusterItemRendered(
 			final LocationItem locationItem,
