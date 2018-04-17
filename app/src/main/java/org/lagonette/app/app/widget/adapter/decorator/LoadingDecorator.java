@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.viewholder.LoadingViewHolder;
-import org.lagonette.app.tools.chainadapter.decorator.VoidDecorator;
+import org.zxcv.chainadapter.decorator.VoidDecorator;
 
 public class LoadingDecorator
 		extends VoidDecorator<LoadingViewHolder> {

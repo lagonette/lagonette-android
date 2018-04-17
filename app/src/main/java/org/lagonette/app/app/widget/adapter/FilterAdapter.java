@@ -17,11 +17,11 @@ import org.lagonette.app.app.widget.adapter.decorator.LocationDecorator;
 import org.lagonette.app.app.widget.adapter.decorator.ShortcutDecorator;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.Shortcut;
-import org.lagonette.app.tools.chainadapter.adapter.ChainAdapter;
-import org.lagonette.app.tools.chainadapter.component.DataSourceComponent;
-import org.lagonette.app.tools.chainadapter.datasource.SingleItemDataSource;
-import org.lagonette.app.tools.chainadapter.link.AdapterLink;
-import org.lagonette.app.tools.chainadapter.locator.HeaderLocator;
+import org.zxcv.chainadapter.adapter.ChainAdapter;
+import org.zxcv.chainadapter.component.DataSourceComponent;
+import org.zxcv.chainadapter.datasource.SingleItemDataSource;
+import org.zxcv.chainadapter.link.AdapterLink;
+import org.zxcv.chainadapter.locator.HeaderLocator;
 import org.lagonette.app.tools.identifier.Identifier;
 
 public class FilterAdapter

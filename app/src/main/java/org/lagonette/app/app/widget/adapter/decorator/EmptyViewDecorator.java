@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.viewholder.EmptyViewHolder;
-import org.lagonette.app.tools.chainadapter.decorator.VoidDecorator;
+import org.zxcv.chainadapter.decorator.VoidDecorator;
 
 public class EmptyViewDecorator
 		extends VoidDecorator<EmptyViewHolder> {

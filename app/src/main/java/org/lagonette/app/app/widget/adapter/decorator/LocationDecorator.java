@@ -14,7 +14,7 @@ import org.lagonette.app.app.widget.viewholder.LocationViewHolder;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.room.statement.Statement;
-import org.lagonette.app.tools.chainadapter.decorator.AbstractAdapterDecorator;
+import org.zxcv.chainadapter.decorator.AbstractAdapterDecorator;
 import org.lagonette.app.tools.functions.main.LongBooleanConsumer;
 import org.lagonette.app.tools.functions.main.LongConsumer;
 

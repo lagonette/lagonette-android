@@ -2,8 +2,8 @@ package org.lagonette.app.app.widget.adapter.datasource.wrapper;
 
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.tools.chainadapter.datasource.AdapterDataSource;
-import org.lagonette.app.tools.chainadapter.datasource.DataSourceWrapper;
+import org.zxcv.chainadapter.datasource.AdapterDataSource;
+import org.zxcv.chainadapter.datasource.DataSourceWrapper;
 import org.lagonette.app.tools.identifier.Identifier;
 
 
