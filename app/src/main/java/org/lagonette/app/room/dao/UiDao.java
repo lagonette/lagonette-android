@@ -10,7 +10,7 @@ import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.room.entity.statement.Shortcut;
 import org.lagonette.app.room.statement.FilterStatement;
-import org.lagonette.app.room.statement.MapPartnerStatement;
+import org.lagonette.app.room.statement.MapLocationStatement;
 import org.lagonette.app.room.statement.PartnerDetailStatement;
 import org.lagonette.app.room.statement.ShortcutStatement;
 
@@ -22,7 +22,7 @@ public interface UiDao {
 	@Query(PartnerDetailStatement.SQL)
 	LiveData<LocationDetail> getLocationsDetail(long id);
 
-	@Query(MapPartnerStatement.SQL)
+	@Query(MapLocationStatement.SQL)
 	LiveData<List<LocationItem>> getMapLocations(String search);
 
 	@Query(FilterStatement.SQL)

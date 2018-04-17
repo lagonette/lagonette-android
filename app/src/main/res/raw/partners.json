@@ -332,7 +332,7 @@
       "email": "contact@lagonette.org",
       "description": null,
       "shortDescription": "Local de la Gonette",
-      "mainCategory": "5",
+      "mainCategory": "-1",
       "sideCategories": [
         ""
       ],

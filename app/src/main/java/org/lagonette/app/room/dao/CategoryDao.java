@@ -40,9 +40,6 @@ public interface CategoryDao {
 	@Query("UPDATE category_metadata SET is_visible = category_id == :id")
 	int makeVisibleOneCategory(long id);
 
-	@Query("UPDATE category_metadata SET is_visible = :isVisible WHERE category_id IN (SELECT category.id FROM category WHERE hidden == 1)")
-	int updateHiddenCategoryVisibility(boolean isVisible);
-
 	@Query("UPDATE category_metadata SET is_visible = :isVisible")
 	void updateCategoryVisibilities(boolean isVisible);
 

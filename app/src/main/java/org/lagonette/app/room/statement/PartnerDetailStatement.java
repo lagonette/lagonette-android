@@ -28,8 +28,8 @@ public interface PartnerDetailStatement
 					"main_category.label, " +
 					"main_category.icon " +
 					FROM_PARTNER +
-					JOIN_MAIN_CATEGORY_ON_PARTNER +
 					JOIN_LOCATION_ON_PARTNER +
+					LEFT_JOIN_MAIN_CATEGORY_ON_PARTNER +
 					" WHERE location.id = :id " +
 					" LIMIT 1";
 }

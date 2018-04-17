@@ -1,6 +1,5 @@
 package org.lagonette.app.app.fragment;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +11,6 @@ import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
 import org.lagonette.app.app.widget.performer.impl.IntentPerformer;
 import org.lagonette.app.app.widget.performer.impl.LocationDetailPerformer;
 import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
-import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
 
 public class LocationDetailFragment
@@ -21,8 +19,6 @@ public class LocationDetailFragment
 	public static final String TAG = "LocationDetailFragment";
 
 	private static final String ARG_LOCATION_ID = "arg:location_id";
-
-	private LiveData<LocationDetail> mLocationDetail;
 
 	private LocationDetailPerformer mLocationPerformer;
 
@@ -46,9 +42,6 @@ public class LocationDetailFragment
 		mViewModel = ViewModelProviders
 				.of(LocationDetailFragment.this)
 				.get(LocationDetailViewModel.class);
-
-		// Maybe we could use LocationDetail LiveData to notify than partner has changed rather than reload another fragment
-		mLocationDetail = mViewModel.getLocationDetail();
 
 		mIntentPerformer = new IntentPerformer(getContext());
 		mLocationPerformer = new LocationDetailPerformer();
@@ -90,6 +83,7 @@ public class LocationDetailFragment
 		mLocationPerformer.onPhoneClick = mIntentPerformer::makeCall;
 		mLocationPerformer.onWebsiteClick = mIntentPerformer::goToWebsite;
 
+		// Maybe we could use LocationDetail LiveData to notify than partner has changed rather than reload another fragment
 		mViewModel.getLocationDetail().observe(
 				LocationDetailFragment.this,
 				mLocationPerformer::displayLocation

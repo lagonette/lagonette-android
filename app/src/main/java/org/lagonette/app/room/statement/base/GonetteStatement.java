@@ -60,6 +60,10 @@ public interface GonetteStatement {
 			" JOIN location" +
 					" ON location.partner_id = partner.id";
 
+	String LEFT_JOIN_LOCATION_ON_PARTNER =
+			" LEFT JOIN location" +
+					" ON location.partner_id = partner.id";
+
 	String LEFT_JOIN_MAIN_LOCATION_ON_MAIN_PARTNER =
 			" LEFT JOIN location AS main_location" +
 					" ON main_location.partner_id = main_partner.id";
@@ -76,8 +80,16 @@ public interface GonetteStatement {
 			" JOIN category AS main_category " +
 					" ON partner.main_category_id = main_category.id ";
 
+	String LEFT_JOIN_MAIN_CATEGORY_ON_PARTNER =
+			" LEFT JOIN category AS main_category " +
+					" ON partner.main_category_id = main_category.id ";
+
 	String JOIN_METADATA_ON_MAIN_CATEGORY =
 			" JOIN category_metadata AS main_category_metadata " +
+					" ON main_category.id = main_category_metadata.category_id ";
+
+	String LEFT_JOIN_METADATA_ON_MAIN_CATEGORY =
+			" LEFT JOIN category_metadata AS main_category_metadata " +
 					" ON main_category.id = main_category_metadata.category_id ";
 
 	String LEFT_JOIN_SIDE_CATEGORY_ON_PARTNER =
@@ -99,6 +111,10 @@ public interface GonetteStatement {
 	String JOIN_MAIN_CATEGORY_AND_METADATA_ON_PARTNER =
 			JOIN_MAIN_CATEGORY_ON_PARTNER +
 					JOIN_METADATA_ON_MAIN_CATEGORY;
+
+	String LEFT_JOIN_MAIN_CATEGORY_AND_METADATA_ON_PARTNER =
+			LEFT_JOIN_MAIN_CATEGORY_ON_PARTNER +
+					LEFT_JOIN_METADATA_ON_MAIN_CATEGORY;
 
 	String LEFT_JOIN_SIDE_CATEGORY_AND_METADATA_ON_PARTNER =
 			LEFT_JOIN_SIDE_CATEGORY_ON_PARTNER +

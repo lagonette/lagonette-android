@@ -50,7 +50,7 @@ public class LocationDetail {
 	public String shortDescription;
 
 	@ColumnInfo(name = "main_category_id")
-	public String mainCategoryId;
+	public long mainCategoryId;
 
 	@ColumnInfo(name = "main_category_icon")
 	public String mainCategoryIcon;

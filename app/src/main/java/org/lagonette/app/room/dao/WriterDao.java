@@ -57,7 +57,6 @@ public abstract class WriterDao {
 		LaGonetteDatabase database = DB.get();
 		insert(database, categoryEntities);
 		insert(database, partnerEntities);
-		insertHeadquarter(database);
 		cleanUp(database);
 	}
 
@@ -86,35 +85,6 @@ public abstract class WriterDao {
 			database.categoryDao().insertCategories(categoryEntities.categories);
 			// When INSERT query will be available with Room, insert directly default metadata rather than create objects.
 			database.categoryDao().insertCategoriesMetadatas(categoryEntities.categoryMetadata);
-		}
-	}
-
-	private void insertHeadquarter(@NonNull LaGonetteDatabase database) {
-		Partner headquarter = database.partnerDao().getHeadquarter();
-
-		if (headquarter != null) {
-
-			// Manage headquarter category
-			Category headquarterCategory = new Category();
-			headquarterCategory.id = 0; //TODO
-			headquarterCategory.label = "Headquarter Category";
-			headquarterCategory.icon = headquarter.logo;
-			headquarterCategory.displayOrder = -1; //TODO
-			headquarterCategory.hidden = true;
-
-			// Manage headquarter category metadata
-			CategoryMetadata headquarterCategoryMetadata = new CategoryMetadata();
-			headquarterCategoryMetadata.categoryId = headquarterCategory.id;
-			headquarterCategoryMetadata.isCollapsed = false;
-			headquarterCategoryMetadata.isVisible = true;
-
-			// Manage headquarter partner
-			headquarter.mainCategoryId = headquarterCategory.id;
-
-			// Insert
-			database.categoryDao().insertCategory(headquarterCategory);
-			database.categoryDao().insertCategoryMetadata(headquarterCategoryMetadata);
-			database.partnerDao().insertPartner(headquarter);
 		}
 	}
 

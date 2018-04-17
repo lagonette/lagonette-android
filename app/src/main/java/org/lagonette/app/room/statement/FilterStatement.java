@@ -17,7 +17,34 @@ public abstract class FilterStatement
 
 	public static final int VALUE_ROW_FOOTER = 3;
 
-	public static final int ROW_TYPE_COUNT = 4;
+	public static final int VALUE_ROW_ORPHAN_PARTNER = 4;
+
+	public static final int VALUE_DISPLAY_ORDER_FIRST = -1;
+
+	public static final int VALUE_ORPHAN_CATEGORY_VISIBILITY = -1;
+
+	private static final String SQL_ORPHAN_PARTNERS =
+			"SELECT " +
+					VALUE_ROW_ORPHAN_PARTNER + " AS row_type, " +
+					Statement.NO_ID + " AS category_id, " +
+					"NULL AS category_label, " +
+					"NULL AS category_icon, " +
+					VALUE_DISPLAY_ORDER_FIRST + " AS category_display_order, " +
+					VALUE_ORPHAN_CATEGORY_VISIBILITY + " AS category_is_visible, " +
+					"NULL AS category_is_collapsed, " +
+					"NULL AS category_is_partners_visible, " +
+					"location.id AS location_id, " +
+					"location.street AS location_street, " +
+					"location.zip_code AS location_zip_code, " +
+					"location.city AS location_city, " +
+					"location.is_exchange_office AS location_is_exchange_office, " +
+					"location_metadata.is_visible AS location_is_visible, " +
+					"partner.is_gonette_headquarter AS partner_is_gonette_headquarter, " +
+					"partner.name AS partner_name" +
+					FROM_PARTNER +
+					JOIN_LOCATION_AND_METADATA_ON_PARTNER +
+					" WHERE partner.name LIKE :search" +
+					" AND partner.main_category_id = " + Statement.NO_ID + " ";
 
 	private static final String SQL_CATEGORIES =
 			"SELECT " +
@@ -40,8 +67,7 @@ public abstract class FilterStatement
 					FROM_CATEGORY_AND_METADATA +
 					LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
 					LEFT_JOIN_MAIN_LOCATION_AND_METADATA_ON_MAIN_PARTNER +
-					" WHERE category.hidden = 0 " +
-					" AND main_partner.name LIKE :search " +
+					" WHERE main_partner.name LIKE :search " +
 					" GROUP BY category.id ";
 
 	private static final String SQL_FOOTERS =
@@ -93,7 +119,9 @@ public abstract class FilterStatement
 					" WHERE main_partner.name LIKE :search AND category_metadata.is_collapsed = 0 ";
 
 	public static final String SQL =
-			SQL_CATEGORIES +
+			SQL_ORPHAN_PARTNERS +
+					" UNION " +
+					SQL_CATEGORIES +
 					" UNION " +
 					SQL_FOOTERS +
 					" UNION " +
@@ -102,6 +130,7 @@ public abstract class FilterStatement
 
 	@Retention(SOURCE)
 	@IntDef({
+			VALUE_ROW_ORPHAN_PARTNER,
 			VALUE_ROW_CATEGORY,
 			VALUE_ROW_MAIN_PARTNER,
 			VALUE_ROW_FOOTER

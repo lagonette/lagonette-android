@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.room.entity.statement.LocationDetail;
+import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.functions.main.Consumer;
 import org.lagonette.app.tools.functions.main.ObjBiDoubleConsumer;
 import org.lagonette.app.util.PhoneUtils;
@@ -35,8 +36,6 @@ public class LocationDetailPerformer
 	private View mHeaderView;
 
 	private TextView mNameTextView;
-
-//    private ImageButton mBackImageButton;
 
 	private TextView mPartnerTypeTextView;
 
@@ -178,29 +177,26 @@ public class LocationDetailPerformer
 			}
 
 			// CATEGORY
-			if (locationDetail.isGonetteHeadquarter) {
+			if (locationDetail.mainCategoryId == Statement.NO_ID) {
 				mCategoriesLayout.setVisibility(View.GONE);
 			}
 			else {
 				mCategoriesLayout.setVisibility(View.VISIBLE);
 				mMainCategoryLabelTextView.setText(locationDetail.label);
-			}
 
-			if (locationDetail.isExchangeOffice) {
-				mMainCategoryLogoLayout.setBackgroundResource(R.drawable.bg_item_exchange_office);
-			}
-			else {
-				mMainCategoryLogoLayout.setBackgroundResource(R.drawable.bg_item_partner);
-			}
+				Glide.with(mMainCategoryLogoImageView.getContext())
+						.load(locationDetail.mainCategoryIcon)
+						.asBitmap()
+						.placeholder(R.drawable.img_item_default)
+						.into(mMainCategoryLogoImageView);
 
-			int size = resources.getDimensionPixelSize(R.dimen.map_item_size);
-
-			Glide.with(mMainCategoryLogoImageView.getContext())
-					.load(locationDetail.mainCategoryIcon)
-					.asBitmap()
-					.override(size, size)
-					.placeholder(R.drawable.img_item_default)
-					.into(mMainCategoryLogoImageView);
+				if (locationDetail.isExchangeOffice) {
+					mMainCategoryLogoLayout.setBackgroundResource(R.drawable.bg_item_exchange_office);
+				}
+				else {
+					mMainCategoryLogoLayout.setBackgroundResource(R.drawable.bg_item_partner);
+				}
+			}
 		}
 	}
 

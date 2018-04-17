@@ -12,6 +12,7 @@ import org.lagonette.app.room.entity.Location;
 import org.lagonette.app.room.entity.LocationMetadata;
 import org.lagonette.app.room.entity.Partner;
 import org.lagonette.app.room.entity.PartnerSideCategory;
+import org.lagonette.app.room.statement.Statement;
 
 import java.util.List;
 
@@ -46,8 +47,8 @@ public interface PartnerDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	long[] insertPartnersSideCategories(List<PartnerSideCategory> partnersSideCategories);
 
-	@Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id IN (SELECT location.id FROM partner JOIN location ON location.partner_id = partner.id WHERE is_gonette_headquarter <> 0)")
-	int updateHeadquarterVisibility(boolean isVisible);
+	@Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id IN (SELECT location.id FROM partner JOIN location ON location.partner_id = partner.id WHERE main_category_id = " + Statement.NO_ID + ")")
+	int updateOrphanPartnerVisibilities(boolean isVisible);
 
 	@Query("UPDATE location_metadata SET is_visible = :isVisible WHERE location_id = :id")
 	int updateLocationVisibility(long id, boolean isVisible);

@@ -96,22 +96,18 @@ public class MainRepo {
 	public void makeVisibleOneCategory(long categoryId) {
 		mExecutor.execute(
 				() -> {
-					LaGonetteDatabase database = mDatabase;
 					try {
-						database.beginTransaction();
-						database
+						mDatabase.beginTransaction();
+						mDatabase
 								.categoryDao()
 								.makeVisibleOneCategory(categoryId);
 						mDatabase
-								.categoryDao()
-								.updateHiddenCategoryVisibility(true);
-						database
 								.partnerDao()
-								.updateHeadquarterVisibility(false);
-						database.setTransactionSuccessful();
+								.updateOrphanPartnerVisibilities(false);
+						mDatabase.setTransactionSuccessful();
 					}
 					finally {
-						database.endTransaction();
+						mDatabase.endTransaction();
 					}
 				}
 		);

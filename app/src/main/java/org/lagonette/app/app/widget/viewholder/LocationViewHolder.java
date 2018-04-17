@@ -40,13 +40,13 @@ public class LocationViewHolder
 
 	public LocationViewHolder(
 			@NonNull ViewGroup parent,
-			boolean isAlone) {
+			boolean isOrphan) {
 		super(
 				LayoutInflater
 						.from(parent.getContext())
 						.inflate(
-								isAlone
-										? R.layout.row_location_alone
+								isOrphan
+										? R.layout.row_location_orphan
 										: R.layout.row_location,
 								parent,
 								false

@@ -13,6 +13,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.viewholder.LocationViewHolder;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
+import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.chainadapter.decorator.AbstractAdapterDecorator;
 import org.lagonette.app.tools.functions.main.LongBooleanConsumer;
 import org.lagonette.app.tools.functions.main.LongConsumer;
@@ -52,7 +53,7 @@ public class LocationDecorator
 	@NonNull
 	@Override
 	public LocationViewHolder createViewHolder(@NonNull ViewGroup parent, int viewType) {
-		LocationViewHolder holder = new LocationViewHolder(parent, viewType == R.id.view_type_headquarter);
+		LocationViewHolder holder = new LocationViewHolder(parent, viewType == R.id.view_type_orphan_location);
 
 		if (mCallbacks.onClick != null) {
 			holder.itemView.setOnClickListener(view -> mCallbacks.onClick.accept(holder.locationId));
@@ -67,19 +68,21 @@ public class LocationDecorator
 
 	@Override
 	public boolean handleViewType(int viewType) {
-		return viewType == R.id.view_type_location || viewType == R.id.view_type_headquarter;
+		return viewType == R.id.view_type_location || viewType == R.id.view_type_orphan_location;
 	}
 
 	@Override
 	public int getViewType(@Nullable Filter filter) {
-		return filter.isGonetteHeadquarter
-				? R.id.view_type_headquarter
+		return filter != null && filter.categoryId == Statement.NO_ID
+				? R.id.view_type_orphan_location
 				: R.id.view_type_location;
 	}
 
 	@Override
 	public boolean handleItem(@Nullable Filter filter) {
-		return filter != null && filter.rowType == FilterStatement.VALUE_ROW_MAIN_PARTNER;
+		return filter != null
+				&& (filter.rowType == FilterStatement.VALUE_ROW_MAIN_PARTNER
+				|| filter.rowType == FilterStatement.VALUE_ROW_ORPHAN_PARTNER);
 	}
 
 	@Override
