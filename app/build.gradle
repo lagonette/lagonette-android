@@ -115,7 +115,7 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 
     // For Paging library
-    implementation "android.arch.paging:runtime:1.0.0-beta1"
+    implementation "android.arch.paging:runtime:1.0.0-rc1"
 
     // For Moshi
     implementation 'com.squareup.moshi:moshi:1.5.0'
