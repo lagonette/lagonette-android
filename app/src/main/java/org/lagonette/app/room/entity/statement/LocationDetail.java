@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 
 import org.lagonette.app.room.embedded.Address;
+import org.lagonette.app.util.LocationUtils;
 
 public class LocationDetail {
 
@@ -49,19 +50,20 @@ public class LocationDetail {
 	@ColumnInfo(name = "short_description")
 	public String shortDescription;
 
+	@Embedded
+	public Address address;
+
 	@ColumnInfo(name = "main_category_id")
 	public long mainCategoryId;
 
 	@ColumnInfo(name = "main_category_icon")
 	public String mainCategoryIcon;
 
-	@Embedded
-	public Address address;
+	@ColumnInfo(name = "main_category_label")
+	public String mainCategoryLabel;
 
-	@ColumnInfo(name = "label")
-	public String label;
-
-	@ColumnInfo(name = "icon")
-	public String icon;
+	public boolean displayAsExchangeOffice() {
+		return LocationUtils.displayAsExchangeOffice(isExchangeOffice, isGonetteHeadquarter);
+	}
 
 }

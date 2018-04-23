@@ -25,8 +25,9 @@ public interface PartnerDetailStatement
 					"location.street, " +
 					"location.zip_code, " +
 					"location.city, " +
-					"main_category.label, " +
-					"main_category.icon " +
+					"main_category.id as main_category_id, " +
+					"main_category.label as main_category_label, " +
+					"main_category.icon as main_category_icon" +
 					FROM_PARTNER +
 					JOIN_LOCATION_ON_PARTNER +
 					LEFT_JOIN_MAIN_CATEGORY_ON_PARTNER +

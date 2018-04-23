@@ -182,7 +182,7 @@ public class LocationDetailPerformer
 			}
 			else {
 				mCategoriesLayout.setVisibility(View.VISIBLE);
-				mMainCategoryLabelTextView.setText(locationDetail.label);
+				mMainCategoryLabelTextView.setText(locationDetail.mainCategoryLabel);
 
 				Glide.with(mMainCategoryLogoImageView.getContext())
 						.load(locationDetail.mainCategoryIcon)
@@ -190,7 +190,7 @@ public class LocationDetailPerformer
 						.placeholder(R.drawable.img_item_default)
 						.into(mMainCategoryLogoImageView);
 
-				if (locationDetail.isExchangeOffice) {
+				if (locationDetail.displayAsExchangeOffice()) {
 					mMainCategoryLogoLayout.setBackgroundResource(R.drawable.bg_item_exchange_office);
 				}
 				else {
