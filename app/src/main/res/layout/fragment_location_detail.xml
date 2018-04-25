@@ -314,7 +314,6 @@
                 android:layout_marginTop="8dp"
                 android:background="@color/divider" />
 
-            <!--TODO Make custom view-->
             <RelativeLayout
                 android:id="@+id/container_categories"
                 android:layout_width="match_parent"

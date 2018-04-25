@@ -1,9 +1,6 @@
 package org.lagonette.app.app.fragment;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.paging.PagedList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -16,8 +13,6 @@ import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
-import org.lagonette.app.room.entity.statement.Filter;
-import org.lagonette.app.room.entity.statement.Shortcut;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
 
@@ -34,22 +29,13 @@ public class FiltersFragment
 
 	private DataViewModel mDataViewModel;
 
-	private LiveData<Shortcut> mShortcut;
-
-	// --- LiveDatas --- //
-
-	private LiveData<PagedList<Filter>> mFilters;
-
-	private MutableLiveData<String> mSearch;
-
 	// --- Views --- //
+
 	private View mFilterContainer;
 
 	private RecyclerView mRecyclerView;
 
 	private FilterAdapter mFilterAdapter;
-
-	// --- Widget --- //
 
 	@NonNull
 	public static FiltersFragment newInstance() {
@@ -68,10 +54,6 @@ public class FiltersFragment
 		mDataViewModel = ViewModelProviders
 				.of(getActivity())
 				.get(DataViewModel.class);
-
-		mFilters = mFiltersViewModel.getFilters();
-		mShortcut = mFiltersViewModel.getShortcut();
-		mSearch = mDataViewModel.getSearch();
 
 		mFilterAdapter = new FilterAdapter(getContext(), getResources());
 		mFilterAdapter.setHasStableIds(true);
@@ -119,19 +101,19 @@ public class FiltersFragment
 
 	@Override
 	protected void onConstructed() {
-		mFilters.observe(
+		mFiltersViewModel.getFilters().observe(
 				FiltersFragment.this,
 				mFilterAdapter::setFilters
 		);
 
-		mShortcut.observe(
+		mFiltersViewModel.getShortcut().observe(
 				FiltersFragment.this,
 				mFilterAdapter::setShortcut
 		);
 
-		mSearch.observe(
+		mDataViewModel.getSearch().observe(
 				FiltersFragment.this,
-				mFiltersViewModel.getSearch()::setValue //TODO Weird
+				mFiltersViewModel::search
 		);
 
 		mFilterAdapter.locationCallbacks.onClick = locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId);

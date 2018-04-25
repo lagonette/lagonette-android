@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.lagonette.app.locator.Repo;
 import org.lagonette.app.room.entity.statement.Filter;
@@ -29,7 +30,7 @@ public class FiltersViewModel
 	}
 
 	@NonNull
-	public MutableLiveData<String> getSearch() {
+	public LiveData<String> getSearch() {
 		return mSearch;
 	}
 
@@ -41,6 +42,10 @@ public class FiltersViewModel
 	@NonNull
 	public LiveData<Shortcut> getShortcut() {
 		return mShortcut;
+	}
+
+	public void search(@Nullable String search) {
+		mSearch.setValue(search);
 	}
 
 	public void changeLocationVisibility(long locationId, boolean isVisible) {

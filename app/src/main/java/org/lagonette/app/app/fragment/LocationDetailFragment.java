@@ -64,9 +64,11 @@ public class LocationDetailFragment
 
 	@Override
 	protected void init() {
-		//TODO Check
-		long locationId = getArguments().getLong(ARG_LOCATION_ID, Statement.NO_ID);
-		mViewModel.setLocationId(locationId);
+		Bundle arguments = getArguments();
+		if (arguments != null) {
+			long locationId = arguments.getLong(ARG_LOCATION_ID, Statement.NO_ID);
+			mViewModel.setLocationId(locationId);
+		}
 	}
 
 	@Override
