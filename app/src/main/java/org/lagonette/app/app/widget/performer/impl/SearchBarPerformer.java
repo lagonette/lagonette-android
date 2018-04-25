@@ -98,7 +98,6 @@ public abstract class SearchBarPerformer
 	}
 
 	private void setupSearchTextView(@NonNull TextView searchText) {
-		//TODO Activity leaks ?
 		// Add TextWatcher later to avoid callback called on configuration changed.
 		searchText.post(
 				() -> searchText.addTextChangedListener(

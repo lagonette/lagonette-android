@@ -47,7 +47,6 @@ public class PermissionsPerformer {
 		}
 	}
 
-	//TODO Move this in Activity
 	public void askForFineLocation() {
 
 		boolean permissionGranted =

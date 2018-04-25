@@ -83,49 +83,50 @@ public class MapPerformer
 
 
 	private void setupMap() {
-		mMap.setPadding(0, mStatusBarHeight, 0, 0); // TODO Useless ?
-		mMap.getUiSettings().setMyLocationButtonEnabled(false);
-		mMap.getUiSettings().setMapToolbarEnabled(false);
+		if (mMap != null) {
+			mMap.getUiSettings().setMyLocationButtonEnabled(false);
+			mMap.getUiSettings().setMapToolbarEnabled(false);
 
-		updateLocationUI();
+			updateLocationUI();
 
-		mClusterManager = new ClusterManager<>(mContext, mMap);
+			mClusterManager = new ClusterManager<>(mContext, mMap);
 
-		mPartnerRenderer = new PartnerRenderer(
-				mContext,
-				LayoutInflater.from(mContext),
-				mMap,
-				mClusterManager,
-				() -> mSelectedMarker
-		);
+			mPartnerRenderer = new PartnerRenderer(
+					mContext,
+					LayoutInflater.from(mContext),
+					mMap,
+					mClusterManager,
+					() -> mSelectedMarker
+			);
 
-		mClusterManager.setRenderer(mPartnerRenderer);
+			mClusterManager.setRenderer(mPartnerRenderer);
 
-		mMap.setOnMapClickListener(
-				latLng -> showFullMap()
-		);
-		mMap.setOnCameraMoveStartedListener(
-				reason -> notifyMapMovement.accept(UiState.MapMovement.MOVE)
-		);
-		mMap.setOnCameraIdleListener(
-				() -> {
-					mClusterManager.onCameraIdle();
-					notifyMapMovement.accept(UiState.MapMovement.IDLE);
-				}
-		);
-		mMap.setOnMarkerClickListener(mClusterManager);
-		mClusterManager.setOnClusterClickListener(
-				cluster -> {
-					moveToCluster.accept(cluster);
-					return true;
-				}
-		);
-		mClusterManager.setOnClusterItemClickListener(
-				item -> {
-					openLocationItem.accept(item);
-					return true;
-				}
-		);
+			mMap.setOnMapClickListener(
+					latLng -> showFullMap()
+			);
+			mMap.setOnCameraMoveStartedListener(
+					reason -> notifyMapMovement.accept(UiState.MapMovement.MOVE)
+			);
+			mMap.setOnCameraIdleListener(
+					() -> {
+						mClusterManager.onCameraIdle();
+						notifyMapMovement.accept(UiState.MapMovement.IDLE);
+					}
+			);
+			mMap.setOnMarkerClickListener(mClusterManager);
+			mClusterManager.setOnClusterClickListener(
+					cluster -> {
+						moveToCluster.accept(cluster);
+						return true;
+					}
+			);
+			mClusterManager.setOnClusterItemClickListener(
+					item -> {
+						openLocationItem.accept(item);
+						return true;
+					}
+			);
+		}
 	}
 
 	private void setupFootprint() {
@@ -176,7 +177,6 @@ public class MapPerformer
 				ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
 		mMap.setMyLocationEnabled(permissionGranted);
-		//TODO Check the behavior when MyPosition Fab is not enabled
 	}
 
 	@Nullable

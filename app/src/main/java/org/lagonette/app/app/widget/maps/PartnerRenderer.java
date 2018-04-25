@@ -212,8 +212,6 @@ public class PartnerRenderer
 		}
 	}
 
-	//TODO Check, remake, improve and so on
-
 	public void onItemBitmapReady(
 			@NonNull LocationItem locationItem,
 			@NonNull MarkerOptions markerOptions,
