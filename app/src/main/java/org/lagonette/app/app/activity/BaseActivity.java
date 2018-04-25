@@ -15,7 +15,6 @@ public abstract class BaseActivity
 
 	protected final void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//TODO Ask user consent to send data
 		Fabric.with(this, new Crashlytics());
 		construct();
 		setContentView(getContentView());
