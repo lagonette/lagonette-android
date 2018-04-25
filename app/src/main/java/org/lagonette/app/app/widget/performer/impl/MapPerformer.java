@@ -84,6 +84,7 @@ public class MapPerformer
 
 	private void setupMap() {
 		if (mMap != null) {
+			mMap.setPadding(0, mStatusBarHeight, 0, 0);
 			mMap.getUiSettings().setMyLocationButtonEnabled(false);
 			mMap.getUiSettings().setMapToolbarEnabled(false);
 

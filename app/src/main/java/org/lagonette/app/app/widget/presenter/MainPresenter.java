@@ -155,6 +155,7 @@ public abstract class MainPresenter<
 		mBottomSheetPerformer.inject(view);
 		mSearchBarPerformer.inject(view);
 		mFabButtonsPerformer.inject(view);
+		mMapFragmentPerformer.inject(view);
 	}
 
 	@Override

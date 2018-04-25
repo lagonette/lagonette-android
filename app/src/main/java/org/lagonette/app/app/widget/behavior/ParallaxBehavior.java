@@ -57,8 +57,7 @@ public class ParallaxBehavior<V extends View>
 		CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params)
 				.getBehavior();
 		if (!(behavior instanceof ParallaxBehavior)) {
-			throw new IllegalArgumentException(
-					"The view is not associated with ParallaxBehavior");
+			throw new IllegalArgumentException("The view is not associated with ParallaxBehavior");
 		}
 		return (ParallaxBehavior<V>) behavior;
 	}
