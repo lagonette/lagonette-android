@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
 
 import org.lagonette.app.app.widget.error.Error;
 import org.lagonette.app.background.tools.exception.WorkerException;
@@ -57,7 +58,7 @@ public class LocalClient<R> {
 				throw new WorkerException(mError, "Body is NULL.");
 			}
 		}
-		catch (IOException e) {
+		catch (IOException | JsonDataException e) {
 			throw new WorkerException(mError, e);
 		}
 		finally {

@@ -19,7 +19,7 @@
       "isGonetteHeadquarter": "0",
       "locations": [
         {
-          "id": "810",
+          "id": 1,
           "openingHours": "lundi au mardi de 8h à 21h",
           "isExchangeOffice": "1",
           "address": "10 rue des Emeraudes",
@@ -50,7 +50,7 @@
       "isGonetteHeadquarter": "0",
       "locations": [
         {
-          "id": "1260",
+          "id": 2,
           "openingHours": null,
           "isExchangeOffice": null,
           "address": "1 rue du Président Edouard Herriot",
@@ -79,7 +79,7 @@
       "isGonetteHeadquarter": "0",
       "locations": [
         {
-          "id": "1300",
+          "id": 3,
           "openingHours": null,
           "isExchangeOffice": null,
           "address": "1 rue du président Edouard Herriot",
@@ -108,7 +108,7 @@
       "isGonetteHeadquarter": "0",
       "locations": [
         {
-          "id": "460",
+          "id": 4,
           "openingHours": "du lundi qu mardi test2",
           "isExchangeOffice": "1",
           "address": "41 Rue du Bon Pasteur",
@@ -137,157 +137,157 @@
       "isGonetteHeadquarter": "0",
       "locations": [
         {
-          "id": "1380",
+          "id": 5,
           "openingHours": "Mercredi de 17h30 à 19h15",
           "isExchangeOffice": null,
-          "address": "",
-          "city": "",
-          "zipCode": "",
-          "latitude": 4.9001276493073,
-          "longitude": 45.814129597595,
+          "address": "9 bis Avenue du Général Leclerc",
+          "city": "Rilleux-la-Pape",
+          "zipCode": "69140",
+          "latitude": "4.900127649307251",
+          "longitude": "45.81412959759548",
           "displayLocation": "1"
         },
         {
-          "id": "1381",
+          "id": 6,
           "openingHours": "Jeudi de 17h30 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.7841891646385,
-          "longitude": 45.756795303267,
+          "zipCode": "     ",
+          "latitude": "4.784189164638519",
+          "longitude": "45.756795303266784",
           "displayLocation": "1"
         },
         {
-          "id": "1382",
+          "id": 7,
           "openingHours": "Mardi de 17h30 à 19h15",
           "isExchangeOffice": null,
-          "address": "",
-          "city": "",
-          "zipCode": "",
-          "latitude": 4.8635101318359,
-          "longitude": 45.749498268873,
+          "address": "8 Rue Saint Théodore",
+          "city": "Lyon",
+          "zipCode": "69003",
+          "latitude": "4.863510131835938",
+          "longitude": "45.74949826887272",
           "displayLocation": "1"
         },
         {
-          "id": "1383",
+          "id": 8,
           "openingHours": "Mardi de 17h30 à 19h30",
           "isExchangeOffice": null,
           "address": "13 rue Delandine",
           "city": "Lyon",
           "zipCode": "69002",
-          "latitude": 4.8275256156921,
-          "longitude": 45.746967758713,
+          "latitude": "4.827525615692139",
+          "longitude": "45.74696775871325",
           "displayLocation": "1"
         },
         {
-          "id": "1384",
+          "id": 9,
           "openingHours": "Jeudi de 17h00 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.8126608133316,
-          "longitude": 45.75751578453,
+          "zipCode": "     ",
+          "latitude": "4.812660813331604",
+          "longitude": "45.75751578452979",
           "displayLocation": "1"
         },
         {
-          "id": "1385",
+          "id": 10,
           "openingHours": "Vendredi de 17h30 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.8064005374908,
-          "longitude": 45.714957762842,
+          "zipCode": "     ",
+          "latitude": "4.806400537490845",
+          "longitude": "45.71495776284155",
           "displayLocation": "1"
         },
         {
-          "id": "1386",
+          "id": 11,
           "openingHours": "Mardi de 17h30 à 19h15",
           "isExchangeOffice": null,
-          "address": "",
-          "city": "",
-          "zipCode": "",
-          "latitude": 4.8063415288925,
-          "longitude": 45.775971903538,
+          "address": "19 Rue Roquette",
+          "city": "Lyon",
+          "zipCode": "69009",
+          "latitude": "4.806341528892517",
+          "longitude": "45.775971903538235",
           "displayLocation": "1"
         },
         {
-          "id": "1387",
+          "id": 12,
           "openingHours": "Mercredi de 17h00 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.9141556024551,
-          "longitude": 45.780038763049,
+          "zipCode": "     ",
+          "latitude": "4.914155602455139",
+          "longitude": "45.78003876304937",
           "displayLocation": "1"
         },
         {
-          "id": "1388",
+          "id": 13,
           "openingHours": "Vendredi de 17h00 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.8213458061218,
-          "longitude": 45.768847637208,
+          "zipCode": "     ",
+          "latitude": "4.821345806121826",
+          "longitude": "45.76884763720772",
           "displayLocation": "1"
         },
         {
-          "id": "1389",
+          "id": 14,
           "openingHours": "Vendredi de 17h00 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.8279923200607,
-          "longitude": 45.730685150693,
+          "zipCode": "     ",
+          "latitude": "4.82799232006073",
+          "longitude": "45.73068515069315",
           "displayLocation": "1"
         },
         {
-          "id": "13810",
+          "id": 15,
           "openingHours": "Mercredi de 17h00 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.9093329906464,
-          "longitude": 45.731767310785,
+          "zipCode": "     ",
+          "latitude": "4.909332990646362",
+          "longitude": "45.73176731078451",
           "displayLocation": "1"
         },
         {
-          "id": "13811",
+          "id": 16,
           "openingHours": "Mercredi de 17h30 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.8810678720474,
-          "longitude": 45.700795769106,
+          "zipCode": "     ",
+          "latitude": "4.881067872047424",
+          "longitude": "45.70079576910608",
           "displayLocation": "1"
         },
         {
-          "id": "13812",
+          "id": 17,
           "openingHours": "Jeudi de 17h00 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.8821568489075,
-          "longitude": 45.759922311654,
+          "zipCode": "     ",
+          "latitude": "4.882156848907471",
+          "longitude": "45.759922311653874",
           "displayLocation": "1"
         },
         {
-          "id": "13813",
+          "id": 18,
           "openingHours": "Jeudi de 17h30 à 19h15",
           "isExchangeOffice": null,
           "address": "",
           "city": "",
-          "zipCode": "",
-          "latitude": 4.8785948753357,
-          "longitude": 45.779051070991,
+          "zipCode": "     ",
+          "latitude": "4.878594875335693",
+          "longitude": "45.77905107099139",
           "displayLocation": "1"
         }
       ]
@@ -310,7 +310,7 @@
       "isGonetteHeadquarter": "0",
       "locations": [
         {
-          "id": "330",
+          "id": 19,
           "openingHours": "du lundi au mardi",
           "isExchangeOffice": null,
           "address": "9 boulevard Edmond Michelet",
@@ -333,13 +333,11 @@
       "description": null,
       "shortDescription": "Local de la Gonette",
       "mainCategory": "-1",
-      "sideCategories": [
-        ""
-      ],
+      "sideCategories": [],
       "isGonetteHeadquarter": "1",
       "locations": [
         {
-          "id": "1370",
+          "id": 20,
           "openingHours": "lundi au vendredi de 9h à 18h",
           "isExchangeOffice": "1",
           "address": "4 rue Imbert Colomès",
@@ -368,7 +366,7 @@
       "isGonetteHeadquarter": "0",
       "locations": [
         {
-          "id": "1070",
+          "id": 21,
           "openingHours": null,
           "isExchangeOffice": "1",
           "address": "11, Impasse de l'Ordre",
@@ -397,7 +395,7 @@
       "isGonetteHeadquarter": "0",
       "locations": [
         {
-          "id": "1340",
+          "id": 22,
           "openingHours": "horaire d'ouverture\r\nlundi bla\r\nùardi bla\r\nmercredi bla",
           "isExchangeOffice": "1",
           "address": "rue imbert colomes",
@@ -448,7 +446,7 @@
       "isGonetteHeadquarter": "0",
       "locations": [
         {
-          "id": "1350",
+          "id": 23,
           "openingHours": "Horaores d'ouverture\r\nJours d'ouverture",
           "isExchangeOffice": "1",
           "address": "",
@@ -459,5 +457,5 @@
       ]
     }
   ],
-  "md5_sum": "9b14f866331397d7497d1766acb54e96"
+  "md5_sum": "5270f4bbbed478c2b5f6819dbb82fb22"
 }

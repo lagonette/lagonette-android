@@ -2,6 +2,8 @@ package org.lagonette.app.background.tools;
 
 import android.support.annotation.NonNull;
 
+import com.squareup.moshi.JsonDataException;
+
 import org.lagonette.app.app.widget.error.Error;
 import org.lagonette.app.background.tools.exception.WorkerException;
 import org.lagonette.app.tools.functions.main.Supplier;
@@ -43,7 +45,7 @@ public class RetrofitClient<R> {
 				throw new WorkerException(mError, "Response error → " + response.code() + ": " + response.message());
 			}
 		}
-		catch (IOException e) {
+		catch (IOException | JsonDataException e) {
 			throw new WorkerException(mError, e);
 		}
 	}

@@ -23,6 +23,9 @@ public interface PartnerDao {
 	@Query("SELECT * FROM partner WHERE is_gonette_headquarter = 1")
 	Partner getHeadquarter();
 
+	@Query("SELECT * FROM location")
+	List<Location> getLocations();
+
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertPartner(@NonNull Partner partner);
 
