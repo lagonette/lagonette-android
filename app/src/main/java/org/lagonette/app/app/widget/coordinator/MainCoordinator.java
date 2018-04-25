@@ -14,10 +14,10 @@ import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.tools.Logger;
-import org.lagonette.app.tools.functions.main.Consumer;
-import org.lagonette.app.tools.functions.main.LongConsumer;
-import org.lagonette.app.tools.functions.main.Runnable;
-import org.lagonette.app.tools.functions.main.Supplier;
+import org.zxcv.functions.main.Consumer;
+import org.zxcv.functions.main.LongConsumer;
+import org.zxcv.functions.main.Runnable;
+import org.zxcv.functions.main.Supplier;
 
 public abstract class MainCoordinator {
 

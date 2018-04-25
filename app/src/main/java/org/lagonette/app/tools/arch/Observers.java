@@ -3,8 +3,8 @@ package org.lagonette.app.tools.arch;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.tools.functions.main.Predicate;
-import org.lagonette.app.tools.functions.main.Supplier;
+import org.zxcv.functions.main.Predicate;
+import org.zxcv.functions.main.Supplier;
 
 public final class Observers {
 

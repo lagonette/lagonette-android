@@ -23,9 +23,9 @@ import org.lagonette.app.background.tools.exception.WorkerException;
 import org.lagonette.app.locator.Api;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
-import org.lagonette.app.tools.functions.main.BiConsumer;
-import org.lagonette.app.tools.functions.throwable.Predicate;
-import org.lagonette.app.tools.functions.throwable.Supplier;
+import org.zxcv.functions.main.BiConsumer;
+import org.zxcv.functions.throwable.Predicate;
+import org.zxcv.functions.throwable.Supplier;
 import org.lagonette.app.util.PreferenceUtils;
 
 public class DataRefreshWorker

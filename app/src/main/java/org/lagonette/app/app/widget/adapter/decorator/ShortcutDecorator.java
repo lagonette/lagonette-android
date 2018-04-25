@@ -14,7 +14,7 @@ import org.lagonette.app.app.widget.viewholder.ShortcutViewHolder;
 import org.lagonette.app.room.entity.statement.Shortcut;
 import org.lagonette.app.room.statement.Statement;
 import org.zxcv.chainadapter.decorator.SimpleAdapterDecorator;
-import org.lagonette.app.tools.functions.main.Consumer;
+import org.zxcv.functions.main.Consumer;
 
 public class ShortcutDecorator
 		extends SimpleAdapterDecorator<ShortcutViewHolder, Shortcut> {

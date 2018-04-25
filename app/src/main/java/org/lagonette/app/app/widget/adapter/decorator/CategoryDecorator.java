@@ -12,8 +12,8 @@ import org.lagonette.app.app.widget.viewholder.CategoryViewHolder;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.zxcv.chainadapter.decorator.SimpleAdapterDecorator;
-import org.lagonette.app.tools.functions.main.LongBooleanConsumer;
-import org.lagonette.app.tools.functions.main.LongConsumer;
+import org.zxcv.functions.main.LongBooleanConsumer;
+import org.zxcv.functions.main.LongConsumer;
 
 public class CategoryDecorator
 		extends SimpleAdapterDecorator<CategoryViewHolder, Filter> {

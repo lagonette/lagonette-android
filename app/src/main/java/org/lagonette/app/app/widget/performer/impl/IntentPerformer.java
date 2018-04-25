@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.app.widget.error.Error;
-import org.lagonette.app.tools.functions.main.Consumer;
+import org.zxcv.functions.main.Consumer;
 import org.lagonette.app.util.IntentUtils;
 
 public class IntentPerformer {

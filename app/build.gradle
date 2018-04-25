@@ -131,6 +131,12 @@ dependencies {
     //For Chain Adapter
     implementation project(":chainadapter")
 
+    //For Identifier
+    implementation project(":identifier")
+
+    //For Functions
+    implementation project(":functions")
+
 }
 
 apply plugin: 'com.google.gms.google-services'

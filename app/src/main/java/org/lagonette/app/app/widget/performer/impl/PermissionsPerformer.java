@@ -6,8 +6,8 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
-import org.lagonette.app.tools.functions.main.ObjIntConsumer;
-import org.lagonette.app.tools.functions.main.Runnable;
+import org.zxcv.functions.main.ObjIntConsumer;
+import org.zxcv.functions.main.Runnable;
 
 public class PermissionsPerformer {
 

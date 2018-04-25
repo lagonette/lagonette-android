@@ -8,7 +8,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
-import org.lagonette.app.tools.functions.main.IntConsumer;
+import org.zxcv.functions.main.IntConsumer;
 import org.lagonette.app.util.UiUtils;
 
 public abstract class BottomSheetPerformer

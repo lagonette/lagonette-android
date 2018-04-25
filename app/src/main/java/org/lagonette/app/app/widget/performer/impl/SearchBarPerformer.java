@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.background.worker.WorkerState;
-import org.lagonette.app.tools.functions.main.Consumer;
-import org.lagonette.app.tools.functions.main.IntConsumer;
+import org.zxcv.functions.main.Consumer;
+import org.zxcv.functions.main.IntConsumer;
 import org.lagonette.app.util.UiUtils;
 
 public abstract class SearchBarPerformer

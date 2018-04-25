@@ -11,8 +11,8 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
-import org.lagonette.app.tools.functions.main.Consumer;
-import org.lagonette.app.tools.functions.main.Runnable;
+import org.zxcv.functions.main.Consumer;
+import org.zxcv.functions.main.Runnable;
 
 public abstract class FabButtonsPerformer
 		implements ViewPerformer {

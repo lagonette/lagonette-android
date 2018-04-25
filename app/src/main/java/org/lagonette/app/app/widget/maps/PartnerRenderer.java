@@ -25,8 +25,8 @@ import com.google.maps.android.ui.IconGenerator;
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.glide.PartnerMarkerTarget;
 import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.tools.functions.main.Provider;
-import org.lagonette.app.tools.functions.main.TriConsumer;
+import org.zxcv.functions.main.Provider;
+import org.zxcv.functions.main.TriConsumer;
 
 public class PartnerRenderer
 		extends DefaultClusterRenderer<LocationItem> {

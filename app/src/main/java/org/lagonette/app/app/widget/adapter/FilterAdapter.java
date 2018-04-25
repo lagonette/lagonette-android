@@ -22,7 +22,7 @@ import org.zxcv.chainadapter.component.DataSourceComponent;
 import org.zxcv.chainadapter.datasource.SingleItemDataSource;
 import org.zxcv.chainadapter.link.AdapterLink;
 import org.zxcv.chainadapter.locator.HeaderLocator;
-import org.lagonette.app.tools.identifier.Identifier;
+import org.zxcv.identifier.Identifier;
 
 public class FilterAdapter
 		extends ChainAdapter<RecyclerView.ViewHolder> {

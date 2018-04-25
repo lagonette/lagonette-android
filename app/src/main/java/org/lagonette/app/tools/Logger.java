@@ -3,10 +3,10 @@ package org.lagonette.app.tools;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.lagonette.app.tools.functions.main.Consumer;
-import org.lagonette.app.tools.functions.main.Function;
-import org.lagonette.app.tools.functions.main.LongConsumer;
-import org.lagonette.app.tools.functions.main.Runnable;
+import org.zxcv.functions.main.Consumer;
+import org.zxcv.functions.main.Function;
+import org.zxcv.functions.main.LongConsumer;
+import org.zxcv.functions.main.Runnable;
 
 public class Logger {
 

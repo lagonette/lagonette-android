@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.zxcv.chainadapter.datasource.AdapterDataSource;
 import org.zxcv.chainadapter.datasource.DataSourceWrapper;
-import org.lagonette.app.tools.identifier.Identifier;
+import org.zxcv.identifier.Identifier;
 
 
 public class SingleIdentifierDataSourceWrapper<I, S>

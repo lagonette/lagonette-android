@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import org.lagonette.app.app.fragment.LocationDetailFragment;
 import org.lagonette.app.app.widget.performer.base.FragmentPerformer;
 import org.lagonette.app.room.statement.Statement;
-import org.lagonette.app.tools.functions.main.LongConsumer;
+import org.zxcv.functions.main.LongConsumer;
 
 import java.util.ArrayList;
 

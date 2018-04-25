@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.zxcv.chainadapter.datasource.PagedListDataSource;
-import org.lagonette.app.tools.identifier.Identifier;
+import org.zxcv.identifier.Identifier;
 
 public class FilterDataSource
 		extends PagedListDataSource<Filter> {

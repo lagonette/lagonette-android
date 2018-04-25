@@ -15,8 +15,8 @@ import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.room.statement.Statement;
 import org.zxcv.chainadapter.decorator.AbstractAdapterDecorator;
-import org.lagonette.app.tools.functions.main.LongBooleanConsumer;
-import org.lagonette.app.tools.functions.main.LongConsumer;
+import org.zxcv.functions.main.LongBooleanConsumer;
+import org.zxcv.functions.main.LongConsumer;
 
 public class LocationDecorator
 		extends AbstractAdapterDecorator<LocationViewHolder, Filter> {
