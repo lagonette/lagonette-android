@@ -10,7 +10,7 @@ public class BooleanAdapter {
 	private static final String FALSE = "0";
 
 	@FromJson
-	public boolean fromJson(@MoshiNullable String bool) {
+	public boolean fromJson(@Nullable String bool) {
 		return TRUE.equals(bool);
 	}
 

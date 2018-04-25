@@ -8,7 +8,7 @@ import com.squareup.moshi.ToJson;
 public class LongAdapter {
 
 	@FromJson
-	public Long fromJson(@MoshiNullable String string) {
+	public Long fromJson(@Nullable String string) {
 		return TextUtils.isEmpty(string) ? null : Long.valueOf(string);
 	}
 
