@@ -53,7 +53,7 @@ android {
             buildConfigField "boolean", "FILL_DB_WITH_LOCAL_VALUE", "true"
             buildConfigField "boolean", "FILL_DB_WITH_SERVER_VALUE", "true"
 
-            // buildConfigField "String", "HOST", '"http://82.225.211.150:18001/dolibarr/htdocs/"'
+//             buildConfigField "String", "HOST", '"http://82.225.211.150:18001/dolibarr/htdocs/"'
             buildConfigField "String", "HOST", '"https://dolibarr.lagonette.org/"'
         }
         prod.initWith(buildTypes.release)

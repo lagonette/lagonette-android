@@ -162,7 +162,7 @@ public class FilterAdapter
 
 	public void ensureEmptyViewLinkIsChained() {
 		if (!isChained(RANK_EMPTY_VIEW)) {
-			unchain(RANK_EMPTY_VIEW);
+			chainUp(mEmptyViewLink);
 		}
 	}
 
