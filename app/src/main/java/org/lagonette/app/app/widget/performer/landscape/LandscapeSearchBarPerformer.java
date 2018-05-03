@@ -10,7 +10,8 @@ public class LandscapeSearchBarPerformer
 	public LandscapeSearchBarPerformer(
 			@IdRes int searchBarRes,
 			@IdRes int progressBarRes,
-			@IdRes int searchTextRes) {
-		super(searchBarRes, progressBarRes, searchTextRes);
+			@IdRes int searchTextRes,
+			@IdRes int clearButtonRes) {
+		super(searchBarRes, progressBarRes, searchTextRes, clearButtonRes);
 	}
 }

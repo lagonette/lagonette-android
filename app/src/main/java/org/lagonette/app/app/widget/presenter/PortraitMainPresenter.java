@@ -59,7 +59,7 @@ public class PortraitMainPresenter
 	@NonNull
 	@Override
 	protected PortraitSearchBarPerformer createSearchBarPerformer(@NonNull PresenterActivity activity) {
-		return new PortraitSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
+		return new PortraitSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text, R.id.search_clear);
 	}
 
 	@NonNull

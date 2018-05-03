@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,11 +21,16 @@ import org.lagonette.app.util.UiUtils;
 public abstract class SearchBarPerformer
 		implements ViewPerformer {
 
+	private static final String EMPTY_TEXT = "";
+
 	@IdRes
 	private final int mProgressBarRes;
 
 	@IdRes
 	private final int mSearchTextRes;
+
+	@IdRes
+	private final int mClearButtonRes;
 
 	@NonNull
 	public IntConsumer onBottomChanged = IntConsumer::doNothing;
@@ -41,16 +47,21 @@ public abstract class SearchBarPerformer
 	@Nullable
 	private TextView mSearchTextView;
 
+	@Nullable
+	private ImageButton mClearImageButton;
+
 	@IdRes
 	private int mSearchBarRes;
 
 	public SearchBarPerformer(
 			@IdRes int searchBarRes,
 			@IdRes int progressBarRes,
-			@IdRes int searchTextRes) {
+			@IdRes int searchTextRes,
+			@IdRes int clearButtonRes) {
 		mSearchBarRes = searchBarRes;
 		mProgressBarRes = progressBarRes;
 		mSearchTextRes = searchTextRes;
+		mClearButtonRes = clearButtonRes;
 	}
 
 	@Override
@@ -58,7 +69,9 @@ public abstract class SearchBarPerformer
 		mSearchBar = view.findViewById(mSearchBarRes);
 		mProgressBar = view.findViewById(mProgressBarRes);
 		mSearchTextView = view.findViewById(mSearchTextRes);
+		mClearImageButton = view.findViewById(mClearButtonRes);
 
+		setupClearButton(mClearImageButton, mSearchTextView);
 		setupSearchBarMarginTop(mSearchBar);
 		setupSearchTextView(mSearchTextView);
 
@@ -83,6 +96,10 @@ public abstract class SearchBarPerformer
 				mProgressBar.setVisibility(View.GONE);
 				break;
 		}
+	}
+
+	private void setupClearButton(@NonNull View clearImageButton, @NonNull TextView searchText) {
+		clearImageButton.setOnClickListener(view -> searchText.setText(EMPTY_TEXT));
 	}
 
 	private void setupSearchBarMarginTop(@NonNull View searchBar) {

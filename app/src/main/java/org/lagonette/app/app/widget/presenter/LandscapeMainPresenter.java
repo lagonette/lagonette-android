@@ -48,7 +48,7 @@ public class LandscapeMainPresenter
 	@NonNull
 	@Override
 	protected LandscapeSearchBarPerformer createSearchBarPerformer(@NonNull PresenterActivity activity) {
-		return new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text);
+		return new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text, R.id.search_clear);
 	}
 
 	@NonNull
