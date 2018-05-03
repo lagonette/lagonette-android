@@ -18,7 +18,7 @@ public class Shortcut {
 	public final int exchangeOfficeCount;
 
 	@ColumnInfo(name = "headquarter_location_id")
-	public final long headquarterLocationId;
+	public final Long headquarterLocationId;
 
 	@NonNull
 	@ColumnInfo(name = "headquarter_icon")
@@ -29,7 +29,7 @@ public class Shortcut {
 			int partnerCount,
 			int visibleExchangeOfficeCount,
 			int exchangeOfficeCount,
-			long headquarterLocationId,
+			Long headquarterLocationId,
 			@NonNull String headquarterIcon) {
 		this.visiblePartnerCount = visiblePartnerCount;
 		this.partnerCount = partnerCount;

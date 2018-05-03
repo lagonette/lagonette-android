@@ -90,6 +90,13 @@ public class ShortcutDecorator
 							? R.drawable.bg_item_exchange_office
 							: R.drawable.bg_item_exchange_office_unselected
 			);
+		}
+		else {
+			holder.locationImageView.setImageResource(R.drawable.bg_item_category);
+			holder.exchangeOfficeImageView.setImageResource(R.drawable.bg_item_category);
+		}
+
+		if (shortcut != null && shortcut.headquarterLocationId != null) {
 			holder.headquarterView.setTag(shortcut.headquarterLocationId);
 			holder.headquarterView.setClickable(true);
 			holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_partner);
@@ -102,8 +109,6 @@ public class ShortcutDecorator
 					.into(holder.iconHeadquarterView);
 		}
 		else {
-			holder.locationImageView.setImageResource(R.drawable.bg_item_category);
-			holder.exchangeOfficeImageView.setImageResource(R.drawable.bg_item_category);
 			holder.headquarterView.setTag(Statement.NO_ID);
 			holder.headquarterView.setClickable(false);
 			holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_category);
