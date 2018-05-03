@@ -76,6 +76,12 @@ public class PartnerRenderer
 	private final Drawable mExchangeOfficeBackgroundDrawable;
 
 	@NonNull
+	private final Drawable mSelectedPartnerBackgroundDrawable;
+
+	@NonNull
+	private final Drawable mSelectedExchangeOfficeBackgroundDrawable;
+
+	@NonNull
 	private final Provider<Marker> mGetSelectedItem;
 
 	@NonNull
@@ -126,6 +132,10 @@ public class PartnerRenderer
 		mPartnerBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_partner);
 		//noinspection ConstantConditions
 		mExchangeOfficeBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_exchange_office);
+		//noinspection ConstantConditions
+		mSelectedPartnerBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_partner);
+		//noinspection ConstantConditions
+		mSelectedExchangeOfficeBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.bg_item_exchange_office);
 
 		mPartnerView.setBackground(mPartnerBackgroundDrawable);
 		mPartnerPlaceholderBitmapDescriptor = createBitmapDescriptor(mPartnerView);
@@ -137,10 +147,10 @@ public class PartnerRenderer
 		mSelectedPartnerView = layoutInflater.inflate(R.layout.item_partner_selected, null);
 		mSelectedPartnerIconView = mSelectedPartnerView.findViewById(R.id.item_partner_icon);
 
-		mSelectedPartnerView.setBackground(mPartnerBackgroundDrawable);
+		mSelectedPartnerView.setBackground(mSelectedPartnerBackgroundDrawable);
 		mSelectedPartnerPlaceholderBitmapDescriptor = createBitmapDescriptor(mSelectedPartnerView);
 
-		mSelectedPartnerView.setBackground(mExchangeOfficeBackgroundDrawable);
+		mSelectedPartnerView.setBackground(mSelectedExchangeOfficeBackgroundDrawable);
 		mSelectedExchangeOfficePlaceholderBitmapDescriptor = createBitmapDescriptor(mSelectedPartnerView);
 
 
@@ -262,7 +272,7 @@ public class PartnerRenderer
 			View partnerView = getPartnerView(isSelectedItem);
 			ImageView partnerIconView = getPartnerIconView(isSelectedItem);
 			partnerIconView.setImageBitmap(bitmap);
-			partnerView.setBackground(getItemDrawable(displayAsExchangeOffice));
+			partnerView.setBackground(getItemDrawable(displayAsExchangeOffice, isSelectedItem));
 			bitmapDescriptor = createBitmapDescriptor(partnerView);
 			bitmapDescriptors.append(categoryId, bitmapDescriptor);
 		}
@@ -307,8 +317,14 @@ public class PartnerRenderer
 	}
 
 	@NonNull
-	private Drawable getItemDrawable(boolean displayAsExchangeOffice) {
-		if (displayAsExchangeOffice) {
+	private Drawable getItemDrawable(boolean displayAsExchangeOffice, boolean isSelectedItem) {
+		if (displayAsExchangeOffice && isSelectedItem) {
+			return mSelectedExchangeOfficeBackgroundDrawable;
+		}
+		else if (isSelectedItem) {
+			return mSelectedPartnerBackgroundDrawable;
+		}
+		else if (displayAsExchangeOffice) {
 			return mExchangeOfficeBackgroundDrawable;
 		}
 		else {
