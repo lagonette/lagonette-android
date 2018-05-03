@@ -123,12 +123,6 @@
     },
     {
       "id": 31,
-      "label": "Services aux entreprises",
-      "displayOrder": "200",
-      "icon": ""
-    },
-    {
-      "id": 31,
       "label": "Conseils et services",
       "displayOrder": "200",
       "icon": "http://82.225.211.150:18002/wp-content/uploads/"
@@ -170,5 +164,5 @@
       "icon": "http://82.225.211.150:18002/wp-content/uploads/Picto-21.png"
     }
   ],
-  "md5_sum": "3f00c5a247a71de52a8d97c2786b6095"
+  "md5_sum": "ceee828f45da7b2fa977001305456c4f"
 }

@@ -143,8 +143,8 @@
           "address": "9 bis Avenue du Général Leclerc",
           "city": "Rilleux-la-Pape",
           "zipCode": "69140",
-          "latitude": "4.900127649307251",
-          "longitude": "45.81412959759548",
+          "latitude": 45.814129597595,
+          "longitude": 4.9001276493073,
           "displayLocation": "1"
         },
         {
@@ -154,8 +154,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.784189164638519",
-          "longitude": "45.756795303266784",
+          "latitude": 45.756795303267,
+          "longitude": 4.7841891646385,
           "displayLocation": "1"
         },
         {
@@ -165,8 +165,8 @@
           "address": "8 Rue Saint Théodore",
           "city": "Lyon",
           "zipCode": "69003",
-          "latitude": "4.863510131835938",
-          "longitude": "45.74949826887272",
+          "latitude": 45.749498268873,
+          "longitude": 4.8635101318359,
           "displayLocation": "1"
         },
         {
@@ -176,8 +176,8 @@
           "address": "13 rue Delandine",
           "city": "Lyon",
           "zipCode": "69002",
-          "latitude": "4.827525615692139",
-          "longitude": "45.74696775871325",
+          "latitude": 45.746967758713,
+          "longitude": 4.8275256156921,
           "displayLocation": "1"
         },
         {
@@ -187,8 +187,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.812660813331604",
-          "longitude": "45.75751578452979",
+          "latitude": 45.75751578453,
+          "longitude": 4.8126608133316,
           "displayLocation": "1"
         },
         {
@@ -198,8 +198,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.806400537490845",
-          "longitude": "45.71495776284155",
+          "latitude": 45.714957762842,
+          "longitude": 4.8064005374908,
           "displayLocation": "1"
         },
         {
@@ -209,8 +209,8 @@
           "address": "19 Rue Roquette",
           "city": "Lyon",
           "zipCode": "69009",
-          "latitude": "4.806341528892517",
-          "longitude": "45.775971903538235",
+          "latitude": 45.775971903538,
+          "longitude": 4.8063415288925,
           "displayLocation": "1"
         },
         {
@@ -220,8 +220,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.914155602455139",
-          "longitude": "45.78003876304937",
+          "latitude": 45.780038763049,
+          "longitude": 4.9141556024551,
           "displayLocation": "1"
         },
         {
@@ -231,8 +231,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.821345806121826",
-          "longitude": "45.76884763720772",
+          "latitude": 45.768847637208,
+          "longitude": 4.8213458061218,
           "displayLocation": "1"
         },
         {
@@ -242,8 +242,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.82799232006073",
-          "longitude": "45.73068515069315",
+          "latitude": 45.730685150693,
+          "longitude": 4.8279923200607,
           "displayLocation": "1"
         },
         {
@@ -253,8 +253,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.909332990646362",
-          "longitude": "45.73176731078451",
+          "latitude": 45.731767310785,
+          "longitude": 4.9093329906464,
           "displayLocation": "1"
         },
         {
@@ -264,8 +264,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.881067872047424",
-          "longitude": "45.70079576910608",
+          "latitude": 45.700795769106,
+          "longitude": 4.8810678720474,
           "displayLocation": "1"
         },
         {
@@ -275,8 +275,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.882156848907471",
-          "longitude": "45.759922311653874",
+          "latitude": 45.759922311654,
+          "longitude": 4.8821568489075,
           "displayLocation": "1"
         },
         {
@@ -286,8 +286,8 @@
           "address": "",
           "city": "",
           "zipCode": "     ",
-          "latitude": "4.878594875335693",
-          "longitude": "45.77905107099139",
+          "latitude": 45.779051070991,
+          "longitude": 4.8785948753357,
           "displayLocation": "1"
         }
       ]
@@ -457,5 +457,5 @@
       ]
     }
   ],
-  "md5_sum": "44c91a34bda4dd08cdc1900dc6070bc8"
+  "md5_sum": "66a5556d34e77c6b7a3a58069a5f472b"
 }
