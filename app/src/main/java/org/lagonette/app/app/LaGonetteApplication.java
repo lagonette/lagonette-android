@@ -73,7 +73,7 @@ public class LaGonetteApplication
 				.build();
 
 		Retrofit retrofit = new Retrofit.Builder()
-				.baseUrl(LaGonetteService.HOST)
+				.baseUrl(BuildConfig.HOST)
 				.client(httpClient.build())
 				.addConverterFactory(MoshiConverterFactory.create(moshi))
 				.build();
