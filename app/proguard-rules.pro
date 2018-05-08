@@ -99,7 +99,7 @@
 -dontwarn okio.**
 
 #Moshi
--keep class org.lagonette.app.api.adapter.MoshiNullable** { *; }
+-keep class org.lagonette.app.api.adapter.Nullable** { *; }
 -keepclassmembers class ** {
     @com.squareup.moshi.FromJson *;
     @com.squareup.moshi.ToJson *;
