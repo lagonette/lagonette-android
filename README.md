@@ -29,8 +29,8 @@ Else you can see our [contibuting guide](https://github.com/La-Gonette/lagonette
 
 ## License
 
-Licensed under the [Apache License 2.0](https://github.com/La-Gonette/lagonette-android/blob/master/LICENSE)
+Licensed under the [Apache License 2.0](https://github.com/La-Gonette/lagonette-android/blob/master/LICENSE).
 
-La Gonette's privacy policies : http://www.lagonette.org/credits-liens/
+La Gonette's privacy policies : http://www.lagonette.org/credits-liens.
 
 Google Play and the Google Play logo are trademarks of Google Inc.
