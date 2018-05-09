@@ -1,6 +1,6 @@
 # La Gonette
 
-La Gonette is the official application for the lyon's local currency : [La Gonette](http://www.lagonette.org)
+La Gonette is the official application for the lyon's local currency : [La Gonette](http://www.lagonette.org).
 
 [![Get it on Google Play](https://raw.githubusercontent.com/wiki/La-Gonette/lagonette-android/play-github.png)](https://play.google.com/store/apps/details?id=org.lagonette.app)
 
