@@ -23,7 +23,7 @@ https://github.com/La-Gonette/lagonette-android/issues
 
 Instructions on how to setup your development environment and build Signal can be found in our [building guide](https://github.com/La-Gonette/lagonette-android/wiki/Building).
 
-If you're new to the _La Gonette_ codebase, we recommend contacting [_La Gonette_ staff](mailto:co@lagonette.org).
+If you're new to the _La Gonette_ codebase, we recommend contacting _La Gonette_ staff at co@lagonette.org and app.lagonette@gmail.com.
 
 Else you can see our [contibuting guide](https://github.com/La-Gonette/lagonette-android/wiki/Contributing).
 
