@@ -2,7 +2,7 @@
 
 La Gonette is the official application for the lyon's local currency : [La Gonette](http://www.lagonette.org)
 
-[![Get it on Google Play](https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=org.lagonette.app)
+[![Get it on Google Play](https://raw.githubusercontent.com/wiki/La-Gonette/lagonette-android/play-github.png)](https://play.google.com/store/apps/details?id=org.lagonette.app)
 
 ## Features
 
@@ -21,11 +21,11 @@ https://github.com/La-Gonette/lagonette-android/issues
 
 ### Code
 
-Instructions on how to setup your development environment and build Signal can be found in our [building guide](https://github.com/La-Gonette/lagonette-android/blob/master/BUILD.md).
+Instructions on how to setup your development environment and build Signal can be found in our [building guide](https://github.com/La-Gonette/lagonette-android/wiki/Building).
 
 If you're new to the La Gonette codebase, we recommend contacting [La Gonette staff](mailto:co@lagonette.org).
 
-Else you can see our [contibuting guide](https://github.com/La-Gonette/lagonette-android/blob/master/CONTRIBUTING.md).
+Else you can see our [contibuting guide](https://github.com/La-Gonette/lagonette-android/wiki/Contributing).
 
 ## License
 
