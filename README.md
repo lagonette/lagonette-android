@@ -1,6 +1,6 @@
 # La Gonette
 
-La Gonette is the official application for the lyon's local currency : [La Gonette](http://www.lagonette.org).
+_La Gonette_ is the official application for the lyon's local currency : [La Gonette](http://www.lagonette.org).
 
 [![Get it on Google Play](https://raw.githubusercontent.com/wiki/La-Gonette/lagonette-android/play-github.png)](https://play.google.com/store/apps/details?id=org.lagonette.app)
 
@@ -23,7 +23,7 @@ https://github.com/La-Gonette/lagonette-android/issues
 
 Instructions on how to setup your development environment and build Signal can be found in our [building guide](https://github.com/La-Gonette/lagonette-android/wiki/Building).
 
-If you're new to the La Gonette codebase, we recommend contacting [La Gonette staff](mailto:co@lagonette.org).
+If you're new to the _La Gonette_ codebase, we recommend contacting [_La Gonette_ staff](mailto:co@lagonette.org).
 
 Else you can see our [contibuting guide](https://github.com/La-Gonette/lagonette-android/wiki/Contributing).
 
@@ -31,6 +31,6 @@ Else you can see our [contibuting guide](https://github.com/La-Gonette/lagonette
 
 Licensed under the [Apache License 2.0](https://github.com/La-Gonette/lagonette-android/blob/master/LICENSE).
 
-La Gonette's privacy policies : http://www.lagonette.org/credits-liens.
+_La Gonette_'s privacy policies : http://www.lagonette.org/credits-liens.
 
 Google Play and the Google Play logo are trademarks of Google Inc.
