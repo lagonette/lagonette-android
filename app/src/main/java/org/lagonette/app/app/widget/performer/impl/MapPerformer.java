@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -87,6 +88,11 @@ public class MapPerformer
 			mMap.setPadding(0, mStatusBarHeight, 0, 0);
 			mMap.getUiSettings().setMyLocationButtonEnabled(false);
 			mMap.getUiSettings().setMapToolbarEnabled(false);
+
+			mMap.setMapStyle(
+					MapStyleOptions.loadRawResourceStyle(mContext, R.raw.maps_style)
+			);
+
 
 			updateLocationUI();
 
