@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 
 public class Shortcut {
 
+	@ColumnInfo(name = "there_is_some_partners")
+	public boolean thereIsSomePartners;
+
 	@ColumnInfo(name = "visible_partner_count")
 	public final int visiblePartnerCount;
 
@@ -31,6 +34,7 @@ public class Shortcut {
 	public final boolean isAllCategoryVisible;
 
 	public Shortcut(
+			boolean thereIsSomePartners,
 			int visiblePartnerCount,
 			int partnerCount,
 			int visibleExchangeOfficeCount,
@@ -39,6 +43,7 @@ public class Shortcut {
 			@NonNull String headquarterIcon,
 			boolean isAllCategoryCollapsed,
 			boolean isAllCategoryVisible) {
+		this.thereIsSomePartners = thereIsSomePartners;
 		this.visiblePartnerCount = visiblePartnerCount;
 		this.partnerCount = partnerCount;
 		this.visibleExchangeOfficeCount = visibleExchangeOfficeCount;

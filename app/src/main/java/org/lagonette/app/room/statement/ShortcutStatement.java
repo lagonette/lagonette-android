@@ -6,7 +6,7 @@ public abstract class ShortcutStatement
 		implements GonetteStatement {
 
 	private static final String CONDITION_SQL =
-			" SELECT 1" +
+			" SELECT 1 as there_is_some_partners" +
 					FROM_PARTNER +
 					" LIMIT 1";
 
