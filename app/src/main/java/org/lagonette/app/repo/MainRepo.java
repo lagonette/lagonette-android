@@ -159,4 +159,12 @@ public class MainRepo {
 		);
 	}
 
+	public void resetMetadata() {
+		mExecutor.execute(
+				() -> mDatabase
+						.writerDao()
+						.resetMetadata()
+		);
+	}
+
 }

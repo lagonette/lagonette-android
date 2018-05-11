@@ -97,4 +97,11 @@ public abstract class WriterDao {
         database.categoryDao().cleanOrphanCategoryMetadata();
 	}
 
+	@Transaction
+	public void resetMetadata() {
+		LaGonetteDatabase database = DB.get();
+		database.partnerDao().resetMetadata();
+        database.categoryDao().resetMetadata();
+	}
+
 }

@@ -46,6 +46,9 @@ public interface CategoryDao {
 	@Query("UPDATE category_metadata SET is_collapsed = :isCollapsed WHERE category_id = :id")
 	int updateCategoryCollapsed(long id, boolean isCollapsed);
 
+	@Query("UPDATE category_metadata SET is_collapsed = 1, is_visible = 1")
+	void resetMetadata();
+
 	@Query("DELETE FROM category_metadata WHERE category_id NOT IN (SELECT id FROM category)")
 	void cleanOrphanCategoryMetadata();
 }

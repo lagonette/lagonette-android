@@ -30,6 +30,8 @@ public class DataViewModel
 	public DataViewModel(Application application) {
 		super(application);
 
+		Repo.get().resetMetadata();
+
 		LiveData<WorkerState> workerState = Repo.get().updateDatas();
 
 		mWorkStatus = Transformations.map(
