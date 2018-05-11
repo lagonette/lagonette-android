@@ -45,7 +45,8 @@ public abstract class FilterStatement
 					FROM_PARTNER +
 					JOIN_LOCATION_AND_METADATA_ON_PARTNER +
 					" WHERE partner.name LIKE :search" +
-					" AND partner.main_category_id = " + Statement.NO_ID + " ";
+					" AND partner.main_category_id = " + Statement.NO_ID + " " +
+					" AND location.display_location <> 0 ";
 
 	private static final String SQL_CATEGORIES =
 			"SELECT " +
@@ -70,6 +71,7 @@ public abstract class FilterStatement
 					LEFT_JOIN_MAIN_PARTNER_ON_CATEGORY +
 					LEFT_JOIN_MAIN_LOCATION_AND_METADATA_ON_MAIN_PARTNER +
 					" WHERE main_partner.name LIKE :search " +
+					" AND main_location.display_location <> 0 " +
 					" GROUP BY category.id ";
 
 	private static final String SQL_FOOTERS =
@@ -96,6 +98,7 @@ public abstract class FilterStatement
 					LEFT_JOIN_MAIN_LOCATION_ON_MAIN_PARTNER +
 					" WHERE main_partner.main_category_id IS NOT NULL " +
 					" AND main_partner.name LIKE :search " +
+					" AND main_location.display_location <> 0 " +
 					" GROUP BY category.id ";
 
 	private static final String SQL_MAIN_PARTNERS =
@@ -120,7 +123,9 @@ public abstract class FilterStatement
 					FROM_CATEGORY_AND_METADATA +
 					JOIN_MAIN_PARTNER_ON_CATEGORY +
 					LEFT_JOIN_MAIN_LOCATION_AND_METADATA_ON_MAIN_PARTNER +
-					" WHERE main_partner.name LIKE :search AND category_metadata.is_collapsed = 0 ";
+					" WHERE main_partner.name LIKE :search " +
+					" AND category_metadata.is_collapsed = 0 " +
+					" AND main_location.display_location <> 0 ";
 
 	public static final String SQL =
 			SQL_ORPHAN_PARTNERS +
