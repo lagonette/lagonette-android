@@ -75,7 +75,6 @@ public class LocationDetailPerformer
 
 	private double mLongitude;
 
-
 	@Override
 	public void inject(@NonNull View view) {
 

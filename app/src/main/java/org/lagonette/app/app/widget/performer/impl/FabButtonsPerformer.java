@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
+import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.zxcv.functions.main.Consumer;
 import org.zxcv.functions.main.Runnable;
@@ -26,19 +27,12 @@ public abstract class FabButtonsPerformer
 	@NonNull
 	public Runnable onPositionLongClick = Runnable::doNothing;
 
-	@IdRes
-	private int mPositionButtonRes;
-
 	@Nullable
 	private FloatingActionButton mPositionFab;
 
-	public FabButtonsPerformer(int positionRes) {
-		mPositionButtonRes = positionRes;
-	}
-
 	@Override
 	public void inject(@NonNull View view) {
-		mPositionFab = view.findViewById(mPositionButtonRes);
+		mPositionFab = view.findViewById(R.id.my_location_fab);
 		if (mPositionFab != null) {
 			updatePositionFabClickListener();
 			mPositionFab.setOnLongClickListener(

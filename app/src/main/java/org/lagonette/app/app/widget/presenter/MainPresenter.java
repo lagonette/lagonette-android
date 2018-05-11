@@ -112,8 +112,8 @@ public abstract class MainPresenter<
 		mFabButtonsPerformer = createFabButtonPerformer(activity);
 		mSearchBarPerformer = createSearchBarPerformer(activity);
 		mBottomSheetPerformer = createBottomSheetPerformer(activity);
-		mFiltersFragmentPerformer = new FiltersFragmentPerformer(activity, R.id.fragment_filters);
-		mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity, R.id.fragment_location_detail);
+		mFiltersFragmentPerformer = new FiltersFragmentPerformer(activity);
+		mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity);
 		mPermissionsPerformer = new PermissionsPerformer(activity);
 		mSnackbarPerformer = new SnackbarPerformer(activity);
 

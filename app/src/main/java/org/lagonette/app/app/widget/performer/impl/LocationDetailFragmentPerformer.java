@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.LocationDetailFragment;
 import org.lagonette.app.app.widget.performer.base.FragmentPerformer;
 import org.lagonette.app.room.statement.Statement;
@@ -30,9 +31,6 @@ public class LocationDetailFragmentPerformer
 	@NonNull
 	private final MutableLiveData<Void> mLoadedNotifier;
 
-	@IdRes
-	private final int mLocationDetailContainerRes;
-
 	@Nullable
 	private LocationDetailFragment mFragment;
 
@@ -40,12 +38,10 @@ public class LocationDetailFragmentPerformer
 	private FragmentManager mFragmentManager;
 
 	public LocationDetailFragmentPerformer(
-			@NonNull AppCompatActivity activity,
-			@IdRes int locationDetailContainerRed) {
+			@NonNull AppCompatActivity activity) {
 		mFragmentManager = activity.getSupportFragmentManager();
 		mFragmentLoadedCommands = new ArrayList<>();
 		mFragmentUnloadedCommands = new ArrayList<>();
-		mLocationDetailContainerRes = locationDetailContainerRed;
 		mTopPadding = new MutableLiveData<>();
 		mLoadedNotifier = new MutableLiveData<>();
 		mLoadedNotifier.setValue(null);
@@ -99,7 +95,7 @@ public class LocationDetailFragmentPerformer
 		}
 
 		transaction.replace(
-				mLocationDetailContainerRes,
+				R.id.fragment_location_detail,
 				mFragment,
 				LocationDetailFragment.TAG
 		);

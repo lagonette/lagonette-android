@@ -9,8 +9,8 @@ import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 public class LandscapeMapFragmentPerformer
 		extends MapFragmentPerformer {
 
-	public LandscapeMapFragmentPerformer(@NonNull AppCompatActivity activity, int mapFragmentRes) {
-		super(activity, mapFragmentRes);
+	public LandscapeMapFragmentPerformer(@NonNull AppCompatActivity activity) {
+		super(activity);
 	}
 
 	@Override

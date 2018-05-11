@@ -42,24 +42,24 @@ public class LandscapeMainPresenter
 	@NonNull
 	@Override
 	protected BottomSheetPerformer createBottomSheetPerformer(@NonNull PresenterActivity activity) {
-		return new LandscapeBottomSheetPerformer(activity.getResources(), R.id.bottom_sheet);
+		return new LandscapeBottomSheetPerformer(activity.getResources());
 	}
 
 	@NonNull
 	@Override
 	protected LandscapeSearchBarPerformer createSearchBarPerformer(@NonNull PresenterActivity activity) {
-		return new LandscapeSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text, R.id.search_clear);
+		return new LandscapeSearchBarPerformer();
 	}
 
 	@NonNull
 	@Override
 	protected LandscapeFabButtonsPerformer createFabButtonPerformer(@NonNull PresenterActivity activity) {
-		return new LandscapeFabButtonsPerformer(R.id.my_location_fab);
+		return new LandscapeFabButtonsPerformer();
 	}
 
 	@NonNull
 	@Override
 	protected LandscapeMapFragmentPerformer createMapFragmentPerformer(@NonNull PresenterActivity activity) {
-		return new LandscapeMapFragmentPerformer(activity, R.id.content);
+		return new LandscapeMapFragmentPerformer(activity);
 	}
 }
