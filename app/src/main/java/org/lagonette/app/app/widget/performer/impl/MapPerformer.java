@@ -27,9 +27,9 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.room.entity.statement.LocationItem;
+import org.lagonette.app.util.UiUtils;
 import org.zxcv.functions.main.Consumer;
 import org.zxcv.functions.main.Runnable;
-import org.lagonette.app.util.UiUtils;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.performer.impl;
 
 import android.os.Build;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -15,9 +14,9 @@ import android.widget.TextView;
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.background.worker.WorkerState;
+import org.lagonette.app.util.UiUtils;
 import org.zxcv.functions.main.Consumer;
 import org.zxcv.functions.main.IntConsumer;
-import org.lagonette.app.util.UiUtils;
 
 public abstract class SearchBarPerformer
 		implements ViewPerformer {

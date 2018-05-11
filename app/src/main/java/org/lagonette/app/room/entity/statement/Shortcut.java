@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 
 public class Shortcut {
 
-	@ColumnInfo(name = "there_is_some_partners")
-	public boolean thereIsSomePartners;
-
 	@ColumnInfo(name = "visible_partner_count")
 	public final int visiblePartnerCount;
 
@@ -32,6 +29,9 @@ public class Shortcut {
 
 	@ColumnInfo(name = "is_all_category_visible")
 	public final boolean isAllCategoryVisible;
+
+	@ColumnInfo(name = "there_is_some_partners")
+	public boolean thereIsSomePartners;
 
 	public Shortcut(
 			boolean thereIsSomePartners,

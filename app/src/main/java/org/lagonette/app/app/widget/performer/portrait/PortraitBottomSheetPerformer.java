@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.performer.portrait;
 
 import android.content.res.Resources;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 

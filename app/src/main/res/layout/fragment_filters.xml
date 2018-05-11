@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/filter_container"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/filter_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -16,6 +15,6 @@
         android:orientation="vertical"
         android:paddingBottom="16dp"
         android:paddingTop="8dp"
-        tools:listitem="@layout/row_location"/>
+        tools:listitem="@layout/row_location" />
 
 </LinearLayout>

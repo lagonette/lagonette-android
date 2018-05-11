@@ -2,7 +2,6 @@ package org.lagonette.app.app.widget.performer.impl;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.location.Location;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;

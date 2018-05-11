@@ -2,7 +2,6 @@ package org.lagonette.app.app.widget.presenter;
 
 import android.support.annotation.NonNull;
 
-import org.lagonette.app.R;
 import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.landscape.LandscapeMainCoordinator;

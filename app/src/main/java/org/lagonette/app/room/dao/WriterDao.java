@@ -94,14 +94,14 @@ public abstract class WriterDao {
 		database.partnerDao().cleanPartnerWithoutLocation();
 		database.partnerDao().cleanOrphanPartnerSideCategory();
 
-        database.categoryDao().cleanOrphanCategoryMetadata();
+		database.categoryDao().cleanOrphanCategoryMetadata();
 	}
 
 	@Transaction
 	public void resetMetadata() {
 		LaGonetteDatabase database = DB.get();
 		database.partnerDao().resetMetadata();
-        database.categoryDao().resetMetadata();
+		database.categoryDao().resetMetadata();
 	}
 
 }
