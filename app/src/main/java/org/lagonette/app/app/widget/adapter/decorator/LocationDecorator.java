@@ -98,8 +98,10 @@ public class LocationDecorator
 			holder.nameTextView.setText(filter.partnerName);
 			holder.itemView.setClickable(holder.isVisible);
 
-			String address = filter.address.format(holder.itemView.getResources());
-			if (!TextUtils.isEmpty(address)) {
+			holder.itemView.setClickable(filter.isLocationDisplayed);
+
+			if (filter.isLocationDisplayed && !TextUtils.isEmpty(filter.address.street)) {
+				String address = filter.address.format(holder.itemView.getResources());
 				holder.addressTextView.setText(address);
 				holder.addressTextView.setVisibility(View.VISIBLE);
 			}

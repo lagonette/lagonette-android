@@ -67,6 +67,9 @@ public class Filter {
 	@ColumnInfo(name = "location_is_exchange_office")
 	public final boolean isLocationExchangeOffice;
 
+	@ColumnInfo(name = "location_display_location")
+	public boolean isLocationDisplayed;
+
 	@ColumnInfo(name = "location_is_visible")
 	public final boolean isLocationVisible;
 
@@ -90,6 +93,7 @@ public class Filter {
 			long locationId,
 			Address address,
 			boolean isLocationExchangeOffice,
+			boolean isLocationDisplayed,
 			boolean isLocationVisible,
 			boolean isGonetteHeadquarter,
 			String partnerName) {
@@ -104,6 +108,7 @@ public class Filter {
 		this.locationId = locationId;
 		this.address = address;
 		this.isLocationExchangeOffice = isLocationExchangeOffice;
+		this.isLocationDisplayed = isLocationDisplayed;
 		this.isLocationVisible = isLocationVisible;
 		this.isGonetteHeadquarter = isGonetteHeadquarter;
 		this.partnerName = partnerName;

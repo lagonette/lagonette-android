@@ -38,6 +38,7 @@ public abstract class FilterStatement
 					"location.zip_code AS location_zip_code, " +
 					"location.city AS location_city, " +
 					"location.is_exchange_office AS location_is_exchange_office, " +
+					"location.display_location AS location_display_location, " +
 					"location_metadata.is_visible AS location_is_visible, " +
 					"partner.is_gonette_headquarter AS partner_is_gonette_headquarter, " +
 					"partner.name AS partner_name" +
@@ -61,6 +62,7 @@ public abstract class FilterStatement
 					"NULL AS location_zip_code, " +
 					"NULL AS location_city, " +
 					"NULL AS location_is_exchange_office, " +
+					"NULL AS location_display_location, " +
 					"NULL AS location_is_visible, " +
 					"NULL AS partner_is_gonette_headquarter, " +
 					"NULL AS partner_name" +
@@ -85,6 +87,7 @@ public abstract class FilterStatement
 					"NULL AS location_zip_code, " +
 					"NULL AS location_city, " +
 					"NULL AS location_is_exchange_office, " +
+					"NULL AS location_display_location, " +
 					"NULL AS location_is_visible, " +
 					"NULL AS partner_is_gonette_headquarter, " +
 					"NULL AS partner_name" +
@@ -110,6 +113,7 @@ public abstract class FilterStatement
 					"main_location.zip_code AS location_zip_code, " +
 					"main_location.city AS location_city, " +
 					"main_location.is_exchange_office AS location_is_exchange_office, " +
+					"main_location.display_location AS location_display_location, " +
 					"main_location_metadata.is_visible AS location_is_visible, " +
 					"main_partner.is_gonette_headquarter AS partner_is_gonette_headquarter, " +
 					"main_partner.name AS partner_name" +
