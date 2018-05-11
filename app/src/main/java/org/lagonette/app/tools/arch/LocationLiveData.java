@@ -64,9 +64,10 @@ public class LocationLiveData
 		return mFusedLocationProviderClient;
 	}
 
-	@RequiresPermission(
-			anyOf = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"}
-	)
+	@RequiresPermission(anyOf = {
+			"android.permission.ACCESS_COARSE_LOCATION",
+			"android.permission.ACCESS_FINE_LOCATION"
+	})
 	private void requestLocationUpdates() throws SecurityException {
 		FusedLocationProviderClient locationProviderClient = getFusedLocationProviderClient();
 		LocationRequest locationRequest = LocationRequest.create();

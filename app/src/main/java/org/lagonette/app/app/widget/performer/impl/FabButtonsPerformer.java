@@ -74,7 +74,7 @@ public abstract class FabButtonsPerformer
 		}
 	}
 
-	public void notifyFineLocationgranted() {
+	public void notifyFineLocationGranted() {
 		updatePositionFabClickListener();
 	}
 }

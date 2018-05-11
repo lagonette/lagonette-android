@@ -181,7 +181,7 @@ public abstract class MainPresenter<
 			mLocationViewModel
 					.getLocation()
 					.observe(activity, mFabButtonsPerformer::updateLocation);
-			mFabButtonsPerformer.notifyFineLocationgranted();
+			mFabButtonsPerformer.notifyFineLocationGranted();
 			mMapFragmentPerformer.updateLocationUI();
 		};
 

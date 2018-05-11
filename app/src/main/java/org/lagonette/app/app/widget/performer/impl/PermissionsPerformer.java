@@ -60,5 +60,8 @@ public class PermissionsPerformer {
 					PERMISSIONS_REQUEST_LOCATION
 			);
 		}
+		else {
+			onFineLocationPermissionGranted.run();
+		}
 	}
 }
