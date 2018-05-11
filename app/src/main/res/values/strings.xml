@@ -6,6 +6,7 @@
 
     <string name="all_format_address_full">%1$s, %2$s %3$s</string>
 
+    <string name="filters_all_categories">Toutes les catégories</string>
     <string name="filters_partners">Partenaires</string>
     <string name="filters_empty_view">"Hum… Il semblerait qu'il n'y ai pas de partenaires…"</string>
 

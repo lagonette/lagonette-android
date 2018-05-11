@@ -83,4 +83,16 @@ public class FiltersViewModel
 				.get()
 				.showAllExchangeOffice();
 	}
+
+	public void changeAllCategoriesCollapsed(boolean collapsed) {
+		Repo
+				.get()
+				.setAllCategoriesCollapsed(collapsed);
+	}
+
+	public void changeAllCategoriesVisibility(boolean visibility) {
+		Repo
+				.get()
+				.setAllCategoriesVisibility(visibility);
+	}
 }

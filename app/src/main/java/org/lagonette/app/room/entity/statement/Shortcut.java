@@ -24,19 +24,29 @@ public class Shortcut {
 	@ColumnInfo(name = "headquarter_icon")
 	public final String headquarterIcon;
 
+	@ColumnInfo(name = "is_all_category_collapsed")
+	public final boolean isAllCategoryCollapsed;
+
+	@ColumnInfo(name = "is_all_category_visible")
+	public final boolean isAllCategoryVisible;
+
 	public Shortcut(
 			int visiblePartnerCount,
 			int partnerCount,
 			int visibleExchangeOfficeCount,
 			int exchangeOfficeCount,
 			Long headquarterLocationId,
-			@NonNull String headquarterIcon) {
+			@NonNull String headquarterIcon,
+			boolean isAllCategoryCollapsed,
+			boolean isAllCategoryVisible) {
 		this.visiblePartnerCount = visiblePartnerCount;
 		this.partnerCount = partnerCount;
 		this.visibleExchangeOfficeCount = visibleExchangeOfficeCount;
 		this.exchangeOfficeCount = exchangeOfficeCount;
 		this.headquarterLocationId = headquarterLocationId;
 		this.headquarterIcon = headquarterIcon;
+		this.isAllCategoryCollapsed = isAllCategoryCollapsed;
+		this.isAllCategoryVisible = isAllCategoryVisible;
 	}
 
 	public boolean isPartnerShortcutSelected() {

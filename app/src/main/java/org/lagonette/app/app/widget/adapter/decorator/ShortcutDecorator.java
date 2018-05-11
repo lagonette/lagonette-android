@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +15,7 @@ import org.lagonette.app.app.widget.viewholder.ShortcutViewHolder;
 import org.lagonette.app.room.entity.statement.Shortcut;
 import org.lagonette.app.room.statement.Statement;
 import org.zxcv.chainadapter.decorator.SimpleAdapterDecorator;
+import org.zxcv.functions.main.BooleanConsumer;
 import org.zxcv.functions.main.Consumer;
 
 public class ShortcutDecorator
@@ -29,6 +31,12 @@ public class ShortcutDecorator
 
 		@Nullable
 		public Consumer<Long> onHeadquarterClick;
+
+		@Nullable
+		public BooleanConsumer onAllCategoriesVisibilityClick;
+
+		@Nullable
+		public BooleanConsumer onAllCategoriesCollapsedClick;
 
 	}
 
@@ -72,6 +80,22 @@ public class ShortcutDecorator
 			holder.headquarterView.setOnClickListener(view -> mCallbacks.onHeadquarterClick.accept((Long) holder.headquarterView.getTag()));
 		}
 
+		if (mCallbacks.onAllCategoriesVisibilityClick != null) {
+			holder.allCategoriesVisibleButton.setOnClickListener(
+					view -> mCallbacks
+							.onAllCategoriesVisibilityClick
+							.accept(!holder.isAllCategoryVisible)
+			);
+		}
+
+		if (mCallbacks.onAllCategoriesCollapsedClick != null) {
+			holder.allCategoriesCollapsedButton.setOnClickListener(
+					view -> mCallbacks
+							.onAllCategoriesCollapsedClick
+							.accept(!holder.isAllCategoryCollapsed)
+			);
+		}
+
 		return holder;
 	}
 
@@ -80,6 +104,9 @@ public class ShortcutDecorator
 			@Nullable Shortcut shortcut,
 			@NonNull ShortcutViewHolder holder) {
 		if (shortcut != null) {
+			holder.isAllCategoryVisible = shortcut.isAllCategoryVisible;
+			holder.isAllCategoryCollapsed = shortcut.isAllCategoryCollapsed;
+
 			holder.locationImageView.setImageResource(
 					shortcut.isPartnerShortcutSelected()
 							? R.drawable.bg_item_partner
@@ -90,10 +117,30 @@ public class ShortcutDecorator
 							? R.drawable.bg_item_exchange_office
 							: R.drawable.bg_item_exchange_office_unselected
 			);
+
+			holder.divider.setVisibility(View.VISIBLE);
+			holder.allCategoriesLayout.setVisibility(View.VISIBLE);
+
+			if (holder.isAllCategoryVisible) {
+				holder.allCategoriesVisibleButton.setImageResource(R.drawable.ic_visibility_accent_24dp);
+			}
+			else {
+				holder.allCategoriesVisibleButton.setImageResource(R.drawable.ic_visibility_grey_24dp);
+			}
+
+			if (holder.isAllCategoryCollapsed) {
+				holder.allCategoriesCollapsedButton.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+			}
+			else {
+				holder.allCategoriesCollapsedButton.setImageResource(R.drawable.ic_expand_less_grey_24dp);
+			}
 		}
 		else {
 			holder.locationImageView.setImageResource(R.drawable.bg_item_category);
 			holder.exchangeOfficeImageView.setImageResource(R.drawable.bg_item_category);
+
+			holder.divider.setVisibility(View.GONE);
+			holder.allCategoriesLayout.setVisibility(View.GONE);
 		}
 
 		if (shortcut != null && shortcut.headquarterLocationId != null) {

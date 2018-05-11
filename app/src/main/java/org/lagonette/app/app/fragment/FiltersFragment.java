@@ -124,6 +124,8 @@ public class FiltersFragment
 		mFilterAdapter.shortcutCallbacks.onLocationClick = mFiltersViewModel::showAllLocations;
 		mFilterAdapter.shortcutCallbacks.onExchangeOfficeClick = mFiltersViewModel::showAllExchangeOffices;
 		mFilterAdapter.shortcutCallbacks.onHeadquarterClick = (locationId) -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
+		mFilterAdapter.shortcutCallbacks.onAllCategoriesCollapsedClick = mFiltersViewModel::changeAllCategoriesCollapsed;
+		mFilterAdapter.shortcutCallbacks.onAllCategoriesVisibilityClick = mFiltersViewModel::changeAllCategoriesVisibility;
 	}
 
 	public void updateTopPadding(int top) {

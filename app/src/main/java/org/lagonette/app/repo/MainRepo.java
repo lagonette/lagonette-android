@@ -121,6 +121,22 @@ public class MainRepo {
 		);
 	}
 
+	public void setAllCategoriesCollapsed(boolean collapsed) {
+		mExecutor.execute(
+				() -> mDatabase
+						.categoryDao()
+						.updateAllCategoriesCollapsed(collapsed)
+		);
+	}
+
+	public void setAllCategoriesVisibility(boolean visibility) {
+		mExecutor.execute(
+				() -> mDatabase
+						.categoryDao()
+						.updateCategoryVisibilities(visibility)
+		);
+	}
+
 	public void showAllLocations() {
 		mExecutor.execute(
 				() -> {
@@ -166,5 +182,4 @@ public class MainRepo {
 						.resetMetadata()
 		);
 	}
-
 }

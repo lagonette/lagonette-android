@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +38,22 @@ public class ShortcutViewHolder
 	@NonNull
 	public final ImageView exchangeOfficeImageView;
 
+	@NonNull
+	public final ImageButton allCategoriesCollapsedButton;
+
+	@NonNull
+	public final ImageButton allCategoriesVisibleButton;
+
+	@NonNull
+	public final View divider;
+
+	@NonNull
+	public final View allCategoriesLayout;
+
+	public boolean isAllCategoryVisible;
+
+	public boolean isAllCategoryCollapsed;
+
 	public ShortcutViewHolder(
 			@NonNull ViewGroup parent) {
 		super(
@@ -59,5 +76,11 @@ public class ShortcutViewHolder
 		backgroundHeadquarterView = itemView.findViewById(R.id.layout_shortcut_headquarter_background);
 		iconHeadquarterView = itemView.findViewById(R.id.view_shortcut_headquarter_icon);
 		textHeadquarterView = itemView.findViewById(R.id.view_shortcut_headquarter_text);
+
+		divider = itemView.findViewById(R.id.shortcut_divider);
+
+		allCategoriesLayout = itemView.findViewById(R.id.shortcut_all_categories);
+		allCategoriesCollapsedButton = itemView.findViewById(R.id.shortcut_collapsed);
+		allCategoriesVisibleButton = itemView.findViewById(R.id.shortcut_visibility);
 	}
 }

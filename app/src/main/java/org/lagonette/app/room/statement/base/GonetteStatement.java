@@ -8,6 +8,8 @@ public interface GonetteStatement {
 
 	String FROM_CATEGORY = " FROM category ";
 
+	String FROM_CATEGORY_METADATA = " FROM category_metadata ";
+
 	String JOIN_METADATA_ON_CATEGORY =
 			" JOIN category_metadata " +
 					" ON category.id = category_metadata.category_id ";
