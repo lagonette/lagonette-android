@@ -56,24 +56,9 @@ android {
 //             buildConfigField "String", "HOST", '"http://82.225.211.150:18001/dolibarr/htdocs/"'
             buildConfigField "String", "HOST", '"https://dolibarr.lagonette.org/"'
         }
-        prod.initWith(buildTypes.release)
-        prod {
-            applicationIdSuffix ".prod"
-            versionNameSuffix "-prod"
-
-            minifyEnabled false
-            shrinkResources false
-            signingConfig signingConfigs.release //TODO really usefull ?
-
-            buildConfigField "boolean", "LOG_SQL", "true"
-            buildConfigField "boolean", "FILL_DB_WITH_LOCAL_VALUE", "true"
-            buildConfigField "boolean", "FILL_DB_WITH_SERVER_VALUE", "true"
-
-            buildConfigField "String", "HOST", '"https://dolibarr.lagonette.org/"'
-        }
         release {
             minifyEnabled true
-            shrinkResources false //TODO
+            shrinkResources true
             signingConfig signingConfigs.release
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -112,14 +97,14 @@ dependencies {
     // For Lifecycles, LiveData, and ViewModel
     implementation 'android.arch.lifecycle:runtime:1.1.1'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
-    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+    annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
 
     // For Room
     implementation 'android.arch.persistence.room:runtime:1.1.0'
-    annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.0'
 
     // For Paging library
-    implementation "android.arch.paging:runtime:1.0.0"
+    implementation 'android.arch.paging:runtime:1.0.0'
 
     // For Moshi
     implementation 'com.squareup.moshi:moshi:1.5.0'
@@ -133,13 +118,13 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.8.0'
 
     //For Chain Adapter
-    implementation project(":chainadapter")
+    implementation project(':chainadapter')
 
     //For Identifier
-    implementation project(":identifier")
+    implementation project(':identifier')
 
     //For Functions
-    implementation project(":functions")
+    implementation project(':functions')
 
 }
 
