@@ -50,28 +50,25 @@ public class PortraitMainPresenter
 	@NonNull
 	@Override
 	protected BottomSheetPerformer createBottomSheetPerformer(@NonNull PresenterActivity activity) {
-		return new PortraitBottomSheetPerformer(
-				activity.getResources(),
-				R.id.bottom_sheet
-		);
+		return new PortraitBottomSheetPerformer(activity.getResources());
 	}
 
 	@NonNull
 	@Override
 	protected PortraitSearchBarPerformer createSearchBarPerformer(@NonNull PresenterActivity activity) {
-		return new PortraitSearchBarPerformer(R.id.search_bar, R.id.progress_bar, R.id.search_text, R.id.search_clear);
+		return new PortraitSearchBarPerformer();
 	}
 
 	@NonNull
 	@Override
 	protected PortraitFabButtonsPerformer createFabButtonPerformer(@NonNull PresenterActivity activity) {
-		return new PortraitFabButtonsPerformer(R.id.my_location_fab, R.id.filters_fab);
+		return new PortraitFabButtonsPerformer();
 	}
 
 	@NonNull
 	@Override
 	protected PortraitMapFragmentPerformer createMapFragmentPerformer(@NonNull PresenterActivity activity) {
-		return new PortraitMapFragmentPerformer(activity, R.id.content);
+		return new PortraitMapFragmentPerformer(activity);
 	}
 
 }

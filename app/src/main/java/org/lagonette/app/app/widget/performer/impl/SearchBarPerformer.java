@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.background.worker.WorkerState;
 import org.zxcv.functions.main.Consumer;
@@ -22,15 +23,6 @@ public abstract class SearchBarPerformer
 		implements ViewPerformer {
 
 	private static final String EMPTY_TEXT = "";
-
-	@IdRes
-	private final int mProgressBarRes;
-
-	@IdRes
-	private final int mSearchTextRes;
-
-	@IdRes
-	private final int mClearButtonRes;
 
 	@NonNull
 	public IntConsumer onBottomChanged = IntConsumer::doNothing;
@@ -50,26 +42,12 @@ public abstract class SearchBarPerformer
 	@Nullable
 	private ImageButton mClearImageButton;
 
-	@IdRes
-	private int mSearchBarRes;
-
-	public SearchBarPerformer(
-			@IdRes int searchBarRes,
-			@IdRes int progressBarRes,
-			@IdRes int searchTextRes,
-			@IdRes int clearButtonRes) {
-		mSearchBarRes = searchBarRes;
-		mProgressBarRes = progressBarRes;
-		mSearchTextRes = searchTextRes;
-		mClearButtonRes = clearButtonRes;
-	}
-
 	@Override
 	public void inject(@NonNull View view) {
-		mSearchBar = view.findViewById(mSearchBarRes);
-		mProgressBar = view.findViewById(mProgressBarRes);
-		mSearchTextView = view.findViewById(mSearchTextRes);
-		mClearImageButton = view.findViewById(mClearButtonRes);
+		mSearchBar = view.findViewById(R.id.search_bar);
+		mProgressBar = view.findViewById(R.id.progress_bar);
+		mSearchTextView = view.findViewById(R.id.search_text);
+		mClearImageButton = view.findViewById(R.id.search_clear);
 
 		setupClearButton(mClearImageButton, mSearchTextView);
 		setupSearchBarMarginTop(mSearchBar);

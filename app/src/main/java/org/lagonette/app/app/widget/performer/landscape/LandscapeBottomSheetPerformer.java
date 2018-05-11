@@ -12,9 +12,8 @@ public class LandscapeBottomSheetPerformer
 		extends BottomSheetPerformer {
 
 	public LandscapeBottomSheetPerformer(
-			@NonNull Resources resources,
-			@IdRes int bottomSheetRes) {
-		super(resources, bottomSheetRes);
+			@NonNull Resources resources) {
+		super(resources);
 	}
 
 	@Override

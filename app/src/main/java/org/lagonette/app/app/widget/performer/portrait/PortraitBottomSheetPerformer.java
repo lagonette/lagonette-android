@@ -10,10 +10,8 @@ import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 public class PortraitBottomSheetPerformer
 		extends BottomSheetPerformer {
 
-	public PortraitBottomSheetPerformer(
-			@NonNull Resources resources,
-			@IdRes int bottomSheetRes) {
-		super(resources, bottomSheetRes);
+	public PortraitBottomSheetPerformer(@NonNull Resources resources) {
+		super(resources);
 	}
 
 	@Override

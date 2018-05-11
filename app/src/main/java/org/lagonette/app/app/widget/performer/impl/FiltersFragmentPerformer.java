@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import org.lagonette.app.R;
 import org.lagonette.app.app.fragment.FiltersFragment;
 import org.lagonette.app.app.widget.performer.base.FragmentPerformer;
 
@@ -38,9 +39,6 @@ public class FiltersFragmentPerformer
 	@NonNull
 	private final MutableLiveData<Void> mLoadedNotifier;
 
-	@IdRes
-	private final int mFiltersContainerRes;
-
 	@Nullable
 	private FiltersFragment mFragment;
 
@@ -48,14 +46,12 @@ public class FiltersFragmentPerformer
 	private FragmentManager mFragmentManager;
 
 	public FiltersFragmentPerformer(
-			@NonNull AppCompatActivity activity,
-			@IdRes int filtersContainerRes) {
+			@NonNull AppCompatActivity activity) {
 		mFragmentManager = activity.getSupportFragmentManager();
 		mFragmentLoadedCommands = new ArrayList<>();
 		mFragmentUnloadedCommands = new ArrayList<>();
 		mLoadedNotifier = new MutableLiveData<>();
 		mLoadedNotifier.setValue(null);
-		mFiltersContainerRes = filtersContainerRes;
 		mTopPadding = new MutableLiveData<>();
 	}
 
@@ -89,7 +85,7 @@ public class FiltersFragmentPerformer
 		mFragmentManager
 				.beginTransaction()
 				.add(
-						mFiltersContainerRes,
+						R.id.fragment_filters,
 						mFragment,
 						FiltersFragment.TAG
 				)

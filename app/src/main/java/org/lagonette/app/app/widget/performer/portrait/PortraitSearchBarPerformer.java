@@ -22,14 +22,6 @@ public class PortraitSearchBarPerformer
 	@Nullable
 	private TopEscapeBehavior mBehavior;
 
-	public PortraitSearchBarPerformer(
-			@IdRes int searchBarRes,
-			@IdRes int progressBarRes,
-			@IdRes int searchTextRes,
-			@IdRes int clearButtonRes) {
-		super(searchBarRes, progressBarRes, searchTextRes, clearButtonRes);
-	}
-
 	@Override
 	public void inject(@NonNull View view) {
 		super.inject(view);
