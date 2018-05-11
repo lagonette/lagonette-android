@@ -14,9 +14,9 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.statement.Statement;
+import org.lagonette.app.util.PhoneUtils;
 import org.zxcv.functions.main.Consumer;
 import org.zxcv.functions.main.ObjBiDoubleConsumer;
-import org.lagonette.app.util.PhoneUtils;
 
 public class LocationDetailPerformer
 		implements ViewPerformer {

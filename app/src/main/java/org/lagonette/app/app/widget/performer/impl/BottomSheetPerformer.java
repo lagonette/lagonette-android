@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.performer.impl;
 
 import android.content.res.Resources;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -9,8 +8,8 @@ import android.view.View;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
-import org.zxcv.functions.main.IntConsumer;
 import org.lagonette.app.util.UiUtils;
+import org.zxcv.functions.main.IntConsumer;
 
 public abstract class BottomSheetPerformer
 		extends BottomSheetBehavior.BottomSheetCallback
