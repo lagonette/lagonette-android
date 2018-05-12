@@ -28,12 +28,9 @@ import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.PermissionsPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
-import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.arch.LocationViewModel;
-import org.lagonette.app.tools.arch.LongObserver;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ID;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.SHOW_FULL_MAP;
 
@@ -202,14 +199,6 @@ public abstract class MainPresenter<
 				SHOW_FULL_MAP,
 				activity,
 				aVoid -> mUiActionStore.startAction(UiAction.showFullMap())
-		);
-		mEventBus.subscribe(
-				OPEN_LOCATION_ID,
-				activity,
-				LongObserver.unbox(
-						Statement.NO_ID,
-						locationId -> mUiActionStore.startAction(UiAction.moveToAndOpenLocation(locationId))
-				)
 		);
 
 		mFabButtonsPerformer.onPositionClick = location -> mUiActionStore.startAction(UiAction.moveToMyLocation(location));

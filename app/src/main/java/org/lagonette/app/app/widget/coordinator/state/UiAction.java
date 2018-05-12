@@ -29,8 +29,6 @@ public class UiAction {
 	@Nullable
 	public final Cluster<LocationItem> cluster;
 
-	public final long locationId;
-
 	@Nullable
 	public final LocationItem item;
 
@@ -48,14 +46,12 @@ public class UiAction {
 			@Nullable Cluster<LocationItem> cluster,
 			@Nullable LocationItem item,
 			@Nullable Location mapLocation,
-			long locationId,
 			boolean shouldMove) {
 		this.type = type;
 		this.pendingAction = pendingAction;
 		this.cluster = cluster;
 		this.item = item;
 		this.mapLocation = mapLocation;
-		this.locationId = locationId;
 		this.shouldMove = shouldMove;
 	}
 
@@ -66,7 +62,6 @@ public class UiAction {
 				null,
 				null,
 				null,
-				Statement.NO_ID,
 				false
 		);
 	}
@@ -78,7 +73,6 @@ public class UiAction {
 				null,
 				null,
 				null,
-				Statement.NO_ID,
 				false
 		);
 	}
@@ -90,7 +84,6 @@ public class UiAction {
 				null,
 				null,
 				mapLocation,
-				Statement.NO_ID,
 				true
 		);
 	}
@@ -102,7 +95,6 @@ public class UiAction {
 				null,
 				null,
 				null,
-				Statement.NO_ID,
 				true
 		);
 	}
@@ -114,7 +106,6 @@ public class UiAction {
 				cluster,
 				null,
 				null,
-				Statement.NO_ID,
 				true
 		);
 	}
@@ -126,20 +117,6 @@ public class UiAction {
 				null,
 				item,
 				null,
-				Statement.NO_ID,
-				true
-		);
-	}
-
-	//TODO What if locationId <= NO_ID?
-	public static UiAction moveToAndOpenLocation(long locationId) {
-		return new UiAction(
-				MOVE_TO_AND_OPEN_LOCATION,
-				null,
-				null,
-				null,
-				null,
-				locationId,
 				true
 		);
 	}
@@ -151,7 +128,6 @@ public class UiAction {
 				null,
 				null,
 				null,
-				Statement.NO_ID,
 				false
 		);
 	}
@@ -163,7 +139,6 @@ public class UiAction {
 				null,
 				null,
 				null,
-				Statement.NO_ID,
 				false
 		);
 	}
