@@ -17,6 +17,8 @@ import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.widget.performer.impl.MapMovementPerformer;
 import org.lagonette.app.app.widget.performer.impl.MapPerformer;
 import org.lagonette.app.room.entity.statement.LocationItem;
+import org.lagonette.app.room.statement.Statement;
+import org.lagonette.app.tools.arch.LongObserver;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
@@ -172,7 +174,10 @@ public class MapsFragment
 		mEventBus.subscribe(
 				OPEN_LOCATION_ID,
 				MapsFragment.this,
-				this::openLocation
+				LongObserver.unbox(
+						Statement.NO_ID,
+						this::openLocation
+				)
 		);
 
 		mEventBus.subscribe(

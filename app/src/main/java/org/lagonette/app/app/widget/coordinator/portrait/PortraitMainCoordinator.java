@@ -154,10 +154,7 @@ public class PortraitMainCoordinator
 	protected void computeMovementToAndOpeningLocation(
 			@NonNull UiAction action,
 			@NonNull UiState state) {
-		if (action.locationId > Statement.NO_ID) {
-			openLocation.accept(action.locationId);
-		}
-		else if (action.item == null) {
+		if (action.item == null) {
 			finishAction.run();
 		}
 		else if (state.isLocationDetailLoaded) {
