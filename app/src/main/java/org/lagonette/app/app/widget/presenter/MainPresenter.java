@@ -57,14 +57,6 @@ public abstract class MainPresenter<
 
 	protected MapViewModel mMapViewModel;
 
-	// --- Live Data --- // //TODO remove LiveDatas
-
-	protected MutableLiveData<String> mSearch;
-
-	protected LiveData<Integer> mWorkStatus;
-
-	protected LiveData<Error> mWorkError;
-
 	// --- Performers --- //
 
 	protected MainCoordinator mCoordinator;
@@ -108,10 +100,6 @@ public abstract class MainPresenter<
 		mMapViewModel = ViewModelProviders
 				.of(activity)
 				.get(MapViewModel.class);
-
-		mSearch = mStateViewModel.getSearch();
-		mWorkStatus = mStateViewModel.getWorkStatus();
-		mWorkError = mStateViewModel.getWorkError();
 
 		mCoordinator = createCoordinator();
 		mMapFragmentPerformer = createMapFragmentPerformer(activity);
@@ -249,11 +237,11 @@ public abstract class MainPresenter<
 		// ------------------------------- //
 
 		// User > ViewModels
-		mSearchBarPerformer.onSearch = mSearch::setValue;
+		mSearchBarPerformer.onSearch = mStateViewModel.getSearch()::setValue;
 
 		// ViewModels > View
-		mWorkStatus.observe(activity, mSearchBarPerformer::setWorkStatus);
-		mWorkError.observe(activity, mSnackbarPerformer::show);
+		mStateViewModel.getWorkStatus().observe(activity, mSearchBarPerformer::setWorkStatus);
+		mStateViewModel.getWorkError().observe(activity, mSnackbarPerformer::show);
 
 
 		// --- Start --- //
