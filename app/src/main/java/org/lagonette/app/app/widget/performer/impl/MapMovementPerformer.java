@@ -34,8 +34,8 @@ public class MapMovementPerformer
 		mMap = googleMap;
 	}
 
-	public void moveToLocation(@NonNull LocationItem item) {
-		if (mMap != null) {
+	public void moveToLocation(@Nullable LocationItem item) {
+		if (mMap != null && item != null) {
 			LatLng latLng = item.getPosition();
 			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET);
 			mMap.animateCamera(

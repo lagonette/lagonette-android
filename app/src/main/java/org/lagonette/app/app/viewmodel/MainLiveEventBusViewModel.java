@@ -13,7 +13,7 @@ public class MainLiveEventBusViewModel
 
 	public interface Action {
 
-		Event<LocationItem> OPEN_LOCATION_ITEM = new Event<>();
+		Event<Long> OPEN_LOCATION_ITEM = new Event<>();
 
 		Event<Cluster<LocationItem>> MOVE_TO_CLUSTER = new Event<>();
 
@@ -24,13 +24,11 @@ public class MainLiveEventBusViewModel
 
 	public interface Map {
 
-		Event<Long> OPEN_LOCATION_ID = new Event<>();
-
 		Event<Location> MOVE_TO_MY_LOCATION = new Event<>();
 
 		Event<Void> MOVE_TO_FOOTPRINT = new Event<>();
 
-		Event<LocationItem> MOVE_TO_LOCATION = new Event<>();
+		Event<Void> MOVE_TO_SELECTED_LOCATION = new Event<>();
 
 		Event<Cluster<LocationItem>> MOVE_TO_CLUSTER = new Event<>();
 

@@ -20,8 +20,8 @@ import org.zxcv.functions.main.Consumer;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_FOOTPRINT;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_LOCATION;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_MY_LOCATION;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_SELECTED_LOCATION;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP_MOVING;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.UPDATE_MAP_LOCATION_UI;
 
@@ -65,10 +65,6 @@ public abstract class MapFragmentPerformer
 		mFragment = (MapsFragment) mFragmentManager.findFragmentByTag(MapsFragment.TAG);
 	}
 
-	public void openLocation(long locationId) {
-		mEventBus.publish(MainLiveEventBusViewModel.Map.OPEN_LOCATION_ID, locationId);
-	}
-
 	@NonNull
 	public UiState.MapMovement getMapMovement() {
 		return mMapMovement;
@@ -92,8 +88,8 @@ public abstract class MapFragmentPerformer
 		mEventBus.publish(MOVE_TO_CLUSTER, cluster);
 	}
 
-	public void moveToLocation(@NonNull LocationItem item) {
-		mEventBus.publish(MOVE_TO_LOCATION, item);
+	public void moveToSelectedLocation() {
+		mEventBus.publish(MOVE_TO_SELECTED_LOCATION);
 	}
 
 	public void stopMoving() {

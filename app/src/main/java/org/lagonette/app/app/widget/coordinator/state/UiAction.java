@@ -29,8 +29,7 @@ public class UiAction {
 	@Nullable
 	public final Cluster<LocationItem> cluster;
 
-	@Nullable
-	public final LocationItem item;
+	public final long selectedLocationId;
 
 	@Nullable
 	public final Location mapLocation;
@@ -44,13 +43,13 @@ public class UiAction {
 			@NonNull ActionType type,
 			@Nullable UiAction pendingAction,
 			@Nullable Cluster<LocationItem> cluster,
-			@Nullable LocationItem item,
+			long selectedLocationId,
 			@Nullable Location mapLocation,
 			boolean shouldMove) {
 		this.type = type;
 		this.pendingAction = pendingAction;
 		this.cluster = cluster;
-		this.item = item;
+		this.selectedLocationId = selectedLocationId;
 		this.mapLocation = mapLocation;
 		this.shouldMove = shouldMove;
 	}
@@ -60,7 +59,7 @@ public class UiAction {
 				OPEN_FILTERS,
 				null,
 				null,
-				null,
+				Statement.NO_ID,
 				null,
 				false
 		);
@@ -71,7 +70,7 @@ public class UiAction {
 				SHOW_FULL_MAP,
 				null,
 				null,
-				null,
+				Statement.NO_ID,
 				null,
 				false
 		);
@@ -82,7 +81,7 @@ public class UiAction {
 				MOVE_TO_MY_LOCATION,
 				null,
 				null,
-				null,
+				Statement.NO_ID,
 				mapLocation,
 				true
 		);
@@ -93,7 +92,7 @@ public class UiAction {
 				MOVE_TO_FOOTPRINT,
 				null,
 				null,
-				null,
+				Statement.NO_ID,
 				null,
 				true
 		);
@@ -104,18 +103,18 @@ public class UiAction {
 				MOVE_TO_CLUSTER,
 				null,
 				cluster,
-				null,
+				Statement.NO_ID,
 				null,
 				true
 		);
 	}
 
-	public static UiAction moveToAndOpenLocation(@Nullable LocationItem item) {
+	public static UiAction openLocation(long locationId) {
 		return new UiAction(
 				MOVE_TO_AND_OPEN_LOCATION,
 				null,
 				null,
-				item,
+				locationId,
 				null,
 				true
 		);
@@ -126,7 +125,7 @@ public class UiAction {
 				BACK,
 				null,
 				null,
-				null,
+				Statement.NO_ID,
 				null,
 				false
 		);
@@ -137,7 +136,7 @@ public class UiAction {
 				RESTORE,
 				pendingAction,
 				null,
-				null,
+				Statement.NO_ID,
 				null,
 				false
 		);

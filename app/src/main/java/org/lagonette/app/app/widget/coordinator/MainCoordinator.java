@@ -13,6 +13,7 @@ import org.lagonette.app.BuildConfig;
 import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.room.entity.statement.LocationItem;
+import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.Logger;
 import org.zxcv.functions.main.Consumer;
 import org.zxcv.functions.main.LongConsumer;
@@ -39,7 +40,10 @@ public abstract class MainCoordinator {
 	public Consumer<Cluster<LocationItem>> moveMapToCluster = Consumer::doNothing;
 
 	@NonNull
-	public Consumer<LocationItem> moveMapToLocation = Consumer::doNothing;
+	public Runnable moveMapToSelectedLocation = Runnable::doNothing;
+
+	@NonNull
+	public LongConsumer selectLocation = LongConsumer::doNothing;
 
 	@NonNull
 	public Consumer<Location> moveMapToMyLocation = Consumer::doNothing;
@@ -49,9 +53,6 @@ public abstract class MainCoordinator {
 
 	@NonNull
 	public Runnable moveMapToFootprint = Runnable::doNothing;
-
-	@NonNull
-	public LongConsumer openLocation = LongConsumer::doNothing;
 
 	@NonNull
 	public Runnable loadMap = Runnable::doNothing;
@@ -178,24 +179,29 @@ public abstract class MainCoordinator {
 	protected abstract void computeIdle(@NonNull UiAction action, @NonNull UiState state);
 
 	private void computeFullMapShowing(@NonNull UiAction action, @NonNull UiState state) {
-		switch (state.bottomSheetState) {
+		if (state.selectedLocationId > Statement.NO_ID) {
+			selectLocation.accept(Statement.NO_ID);
+		}
+		else {
+			switch (state.bottomSheetState) {
 
-			case BottomSheetBehavior.STATE_COLLAPSED:
-			case BottomSheetBehavior.STATE_EXPANDED:
-				closeBottomSheet.run();
-				break;
+				case BottomSheetBehavior.STATE_COLLAPSED:
+				case BottomSheetBehavior.STATE_EXPANDED:
+					closeBottomSheet.run();
+					break;
 
-			case BottomSheetBehavior.STATE_SETTLING:
-				wait.run();
-				break;
+				case BottomSheetBehavior.STATE_SETTLING:
+					wait.run();
+					break;
 
-			case BottomSheetBehavior.STATE_DRAGGING:
-				finishAction.run();
-				break;
+				case BottomSheetBehavior.STATE_DRAGGING:
+					finishAction.run();
+					break;
 
-			case BottomSheetBehavior.STATE_HIDDEN:
-				finishAction.run();
-				break;
+				case BottomSheetBehavior.STATE_HIDDEN:
+					finishAction.run();
+					break;
+			}
 		}
 	}
 
@@ -310,9 +316,13 @@ public abstract class MainCoordinator {
 					TAG, "INTENT --> moveMapToCluster",
 					moveMapToCluster
 			);
-			moveMapToLocation = Logger.log(
-					TAG, "INTENT --> moveMapToLocation",
-					moveMapToLocation
+			moveMapToSelectedLocation = Logger.log(
+					TAG, "INTENT --> moveMapToSelectedLocation",
+					moveMapToSelectedLocation
+			);
+			selectLocation = Logger.log(
+					TAG, "INTENT --> selectLocation",
+					selectLocation
 			);
 			moveMapToMyLocation = Logger.log(
 					TAG, "INTENT --> moveMapToMyLocation",
@@ -325,10 +335,6 @@ public abstract class MainCoordinator {
 			moveMapToFootprint = Logger.log(
 					TAG, "INTENT --> moveMapToFootprint",
 					moveMapToFootprint
-			);
-			openLocation = Logger.log(
-					TAG, "INTENT --> openLocation",
-					openLocation
 			);
 
 			loadFilters = Logger.log(

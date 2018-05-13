@@ -15,6 +15,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
+import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.viewmodel.UiActionStore;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.UiAction;
@@ -28,7 +29,9 @@ import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.PermissionsPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
+import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.arch.LocationViewModel;
+import org.lagonette.app.tools.arch.LongObserver;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
@@ -52,7 +55,9 @@ public abstract class MainPresenter<
 
 	protected LocationViewModel mLocationViewModel;
 
-	// --- Live Data --- //
+	protected MapViewModel mMapViewModel;
+
+	// --- Live Data --- // //TODO remove LiveDatas
 
 	protected MutableLiveData<String> mSearch;
 
@@ -100,6 +105,10 @@ public abstract class MainPresenter<
 				.of(activity)
 				.get(LocationViewModel.class);
 
+		mMapViewModel = ViewModelProviders
+				.of(activity)
+				.get(MapViewModel.class);
+
 		mSearch = mStateViewModel.getSearch();
 		mWorkStatus = mStateViewModel.getWorkStatus();
 		mWorkError = mStateViewModel.getWorkError();
@@ -118,12 +127,13 @@ public abstract class MainPresenter<
 		mCoordinator.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
 		mCoordinator.closeBottomSheet = mBottomSheetPerformer::closeBottomSheet;
 
+		mCoordinator.selectLocation = mMapViewModel::selectLocation;
+
 		mCoordinator.moveMapToCluster = mMapFragmentPerformer::moveToCluster;
-		mCoordinator.moveMapToLocation = mMapFragmentPerformer::moveToLocation;
+		mCoordinator.moveMapToSelectedLocation = mMapFragmentPerformer::moveToSelectedLocation;
 		mCoordinator.moveMapToMyLocation = mMapFragmentPerformer::moveToMyLocation;
 		mCoordinator.stopMapMoving = mMapFragmentPerformer::stopMoving;
 		mCoordinator.moveMapToFootprint = mMapFragmentPerformer::moveToFootprint;
-		mCoordinator.openLocation = mMapFragmentPerformer::openLocation;
 
 		mCoordinator.loadMap = mMapFragmentPerformer::loadFragment;
 		mCoordinator.restoreMap = mMapFragmentPerformer::restoreFragment;
@@ -188,7 +198,10 @@ public abstract class MainPresenter<
 		mEventBus.subscribe(
 				OPEN_LOCATION_ITEM,
 				activity,
-				locationItem -> mUiActionStore.startAction(UiAction.moveToAndOpenLocation(locationItem))
+				LongObserver.unbox(
+						Statement.NO_ID,
+						locationId -> mUiActionStore.startAction(UiAction.openLocation(locationId))
+				)
 		);
 		mEventBus.subscribe(
 				MOVE_TO_CLUSTER,
@@ -204,6 +217,11 @@ public abstract class MainPresenter<
 		mFabButtonsPerformer.onPositionClick = location -> mUiActionStore.startAction(UiAction.moveToMyLocation(location));
 		mFabButtonsPerformer.onPositionLongClick = () -> mUiActionStore.startAction(UiAction.moveToFootprint());
 		mFabButtonsPerformer.askForFineLocationPermission = mPermissionsPerformer::askForFineLocation;
+
+		mMapViewModel.getSelectedLocation().observe(
+				activity,
+				locationItem -> mCoordinator.process()
+		);
 
 		mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mCoordinator.process());
 		mLocationDetailFragmentPerformer.onFragmentUnloaded(() -> mCoordinator.process());
@@ -269,7 +287,8 @@ public abstract class MainPresenter<
 				mBottomSheetPerformer.getState(),
 				mFiltersFragmentPerformer.isLoaded(),
 				mLocationDetailFragmentPerformer.isLoaded(),
-				mLocationDetailFragmentPerformer.getLoadedId()
+				mLocationDetailFragmentPerformer.getLoadedId(),
+				mMapViewModel.getSelectedLocationId()
 		);
 	}
 

@@ -96,7 +96,7 @@ public class LandscapeMainCoordinator
 	protected void computeMovementToAndOpeningLocation(
 			@NonNull UiAction action,
 			@NonNull UiState state) {
-		if (action.item == null) {
+		if (action.selectedLocationId <= Statement.NO_ID) {
 			finishAction.run();
 		}
 		else if (state.isLocationDetailLoaded) {
@@ -104,13 +104,15 @@ public class LandscapeMainCoordinator
 
 				case BottomSheetBehavior.STATE_COLLAPSED:
 				case BottomSheetBehavior.STATE_EXPANDED:
-					long selectedId = action.item.getId();
-					if (action.shouldMove) {
-						action.shouldMove = false; //TODO Unidirectional Data flow !
-						moveMapToLocation.accept(action.item);
+					if (state.selectedLocationId != action.selectedLocationId) {
+						selectLocation.accept(action.selectedLocationId);
 					}
-					else if (state.loadedLocationId != selectedId) {
-						loadLocationDetail.accept(action.item.getId());
+					else if (action.shouldMove) {
+						action.shouldMove = false; //TODO Unidirectional Data flow !
+						moveMapToSelectedLocation.run();
+					}
+					else if (state.loadedLocationId != action.selectedLocationId) {
+						loadLocationDetail.accept(action.selectedLocationId);
 					}
 					else {
 						finishAction.run();
@@ -133,17 +135,15 @@ public class LandscapeMainCoordinator
 							break;
 
 						case IDLE:
-							if (action.item != null) {
-								if (action.shouldMove) { //TODO Use reason to mark action done if the user move something
-									action.shouldMove = false; //TODO Unidirectional Data flow !
-									moveMapToLocation.accept(action.item);
-								}
-								else {
-									openBottomSheet.run();
-								}
+							if (state.selectedLocationId != action.selectedLocationId) {
+								selectLocation.accept(action.selectedLocationId);
+							}
+							else if (action.shouldMove) { //TODO Use reason to mark action done if the user move something
+								action.shouldMove = false; //TODO Unidirectional Data flow !
+								moveMapToSelectedLocation.run();
 							}
 							else {
-								finishAction.run();
+								openBottomSheet.run();
 							}
 							break;
 					}
@@ -167,7 +167,7 @@ public class LandscapeMainCoordinator
 					break;
 
 				case BottomSheetBehavior.STATE_HIDDEN:
-					loadLocationDetail.accept(action.item.getId());
+					loadLocationDetail.accept(action.selectedLocationId);
 					break;
 			}
 		}

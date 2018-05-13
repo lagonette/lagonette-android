@@ -22,8 +22,11 @@ public interface UiDao {
 	@Query(PartnerDetailStatement.SQL)
 	LiveData<LocationDetail> getLocationsDetail(long id);
 
-	@Query(MapLocationStatement.SQL)
+	@Query(MapLocationStatement.LOCATIONS_SQL)
 	LiveData<List<LocationItem>> getMapLocations(String search);
+
+	@Query(MapLocationStatement.LOCATION_SQL)
+	LiveData<LocationItem> getMapLocation(long id);
 
 	@Query(FilterStatement.SQL)
 	DataSource.Factory<Integer, Filter> getFilters(String search);
