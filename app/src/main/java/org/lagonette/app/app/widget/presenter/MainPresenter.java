@@ -1,7 +1,6 @@
 package org.lagonette.app.app.widget.presenter;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModelProviders;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -18,9 +17,14 @@ import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.viewmodel.UiActionStore;
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
-import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
-import org.lagonette.app.app.widget.error.Error;
+import org.lagonette.app.app.widget.coordinator.state.action.BackAction;
+import org.lagonette.app.app.widget.coordinator.state.action.MoveToClusterAction;
+import org.lagonette.app.app.widget.coordinator.state.action.MoveToFootprintAction;
+import org.lagonette.app.app.widget.coordinator.state.action.MoveToMyLocationAction;
+import org.lagonette.app.app.widget.coordinator.state.action.OpenLocationAction;
+import org.lagonette.app.app.widget.coordinator.state.action.RestoreAction;
+import org.lagonette.app.app.widget.coordinator.state.action.ShowFullMapAction;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.FabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.impl.FiltersFragmentPerformer;
@@ -164,7 +168,7 @@ public abstract class MainPresenter<
 	@CallSuper
 	public void restore(@NonNull PresenterActivity activity, @NonNull Bundle savedInstanceState) {
 		mCoordinator.restore();
-		mUiActionStore.startAction(UiAction.restore(mUiActionStore.getAction().getValue()));
+		mUiActionStore.startAction(new RestoreAction(mUiActionStore.getAction().getValue()));
 	}
 
 	@Override
@@ -188,22 +192,22 @@ public abstract class MainPresenter<
 				activity,
 				LongObserver.unbox(
 						Statement.NO_ID,
-						locationId -> mUiActionStore.startAction(UiAction.openLocation(locationId))
+						locationId -> mUiActionStore.startAction(new OpenLocationAction(locationId))
 				)
 		);
 		mEventBus.subscribe(
 				MOVE_TO_CLUSTER,
 				activity,
-				cluster -> mUiActionStore.startAction(UiAction.moveToCluster(cluster))
+				cluster -> mUiActionStore.startAction(new MoveToClusterAction(cluster))
 		);
 		mEventBus.subscribe(
 				SHOW_FULL_MAP,
 				activity,
-				aVoid -> mUiActionStore.startAction(UiAction.showFullMap())
+				aVoid -> mUiActionStore.startAction(new ShowFullMapAction())
 		);
 
-		mFabButtonsPerformer.onPositionClick = location -> mUiActionStore.startAction(UiAction.moveToMyLocation(location));
-		mFabButtonsPerformer.onPositionLongClick = () -> mUiActionStore.startAction(UiAction.moveToFootprint());
+		mFabButtonsPerformer.onPositionClick = location -> mUiActionStore.startAction(new MoveToMyLocationAction(location));
+		mFabButtonsPerformer.onPositionLongClick = () -> mUiActionStore.startAction(new MoveToFootprintAction());
 		mFabButtonsPerformer.askForFineLocationPermission = mPermissionsPerformer::askForFineLocation;
 
 		mMapViewModel.getSelectedLocation().observe(
@@ -263,7 +267,7 @@ public abstract class MainPresenter<
 			return false;
 		}
 
-		mUiActionStore.startAction(UiAction.back());
+		mUiActionStore.startAction(new BackAction());
 		return true;
 	}
 

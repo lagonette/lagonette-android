@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
-import org.lagonette.app.app.widget.coordinator.state.UiAction;
+import org.lagonette.app.app.widget.coordinator.state.action.UiAction;
 
 public class UiActionStore
 		extends ViewModel {

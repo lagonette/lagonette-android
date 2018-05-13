@@ -4,15 +4,18 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 
 import org.lagonette.app.app.widget.coordinator.MainCoordinator;
-import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
+import org.lagonette.app.app.widget.coordinator.state.action.IdleAction;
+import org.lagonette.app.app.widget.coordinator.state.action.OpenFiltersAction;
+import org.lagonette.app.app.widget.coordinator.state.action.OpenLocationAction;
+import org.lagonette.app.app.widget.coordinator.state.action.RestoreAction;
 import org.lagonette.app.room.statement.Statement;
 
 public class PortraitMainCoordinator
 		extends MainCoordinator {
 
 	@Override
-	protected void computeRestore(@NonNull UiAction action, @NonNull UiState state) {
+	protected void computeRestore(@NonNull RestoreAction action, @NonNull UiState state) {
 		if (state.isFiltersLoaded) {
 			unloadFilters.run();
 		}
@@ -47,7 +50,9 @@ public class PortraitMainCoordinator
 	}
 
 	@Override
-	protected void computeFiltersOpening(@NonNull UiAction action, @NonNull UiState state) {
+	protected void computeFiltersOpening(
+			@NonNull OpenFiltersAction action,
+			@NonNull UiState state) {
 
 		switch (state.bottomSheetState) {
 
@@ -127,7 +132,7 @@ public class PortraitMainCoordinator
 	}
 
 	@Override
-	protected void computeIdle(@NonNull UiAction action, @NonNull UiState state) {
+	protected void computeIdle(@NonNull IdleAction action, @NonNull UiState state) {
 		switch (state.bottomSheetState) {
 
 			case BottomSheetBehavior.STATE_COLLAPSED:
@@ -151,8 +156,8 @@ public class PortraitMainCoordinator
 	}
 
 	@Override
-	protected void computeMovementToAndOpeningLocation(
-			@NonNull UiAction action,
+	protected void computeLocationOpening(
+			@NonNull OpenLocationAction action,
 			@NonNull UiState state) {
 		if (action.selectedLocationId <= Statement.NO_ID) {
 			finishAction.run();

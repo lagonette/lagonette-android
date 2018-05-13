@@ -10,8 +10,16 @@ import com.crashlytics.android.Crashlytics;
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.BuildConfig;
-import org.lagonette.app.app.widget.coordinator.state.UiAction;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
+import org.lagonette.app.app.widget.coordinator.state.action.BackAction;
+import org.lagonette.app.app.widget.coordinator.state.action.IdleAction;
+import org.lagonette.app.app.widget.coordinator.state.action.MoveToClusterAction;
+import org.lagonette.app.app.widget.coordinator.state.action.MoveToFootprintAction;
+import org.lagonette.app.app.widget.coordinator.state.action.MoveToMyLocationAction;
+import org.lagonette.app.app.widget.coordinator.state.action.OpenFiltersAction;
+import org.lagonette.app.app.widget.coordinator.state.action.OpenLocationAction;
+import org.lagonette.app.app.widget.coordinator.state.action.RestoreAction;
+import org.lagonette.app.app.widget.coordinator.state.action.ShowFullMapAction;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.Logger;
@@ -102,53 +110,45 @@ public abstract class MainCoordinator {
 
 	private void process(@NonNull UiState state) {
 		if (state.action != null) {
-			switch (state.action.type) {
-
-				case BACK:
-					computeBack(state.action, state);
-					break;
-
-				case RESTORE:
-					computeRestore(state.action, state);
-					break;
-
-				case OPEN_FILTERS:
-					computeFiltersOpening(state.action, state);
-					break;
-
-				case MOVE_TO_MY_LOCATION:
-					computeMovementToMyLocation(state.action, state);
-					break;
-
-				case MOVE_TO_FOOTPRINT:
-					computeMovementToFootprint(state.action, state);
-					break;
-
-				case MOVE_TO_CLUSTER:
-					computeMovementToCluster(state.action, state);
-					break;
-
-				case MOVE_TO_AND_OPEN_LOCATION:
-					computeMovementToAndOpeningLocation(state.action, state);
-					break;
-
-				case SHOW_FULL_MAP:
-					computeFullMapShowing(state.action, state);
-					break;
-
-				default:
-				case IDLE:
-					computeIdle(state.action, state);
-					break;
+			if (state.action instanceof BackAction) {
+				computeBack((BackAction) state.action, state);
+			}
+			else if (state.action instanceof RestoreAction) {
+				computeRestore((RestoreAction) state.action, state);
+			}
+			else if (state.action instanceof OpenFiltersAction) {
+				computeFiltersOpening((OpenFiltersAction) state.action, state);
+			}
+			else if (state.action instanceof MoveToMyLocationAction) {
+				computeMovementToMyLocation((MoveToMyLocationAction) state.action, state);
+			}
+			else if (state.action instanceof MoveToFootprintAction) {
+				computeMovementToFootprint((MoveToFootprintAction) state.action, state);
+			}
+			else if (state.action instanceof MoveToClusterAction) {
+				computeMovementToCluster((MoveToClusterAction) state.action, state);
+			}
+			else if (state.action instanceof OpenLocationAction) {
+				computeLocationOpening((OpenLocationAction) state.action, state);
+			}
+			else if (state.action instanceof ShowFullMapAction) {
+				computeFullMapShowing((ShowFullMapAction) state.action, state);
+			}
+			else {
+				computeIdle((IdleAction) state.action, state);
 			}
 		}
 	}
 
-	protected abstract void computeRestore(@NonNull UiAction action, @NonNull UiState state);
+	protected abstract void computeRestore(@NonNull RestoreAction action, @NonNull UiState state);
 
-	protected abstract void computeFiltersOpening(@NonNull UiAction action, @NonNull UiState state);
+	protected abstract void computeFiltersOpening(
+			@NonNull OpenFiltersAction action,
+			@NonNull UiState state);
 
-	private void computeMovementToMyLocation(@NonNull UiAction action, @NonNull UiState state) {
+	private void computeMovementToMyLocation(
+			@NonNull MoveToMyLocationAction action,
+			@NonNull UiState state) {
 		switch (state.bottomSheetState) {
 
 			case BottomSheetBehavior.STATE_SETTLING:
@@ -176,9 +176,9 @@ public abstract class MainCoordinator {
 		}
 	}
 
-	protected abstract void computeIdle(@NonNull UiAction action, @NonNull UiState state);
+	protected abstract void computeIdle(@NonNull IdleAction action, @NonNull UiState state);
 
-	private void computeFullMapShowing(@NonNull UiAction action, @NonNull UiState state) {
+	private void computeFullMapShowing(@NonNull ShowFullMapAction action, @NonNull UiState state) {
 		if (state.selectedLocationId > Statement.NO_ID) {
 			selectLocation.accept(Statement.NO_ID);
 		}
@@ -205,11 +205,13 @@ public abstract class MainCoordinator {
 		}
 	}
 
-	protected abstract void computeMovementToAndOpeningLocation(
-			@NonNull UiAction action,
+	protected abstract void computeLocationOpening(
+			@NonNull OpenLocationAction action,
 			@NonNull UiState state);
 
-	private void computeMovementToCluster(@NonNull UiAction action, @NonNull UiState state) {
+	private void computeMovementToCluster(
+			@NonNull MoveToClusterAction action,
+			@NonNull UiState state) {
 		switch (state.bottomSheetState) {
 
 			case BottomSheetBehavior.STATE_COLLAPSED:
@@ -243,7 +245,9 @@ public abstract class MainCoordinator {
 		}
 	}
 
-	private void computeMovementToFootprint(@NonNull UiAction action, @NonNull UiState state) {
+	private void computeMovementToFootprint(
+			@NonNull MoveToFootprintAction action,
+			@NonNull UiState state) {
 		switch (state.bottomSheetState) {
 
 			case BottomSheetBehavior.STATE_SETTLING:
@@ -272,7 +276,7 @@ public abstract class MainCoordinator {
 		}
 	}
 
-	private void computeBack(@NonNull UiAction action, @NonNull UiState state) {
+	private void computeBack(@NonNull BackAction action, @NonNull UiState state) {
 		switch (state.bottomSheetState) {
 
 			case BottomSheetBehavior.STATE_SETTLING:
