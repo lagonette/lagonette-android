@@ -4,6 +4,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.lagonette.app.app.widget.coordinator.state.action.UiAction;
 import org.lagonette.app.util.BottomSheetUtils;
 
 import java.lang.annotation.Retention;
