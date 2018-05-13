@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.lagonette.app.util.SharedPreferencesUtils;
 
-public class MapLocationViewModel
+public class MapCameraViewModel
 		extends AndroidViewModel {
 
 	@NonNull
@@ -22,7 +22,7 @@ public class MapLocationViewModel
 	@NonNull
 	private final SharedPreferences mSharedPref;
 
-	public MapLocationViewModel(@NonNull Application application) {
+	public MapCameraViewModel(@NonNull Application application) {
 		super(application);
 		mCameraPosition = new MutableLiveData<>();
 		mSharedPref = PreferenceManager.getDefaultSharedPreferences(application);

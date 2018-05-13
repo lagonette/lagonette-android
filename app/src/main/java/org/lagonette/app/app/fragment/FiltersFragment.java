@@ -14,7 +14,7 @@ import org.lagonette.app.app.viewmodel.FiltersViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.widget.adapter.FilterAdapter;
 
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.OPEN_LOCATION_ID;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
 
 public class FiltersFragment
 		extends BaseFragment {
@@ -116,14 +116,14 @@ public class FiltersFragment
 				mFiltersViewModel::search
 		);
 
-		mFilterAdapter.locationCallbacks.onClick = locationId -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
+		mFilterAdapter.locationCallbacks.onClick = locationId -> mEventBus.publish(OPEN_LOCATION_ITEM, locationId);
 		mFilterAdapter.locationCallbacks.onVisibilityClick = mFiltersViewModel::changeLocationVisibility;
 		mFilterAdapter.categoryCallbacks.onVisibilityClick = mFiltersViewModel::changeCategoryVisibility;
 		mFilterAdapter.categoryCallbacks.onVisibilityLongClick = mFiltersViewModel::makeVisibleOneCategory;
 		mFilterAdapter.categoryCallbacks.onCollapsedClick = mFiltersViewModel::changeCategoryCollapsed;
 		mFilterAdapter.shortcutCallbacks.onLocationClick = mFiltersViewModel::showAllLocations;
 		mFilterAdapter.shortcutCallbacks.onExchangeOfficeClick = mFiltersViewModel::showAllExchangeOffices;
-		mFilterAdapter.shortcutCallbacks.onHeadquarterClick = (locationId) -> mEventBus.publish(OPEN_LOCATION_ID, locationId);
+		mFilterAdapter.shortcutCallbacks.onHeadquarterClick = (locationId) -> mEventBus.publish(OPEN_LOCATION_ITEM, locationId);
 		mFilterAdapter.shortcutCallbacks.onAllCategoriesCollapsedClick = mFiltersViewModel::changeAllCategoriesCollapsed;
 		mFilterAdapter.shortcutCallbacks.onAllCategoriesVisibilityClick = mFiltersViewModel::changeAllCategoriesVisibility;
 	}

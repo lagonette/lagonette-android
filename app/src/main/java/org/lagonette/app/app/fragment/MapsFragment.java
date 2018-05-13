@@ -12,22 +12,18 @@ import com.google.android.gms.maps.model.CameraPosition;
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
-import org.lagonette.app.app.viewmodel.MapLocationViewModel;
+import org.lagonette.app.app.viewmodel.MapCameraViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
 import org.lagonette.app.app.widget.performer.impl.MapMovementPerformer;
 import org.lagonette.app.app.widget.performer.impl.MapPerformer;
-import org.lagonette.app.room.entity.statement.LocationItem;
-import org.lagonette.app.room.statement.Statement;
-import org.lagonette.app.tools.arch.LongObserver;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.NOTIFY_MAP_MOVEMENT;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.SHOW_FULL_MAP;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_FOOTPRINT;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_LOCATION;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_MY_LOCATION;
-import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.OPEN_LOCATION_ID;
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.MOVE_TO_SELECTED_LOCATION;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.STOP_MOVING;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Map.UPDATE_MAP_LOCATION_UI;
 
@@ -44,7 +40,7 @@ public class MapsFragment
 
 	private MainLiveEventBusViewModel mEventBus;
 
-	private MapLocationViewModel mMapLocationViewModel;
+	private MapCameraViewModel mMapCameraViewModel;
 
 	// --- Performers --- //
 
@@ -66,12 +62,12 @@ public class MapsFragment
 
 		mMapMovementPerformer = new MapMovementPerformer();
 
-		mMapLocationViewModel = ViewModelProviders
+		mMapCameraViewModel = ViewModelProviders
 				.of(MapsFragment.this)
-				.get(MapLocationViewModel.class);
+				.get(MapCameraViewModel.class);
 
 		mMapViewModel = ViewModelProviders
-				.of(MapsFragment.this)
+				.of(getActivity())
 				.get(MapViewModel.class);
 
 		mDataViewModel = ViewModelProviders
@@ -122,21 +118,26 @@ public class MapsFragment
 		mMapFragment.getMapAsync(googleMap -> {
 			mMapPerformer.onMapReady(googleMap);
 			mMapMovementPerformer.onMapReady(googleMap);
-			mMapLocationViewModel.getCameraPosition().observe(
+			mMapCameraViewModel.getCameraPosition().observe(
 					MapsFragment.this,
 					mMapMovementPerformer::setCameraPosition
 			);
 
-			mMapViewModel.getMapPartners().observe(
+			mMapViewModel.getLocations().observe(
 					MapsFragment.this,
 					mMapPerformer::showPartners
 			);
 		});
 
+		mMapViewModel.getSelectedLocation().observe(
+				MapsFragment.this,
+				mMapPerformer::selectLocation
+		);
+
 		mMapPerformer.showFullMap = () -> mEventBus.publish(SHOW_FULL_MAP);
 		mMapPerformer.notifyMapMovement = movement -> mEventBus.publish(NOTIFY_MAP_MOVEMENT, movement);
 		mMapPerformer.moveToCluster = cluster -> mEventBus.publish(MOVE_TO_CLUSTER, cluster);
-		mMapPerformer.openLocationItem = item -> mEventBus.publish(OPEN_LOCATION_ITEM, item);
+		mMapPerformer.openLocationItem = item -> mEventBus.publish(OPEN_LOCATION_ITEM, item.getId());
 
 		mEventBus.subscribe(
 				MOVE_TO_MY_LOCATION,
@@ -151,12 +152,9 @@ public class MapsFragment
 		);
 
 		mEventBus.subscribe(
-				MOVE_TO_LOCATION,
+				MOVE_TO_SELECTED_LOCATION,
 				MapsFragment.this,
-				locationItem -> {
-					mMapPerformer.selectLocation(locationItem);
-					mMapMovementPerformer.moveToLocation(locationItem);
-				}
+				() -> mMapMovementPerformer.moveToLocation(mMapViewModel.getSelectedLocation().getValue())
 		);
 
 		mEventBus.subscribe(
@@ -172,15 +170,6 @@ public class MapsFragment
 		);
 
 		mEventBus.subscribe(
-				OPEN_LOCATION_ID,
-				MapsFragment.this,
-				LongObserver.unbox(
-						Statement.NO_ID,
-						this::openLocation
-				)
-		);
-
-		mEventBus.subscribe(
 				UPDATE_MAP_LOCATION_UI,
 				MapsFragment.this,
 				mMapPerformer::updateLocationUI
@@ -192,14 +181,9 @@ public class MapsFragment
 	public void onPause() {
 		CameraPosition cameraPosition = mMapMovementPerformer.getCameraPosition();
 		if (cameraPosition != null) {
-			mMapLocationViewModel.save(cameraPosition);
+			mMapCameraViewModel.save(cameraPosition);
 		}
 		super.onPause();
-	}
-
-	private void openLocation(long locationId) {
-		LocationItem locationItem = mMapPerformer.retrieveLocationItem(locationId);
-		mEventBus.publish(OPEN_LOCATION_ITEM, locationItem);
 	}
 
 	/**

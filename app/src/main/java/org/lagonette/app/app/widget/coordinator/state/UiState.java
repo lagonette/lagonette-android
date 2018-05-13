@@ -44,19 +44,23 @@ public class UiState {
 
 	public final boolean isLocationDetailLoaded;
 
+	public final long selectedLocationId;
+
 	public UiState(
 			@Nullable UiAction action,
 			@NonNull MapMovement mapMovement,
 			@BottomSheetState int bottomSheetState,
 			boolean isFiltersLoaded,
 			boolean isLocationDetailLoaded,
-			long loadedLocationId) {
+			long loadedLocationId,
+			long selectedLocationId) {
 		this.action = action;
 		this.mapMovement = mapMovement;
 		this.bottomSheetState = bottomSheetState;
 		this.isFiltersLoaded = isFiltersLoaded;
 		this.isLocationDetailLoaded = isLocationDetailLoaded;
 		this.loadedLocationId = loadedLocationId;
+		this.selectedLocationId = selectedLocationId;
 	}
 
 	@Override
@@ -76,6 +80,8 @@ public class UiState {
 		string += "\tBottom sheet fragment state: [\n";
 		string += "\t\tis filters loaded: " + isFiltersLoaded + "\n";
 		string += "\t\tis location detail loaded: " + isLocationDetailLoaded + "\n";
+		string += "\t\tloaded location id: " + loadedLocationId + "\n";
+		string += "\t\tselected location id: " + selectedLocationId + "\n";
 		string += "\t]\n";
 		string += "]";
 		return string;

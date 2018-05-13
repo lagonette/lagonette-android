@@ -44,7 +44,14 @@ public class MainRepo {
 		return worker.getWorkerState();
 	}
 
-	public LiveData<List<LocationItem>> getMapPartners(@NonNull LiveData<String> searchLiveData) {
+	public LiveData<LocationItem> getMapLocation(@NonNull LiveData<Long> locationIdLiveData) {
+		return Transformations.switchMap(
+				locationIdLiveData,
+				locationId -> mDatabase.uiDao().getMapLocation(locationId)
+		);
+	}
+
+	public LiveData<List<LocationItem>> getMapLocations(@NonNull LiveData<String> searchLiveData) {
 		return Transformations.switchMap(
 				searchLiveData,
 				search -> mDatabase
@@ -58,7 +65,7 @@ public class MainRepo {
 				locationIdLiveData,
 				locationId -> locationId > Statement.NO_ID
 						? mDatabase.uiDao().getLocationsDetail(locationId)
-						: null
+						: null //TODO do not return null
 		);
 	}
 

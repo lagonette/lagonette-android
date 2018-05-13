@@ -63,15 +63,12 @@ public class MapPerformer
 
 	private int mStatusBarHeight;
 
-	private LongSparseArray<LocationItem> mLocationItems;
-
 	@Nullable
 	private Marker mSelectedMarker;
 
 	public MapPerformer(@NonNull Context context) {
 		mContext = context;
 		mStatusBarHeight = UiUtils.getStatusBarHeight(mContext.getResources());
-		mLocationItems = new LongSparseArray<>();
 	}
 
 	@Override
@@ -153,12 +150,8 @@ public class MapPerformer
 	}
 
 	public void showPartners(@Nullable List<LocationItem> locationItems) {
-		mLocationItems.clear();
 		mClusterManager.clearItems();
 		if (locationItems != null) {
-			for (LocationItem item : locationItems) { //TODO Improve -> Pass the item or keep in the ViewModel
-				mLocationItems.put(item.getId(), item);
-			}
 			mClusterManager.addItems(locationItems);
 		}
 		mClusterManager.cluster();
@@ -186,19 +179,16 @@ public class MapPerformer
 		mMap.setMyLocationEnabled(permissionGranted);
 	}
 
-	@Nullable
-	public LocationItem retrieveLocationItem(long locationId) {
-		return mLocationItems.get(locationId);
+	public void selectLocation(@Nullable LocationItem selected) {
+		removeSelectedMarkerIfNeeded();
+		if (selected != null) {
+			mSelectedMarker = mMap.addMarker(
+					mPartnerRenderer.createSelectedMarkerOptions(selected)
+			);
+		}
 	}
 
-	public void selectLocation(@NonNull LocationItem selected) {
-		unselectLocation();
-		mSelectedMarker = mMap.addMarker(
-				mPartnerRenderer.createSelectedMarkerOptions(selected)
-		);
-	}
-
-	private void unselectLocation() {
+	private void removeSelectedMarkerIfNeeded() {
 		if (mSelectedMarker != null) {
 			mSelectedMarker.remove();
 			mSelectedMarker = null;
@@ -206,7 +196,6 @@ public class MapPerformer
 	}
 
 	public void showFullMap() {
-		unselectLocation();
 		showFullMap.run();
 	}
 }
