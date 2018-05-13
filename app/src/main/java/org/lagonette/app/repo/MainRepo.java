@@ -63,9 +63,7 @@ public class MainRepo {
 	public LiveData<LocationDetail> getLocationDetail(@NonNull LiveData<Long> locationIdLiveData) {
 		return Transformations.switchMap(
 				locationIdLiveData,
-				locationId -> locationId > Statement.NO_ID
-						? mDatabase.uiDao().getLocationsDetail(locationId)
-						: null //TODO do not return null
+				locationId -> mDatabase.uiDao().getLocationsDetail(locationId)
 		);
 	}
 
