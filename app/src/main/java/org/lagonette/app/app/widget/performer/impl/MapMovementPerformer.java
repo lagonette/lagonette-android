@@ -37,7 +37,13 @@ public class MapMovementPerformer
 	public void moveToLocation(@Nullable LocationItem item) {
 		if (mMap != null && item != null) {
 			LatLng latLng = item.getPosition();
-			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_STREET);
+			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+					latLng,
+					Math.max(
+							ZOOM_LEVEL_STREET,
+							mMap.getCameraPosition().zoom
+					)
+			);
 			mMap.animateCamera(
 					cameraUpdate,
 					ANIMATION_LENGTH_LONG,
