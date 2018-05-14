@@ -3,8 +3,6 @@ package org.lagonette.app.app.widget.presenter;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.app.activity.PresenterActivity;
-import org.lagonette.app.app.widget.coordinator.MainCoordinator;
-import org.lagonette.app.app.widget.coordinator.portrait.PortraitMainCoordinator;
 import org.lagonette.app.app.widget.coordinator.state.action.OpenFiltersAction;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
@@ -23,7 +21,7 @@ public class PortraitMainPresenter
 		super.onConstructed(activity);
 
 		// Performer > LiveData
-		mFabButtonsPerformer.onFiltersClick(() -> mUiActionStore.startAction(new OpenFiltersAction()));
+		mFabButtonsPerformer.onFiltersClick(() -> mUiActionStore.start(new OpenFiltersAction()));
 
 		// LiveData > Performer, Coordinator
 		mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mSearchBarPerformer.enableBehavior(true));
@@ -38,12 +36,6 @@ public class PortraitMainPresenter
 			mMapFragmentPerformer.notifySearchBarBottomChanged(offset);
 			mBottomSheetPerformer.notifySearchBarBottomChanged(offset);
 		};
-	}
-
-	@NonNull
-	@Override
-	protected MainCoordinator createCoordinator() {
-		return new PortraitMainCoordinator();
 	}
 
 	@NonNull
