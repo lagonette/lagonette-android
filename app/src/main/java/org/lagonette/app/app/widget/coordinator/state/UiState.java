@@ -2,9 +2,7 @@ package org.lagonette.app.app.widget.coordinator.state;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import org.lagonette.app.app.widget.coordinator.state.action.UiAction;
 import org.lagonette.app.util.BottomSheetUtils;
 
 import java.lang.annotation.Retention;
@@ -18,6 +16,32 @@ import static android.support.design.widget.BottomSheetBehavior.STATE_SETTLING;
 
 public class UiState {
 
+	public static class Factory {
+
+		private final int mOrientation;
+
+		public Factory(int orientation) {
+			mOrientation = orientation;
+		}
+
+		public UiState create(
+				@NonNull MapMovement mapMovement,
+				@BottomSheetState int bottomSheetState,
+				boolean isFiltersLoaded,
+				boolean isLocationDetailLoaded,
+				long loadedLocationId,
+				long selectedLocationId) {
+			return new UiState(
+					mOrientation,
+					mapMovement,
+					bottomSheetState,
+					isFiltersLoaded,
+					isLocationDetailLoaded,
+					loadedLocationId,
+					selectedLocationId);
+		}
+	}
+
 	@Retention(RetentionPolicy.SOURCE)
 	@IntDef({
 			STATE_EXPANDED,
@@ -29,9 +53,6 @@ public class UiState {
 	public @interface BottomSheetState {
 
 	}
-
-	@Nullable
-	public final UiAction action;
 
 	@NonNull
 	public final MapMovement mapMovement;
@@ -47,15 +68,17 @@ public class UiState {
 
 	public final long selectedLocationId;
 
+	public final int orientation;
+
 	public UiState(
-			@Nullable UiAction action,
+			int orientation,
 			@NonNull MapMovement mapMovement,
 			@BottomSheetState int bottomSheetState,
 			boolean isFiltersLoaded,
 			boolean isLocationDetailLoaded,
 			long loadedLocationId,
 			long selectedLocationId) {
-		this.action = action;
+		this.orientation = orientation;
 		this.mapMovement = mapMovement;
 		this.bottomSheetState = bottomSheetState;
 		this.isFiltersLoaded = isFiltersLoaded;
@@ -67,6 +90,7 @@ public class UiState {
 	@Override
 	public String toString() {
 		String string = "MainState: [\n";
+		string += "\torientation: " + orientation + "\n";
 		string += "\tMap movement: ";
 		switch (mapMovement) {
 			case IDLE:

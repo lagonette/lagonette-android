@@ -127,12 +127,12 @@ public class MapsFragment
 					MapsFragment.this,
 					mMapPerformer::showPartners
 			);
-		});
 
-		mMapViewModel.getSelectedLocation().observe(
-				MapsFragment.this,
-				mMapPerformer::selectLocation
-		);
+			mMapViewModel.getSelectedLocation().observe(
+					MapsFragment.this,
+					mMapPerformer::selectLocation
+			);
+		});
 
 		mMapPerformer.showFullMap = () -> mEventBus.publish(SHOW_FULL_MAP);
 		mMapPerformer.notifyMapMovement = movement -> mEventBus.publish(NOTIFY_MAP_MOVEMENT, movement);

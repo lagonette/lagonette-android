@@ -3,8 +3,6 @@ package org.lagonette.app.app.widget.presenter;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.app.activity.PresenterActivity;
-import org.lagonette.app.app.widget.coordinator.MainCoordinator;
-import org.lagonette.app.app.widget.coordinator.landscape.LandscapeMainCoordinator;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeFabButtonsPerformer;
@@ -20,6 +18,9 @@ public class LandscapeMainPresenter
 	@Override
 	public void init(@NonNull PresenterActivity activity) {
 		mFiltersFragmentPerformer.loadFragment();
+		if (!mFiltersFragmentPerformer.isLoaded()) {
+			mFiltersFragmentPerformer.loadFragment();
+		}
 		super.init(activity);
 	}
 
@@ -30,12 +31,6 @@ public class LandscapeMainPresenter
 		// Performer > Performer
 		mBottomSheetPerformer.onSlideChanged = mLocationDetailFragmentPerformer::updateTopPadding;
 		mSearchBarPerformer.onBottomChanged = mFiltersFragmentPerformer::updateTopPadding;
-	}
-
-	@NonNull
-	@Override
-	protected MainCoordinator createCoordinator() {
-		return new LandscapeMainCoordinator();
 	}
 
 	@NonNull
