@@ -34,7 +34,7 @@ public class OpenLocationAction
 						callbacks.selectLocation.accept(selectedLocationId);
 					}
 					else if (shouldMove) {
-						shouldMove = false; //TODO Unidirectional Data flow !
+						shouldMove = false;
 						callbacks.moveMapToSelectedLocation.run();
 					}
 					else if (state.loadedLocationId != selectedLocationId) {
@@ -119,7 +119,7 @@ public class OpenLocationAction
 						callbacks.selectLocation.accept(selectedLocationId);
 					}
 					else if (shouldMove) {
-						shouldMove = false; //TODO Unidirectional Data flow !
+						shouldMove = false;
 						callbacks.moveMapToSelectedLocation.run();
 					}
 					else if (state.loadedLocationId != selectedLocationId) {
@@ -150,7 +150,7 @@ public class OpenLocationAction
 								callbacks.selectLocation.accept(selectedLocationId);
 							}
 							else if (shouldMove) { //TODO Use reason to mark action done if the user move something
-								shouldMove = false; //TODO Unidirectional Data flow !
+								shouldMove = false;
 								callbacks.moveMapToSelectedLocation.run();
 							}
 							else {
