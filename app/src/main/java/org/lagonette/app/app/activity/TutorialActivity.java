@@ -1,17 +1,15 @@
 package org.lagonette.app.app.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.Button;
 
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.impl.PermissionsPerformer;
+import org.lagonette.app.app.widget.performer.impl.TutorialPerformer;
 import org.lagonette.app.app.widget.viewpager.TutorialViewPagerAdapter;
 
 public class TutorialActivity
@@ -25,9 +23,13 @@ public class TutorialActivity
 
 	private PermissionsPerformer mPermissionsPerformer;
 
+	private TutorialPerformer mTutorialPerformer;
+
 	@Override
 	protected void construct() {
+		mViewPagerAdapter = new TutorialViewPagerAdapter();
 		mPermissionsPerformer = new PermissionsPerformer(this);
+		mTutorialPerformer = new TutorialPerformer();
 	}
 
 	@Override
@@ -39,6 +41,7 @@ public class TutorialActivity
 	protected void inject(@NonNull View view) {
 		mViewPager = view.findViewById(R.id.tutorial_pager);
 		mDotsIndicator = view.findViewById(R.id.tutorial_dots);
+		mTutorialPerformer.inject(view);
 	}
 
 	@Override
@@ -54,58 +57,22 @@ public class TutorialActivity
 	@Override
 	protected void onConstructed() {
 
-		TutorialViewPagerAdapter.Callbacks callbacks = new TutorialViewPagerAdapter.Callbacks();
-		callbacks.finish = this::finish;
-		callbacks.goToNextPage = this::goToNextPage;
-		callbacks.askForFineLocation = mPermissionsPerformer::askForFineLocation;
-		callbacks.checkForFineLocation = mPermissionsPerformer::checkForFineLocation;
-
-		mViewPagerAdapter = new TutorialViewPagerAdapter(callbacks);
 		mViewPager.setAdapter(mViewPagerAdapter);
 		mDotsIndicator.setViewPager(mViewPager);
 
+		mViewPager.addOnPageChangeListener(mTutorialPerformer);
+
+		mViewPagerAdapter.callbacks.finish = this::finish;
+		mViewPagerAdapter.callbacks.goToNextPage = mTutorialPerformer::goToNextPage;
+		mViewPagerAdapter.callbacks.askForFineLocation = mPermissionsPerformer::askForFineLocation;
+		mViewPagerAdapter.callbacks.checkForFineLocation = mPermissionsPerformer::checkForFineLocation;
+
+		mTutorialPerformer.finish = this::finish;
+		mTutorialPerformer.getCurrentPage = mViewPager::getCurrentItem;
+		mTutorialPerformer.getPageCount = mViewPagerAdapter::getCount;
+		mTutorialPerformer.goToNextPage = () -> mViewPager.arrowScroll(View.FOCUS_RIGHT);
+
 		mPermissionsPerformer.onFineLocationPermissionResult = mViewPagerAdapter::onFineLocationPermissionResult;
-
-		mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-			@Override
-			public void onPageSelected(int position) {
-				updateNextButton();
-			}
-		});
-
-		// TODO Put this in performer
-		findViewById(R.id.tutorial_button_next).setOnClickListener(
-				view -> goToNextPage()
-		);
-	}
-
-	private void goToNextPage() {
-		PagerAdapter adapter = mViewPager.getAdapter();
-		if (adapter != null) {
-			if (mViewPager.getCurrentItem() == adapter.getCount() - 1) {
-				setResult(Activity.RESULT_OK);
-				finish();
-			}
-			else {
-				mViewPager.arrowScroll(View.FOCUS_RIGHT);
-			}
-		}
-	}
-
-	// TODO Put this in performer
-	private void updateNextButton() {
-		PagerAdapter adapter = mViewPager.getAdapter();
-		if (adapter != null) {
-			if (mViewPager.getCurrentItem() == adapter.getCount() - 1) {
-				((Button) findViewById(R.id.tutorial_button_next)).setText(R.string.all_button_finish);
-			}
-			else {
-				((Button) findViewById(R.id.tutorial_button_next)).setText(R.string.all_button_next);
-			}
-		}
-		else {
-			((Button) findViewById(R.id.tutorial_button_next)).setText(R.string.all_button_finish);
-		}
 	}
 
 	@Override
@@ -114,5 +81,10 @@ public class TutorialActivity
 			@NonNull String permissions[],
 			@NonNull int[] grantResults) {
 		mPermissionsPerformer.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	}
+
+	public void finish(int resultCode) {
+		setResult(resultCode);
+		finish();
 	}
 }

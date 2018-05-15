@@ -49,7 +49,7 @@ public abstract class MainPresenter<
 		SBP extends SearchBarPerformer>
 		implements PresenterActivity.Lifecycle {
 
-	private static final String TAG = "MainPresenter";
+	public static final int REQUEST_CODE_TUTORIAL = 0;
 
 	// --- View Model --- //
 
@@ -272,8 +272,6 @@ public abstract class MainPresenter<
 		}
 
 	}
-
-	public static final int REQUEST_CODE_TUTORIAL = 0;
 
 	@Override
 	public void onRequestPermissionsResult(

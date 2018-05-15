@@ -61,12 +61,12 @@ public class TutorialViewPagerAdapter
 
 
 	@NonNull
-	private Callbacks mCallbacks;
+	public final Callbacks callbacks;
 
 	//TODO After tutorial -> Update location UI
 
-	public TutorialViewPagerAdapter(@NonNull Callbacks callbacks) {
-		mCallbacks = callbacks;
+	public TutorialViewPagerAdapter() {
+		callbacks = new Callbacks();
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class TutorialViewPagerAdapter
 		}
 		else if (position == TutorialPage.PERMISSIONS.ordinal()) {
 			PermissionsPageHolder holder = (PermissionsPageHolder) pageHolder;
-			if (mCallbacks.checkForFineLocation.get()) {
+			if (callbacks.checkForFineLocation.get()) {
 				holder.allowButton.setVisibility(View.GONE);
 				holder.checkedImage.setVisibility(View.VISIBLE);
 			}
@@ -84,13 +84,13 @@ public class TutorialViewPagerAdapter
 				holder.allowButton.setVisibility(View.VISIBLE);
 				holder.checkedImage.setVisibility(View.GONE);
 				holder.allowButton.setOnClickListener(
-						button -> mCallbacks.askForFineLocation.run()
+						button -> callbacks.askForFineLocation.run()
 				);
 			}
 		}
 //		else if (position == TutorialPage.REPORT.ordinal()) {
 //			view.findViewById(R.id.tutorial_button_no).setOnClickListener(
-//					button -> mCallbacks.goToNextPage.run()
+//					button -> callbacks.goToNextPage.run()
 //			);
 //		}
 		else if (position == TutorialPage.END.ordinal()) {
@@ -122,7 +122,7 @@ public class TutorialViewPagerAdapter
 
 	public void onFineLocationPermissionResult(boolean granted) {
 		notifyDataSetChanged();
-		mCallbacks.goToNextPage.run();
+		callbacks.goToNextPage.run();
 	}
 
 	public enum TutorialPage {
