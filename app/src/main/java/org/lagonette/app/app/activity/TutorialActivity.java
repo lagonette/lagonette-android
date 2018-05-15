@@ -1,5 +1,6 @@
 package org.lagonette.app.app.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -82,6 +83,7 @@ public class TutorialActivity
 		PagerAdapter adapter = mViewPager.getAdapter();
 		if (adapter != null) {
 			if (mViewPager.getCurrentItem() == adapter.getCount() - 1) {
+				setResult(Activity.RESULT_OK);
 				finish();
 			}
 			else {

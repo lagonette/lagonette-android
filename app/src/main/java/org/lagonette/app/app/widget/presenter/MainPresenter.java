@@ -1,5 +1,6 @@
 package org.lagonette.app.app.widget.presenter;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +8,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import org.lagonette.app.R;
@@ -91,11 +91,15 @@ public abstract class MainPresenter<
 
 	protected UiAction.Callbacks mCallbacks;
 
+	protected Runnable mFinishActivity;
+
 	@Override
 	@CallSuper
 	public void construct(@NonNull PresenterActivity activity) {
 
 		mCallbacks = new UiAction.Callbacks();
+
+		mFinishActivity = activity::finish;
 
 		mUiStateFactory = new UiState.Factory(activity.getResources().getConfiguration().orientation);
 
@@ -264,10 +268,12 @@ public abstract class MainPresenter<
 		// --- Start --- //
 		if (!mPreferencesPerformer.isTutorialComplete()) {
 			Intent intent = new Intent(activity, TutorialActivity.class);
-			activity.startActivity(intent);
+			activity.startActivityForResult(intent, REQUEST_CODE_TUTORIAL);
 		}
 
 	}
+
+	public static final int REQUEST_CODE_TUTORIAL = 0;
 
 	@Override
 	public void onRequestPermissionsResult(
@@ -275,6 +281,18 @@ public abstract class MainPresenter<
 			@NonNull String permissions[],
 			@NonNull int[] grantResults) {
 		mPermissionsPerformer.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
+		if (requestCode == REQUEST_CODE_TUTORIAL) {
+			if (resultCode == Activity.RESULT_OK) {
+				mPreferencesPerformer.setTutorialAsComplete();
+			}
+			else {
+				mFinishActivity.run();
+			}
+		}
 	}
 
 	public boolean onBackPressed(@NonNull PresenterActivity activity) {

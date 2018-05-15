@@ -1,5 +1,6 @@
 package org.lagonette.app.app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -27,6 +28,8 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
 				int requestCode,
 				@NonNull String[] permissions,
 				@NonNull int[] grantResults);
+
+		void onActivityResult(int requestCode, int resultCode, @NonNull Intent data);
 	}
 
 	protected Presenter mPresenter;
@@ -73,5 +76,11 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
 			@NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		mPresenter.onActivityResult(requestCode, resultCode, data);
 	}
 }
