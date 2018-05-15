@@ -63,8 +63,6 @@ public class TutorialViewPagerAdapter
 	@NonNull
 	public final Callbacks callbacks;
 
-	//TODO After tutorial -> Update location UI
-
 	public TutorialViewPagerAdapter() {
 		callbacks = new Callbacks();
 	}

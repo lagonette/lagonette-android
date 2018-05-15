@@ -1,16 +1,14 @@
 package org.lagonette.app.app.widget.performer.impl;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.widget.performer.base.ViewPerformer;
+import org.zxcv.functions.main.BooleanSupplier;
 import org.zxcv.functions.main.Consumer;
 import org.zxcv.functions.main.Runnable;
 
@@ -22,6 +20,9 @@ public abstract class FabButtonsPerformer
 
 	@NonNull
 	public Runnable askForFineLocationPermission = Runnable::doNothing;
+
+	@NonNull
+	public BooleanSupplier checkForFineLocationPermission = BooleanSupplier.get(false);
 
 	@NonNull
 	public Runnable onPositionLongClick = Runnable::doNothing;
@@ -45,10 +46,7 @@ public abstract class FabButtonsPerformer
 
 	private void updatePositionFabClickListener() {
 		if (mPositionFab != null) {
-			boolean permissionGranted =
-					ActivityCompat.checkSelfPermission(mPositionFab.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-
-			if (permissionGranted) {
+			if (checkForFineLocationPermission.get()) {
 				mPositionFab.setOnClickListener(
 						button -> onPositionClick.accept((Location) button.getTag())
 				);

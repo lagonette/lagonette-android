@@ -193,15 +193,7 @@ public abstract class MainPresenter<
 	@CallSuper
 	public void onConstructed(@NonNull PresenterActivity activity) {
 
-		mPermissionsPerformer.onFineLocationPermissionResult = granted -> {
-			if (granted) {
-				mLocationViewModel
-						.getLocation()
-						.observe(activity, mFabButtonsPerformer::updateLocation);
-				mFabButtonsPerformer.notifyFineLocationGranted();
-				mMapFragmentPerformer.updateLocationUI();
-			}
-		};
+		mPermissionsPerformer.onFineLocationPermissionResult = granted -> connectLocationProcessIfNeeded(activity);
 
 		// === Performer > Store === //
 		mEventBus.subscribe(
@@ -226,6 +218,7 @@ public abstract class MainPresenter<
 		mFabButtonsPerformer.onPositionClick = location -> mUiActionStore.start(new MoveToMyLocationAction(location));
 		mFabButtonsPerformer.onPositionLongClick = () -> mUiActionStore.start(new MoveToFootprintAction());
 		mFabButtonsPerformer.askForFineLocationPermission = mPermissionsPerformer::askForFineLocation;
+		mFabButtonsPerformer.checkForFineLocationPermission = mPermissionsPerformer::checkForFineLocation;
 
 		mMapViewModel.getSelectedLocation().observe(
 				activity,
@@ -266,10 +259,8 @@ public abstract class MainPresenter<
 
 
 		// --- Start --- //
-		if (!mPreferencesPerformer.isTutorialComplete()) {
-			Intent intent = new Intent(activity, TutorialActivity.class);
-			activity.startActivityForResult(intent, REQUEST_CODE_TUTORIAL);
-		}
+		connectLocationProcessIfNeeded(activity);
+		startTutorialIfNeeded(activity);
 
 	}
 
@@ -282,10 +273,15 @@ public abstract class MainPresenter<
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
+	public void onActivityResult(
+			@NonNull PresenterActivity activity,
+			int requestCode,
+			int resultCode,
+			@NonNull Intent data) {
 		if (requestCode == REQUEST_CODE_TUTORIAL) {
 			if (resultCode == Activity.RESULT_OK) {
 				mPreferencesPerformer.setTutorialAsComplete();
+				connectLocationProcessIfNeeded(activity);
 			}
 			else {
 				mFinishActivity.run();
@@ -313,6 +309,26 @@ public abstract class MainPresenter<
 				mLocationDetailFragmentPerformer.getLoadedId(),
 				mMapViewModel.getSelectedLocationId()
 		);
+	}
+
+	private void connectLocationProcessIfNeeded(@NonNull PresenterActivity activity) {
+		if (mPermissionsPerformer.checkForFineLocation()) {
+			mLocationViewModel
+					.getLocation()
+					.observe(
+							activity,
+							mFabButtonsPerformer::updateLocation
+					);
+			mFabButtonsPerformer.notifyFineLocationGranted();
+			mMapFragmentPerformer.updateLocationUI();
+		}
+	}
+
+	private void startTutorialIfNeeded(@NonNull PresenterActivity activity) {
+		if (!mPreferencesPerformer.isTutorialComplete()) {
+			Intent intent = new Intent(activity, TutorialActivity.class);
+			activity.startActivityForResult(intent, REQUEST_CODE_TUTORIAL);
+		}
 	}
 
 	@NonNull

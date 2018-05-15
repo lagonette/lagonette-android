@@ -29,7 +29,11 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
 				@NonNull String[] permissions,
 				@NonNull int[] grantResults);
 
-		void onActivityResult(int requestCode, int resultCode, @NonNull Intent data);
+		void onActivityResult(
+				@NonNull PresenterActivity presenterPresenterActivity,
+				int requestCode,
+				int resultCode,
+				@NonNull Intent data);
 	}
 
 	protected Presenter mPresenter;
@@ -81,6 +85,6 @@ public abstract class PresenterActivity<Presenter extends PresenterActivity.Life
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		mPresenter.onActivityResult(requestCode, resultCode, data);
+		mPresenter.onActivityResult(this, requestCode, resultCode, data);
 	}
 }
