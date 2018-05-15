@@ -56,7 +56,7 @@ public class TutorialViewPagerAdapter
 
 		public Runnable askForFineLocation = Runnable::doNothing;
 
-		public BooleanSupplier checkForFineLocation = BooleanSupplier.create(false);
+		public BooleanSupplier checkForFineLocation = BooleanSupplier.get(false);
 	}
 
 

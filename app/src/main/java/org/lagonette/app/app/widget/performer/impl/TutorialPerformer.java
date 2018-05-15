@@ -20,9 +20,9 @@ public class TutorialPerformer
 
 	public Runnable goToNextPage = Runnable::doNothing;
 
-	public IntSupplier getCurrentPage = IntSupplier.create(0);
+	public IntSupplier getCurrentPage = IntSupplier.get(0);
 
-	public IntSupplier getPageCount = IntSupplier.create(0);
+	public IntSupplier getPageCount = IntSupplier.get(0);
 
 	private Button mNextButton;
 
