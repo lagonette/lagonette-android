@@ -10,31 +10,34 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="48dp"
         android:scaleType="centerCrop"
         android:src="@drawable/lyon" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="48dp"
         android:background="@color/tutorial_filter" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="364dp"
+        android:layout_marginRight="364dp"
         android:padding="16dp"
-        android:layout_marginBottom="356dp"
         android:background="@android:color/transparent"
         android:scaleType="centerInside"
         android:src="@drawable/header_gonette" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/tutorial_pager"
-        android:layout_width="match_parent"
-        android:layout_height="244dp"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="112dp" />
+        android:layout_width="340dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:layout_gravity="end"
+        android:paddingBottom="96dp"
+        android:paddingTop="96dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/tutorial_dots"
@@ -45,38 +48,34 @@
         app:dotsCornerRadius="8dp"
         app:dotsSize="8dp"
         app:dotsSpacing="4dp"
-        app:dotsWidthFactor="3" />
+        app:dotsWidthFactor="3"
+        app:layout_anchor="@id/tutorial_pager"
+        app:layout_anchorGravity="bottom|center" />
 
     <Button
         android:id="@+id/tutorial_button_next"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
+        android:layout_gravity="start|bottom"
+        app:layout_anchorGravity="end|bottom"
+        app:layout_anchor="@id/tutorial_pager"
         android:text="@string/all_button_next" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:layout_gravity="top"
-        android:background="@drawable/bg_shadow_top"
+        android:layout_width="8dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/bg_shadow_left"
         app:layout_anchor="@id/tutorial_pager"
-        app:layout_anchorGravity="top" />
+        app:layout_anchorGravity="left" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/bg_shadow_bottom"
+        android:layout_width="8dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@drawable/bg_shadow_right"
         app:layout_anchor="@id/tutorial_pager"
-        app:layout_anchorGravity="bottom" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:layout_gravity="top"
-        android:background="@drawable/bg_shadow_top"
-        app:layout_anchor="@id/tutorial_dots"
-        app:layout_anchorGravity="top" />
+        app:layout_anchorGravity="right" />
 
 </android.support.design.widget.CoordinatorLayout>
