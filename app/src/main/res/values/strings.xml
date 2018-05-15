@@ -31,10 +31,10 @@
     <string name="snackbar_error_unknown">"Une erreur inconnue s'est produite."</string>
 
     <string name="tutorial_intro_title">Bienvenue sur l\'application officiel !</string>
-    <string name="tutorial_intro_subhead">Prêt à retrouver tous les partenaires prêt de chez toi ?!</string>
-    <string name="tutorial_permissions_title">Autorisez la localisation ?</string>
-    <string name="tutorial_permissions_subhead">Afin de localiser les partenaires prêt de vous.</string>
-    <string name="tutorial_report_title">Autorisez les rapports de bogues ?</string>
+    <string name="tutorial_intro_subhead">Prêt à retrouver tous les partenaires prêt de chez vous ?!</string>
+    <string name="tutorial_permissions_title">Autoriser la localisation ?</string>
+    <string name="tutorial_permissions_subhead">La localisation permet de vous situer sur la carte afin de retrouver les partenaires prêt de vous.</string>
+    <string name="tutorial_report_title">Autoriser les rapports de bogues ?</string>
     <string name="tutorial_report_subhead">Ces rapports sont envoyés sur Firebase (Google) et permettent aux développeur·euse·s de corriger et d\'améliorer l'application.</string>
     <string name="tutorial_end_title">Tout est prêt !</string>
 
