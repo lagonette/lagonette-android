@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:layout_gravity="top"
-        android:background="@drawable/bg_shadow_bottom_sheet"
+        android:background="@drawable/bg_shadow_top"
         app:layout_anchor="@id/bottom_sheet"
         app:layout_anchorGravity="top" />
 

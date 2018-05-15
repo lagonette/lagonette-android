@@ -1,29 +1,25 @@
 package org.lagonette.app.app.widget.performer.impl;
 
 import android.Manifest;
-import android.content.Context;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
-import org.zxcv.functions.main.ObjIntConsumer;
-import org.zxcv.functions.main.Runnable;
+import org.zxcv.functions.main.BooleanConsumer;
 
 public class PermissionsPerformer {
 
 	private static final int PERMISSIONS_REQUEST_LOCATION = 666;
 
 	@NonNull
-	private final Context mContext;
+	private final Activity mActivity;
 
 	@NonNull
-	public ObjIntConsumer<String[]> requestPermissions = ObjIntConsumer::doNothing;
+	public BooleanConsumer onFineLocationPermissionResult = BooleanConsumer::doNothing;
 
-	@NonNull
-	public Runnable onFineLocationPermissionGranted = Runnable::doNothing;
-
-	public PermissionsPerformer(@NonNull Context context) {
-		mContext = context;
+	public PermissionsPerformer(@NonNull Activity activity) {
+		mActivity = activity;
 	}
 
 	public void onRequestPermissionsResult(
@@ -41,19 +37,18 @@ public class PermissionsPerformer {
 
 	public void onLocationPermissionResult(@NonNull int[] grantResults) {
 		// If request is cancelled, the result arrays are empty.
-		if (grantResults.length > 0
-				&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-			onFineLocationPermissionGranted.run();
-		}
+		onFineLocationPermissionResult.accept(grantResults.length > 0
+				&& grantResults[0] == PackageManager.PERMISSION_GRANTED);
 	}
 
 	public void askForFineLocation() {
 
 		boolean permissionGranted =
-				ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+				ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
 		if (!permissionGranted) {
-			requestPermissions.accept(
+			ActivityCompat.requestPermissions(
+					mActivity,
 					new String[]{
 							Manifest.permission.ACCESS_FINE_LOCATION
 					},
@@ -61,7 +56,11 @@ public class PermissionsPerformer {
 			);
 		}
 		else {
-			onFineLocationPermissionGranted.run();
+			onFineLocationPermissionResult.accept(true);
 		}
+	}
+
+	public boolean checkForFineLocation() {
+		return ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 	}
 }

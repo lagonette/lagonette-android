@@ -123,7 +123,7 @@
         android:id="@+id/shortcut_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/divider" />
+        android:background="@color/all_divider" />
 
     <LinearLayout
         android:id="@+id/shortcut_all_categories"
@@ -161,7 +161,7 @@
             android:layout_weight="1"
             android:text="@string/filters_all_categories"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/text_secondary" />
+            android:textColor="@color/all_text_secondary" />
 
         <ImageButton
             android:id="@+id/shortcut_collapsed"

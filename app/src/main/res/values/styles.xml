@@ -8,6 +8,15 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Base.AppTheme"></style>
+    <style name="AppTheme" parent="Base.AppTheme" />
+
+    <style name="AppTheme.White" parent="AppTheme" >
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="Widget.AppCompat.Button.White" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@android:color/white</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
 
 </resources>

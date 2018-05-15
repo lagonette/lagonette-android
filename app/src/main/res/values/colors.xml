@@ -12,10 +12,21 @@
     <color name="la_gonette_09">#60000000</color>
     <color name="la_gonette_10">#1E000000</color>
     <color name="la_gonette_11">#EEEEEE</color>
+    <color name="la_gonette_12">#89FFFFFF</color>
 
     <color name="la_gonnette_primary">@color/la_gonette_01</color>
     <color name="la_gonnette_secondary_1">@color/la_gonette_02</color>
     <color name="la_gonnette_secondary_2">@color/la_gonette_03</color>
+
+    <color name="all_text_primary">@color/la_gonette_07</color>
+    <color name="all_text_secondary">@color/la_gonette_08</color>
+    <color name="all_text_disabled">@color/la_gonette_09</color>
+    <color name="all_text_hint">@color/la_gonette_09</color>
+
+    <color name="all_divider">@color/la_gonette_10</color>
+
+    <color name="all_icon">@color/la_gonette_09</color>
+    <color name="all_icon_dark">@color/la_gonette_08</color>
 
     <color name="colorPrimary">@color/la_gonette_01</color>
     <color name="colorPrimaryDark">@color/la_gonette_04</color>
@@ -23,17 +34,9 @@
 
     <color name="map_footprint">@color/la_gonette_06</color>
 
-    <color name="text_primary">@color/la_gonette_07</color>
-    <color name="text_secondary">@color/la_gonette_08</color>
-    <color name="text_disabled">@color/la_gonette_09</color>
-    <color name="text_hint">@color/la_gonette_09</color>
-
-    <color name="divider">@color/la_gonette_10</color>
-
-    <color name="icon">@color/la_gonette_09</color>
-    <color name="icon_dark">@color/la_gonette_08</color>
-
     <color name="row_partner_main_background">@android:color/white</color>
     <color name="row_partner_side_background">@color/la_gonette_11</color>
+
+    <color name="tutorial_filter">@color/la_gonette_12</color>
 
 </resources>

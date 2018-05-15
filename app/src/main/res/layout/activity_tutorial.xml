@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.lagonette.app.app.activity.TutorialActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginBottom="48dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/lyon" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="48dp"
+        android:background="@color/tutorial_filter" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginBottom="356dp"
+        android:background="@android:color/transparent"
+        android:scaleType="center"
+        android:src="@drawable/header_gonette" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/tutorial_pager"
+        android:layout_width="match_parent"
+        android:layout_height="244dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="112dp" />
+
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/tutorial_dots"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom|center"
+        app:dotsColor="@color/colorAccent"
+        app:dotsCornerRadius="8dp"
+        app:dotsSize="8dp"
+        app:dotsSpacing="4dp"
+        app:dotsWidthFactor="2.5"
+        app:layout_anchorGravity="bottom" />
+
+    <Button
+        android:id="@+id/tutorial_button_next"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:text="@string/all_button_next" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_gravity="top"
+        android:background="@drawable/bg_shadow_top"
+        app:layout_anchor="@id/tutorial_pager"
+        app:layout_anchorGravity="top" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_shadow_bottom"
+        app:layout_anchor="@id/tutorial_pager"
+        app:layout_anchorGravity="bottom" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_gravity="top"
+        android:background="@drawable/bg_shadow_top"
+        app:layout_anchor="@id/tutorial_dots"
+        app:layout_anchorGravity="top" />
+
+</android.support.design.widget.CoordinatorLayout>

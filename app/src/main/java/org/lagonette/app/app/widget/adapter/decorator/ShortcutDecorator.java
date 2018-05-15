@@ -59,8 +59,8 @@ public class ShortcutDecorator
 
 		mCategoryIconSize = resources.getDimensionPixelSize(R.dimen.filters_category_icon_size);
 
-		mDisabledTextColor = ContextCompat.getColor(context, R.color.text_disabled);
-		mSecondaryTextColor = ContextCompat.getColor(context, R.color.text_secondary);
+		mDisabledTextColor = ContextCompat.getColor(context, R.color.all_text_disabled);
+		mSecondaryTextColor = ContextCompat.getColor(context, R.color.all_text_secondary);
 	}
 
 	@NonNull

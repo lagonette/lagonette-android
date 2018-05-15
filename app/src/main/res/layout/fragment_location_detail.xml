@@ -142,7 +142,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@color/divider" />
+                android:background="@color/all_divider" />
 
             <RelativeLayout
                 android:id="@+id/container_address"
@@ -193,7 +193,7 @@
                     android:layout_marginBottom="1dp"
                     android:layout_marginLeft="72dp"
                     android:layout_marginStart="72dp"
-                    android:background="@color/divider" />
+                    android:background="@color/all_divider" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -236,7 +236,7 @@
                     android:layout_marginBottom="1dp"
                     android:layout_marginLeft="72dp"
                     android:layout_marginStart="72dp"
-                    android:background="@color/divider" />
+                    android:background="@color/all_divider" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -279,7 +279,7 @@
                     android:layout_marginBottom="1dp"
                     android:layout_marginLeft="72dp"
                     android:layout_marginStart="72dp"
-                    android:background="@color/divider" />
+                    android:background="@color/all_divider" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -312,7 +312,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@color/divider" />
+                android:background="@color/all_divider" />
 
             <RelativeLayout
                 android:id="@+id/container_categories"

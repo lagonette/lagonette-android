@@ -1,6 +1,7 @@
 package org.lagonette.app.app.widget.presenter;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
@@ -11,6 +12,7 @@ import android.view.View;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.activity.PresenterActivity;
+import org.lagonette.app.app.activity.TutorialActivity;
 import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
@@ -31,6 +33,7 @@ import org.lagonette.app.app.widget.performer.impl.LocationDetailFragmentPerform
 import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.PermissionsPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
+import org.lagonette.app.app.widget.performer.impl.SharedPreferencesPerformer;
 import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.arch.LocationViewModel;
@@ -78,6 +81,8 @@ public abstract class MainPresenter<
 
 	protected SnackbarPerformer mSnackbarPerformer;
 
+	protected SharedPreferencesPerformer mPreferencesPerformer;
+
 	// --- Factories --- //
 
 	protected UiState.Factory mUiStateFactory;
@@ -122,6 +127,7 @@ public abstract class MainPresenter<
 		mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity);
 		mPermissionsPerformer = new PermissionsPerformer(activity);
 		mSnackbarPerformer = new SnackbarPerformer(activity);
+		mPreferencesPerformer = new SharedPreferencesPerformer(activity);
 
 		// === Coordinator > Performer === //
 		mCallbacks.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
@@ -183,13 +189,14 @@ public abstract class MainPresenter<
 	@CallSuper
 	public void onConstructed(@NonNull PresenterActivity activity) {
 
-		mPermissionsPerformer.requestPermissions = (permissions, requestCode) -> ActivityCompat.requestPermissions(activity, permissions, requestCode);
-		mPermissionsPerformer.onFineLocationPermissionGranted = () -> {
-			mLocationViewModel
-					.getLocation()
-					.observe(activity, mFabButtonsPerformer::updateLocation);
-			mFabButtonsPerformer.notifyFineLocationGranted();
-			mMapFragmentPerformer.updateLocationUI();
+		mPermissionsPerformer.onFineLocationPermissionResult = granted -> {
+			if (granted) {
+				mLocationViewModel
+						.getLocation()
+						.observe(activity, mFabButtonsPerformer::updateLocation);
+				mFabButtonsPerformer.notifyFineLocationGranted();
+				mMapFragmentPerformer.updateLocationUI();
+			}
 		};
 
 		// === Performer > Store === //
@@ -255,7 +262,10 @@ public abstract class MainPresenter<
 
 
 		// --- Start --- //
-		mPermissionsPerformer.askForFineLocation();
+		if (!mPreferencesPerformer.isTutorialComplete()) {
+			Intent intent = new Intent(activity, TutorialActivity.class);
+			activity.startActivity(intent);
+		}
 
 	}
 

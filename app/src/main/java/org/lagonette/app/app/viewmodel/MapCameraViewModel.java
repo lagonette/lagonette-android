@@ -20,34 +20,34 @@ public class MapCameraViewModel
 	private final MutableLiveData<CameraPosition> mCameraPosition;
 
 	@NonNull
-	private final SharedPreferences mSharedPref;
+	private final SharedPreferences mSharedPrefs;
 
 	public MapCameraViewModel(@NonNull Application application) {
 		super(application);
 		mCameraPosition = new MutableLiveData<>();
-		mSharedPref = PreferenceManager.getDefaultSharedPreferences(application);
+		mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(application);
 
 		mCameraPosition.setValue(
 				CameraPosition.builder()
 						.target(new LatLng(
-								(double) mSharedPref.getFloat(
+								(double) mSharedPrefs.getFloat(
 										SharedPreferencesUtils.PREFERENCE_START_LATITUDE,
 										SharedPreferencesUtils.DEFAULT_VALUE_START_LATITUDE
 								),
-								(double) mSharedPref.getFloat(
+								(double) mSharedPrefs.getFloat(
 										SharedPreferencesUtils.PREFERENCE_START_LONGITUDE,
 										SharedPreferencesUtils.DEFAULT_VALUE_START_LONGITUDE
 								)
 						))
-						.zoom(mSharedPref.getFloat(
+						.zoom(mSharedPrefs.getFloat(
 								SharedPreferencesUtils.PREFERENCE_START_ZOOM,
 								SharedPreferencesUtils.DEFAULT_VALUE_START_ZOOM
 						))
-						.tilt(mSharedPref.getFloat(
+						.tilt(mSharedPrefs.getFloat(
 								SharedPreferencesUtils.PREFERENCE_START_TILT,
 								SharedPreferencesUtils.DEFAULT_VALUE_START_TILT
 						))
-						.bearing(mSharedPref.getFloat(
+						.bearing(mSharedPrefs.getFloat(
 								SharedPreferencesUtils.PREFERENCE_START_BEARING,
 								SharedPreferencesUtils.DEFAULT_VALUE_START_BEARING
 						))
@@ -56,7 +56,7 @@ public class MapCameraViewModel
 	}
 
 	public void save(@NonNull CameraPosition cameraPosition) {
-		mSharedPref.edit()
+		mSharedPrefs.edit()
 				.putFloat(SharedPreferencesUtils.PREFERENCE_START_LATITUDE, (float) cameraPosition.target.latitude)
 				.putFloat(SharedPreferencesUtils.PREFERENCE_START_LONGITUDE, (float) cameraPosition.target.longitude)
 				.putFloat(SharedPreferencesUtils.PREFERENCE_START_ZOOM, cameraPosition.zoom)
