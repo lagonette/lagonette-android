@@ -1,6 +1,5 @@
 package org.lagonette.app.app.widget.viewpager;
 
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +13,6 @@ import org.zxcv.functions.main.Runnable;
 public class TutorialViewPagerAdapter
 		extends AbstractViewPagerAdapter {
 
-	public static class IntroPageHolder
-			extends PageHolder {
-
-		public IntroPageHolder(@NonNull ViewGroup parent, @LayoutRes int layoutRes) {
-			super(parent, layoutRes);
-		}
-	}
-
 	public static class PermissionsPageHolder
 			extends PageHolder {
 
@@ -31,18 +22,10 @@ public class TutorialViewPagerAdapter
 		@NonNull
 		public final ImageView checkedImage;
 
-		public PermissionsPageHolder(@NonNull ViewGroup parent, @LayoutRes int layoutRes) {
-			super(parent, layoutRes);
+		public PermissionsPageHolder(@NonNull ViewGroup parent) {
+			super(parent, R.layout.page_tutorial_permissions);
 			allowButton = itemView.findViewById(R.id.tutorial_button_allow);
 			checkedImage = itemView.findViewById(R.id.tutorial_image_checked);
-		}
-	}
-
-	public static class EndPageHolder
-			extends PageHolder {
-
-		public EndPageHolder(@NonNull ViewGroup parent, @LayoutRes int layoutRes) {
-			super(parent, layoutRes);
 		}
 	}
 
@@ -69,10 +52,7 @@ public class TutorialViewPagerAdapter
 
 	@Override
 	protected void bind(@NonNull PageHolder pageHolder, int position) {
-		if (position == TutorialPage.INTRO.ordinal()) {
-			IntroPageHolder holder = (IntroPageHolder) pageHolder;
-		}
-		else if (position == TutorialPage.PERMISSIONS.ordinal()) {
+		if (position == TutorialPage.PERMISSIONS.ordinal()) {
 			PermissionsPageHolder holder = (PermissionsPageHolder) pageHolder;
 			if (callbacks.checkForFineLocation.get()) {
 				holder.allowButton.setVisibility(View.GONE);
@@ -91,26 +71,17 @@ public class TutorialViewPagerAdapter
 //					button -> callbacks.goToNextPage.run()
 //			);
 //		}
-		else if (position == TutorialPage.END.ordinal()) {
-			EndPageHolder holder = (EndPageHolder) pageHolder;
-		}
 	}
 
 	@NonNull
 	@Override
 	protected PageHolder create(
-			@NonNull ViewGroup container, int position) {
-		if (position == TutorialPage.INTRO.ordinal()) {
-			return new IntroPageHolder(container, R.layout.page_tutorial_intro);
-		}
-		else if (position == TutorialPage.PERMISSIONS.ordinal()) {
-			return new PermissionsPageHolder(container, R.layout.page_tutorial_permissions);
-		}
+			@NonNull ViewGroup parent, int position) {
+//		if (position == TutorialPage.PERMISSIONS.ordinal()) {
+			return new PermissionsPageHolder(parent);
+//		}
 //		else if (position == TutorialPage.REPORT.ordinal()) {
 //		}
-		else /*if (position == TutorialPage.END.ordinal())*/ {
-			return new EndPageHolder(container, R.layout.page_tutorial_end);
-		}
 	}
 
 	@Override
@@ -124,9 +95,7 @@ public class TutorialViewPagerAdapter
 	}
 
 	public enum TutorialPage {
-		INTRO(),
 		PERMISSIONS(),
-		//		REPORT(R.layout.page_tutorial_report),
-		END();
+		//REPORT(),
 	}
 }

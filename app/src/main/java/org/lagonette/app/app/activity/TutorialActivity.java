@@ -73,6 +73,8 @@ public class TutorialActivity
 		mTutorialPerformer.goToNextPage = () -> mViewPager.arrowScroll(View.FOCUS_RIGHT);
 
 		mPermissionsPerformer.onFineLocationPermissionResult = mViewPagerAdapter::onFineLocationPermissionResult;
+
+		mTutorialPerformer.start();
 	}
 
 	@Override

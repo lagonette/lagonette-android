@@ -12,16 +12,16 @@ public abstract class AbstractViewPagerAdapter<PH extends PageHolder>
 
 	@NonNull
 	@Override
-	public Object instantiateItem(@NonNull ViewGroup container, int position) {
-		PH pageHolder = create(container, position);
-		container.addView(pageHolder.itemView);
+	public Object instantiateItem(@NonNull ViewGroup parent, int position) {
+		PH pageHolder = create(parent, position);
+		parent.addView(pageHolder.itemView);
 		bind(pageHolder, position);
 		return pageHolder;
 	}
 
 	@Override
-	public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object view) {
-		container.removeView(((PageHolder) view).itemView);
+	public void destroyItem(@NonNull ViewGroup parent, int position, @NonNull Object view) {
+		parent.removeView(((PageHolder) view).itemView);
 	}
 
 	@Override

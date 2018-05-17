@@ -35,7 +35,6 @@ public class TutorialPerformer
 		);
 	}
 
-	// TODO Put this in performer
 	private void updateNextButton() {
 		if (getCurrentPage.get() == getPageCount.get() - 1) {
 			mNextButton.setText(R.string.all_button_finish);
@@ -56,6 +55,10 @@ public class TutorialPerformer
 
 	@Override
 	public void onPageSelected(int position) {
+		updateNextButton();
+	}
+
+	public void start() {
 		updateNextButton();
 	}
 }
