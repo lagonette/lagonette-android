@@ -40,7 +40,7 @@ public abstract class ShowcasePerformer {
 
 		mShapePadding = activity.getResources().getDimensionPixelSize(R.dimen.showcase_shape_padding);
 		mMaskColor = ContextCompat.getColor(activity, R.color.showcase_mask);
-		mFirstDelay = 1500;
+		mFirstDelay = 1000;
 		mDelay = 500;
 	}
 
