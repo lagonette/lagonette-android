@@ -66,6 +66,7 @@ public class OnboardingActivity
 		mViewPagerAdapter.callbacks.goToNextPage = mOnboardingPerformer::goToNextPage;
 		mViewPagerAdapter.callbacks.askForFineLocation = mPermissionsPerformer::askForFineLocation;
 		mViewPagerAdapter.callbacks.checkForFineLocation = mPermissionsPerformer::checkForFineLocation;
+		mViewPagerAdapter.callbacks.enableCrashlytics = () -> mSharedPreferencesPerformer.setCrashlitycsEnabled(true);
 
 		mOnboardingPerformer.finish = this::finish;
 		mOnboardingPerformer.getCurrentPage = mViewPager::getCurrentItem;

@@ -344,11 +344,7 @@ public abstract class MainPresenter<
 	}
 
 	private void startOnboardingIfNeeded(@NonNull PresenterActivity activity) {
-		boolean needed = true;
-		needed &= !mPreferencesPerformer.isOnboardingComplete();
-		needed &= Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-
-		if (needed) {
+		if (!mPreferencesPerformer.isOnboardingComplete()) {
 			Intent intent = new Intent(activity, OnboardingActivity.class);
 			activity.startActivityForResult(intent, REQUEST_CODE_ONBOARDING);
 		}
