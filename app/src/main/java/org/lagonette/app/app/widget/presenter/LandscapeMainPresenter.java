@@ -8,12 +8,14 @@ import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetPerf
 import org.lagonette.app.app.widget.performer.landscape.LandscapeFabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeMapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeSearchBarPerformer;
+import org.lagonette.app.app.widget.performer.landscape.LandscapeShowcasePerformer;
 
 public class LandscapeMainPresenter
 		extends MainPresenter<
 		LandscapeFabButtonsPerformer,
 		LandscapeMapFragmentPerformer,
-		LandscapeSearchBarPerformer> {
+		LandscapeSearchBarPerformer,
+		LandscapeShowcasePerformer> {
 
 	@Override
 	public void init(@NonNull PresenterActivity activity) {
@@ -31,6 +33,12 @@ public class LandscapeMainPresenter
 		// Performer > Performer
 		mBottomSheetPerformer.onSlideChanged = mLocationDetailFragmentPerformer::updateTopPadding;
 		mSearchBarPerformer.onBottomChanged = mFiltersFragmentPerformer::updateTopPadding;
+	}
+
+	@NonNull
+	@Override
+	protected LandscapeShowcasePerformer createShowcasePerformer(@NonNull PresenterActivity activity) {
+		return new LandscapeShowcasePerformer(activity);
 	}
 
 	@NonNull

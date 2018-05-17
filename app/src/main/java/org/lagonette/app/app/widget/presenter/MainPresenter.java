@@ -47,7 +47,8 @@ import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.S
 public abstract class MainPresenter<
 		FBP extends FabButtonsPerformer,
 		MFP extends MapFragmentPerformer,
-		SBP extends SearchBarPerformer>
+		SBP extends SearchBarPerformer,
+		SP extends ShowcasePerformer>
 		implements PresenterActivity.Lifecycle {
 
 	public static final int REQUEST_CODE_ONBOARDING = 0;
@@ -84,7 +85,7 @@ public abstract class MainPresenter<
 
 	protected SharedPreferencesPerformer mPreferencesPerformer;
 
-	protected ShowcasePerformer mShowcasePerformer;
+	protected SP mShowcasePerformer;
 
 	// --- Factories --- //
 
@@ -135,7 +136,7 @@ public abstract class MainPresenter<
 		mPermissionsPerformer = new PermissionsPerformer(activity);
 		mSnackbarPerformer = new SnackbarPerformer(activity);
 		mPreferencesPerformer = new SharedPreferencesPerformer(activity);
-		mShowcasePerformer = new ShowcasePerformer(activity);
+		mShowcasePerformer = createShowcasePerformer(activity);
 
 		// === Coordinator > Performer === //
 		mCallbacks.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
@@ -264,7 +265,6 @@ public abstract class MainPresenter<
 
 		// Showcase
 		mShowcasePerformer.checkForFineLocationPermission = mPermissionsPerformer::checkForFineLocation;
-		mShowcasePerformer.isFiltersLoaded = mFiltersFragmentPerformer::isLoaded;
 		mShowcasePerformer.isLocationDetailLoaded = mLocationDetailFragmentPerformer::isLoaded;
 
 		mBottomSheetPerformer.onStateChanged = mShowcasePerformer.appendBottomSheetListener(activity, mBottomSheetPerformer.onStateChanged);
@@ -300,6 +300,9 @@ public abstract class MainPresenter<
 			}
 		}
 	}
+
+	@NonNull
+	protected abstract SP createShowcasePerformer(@NonNull PresenterActivity activity);
 
 	public boolean onBackPressed(@NonNull PresenterActivity activity) {
 

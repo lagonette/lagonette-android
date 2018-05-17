@@ -1,6 +1,5 @@
 package org.lagonette.app.app.widget.presenter;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.app.activity.PresenterActivity;
@@ -10,16 +9,17 @@ import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerfor
 import org.lagonette.app.app.widget.performer.portrait.PortraitFabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitMapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitSearchBarPerformer;
+import org.lagonette.app.app.widget.performer.portrait.PortraitShowcasePerformer;
 
 public class PortraitMainPresenter
 		extends MainPresenter<
 		PortraitFabButtonsPerformer,
 		PortraitMapFragmentPerformer,
-		PortraitSearchBarPerformer> {
+		PortraitSearchBarPerformer,
+		PortraitShowcasePerformer> {
 
 	@Override
 	public void onConstructed(@NonNull PresenterActivity activity) {
-		super.onConstructed(activity);
 
 		// Performer > LiveData
 		mFabButtonsPerformer.onFiltersClick(() -> mUiActionStore.start(new OpenFiltersAction()));
@@ -37,6 +37,17 @@ public class PortraitMainPresenter
 			mMapFragmentPerformer.notifySearchBarBottomChanged(offset);
 			mBottomSheetPerformer.notifySearchBarBottomChanged(offset);
 		};
+
+		// Showcase
+		mShowcasePerformer.isFiltersLoaded = mFiltersFragmentPerformer::isLoaded;
+
+		super.onConstructed(activity);
+	}
+
+	@NonNull
+	@Override
+	protected PortraitShowcasePerformer createShowcasePerformer(@NonNull PresenterActivity activity) {
+		return new PortraitShowcasePerformer(activity);
 	}
 
 	@NonNull
