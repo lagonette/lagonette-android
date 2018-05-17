@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="org.lagonette.app.app.activity.onboardingActivity">
+    tools:context="org.lagonette.app.app.activity.OnboardingActivity">
 
     <ImageView
         android:layout_width="match_parent"
@@ -23,9 +23,9 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
         android:layout_marginBottom="356dp"
         android:background="@android:color/transparent"
+        android:padding="16dp"
         android:scaleType="centerInside"
         android:src="@drawable/header_gonette" />
 
@@ -34,7 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="244dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="112dp" />
+        android:layout_marginBottom="112dp"
+        android:background="@android:color/white" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/onboarding_dots"

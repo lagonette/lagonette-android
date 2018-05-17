@@ -23,21 +23,30 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="364dp"
         android:layout_marginRight="364dp"
-        android:padding="16dp"
         android:background="@android:color/transparent"
+        android:padding="16dp"
         android:scaleType="centerInside"
         android:src="@drawable/header_gonette" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/onboarding_pager"
+    <FrameLayout
+        android:id="@+id/onboarding_pager_container"
         android:layout_width="340dp"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
         android:layout_gravity="end"
-        android:paddingBottom="96dp"
-        android:paddingTop="96dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp" />
+        android:layout_marginRight="24dp"
+        android:background="@android:color/white"
+        android:paddingBottom="48dp"
+        android:paddingTop="?attr/actionBarSize">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/onboarding_pager"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_gravity="center" />
+
+
+    </FrameLayout>
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/onboarding_dots"
@@ -49,7 +58,7 @@
         app:dotsSize="8dp"
         app:dotsSpacing="4dp"
         app:dotsWidthFactor="3"
-        app:layout_anchor="@id/onboarding_pager"
+        app:layout_anchor="@id/onboarding_pager_container"
         app:layout_anchorGravity="bottom|center" />
 
     <Button
@@ -58,16 +67,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"
-        app:layout_anchorGravity="end|bottom"
-        app:layout_anchor="@id/onboarding_pager"
-        android:text="@string/all_button_next" />
+        android:text="@string/all_button_next"
+        app:layout_anchor="@id/onboarding_pager_container"
+        app:layout_anchorGravity="end|bottom" />
 
     <View
         android:layout_width="8dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@drawable/bg_shadow_left"
-        app:layout_anchor="@id/onboarding_pager"
+        app:layout_anchor="@id/onboarding_pager_container"
         app:layout_anchorGravity="left" />
 
     <View
@@ -75,7 +84,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@drawable/bg_shadow_right"
-        app:layout_anchor="@id/onboarding_pager"
+        app:layout_anchor="@id/onboarding_pager_container"
         app:layout_anchorGravity="right" />
 
 </android.support.design.widget.CoordinatorLayout>
