@@ -34,6 +34,8 @@ public class ShowcasePerformer {
 
 	private final int mDelay;
 
+	private final int mShapePadding;
+
 	@NonNull
 	public BooleanSupplier checkForFineLocationPermission = BooleanSupplier::getFalse;
 
@@ -45,6 +47,7 @@ public class ShowcasePerformer {
 
 	public ShowcasePerformer(@NonNull PresenterActivity activity) {
 		mRadius = activity.getResources().getDimensionPixelSize(R.dimen.showcase_search_radius);
+		mShapePadding = activity.getResources().getDimensionPixelSize(R.dimen.showcase_shape_padding);
 		mMaskColor = ContextCompat.getColor(activity, R.color.showcase_mask);
 		mFirstDelay = 1500;
 		mDelay = 500;
@@ -115,7 +118,7 @@ public class ShowcasePerformer {
 					if (isFiltersLoaded.get()) {
 						startFiltersSequence(activity, filtersSequence);
 					}
-					else if (isFiltersLoaded.get()) {
+					else if (isLocationDetailLoaded.get()) {
 						startDetailSequence(activity, detailsSequence);
 					}
 				}
@@ -136,7 +139,7 @@ public class ShowcasePerformer {
 								.setDismissText(R.string.all_button_ok)
 								.setMaskColour(mMaskColor)
 								.setTargetTouchable(true)
-								.withRectangleShape()
+								.setShapePadding(mShapePadding)
 								.setDelay(mDelay)
 								.build()
 				)
@@ -155,7 +158,7 @@ public class ShowcasePerformer {
 								.setDismissText(R.string.all_button_ok)
 								.setMaskColour(mMaskColor)
 								.setTargetTouchable(true)
-								.withRectangleShape()
+								.setShapePadding(mShapePadding)
 								.setDelay(mDelay)
 								.build()
 				)

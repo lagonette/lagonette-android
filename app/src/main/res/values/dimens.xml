@@ -18,5 +18,6 @@
     <dimen name="filters_peek_height">96dp</dimen>
 
     <dimen name="showcase_search_radius">4dp</dimen>
+    <dimen name="showcase_shape_padding">64dp</dimen>
 
 </resources>
