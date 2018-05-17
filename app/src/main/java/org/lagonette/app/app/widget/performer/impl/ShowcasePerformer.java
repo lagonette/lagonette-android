@@ -1,6 +1,5 @@
 package org.lagonette.app.app.widget.performer.impl;
 
-import android.os.SystemClock;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -34,6 +33,8 @@ public class ShowcasePerformer {
 
 	private final int mDelay;
 
+	private final int mBottomSheetShapePadding;
+
 	private final int mShapePadding;
 
 	@NonNull
@@ -47,6 +48,7 @@ public class ShowcasePerformer {
 
 	public ShowcasePerformer(@NonNull PresenterActivity activity) {
 		mRadius = activity.getResources().getDimensionPixelSize(R.dimen.showcase_search_radius);
+		mBottomSheetShapePadding = activity.getResources().getDimensionPixelSize(R.dimen.showcase_shape_bottom_sheet_padding);
 		mShapePadding = activity.getResources().getDimensionPixelSize(R.dimen.showcase_shape_padding);
 		mMaskColor = ContextCompat.getColor(activity, R.color.showcase_mask);
 		mFirstDelay = 1500;
@@ -68,6 +70,7 @@ public class ShowcasePerformer {
 									.setContentText(R.string.showcase_search_content)
 									.setDismissText(R.string.all_button_ok)
 									.setMaskColour(mMaskColor)
+									.setShapePadding(mShapePadding)
 									.setShape(
 											new RoundRectangleShape(
 													new ViewTarget(activity.findViewById(R.id.search_bar)).getBounds(),
@@ -86,6 +89,7 @@ public class ShowcasePerformer {
 									.setDismissText(R.string.all_button_ok)
 									.setTargetTouchable(checkForFineLocationPermission.get())
 									.setMaskColour(mMaskColor)
+									.setShapePadding(mShapePadding)
 									.setDelay(mDelay)
 									.build()
 					)
@@ -97,6 +101,7 @@ public class ShowcasePerformer {
 									.setDismissText(R.string.all_button_ok)
 									.setTargetTouchable(true)
 									.setMaskColour(mMaskColor)
+									.setShapePadding(mShapePadding)
 									.setDelay(mDelay)
 									.build()
 					)
@@ -138,8 +143,8 @@ public class ShowcasePerformer {
 								.setContentText(R.string.showcase_filters_content)
 								.setDismissText(R.string.all_button_ok)
 								.setMaskColour(mMaskColor)
+								.setShapePadding(mBottomSheetShapePadding)
 								.setTargetTouchable(true)
-								.setShapePadding(mShapePadding)
 								.setDelay(mDelay)
 								.build()
 				)
@@ -157,8 +162,8 @@ public class ShowcasePerformer {
 								.setContentText(R.string.showcase_details_content)
 								.setDismissText(R.string.all_button_ok)
 								.setMaskColour(mMaskColor)
+								.setShapePadding(mBottomSheetShapePadding)
 								.setTargetTouchable(true)
-								.setShapePadding(mShapePadding)
 								.setDelay(mDelay)
 								.build()
 				)
