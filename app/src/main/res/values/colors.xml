@@ -39,6 +39,6 @@
     <color name="row_partner_main_background">@android:color/white</color>
     <color name="row_partner_side_background">@color/la_gonette_11</color>
 
-    <color name="showcase_mask">#DD19AEB0</color>
+    <color name="showcase_mask">#DDE6411C</color>
 
 </resources>
