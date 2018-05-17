@@ -43,8 +43,8 @@
     <string name="showcase_filters_fab_title">Ouvrez l\'annuaire !</string>
     <string name="showcase_filters_fab_content">Retrouvez tous les partenaires de la Gonette triés par categories.</string>
     <string name="showcase_filters_title">Bienvenue dans l\'annuaire !</string>
-    <string name="showcase_filters_content">Glissez vers le haut pour acceder à la liste des partenaires.</string>
+    <string name="showcase_filters_content">Glissez vers le haut pour accéder à la liste des partenaires.</string>
     <string name="showcase_details_title">Découvrez vos partenaires !</string>
-    <string name="showcase_details_content">Glissez vers le haut pour acceder à plus de details.</string>
+    <string name="showcase_details_content">Glissez vers le haut pour accéder à plus de details.</string>
 
 </resources>
