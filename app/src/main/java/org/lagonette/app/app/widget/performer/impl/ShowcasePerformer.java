@@ -46,7 +46,7 @@ public class ShowcasePerformer {
 	public ShowcasePerformer(@NonNull PresenterActivity activity) {
 		mRadius = activity.getResources().getDimensionPixelSize(R.dimen.showcase_search_radius);
 		mMaskColor = ContextCompat.getColor(activity, R.color.showcase_mask);
-		mFirstDelay = 1000;
+		mFirstDelay = 1500;
 		mDelay = 500;
 	}
 
