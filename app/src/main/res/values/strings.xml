@@ -37,7 +37,7 @@
     <string name="onboarding_report_subhead">Ces rapports sont envoyés sur Crashlytics (Google) et permettent aux développeur·euse·s de corriger et d\'améliorer l\'application.</string>
 
     <string name="showcase_search_title">Filtrez les partenaires !</string>
-    <string name="showcase_search_content">Filtrez les partenaires dans toute l\'application depuis un seul endroit.</string>
+    <string name="showcase_search_content">Filtrez les partenaires de toute l\'application depuis un seul endroit.</string>
     <string name="showcase_location_title">Ma position !</string>
     <string name="showcase_location_content">Cliquez ici et la carte se centrera sur vous.</string>
     <string name="showcase_filters_fab_title">Ouvrez l\'annuaire !</string>
