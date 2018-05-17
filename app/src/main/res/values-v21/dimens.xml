@@ -6,4 +6,6 @@
     <dimen name="search_bar_margin_top">8dp</dimen>
     <dimen name="search_bar_margin_bottom">-1dp</dimen>
 
+    <dimen name="showcase_shape_padding">6dp</dimen>
+
 </resources>

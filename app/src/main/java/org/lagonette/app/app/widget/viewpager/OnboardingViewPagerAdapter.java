@@ -1,5 +1,6 @@
 package org.lagonette.app.app.widget.viewpager;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,10 @@ import org.zxcv.functions.main.Runnable;
 
 public class OnboardingViewPagerAdapter
 		extends AbstractViewPagerAdapter {
+
+	public static int PAGE_COUNT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 1 : 0;
+
+	public static int PAGE_POSITION_PERMISSION = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 0 : -1;
 
 	public static class PermissionsPageHolder
 			extends PageHolder {
@@ -52,7 +57,7 @@ public class OnboardingViewPagerAdapter
 
 	@Override
 	protected void bind(@NonNull PageHolder pageHolder, int position) {
-		if (position == OnboardingPage.PERMISSIONS.ordinal()) {
+		if (position == PAGE_POSITION_PERMISSION) {
 			PermissionsPageHolder holder = (PermissionsPageHolder) pageHolder;
 			if (callbacks.checkForFineLocation.get()) {
 				holder.allowButton.setVisibility(View.GONE);
@@ -86,7 +91,7 @@ public class OnboardingViewPagerAdapter
 
 	@Override
 	public int getCount() {
-		return OnboardingPage.values().length;
+		return PAGE_COUNT;
 	}
 
 	public void onFineLocationPermissionResult(boolean granted) {
@@ -94,8 +99,4 @@ public class OnboardingViewPagerAdapter
 		callbacks.goToNextPage.run();
 	}
 
-	public enum OnboardingPage {
-		PERMISSIONS(),
-		//REPORT(),
-	}
 }

@@ -3,6 +3,7 @@ package org.lagonette.app.app.widget.presenter;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
@@ -340,7 +341,11 @@ public abstract class MainPresenter<
 	}
 
 	private void startOnboardingIfNeeded(@NonNull PresenterActivity activity) {
-		if (!mPreferencesPerformer.isOnboardingComplete()) {
+		boolean needed = true;
+		needed &= !mPreferencesPerformer.isOnboardingComplete();
+		needed &= Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+
+		if (needed) {
 			Intent intent = new Intent(activity, OnboardingActivity.class);
 			activity.startActivityForResult(intent, REQUEST_CODE_ONBOARDING);
 		}

@@ -21,6 +21,6 @@
     <dimen name="showcase_bottom_sheet_shape_padding">48dp</dimen>
     <dimen name="showcase_bottom_sheet_radius_x">512dp</dimen>
     <dimen name="showcase_bottom_sheet_radius_y">48dp</dimen>
-    <dimen name="showcase_shape_padding">6dp</dimen>
+    <dimen name="showcase_shape_padding">0dp</dimen>
 
 </resources>
