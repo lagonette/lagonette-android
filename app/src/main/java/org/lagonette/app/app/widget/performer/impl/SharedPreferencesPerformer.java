@@ -6,13 +6,28 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.util.SharedPreferencesUtils;
+import org.zxcv.functions.main.Runnable;
 
 public class SharedPreferencesPerformer {
 
+	@NonNull
 	private final SharedPreferences mSharedPrefs;
+
+	@NonNull
+	public Runnable enableCrashlitycs = Runnable::doNothing;
 
 	public SharedPreferencesPerformer(@NonNull Context context) {
 		mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+		mSharedPrefs.registerOnSharedPreferenceChangeListener(
+				(sharedPreferences, pref) -> onPrefsChanged(pref)
+		);
+	}
+
+	private void onPrefsChanged(String pref) {
+		if (pref.equals(SharedPreferencesUtils.PREFERENCE_CRASHLITYCS_ENABLED)) {
+			enableCrashlitycs.run();
+		}
 	}
 
 	public boolean isOnboardingComplete() {
@@ -31,4 +46,19 @@ public class SharedPreferencesPerformer {
 				.apply();
 	}
 
+	public boolean isCrashlitycsEnabled() {
+		return mSharedPrefs.getBoolean(
+				SharedPreferencesUtils.PREFERENCE_CRASHLITYCS_ENABLED,
+				SharedPreferencesUtils.DEFAULT_VALUE_CRASHLITYCS_ENABLED
+		);
+	}
+
+	public void setCrashlitycsEnabled(boolean enabled) {
+		mSharedPrefs.edit()
+				.putBoolean(
+						SharedPreferencesUtils.PREFERENCE_CRASHLITYCS_ENABLED,
+						enabled
+				)
+				.apply();
+	}
 }

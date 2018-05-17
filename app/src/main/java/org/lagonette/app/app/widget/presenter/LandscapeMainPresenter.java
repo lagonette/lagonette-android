@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.impl.SharedPreferencesPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeFabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeMapFragmentPerformer;
@@ -16,6 +17,10 @@ public class LandscapeMainPresenter
 		LandscapeMapFragmentPerformer,
 		LandscapeSearchBarPerformer,
 		LandscapeShowcasePerformer> {
+
+	public LandscapeMainPresenter(@NonNull SharedPreferencesPerformer preferencesPerformer) {
+		super(preferencesPerformer);
+	}
 
 	@Override
 	public void init(@NonNull PresenterActivity activity) {

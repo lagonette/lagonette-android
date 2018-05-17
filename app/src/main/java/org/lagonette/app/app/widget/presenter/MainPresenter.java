@@ -98,6 +98,10 @@ public abstract class MainPresenter<
 
 	protected Runnable mFinishActivity;
 
+	public MainPresenter(@NonNull SharedPreferencesPerformer preferencesPerformer) {
+		mPreferencesPerformer = preferencesPerformer;
+	}
+
 	@Override
 	@CallSuper
 	public void construct(@NonNull PresenterActivity activity) {
@@ -136,7 +140,6 @@ public abstract class MainPresenter<
 		mLocationDetailFragmentPerformer = new LocationDetailFragmentPerformer(activity);
 		mPermissionsPerformer = new PermissionsPerformer(activity);
 		mSnackbarPerformer = new SnackbarPerformer(activity);
-		mPreferencesPerformer = new SharedPreferencesPerformer(activity);
 		mShowcasePerformer = createShowcasePerformer(activity);
 
 		// === Coordinator > Performer === //

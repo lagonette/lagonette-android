@@ -14,10 +14,10 @@ public class MainActivity
 	@Override
 	protected MainPresenter getPresenter() {
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			return new LandscapeMainPresenter();
+			return new LandscapeMainPresenter(mSharedPreferencesPerformer);
 		}
 		else {
-			return new PortraitMainPresenter();
+			return new PortraitMainPresenter(mSharedPreferencesPerformer);
 		}
 	}
 

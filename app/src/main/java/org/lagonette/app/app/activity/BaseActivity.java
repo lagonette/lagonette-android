@@ -8,14 +8,20 @@ import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.lagonette.app.BuildConfig;
+import org.lagonette.app.app.widget.performer.impl.SharedPreferencesPerformer;
+
 import io.fabric.sdk.android.Fabric;
 
 public abstract class BaseActivity
 		extends AppCompatActivity {
 
+	protected SharedPreferencesPerformer mSharedPreferencesPerformer;
+
 	protected final void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Fabric.with(this, new Crashlytics());
+		initPerformer();
+		initCrashlyticsIfNeeded();
 		construct();
 		setContentView(getContentView());
 		inject(getWindow().getDecorView().getRootView());
@@ -26,6 +32,17 @@ public abstract class BaseActivity
 			restore(savedInstanceState);
 		}
 		onConstructed();
+	}
+
+	protected void initCrashlyticsIfNeeded() {
+		if (BuildConfig.DEBUG || mSharedPreferencesPerformer.isCrashlitycsEnabled()) {
+			Fabric.with(this, new Crashlytics());
+		}
+	}
+
+	protected void initPerformer() {
+		mSharedPreferencesPerformer = new SharedPreferencesPerformer(this);
+		mSharedPreferencesPerformer.enableCrashlitycs = this::initCrashlyticsIfNeeded;
 	}
 
 	protected abstract void construct();
@@ -40,4 +57,5 @@ public abstract class BaseActivity
 	protected abstract void restore(@NonNull Bundle savedInstanceState);
 
 	protected abstract void onConstructed();
+
 }

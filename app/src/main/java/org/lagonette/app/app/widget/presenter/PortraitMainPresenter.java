@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.widget.coordinator.state.action.OpenFiltersAction;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
+import org.lagonette.app.app.widget.performer.impl.SharedPreferencesPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitFabButtonsPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitMapFragmentPerformer;
@@ -17,6 +18,10 @@ public class PortraitMainPresenter
 		PortraitMapFragmentPerformer,
 		PortraitSearchBarPerformer,
 		PortraitShowcasePerformer> {
+
+	public PortraitMainPresenter(@NonNull SharedPreferencesPerformer preferencesPerformer) {
+		super(preferencesPerformer);
+	}
 
 	@Override
 	public void onConstructed(@NonNull PresenterActivity activity) {
