@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="org.lagonette.app.app.activity.TutorialActivity">
+    tools:context="org.lagonette.app.app.activity.onboardingActivity">
 
     <ImageView
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="48dp"
-        android:background="@color/tutorial_filter" />
+        android:background="@color/onboarding_filter" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -30,14 +30,14 @@
         android:src="@drawable/header_gonette" />
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/tutorial_pager"
+        android:id="@+id/onboarding_pager"
         android:layout_width="match_parent"
         android:layout_height="244dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="112dp" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-        android:id="@+id/tutorial_dots"
+        android:id="@+id/onboarding_dots"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_gravity="bottom|center"
@@ -48,7 +48,7 @@
         app:dotsWidthFactor="3" />
 
     <Button
-        android:id="@+id/tutorial_button_next"
+        android:id="@+id/onboarding_button_next"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
         android:layout_height="8dp"
         android:layout_gravity="top"
         android:background="@drawable/bg_shadow_top"
-        app:layout_anchor="@id/tutorial_pager"
+        app:layout_anchor="@id/onboarding_pager"
         app:layout_anchorGravity="top" />
 
     <View
@@ -68,7 +68,7 @@
         android:layout_height="8dp"
         android:layout_gravity="bottom"
         android:background="@drawable/bg_shadow_bottom"
-        app:layout_anchor="@id/tutorial_pager"
+        app:layout_anchor="@id/onboarding_pager"
         app:layout_anchorGravity="bottom" />
 
     <View
@@ -76,7 +76,7 @@
         android:layout_height="8dp"
         android:layout_gravity="top"
         android:background="@drawable/bg_shadow_top"
-        app:layout_anchor="@id/tutorial_dots"
+        app:layout_anchor="@id/onboarding_dots"
         app:layout_anchorGravity="top" />
 
 </android.support.design.widget.CoordinatorLayout>

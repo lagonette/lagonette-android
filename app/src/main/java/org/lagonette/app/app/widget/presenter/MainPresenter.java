@@ -12,7 +12,7 @@ import android.view.View;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.activity.PresenterActivity;
-import org.lagonette.app.app.activity.TutorialActivity;
+import org.lagonette.app.app.activity.OnboardingActivity;
 import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
@@ -49,7 +49,7 @@ public abstract class MainPresenter<
 		SBP extends SearchBarPerformer>
 		implements PresenterActivity.Lifecycle {
 
-	public static final int REQUEST_CODE_TUTORIAL = 0;
+	public static final int REQUEST_CODE_ONBOARDING = 0;
 
 	// --- View Model --- //
 
@@ -260,7 +260,7 @@ public abstract class MainPresenter<
 
 		// --- Start --- //
 		connectLocationProcessIfNeeded(activity);
-		startTutorialIfNeeded(activity);
+		startOnboardingIfNeeded(activity);
 
 	}
 
@@ -278,9 +278,9 @@ public abstract class MainPresenter<
 			int requestCode,
 			int resultCode,
 			@NonNull Intent data) {
-		if (requestCode == REQUEST_CODE_TUTORIAL) {
+		if (requestCode == REQUEST_CODE_ONBOARDING) {
 			if (resultCode == Activity.RESULT_OK) {
-				mPreferencesPerformer.setTutorialAsComplete();
+				mPreferencesPerformer.setOnboardingAsComplete();
 				connectLocationProcessIfNeeded(activity);
 			}
 			else {
@@ -324,10 +324,10 @@ public abstract class MainPresenter<
 		}
 	}
 
-	private void startTutorialIfNeeded(@NonNull PresenterActivity activity) {
-		if (!mPreferencesPerformer.isTutorialComplete()) {
-			Intent intent = new Intent(activity, TutorialActivity.class);
-			activity.startActivityForResult(intent, REQUEST_CODE_TUTORIAL);
+	private void startOnboardingIfNeeded(@NonNull PresenterActivity activity) {
+		if (!mPreferencesPerformer.isOnboardingComplete()) {
+			Intent intent = new Intent(activity, OnboardingActivity.class);
+			activity.startActivityForResult(intent, REQUEST_CODE_ONBOARDING);
 		}
 	}
 

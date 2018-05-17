@@ -10,7 +10,7 @@ import org.lagonette.app.R;
 import org.zxcv.functions.main.BooleanSupplier;
 import org.zxcv.functions.main.Runnable;
 
-public class TutorialViewPagerAdapter
+public class OnboardingViewPagerAdapter
 		extends AbstractViewPagerAdapter {
 
 	public static class PermissionsPageHolder
@@ -23,9 +23,9 @@ public class TutorialViewPagerAdapter
 		public final ImageView checkedImage;
 
 		public PermissionsPageHolder(@NonNull ViewGroup parent) {
-			super(parent, R.layout.page_tutorial_permissions);
-			allowButton = itemView.findViewById(R.id.tutorial_button_allow);
-			checkedImage = itemView.findViewById(R.id.tutorial_image_checked);
+			super(parent, R.layout.page_onboarding_permissions);
+			allowButton = itemView.findViewById(R.id.onboarding_button_allow);
+			checkedImage = itemView.findViewById(R.id.onboarding_image_checked);
 		}
 	}
 
@@ -46,13 +46,13 @@ public class TutorialViewPagerAdapter
 	@NonNull
 	public final Callbacks callbacks;
 
-	public TutorialViewPagerAdapter() {
+	public OnboardingViewPagerAdapter() {
 		callbacks = new Callbacks();
 	}
 
 	@Override
 	protected void bind(@NonNull PageHolder pageHolder, int position) {
-		if (position == TutorialPage.PERMISSIONS.ordinal()) {
+		if (position == OnboardingPage.PERMISSIONS.ordinal()) {
 			PermissionsPageHolder holder = (PermissionsPageHolder) pageHolder;
 			if (callbacks.checkForFineLocation.get()) {
 				holder.allowButton.setVisibility(View.GONE);
@@ -66,8 +66,8 @@ public class TutorialViewPagerAdapter
 				);
 			}
 		}
-//		else if (position == TutorialPage.REPORT.ordinal()) {
-//			view.findViewById(R.id.tutorial_button_no).setOnClickListener(
+//		else if (position == OnboardingPage.REPORT.ordinal()) {
+//			view.findViewById(R.id.onboarding_button_no).setOnClickListener(
 //					button -> callbacks.goToNextPage.run()
 //			);
 //		}
@@ -77,16 +77,16 @@ public class TutorialViewPagerAdapter
 	@Override
 	protected PageHolder create(
 			@NonNull ViewGroup parent, int position) {
-//		if (position == TutorialPage.PERMISSIONS.ordinal()) {
+//		if (position == OnboardingPage.PERMISSIONS.ordinal()) {
 			return new PermissionsPageHolder(parent);
 //		}
-//		else if (position == TutorialPage.REPORT.ordinal()) {
+//		else if (position == OnboardingPage.REPORT.ordinal()) {
 //		}
 	}
 
 	@Override
 	public int getCount() {
-		return TutorialPage.values().length;
+		return OnboardingPage.values().length;
 	}
 
 	public void onFineLocationPermissionResult(boolean granted) {
@@ -94,7 +94,7 @@ public class TutorialViewPagerAdapter
 		callbacks.goToNextPage.run();
 	}
 
-	public enum TutorialPage {
+	public enum OnboardingPage {
 		PERMISSIONS(),
 		//REPORT(),
 	}

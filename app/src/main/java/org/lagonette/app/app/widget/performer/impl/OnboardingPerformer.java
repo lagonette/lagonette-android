@@ -12,7 +12,7 @@ import org.zxcv.functions.main.IntConsumer;
 import org.zxcv.functions.main.IntSupplier;
 import org.zxcv.functions.main.Runnable;
 
-public class TutorialPerformer
+public class OnboardingPerformer
 		extends ViewPager.SimpleOnPageChangeListener
 		implements ViewPerformer {
 
@@ -28,7 +28,7 @@ public class TutorialPerformer
 
 	@Override
 	public void inject(@NonNull View view) {
-		mNextButton = view.findViewById(R.id.tutorial_button_next);
+		mNextButton = view.findViewById(R.id.onboarding_button_next);
 
 		mNextButton.setOnClickListener(
 				button -> goToNextPage()

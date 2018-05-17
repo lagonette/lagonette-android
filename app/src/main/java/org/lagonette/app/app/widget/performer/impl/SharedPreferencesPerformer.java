@@ -15,18 +15,18 @@ public class SharedPreferencesPerformer {
 		mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	public boolean isTutorialComplete() {
+	public boolean isOnboardingComplete() {
 		return mSharedPrefs.getInt(
-				SharedPreferencesUtils.PREFERENCE_TUTORIAL_COMPLETE_VERSION,
-				SharedPreferencesUtils.DEFAULT_VALUE_TUTORIAL_COMPLETE_VERSION
-		) >= SharedPreferencesUtils.CURRENT_VALUE_TUTORIAL_VERSION;
+				SharedPreferencesUtils.PREFERENCE_ONBOARDING_COMPLETE_VERSION,
+				SharedPreferencesUtils.DEFAULT_VALUE_ONBOARDING_COMPLETE_VERSION
+		) >= SharedPreferencesUtils.CURRENT_VALUE_ONBOARDING_VERSION;
 	}
 
-	public void setTutorialAsComplete() {
+	public void setOnboardingAsComplete() {
 		mSharedPrefs.edit()
 				.putInt(
-						SharedPreferencesUtils.PREFERENCE_TUTORIAL_COMPLETE_VERSION,
-						SharedPreferencesUtils.CURRENT_VALUE_TUTORIAL_VERSION
+						SharedPreferencesUtils.PREFERENCE_ONBOARDING_COMPLETE_VERSION,
+						SharedPreferencesUtils.CURRENT_VALUE_ONBOARDING_VERSION
 				)
 				.apply();
 	}

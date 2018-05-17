@@ -12,7 +12,7 @@ public class SharedPreferencesUtils {
 
 	public static final String PREFERENCE_START_BEARING = "preference_start_bearing";
 
-	public static final String PREFERENCE_TUTORIAL_COMPLETE_VERSION = "preference_tutorial_complete_version";
+	public static final String PREFERENCE_ONBOARDING_COMPLETE_VERSION = "preference_onboarding_complete_version";
 
 	public static final float DEFAULT_VALUE_START_LATITUDE = 45.86691680129967f;
 
@@ -24,7 +24,7 @@ public class SharedPreferencesUtils {
 
 	public static final float DEFAULT_VALUE_START_BEARING = 0;
 
-	public static final int DEFAULT_VALUE_TUTORIAL_COMPLETE_VERSION = -1;
+	public static final int DEFAULT_VALUE_ONBOARDING_COMPLETE_VERSION = -1;
 
-	public static final int CURRENT_VALUE_TUTORIAL_VERSION = 0;
+	public static final int CURRENT_VALUE_ONBOARDING_VERSION = 0;
 }

@@ -25,7 +25,7 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/tutorial_subhead"
+        android:id="@+id/onboarding_subhead"
         style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -33,29 +33,29 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:gravity="start"
-        android:text="@string/tutorial_permissions_subhead"
+        android:text="@string/onboarding_permissions_subhead"
         android:textAlignment="textStart"
         android:textColor="@color/all_text_secondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/tutorial_headline" />
+        app:layout_constraintTop_toBottomOf="@+id/onboarding_headline" />
 
     <TextView
-        android:id="@+id/tutorial_headline"
+        android:id="@+id/onboarding_headline"
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:gravity="start"
-        android:text="@string/tutorial_permissions_title"
+        android:text="@string/onboarding_permissions_title"
         android:textAlignment="textStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/imageView" />
 
     <Button
-        android:id="@+id/tutorial_button_allow"
+        android:id="@+id/onboarding_button_allow"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,10 +68,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tutorial_subhead" />
+        app:layout_constraintTop_toBottomOf="@+id/onboarding_subhead" />
 
     <ImageView
-        android:id="@+id/tutorial_image_checked"
+        android:id="@+id/onboarding_image_checked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -83,7 +83,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tutorial_subhead" />
+        app:layout_constraintTop_toBottomOf="@+id/onboarding_subhead" />
 
 
 </android.support.constraint.ConstraintLayout>

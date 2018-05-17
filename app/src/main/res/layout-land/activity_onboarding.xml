@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="org.lagonette.app.app.activity.TutorialActivity">
+    tools:context="org.lagonette.app.app.activity.onboardingActivity">
 
     <ImageView
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/tutorial_filter" />
+        android:background="@color/onboarding_filter" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:src="@drawable/header_gonette" />
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/tutorial_pager"
+        android:id="@+id/onboarding_pager"
         android:layout_width="340dp"
         android:layout_height="match_parent"
         android:background="@android:color/white"
@@ -40,7 +40,7 @@
         android:layout_marginRight="24dp" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-        android:id="@+id/tutorial_dots"
+        android:id="@+id/onboarding_dots"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_gravity="bottom|center"
@@ -49,17 +49,17 @@
         app:dotsSize="8dp"
         app:dotsSpacing="4dp"
         app:dotsWidthFactor="3"
-        app:layout_anchor="@id/tutorial_pager"
+        app:layout_anchor="@id/onboarding_pager"
         app:layout_anchorGravity="bottom|center" />
 
     <Button
-        android:id="@+id/tutorial_button_next"
+        android:id="@+id/onboarding_button_next"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"
         app:layout_anchorGravity="end|bottom"
-        app:layout_anchor="@id/tutorial_pager"
+        app:layout_anchor="@id/onboarding_pager"
         android:text="@string/all_button_next" />
 
     <View
@@ -67,7 +67,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@drawable/bg_shadow_left"
-        app:layout_anchor="@id/tutorial_pager"
+        app:layout_anchor="@id/onboarding_pager"
         app:layout_anchorGravity="left" />
 
     <View
@@ -75,7 +75,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@drawable/bg_shadow_right"
-        app:layout_anchor="@id/tutorial_pager"
+        app:layout_anchor="@id/onboarding_pager"
         app:layout_anchorGravity="right" />
 
 </android.support.design.widget.CoordinatorLayout>
