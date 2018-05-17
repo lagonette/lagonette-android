@@ -22,9 +22,9 @@ public class ShowcasePerformer {
 
 	public static final String SEQUENCE_ID_FILTERS = BuildConfig.APPLICATION_ID + ".sequenceId:filters";
 
-	public static final String SEQUENCE_ID_DETAIL = BuildConfig.APPLICATION_ID + ".sequenceId:detaile";
+	public static final String SEQUENCE_ID_DETAIL = BuildConfig.APPLICATION_ID + ".sequenceId:details";
 
-	private final int mRadius;
+	private final int mSearchRadius;
 
 	@ColorInt
 	private final int mMaskColor;
@@ -37,6 +37,10 @@ public class ShowcasePerformer {
 
 	private final int mShapePadding;
 
+	private final int mBottomSheetXRadius;
+
+	private final int mBottomSheetYRadius;
+
 	@NonNull
 	public BooleanSupplier checkForFineLocationPermission = BooleanSupplier::getFalse;
 
@@ -47,8 +51,12 @@ public class ShowcasePerformer {
 	public BooleanSupplier isFiltersLoaded = BooleanSupplier::getFalse;
 
 	public ShowcasePerformer(@NonNull PresenterActivity activity) {
-		mRadius = activity.getResources().getDimensionPixelSize(R.dimen.showcase_search_radius);
-		mBottomSheetShapePadding = activity.getResources().getDimensionPixelSize(R.dimen.showcase_shape_bottom_sheet_padding);
+		mSearchRadius = activity.getResources().getDimensionPixelSize(R.dimen.showcase_search_radius);
+
+		mBottomSheetXRadius = activity.getResources().getDimensionPixelSize(R.dimen.showcase_bottom_sheet_radius_x);
+		mBottomSheetYRadius = activity.getResources().getDimensionPixelSize(R.dimen.showcase_bottom_sheet_radius_y);
+		mBottomSheetShapePadding = activity.getResources().getDimensionPixelSize(R.dimen.showcase_bottom_sheet_shape_padding);
+		
 		mShapePadding = activity.getResources().getDimensionPixelSize(R.dimen.showcase_shape_padding);
 		mMaskColor = ContextCompat.getColor(activity, R.color.showcase_mask);
 		mFirstDelay = 1500;
@@ -74,8 +82,8 @@ public class ShowcasePerformer {
 									.setShape(
 											new RoundRectangleShape(
 													new ViewTarget(activity.findViewById(R.id.search_bar)).getBounds(),
-													mRadius,
-													mRadius
+													mSearchRadius,
+													mSearchRadius
 											)
 									)
 									.setDelay(mFirstDelay)
@@ -144,6 +152,13 @@ public class ShowcasePerformer {
 								.setDismissText(R.string.all_button_ok)
 								.setMaskColour(mMaskColor)
 								.setShapePadding(mBottomSheetShapePadding)
+								.setShape(
+										new RoundRectangleShape(
+												new ViewTarget(activity.findViewById(R.id.search_bar)).getBounds(),
+												mBottomSheetXRadius,
+												mBottomSheetYRadius
+												)
+								)
 								.setTargetTouchable(true)
 								.setDelay(mDelay)
 								.build()
@@ -163,6 +178,13 @@ public class ShowcasePerformer {
 								.setDismissText(R.string.all_button_ok)
 								.setMaskColour(mMaskColor)
 								.setShapePadding(mBottomSheetShapePadding)
+								.setShape(
+										new RoundRectangleShape(
+												new ViewTarget(activity.findViewById(R.id.search_bar)).getBounds(),
+												mBottomSheetXRadius,
+												mBottomSheetYRadius
+										)
+								)
 								.setTargetTouchable(true)
 								.setDelay(mDelay)
 								.build()
