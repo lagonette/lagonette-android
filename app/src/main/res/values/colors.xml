@@ -34,9 +34,11 @@
 
     <color name="map_footprint">@color/la_gonette_06</color>
 
+    <color name="onboarding_filter">@color/la_gonette_12</color>
+
     <color name="row_partner_main_background">@android:color/white</color>
     <color name="row_partner_side_background">@color/la_gonette_11</color>
 
-    <color name="onboarding_filter">@color/la_gonette_12</color>
+    <color name="showcase_mask">#DD19AEB0</color>
 
 </resources>

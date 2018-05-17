@@ -11,8 +11,8 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
 import org.lagonette.app.R;
-import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.activity.OnboardingActivity;
+import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.viewmodel.DataViewModel;
 import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.viewmodel.MapViewModel;
@@ -34,6 +34,7 @@ import org.lagonette.app.app.widget.performer.impl.MapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.impl.PermissionsPerformer;
 import org.lagonette.app.app.widget.performer.impl.SearchBarPerformer;
 import org.lagonette.app.app.widget.performer.impl.SharedPreferencesPerformer;
+import org.lagonette.app.app.widget.performer.impl.ShowcasePerformer;
 import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.arch.LocationViewModel;
@@ -82,6 +83,8 @@ public abstract class MainPresenter<
 	protected SnackbarPerformer mSnackbarPerformer;
 
 	protected SharedPreferencesPerformer mPreferencesPerformer;
+
+	protected ShowcasePerformer mShowcasePerformer;
 
 	// --- Factories --- //
 
@@ -132,6 +135,7 @@ public abstract class MainPresenter<
 		mPermissionsPerformer = new PermissionsPerformer(activity);
 		mSnackbarPerformer = new SnackbarPerformer(activity);
 		mPreferencesPerformer = new SharedPreferencesPerformer(activity);
+		mShowcasePerformer = new ShowcasePerformer(activity);
 
 		// === Coordinator > Performer === //
 		mCallbacks.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
@@ -258,6 +262,13 @@ public abstract class MainPresenter<
 		mStateViewModel.getWorkError().observe(activity, mSnackbarPerformer::show);
 
 
+		// Showcase
+		mShowcasePerformer.checkForFineLocationPermission = mPermissionsPerformer::checkForFineLocation;
+		mShowcasePerformer.isFiltersLoaded = mFiltersFragmentPerformer::isLoaded;
+		mShowcasePerformer.isLocationDetailLoaded = mLocationDetailFragmentPerformer::isLoaded;
+
+		mBottomSheetPerformer.onStateChanged = mShowcasePerformer.appendBottomSheetListener(activity, mBottomSheetPerformer.onStateChanged);
+
 		// --- Start --- //
 		connectLocationProcessIfNeeded(activity);
 		startOnboardingIfNeeded(activity);
@@ -282,6 +293,7 @@ public abstract class MainPresenter<
 			if (resultCode == Activity.RESULT_OK) {
 				mPreferencesPerformer.setOnboardingAsComplete();
 				connectLocationProcessIfNeeded(activity);
+				startOnboardingIfNeeded(activity);
 			}
 			else {
 				mFinishActivity.run();
@@ -328,6 +340,9 @@ public abstract class MainPresenter<
 		if (!mPreferencesPerformer.isOnboardingComplete()) {
 			Intent intent = new Intent(activity, OnboardingActivity.class);
 			activity.startActivityForResult(intent, REQUEST_CODE_ONBOARDING);
+		}
+		else {
+			mShowcasePerformer.startShowcaseIfNeeded(activity);
 		}
 	}
 

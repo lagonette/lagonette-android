@@ -76,6 +76,9 @@ repositories {
     maven {
         url 'https://maven.google.com'
     }
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 dependencies {
@@ -121,6 +124,9 @@ dependencies {
 
     // For bottom dots
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:2.0.2'
+
+    // For Showcase
+    implementation 'com.github.deano2390:MaterialShowcaseView:1.2.0'
 
     //For Chain Adapter
     implementation project(':chainadapter')
