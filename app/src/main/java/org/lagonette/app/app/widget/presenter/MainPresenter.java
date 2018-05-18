@@ -3,7 +3,6 @@ package org.lagonette.app.app.widget.presenter;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
@@ -40,6 +39,7 @@ import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
 import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.tools.arch.LocationViewModel;
 import org.lagonette.app.tools.arch.LongObserver;
+import org.zxcv.functions.main.Runnable;
 
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
@@ -53,6 +53,10 @@ public abstract class MainPresenter<
 		implements PresenterActivity.Lifecycle {
 
 	public static final int REQUEST_CODE_ONBOARDING = 0;
+
+	// Callbacks
+
+	public Runnable enableCrashlyticsIfNeeded = Runnable::doNothing;
 
 	// --- View Model --- //
 
@@ -275,7 +279,7 @@ public abstract class MainPresenter<
 
 		// --- Start --- //
 		connectLocationProcessIfNeeded(activity);
-		startOnboardingIfNeeded(activity);
+		startOnboardingOrShowcaseIfNeeded(activity);
 
 	}
 
@@ -296,8 +300,9 @@ public abstract class MainPresenter<
 		if (requestCode == REQUEST_CODE_ONBOARDING) {
 			if (resultCode == Activity.RESULT_OK) {
 				mPreferencesPerformer.setOnboardingAsComplete();
+				enableCrashlyticsIfNeeded.run();
 				connectLocationProcessIfNeeded(activity);
-				startOnboardingIfNeeded(activity);
+				startOnboardingOrShowcaseIfNeeded(activity);
 			}
 			else {
 				mFinishActivity.run();
@@ -343,7 +348,7 @@ public abstract class MainPresenter<
 		}
 	}
 
-	private void startOnboardingIfNeeded(@NonNull PresenterActivity activity) {
+	private void startOnboardingOrShowcaseIfNeeded(@NonNull PresenterActivity activity) {
 		if (!mPreferencesPerformer.isOnboardingComplete()) {
 			Intent intent = new Intent(activity, OnboardingActivity.class);
 			activity.startActivityForResult(intent, REQUEST_CODE_ONBOARDING);

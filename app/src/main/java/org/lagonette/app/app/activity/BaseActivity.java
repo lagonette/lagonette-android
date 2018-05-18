@@ -42,7 +42,6 @@ public abstract class BaseActivity
 
 	protected void initPerformer() {
 		mSharedPreferencesPerformer = new SharedPreferencesPerformer(this);
-		mSharedPreferencesPerformer.enableCrashlitycs = this::initCrashlyticsIfNeeded;
 	}
 
 	protected abstract void construct();

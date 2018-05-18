@@ -13,12 +13,15 @@ public class MainActivity
 	@NonNull
 	@Override
 	protected MainPresenter getPresenter() {
+		MainPresenter presenter;
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			return new LandscapeMainPresenter(mSharedPreferencesPerformer);
+			presenter = new LandscapeMainPresenter(mSharedPreferencesPerformer);
 		}
 		else {
-			return new PortraitMainPresenter(mSharedPreferencesPerformer);
+			presenter = new PortraitMainPresenter(mSharedPreferencesPerformer);
 		}
+		presenter.enableCrashlyticsIfNeeded = this::initCrashlyticsIfNeeded;
+		return presenter;
 	}
 
 	@Override
