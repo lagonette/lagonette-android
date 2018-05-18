@@ -19,8 +19,8 @@ android {
         applicationId "org.lagonette.app"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 6
-        versionName "1.0.0-alpha6"
+        versionCode 7
+        versionName "1.0.0-alpha7"
 
         javaCompileOptions {
             annotationProcessorOptions {
