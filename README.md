@@ -25,8 +25,6 @@ Instructions on how to setup your development environment and build Signal can b
 
 If you're new to the _La Gonette_ codebase, we recommend contacting _La Gonette_ staff at co@lagonette.org and app.lagonette@gmail.com.
 
-Else you can see our [contibuting guide](https://github.com/La-Gonette/lagonette-android/wiki/Contributing).
-
 ## License
 
 Licensed under the [Apache License 2.0](https://github.com/La-Gonette/lagonette-android/blob/master/LICENSE).
