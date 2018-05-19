@@ -66,9 +66,10 @@
 -keep class com.google.android.gms.maps.** { *; }
 -keep interface com.google.android.gms.maps.** { *; }
 
-#Firebase
--keep class com.google.android.gms.internal.** { *; }
--keep interface com.google.android.gms.internal.** { *; }
+#Crashlytics
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
 
 #Behavior
 -keep public class * extends android.support.design.widget.CoordinatorLayout$Behavior { *; }
