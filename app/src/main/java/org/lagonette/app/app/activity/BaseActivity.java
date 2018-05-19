@@ -6,12 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
-
-import org.lagonette.app.BuildConfig;
 import org.lagonette.app.app.widget.performer.impl.SharedPreferencesPerformer;
-
-import io.fabric.sdk.android.Fabric;
+import org.lagonette.app.tools.CrashReporter;
 
 public abstract class BaseActivity
 		extends AppCompatActivity {
@@ -35,8 +31,8 @@ public abstract class BaseActivity
 	}
 
 	protected void initCrashlyticsIfNeeded() {
-		if (BuildConfig.DEBUG || mSharedPreferencesPerformer.isCrashlitycsEnabled()) {
-			Fabric.with(this, new Crashlytics());
+		if (mSharedPreferencesPerformer.isCrashlitycsEnabled()) {
+			CrashReporter.init(this);
 		}
 	}
 

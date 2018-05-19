@@ -5,12 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.maps.android.clustering.Cluster;
 
 import org.lagonette.app.BuildConfig;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.room.entity.statement.LocationItem;
+import org.lagonette.app.tools.CrashReporter;
 import org.lagonette.app.tools.Logger;
 import org.zxcv.functions.main.Consumer;
 import org.zxcv.functions.main.LongConsumer;
@@ -145,7 +145,7 @@ public abstract class UiAction {
 	public abstract void process(@NonNull UiState state, @NonNull Callbacks callbacks);
 
 	protected void wtf(@NonNull UiState state) {
-		Crashlytics.log(Log.ERROR, TAG, state.toString());
-		Crashlytics.logException(new IllegalArgumentException("UiAction received a weird state"));
+		CrashReporter.log(Log.ERROR, TAG, state.toString());
+		CrashReporter.logException(new IllegalArgumentException("UiAction received a weird state"));
 	}
 }

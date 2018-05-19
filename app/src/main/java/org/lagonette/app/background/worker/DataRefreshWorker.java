@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.moshi.Moshi;
 
 import org.lagonette.app.BuildConfig;
@@ -23,6 +22,7 @@ import org.lagonette.app.background.tools.exception.WorkerException;
 import org.lagonette.app.locator.Api;
 import org.lagonette.app.locator.DB;
 import org.lagonette.app.room.database.LaGonetteDatabase;
+import org.lagonette.app.tools.CrashReporter;
 import org.lagonette.app.util.PreferenceUtils;
 import org.zxcv.functions.main.BiConsumer;
 import org.zxcv.functions.throwable.Predicate;
@@ -150,7 +150,7 @@ public class DataRefreshWorker
 		}
 		catch (WorkerException e) {
 			Log.e(TAG, "Caught: ", e);
-			Crashlytics.logException(e);
+			CrashReporter.logException(e);
 			return WorkerState.error(e.error);
 		}
 	}

@@ -1,9 +1,10 @@
 package org.lagonette.app.util;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+
+import org.lagonette.app.tools.CrashReporter;
 
 public class PhoneUtils {
 
@@ -16,7 +17,7 @@ public class PhoneUtils {
 			return util.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
 		}
 		catch (NumberParseException e) {
-			Crashlytics.logException(e);
+			CrashReporter.logException(e);
 			return number;
 		}
 	}

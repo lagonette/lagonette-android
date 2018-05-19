@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -26,6 +25,7 @@ import org.lagonette.app.R;
 import org.lagonette.app.app.widget.coordinator.state.UiState;
 import org.lagonette.app.app.widget.maps.PartnerRenderer;
 import org.lagonette.app.room.entity.statement.LocationItem;
+import org.lagonette.app.tools.CrashReporter;
 import org.lagonette.app.util.UiUtils;
 import org.zxcv.functions.main.Consumer;
 import org.zxcv.functions.main.Runnable;
@@ -144,7 +144,7 @@ public class MapPerformer
 		}
 		catch (IOException | JSONException e) {
 			Log.e(TAG, "setupFootprint: " + e.getMessage(), e);
-			Crashlytics.logException(e);
+			CrashReporter.logException(e);
 		}
 	}
 
