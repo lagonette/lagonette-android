@@ -35,7 +35,11 @@
         android:layout_height="244dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="112dp"
-        android:background="@android:color/white" />
+        android:background="@android:color/white"
+        android:paddingEnd="@dimen/bottom_sheet_padding_horizontal"
+        android:paddingLeft="@dimen/bottom_sheet_padding_horizontal"
+        android:paddingRight="@dimen/bottom_sheet_padding_horizontal"
+        android:paddingStart="@dimen/bottom_sheet_padding_horizontal" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/onboarding_dots"

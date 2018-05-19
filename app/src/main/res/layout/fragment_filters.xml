@@ -14,6 +14,10 @@
         android:clipToPadding="false"
         android:orientation="vertical"
         android:paddingBottom="16dp"
+        android:paddingEnd="@dimen/bottom_sheet_padding_horizontal"
+        android:paddingLeft="@dimen/bottom_sheet_padding_horizontal"
+        android:paddingRight="@dimen/bottom_sheet_padding_horizontal"
+        android:paddingStart="@dimen/bottom_sheet_padding_horizontal"
         android:paddingTop="8dp"
         tools:listitem="@layout/row_location" />
 

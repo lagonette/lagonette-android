@@ -22,7 +22,11 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/bottom_sheet_padding_horizontal"
+            android:paddingLeft="@dimen/bottom_sheet_padding_horizontal"
+            android:paddingRight="@dimen/bottom_sheet_padding_horizontal"
+            android:paddingStart="@dimen/bottom_sheet_padding_horizontal">
 
             <TextView
                 android:id="@+id/name"
@@ -53,6 +57,10 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:paddingBottom="8dp"
+        android:paddingEnd="@dimen/bottom_sheet_padding_horizontal"
+        android:paddingLeft="@dimen/bottom_sheet_padding_horizontal"
+        android:paddingRight="@dimen/bottom_sheet_padding_horizontal"
+        android:paddingStart="@dimen/bottom_sheet_padding_horizontal"
         android:paddingTop="8dp">
 
         <LinearLayout

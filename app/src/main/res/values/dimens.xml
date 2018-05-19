@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="bottom_sheet_padding_horizontal">0dp</dimen>
+
     <dimen name="fab_elevation_primary">6dp</dimen>
     <dimen name="fab_elevation_secondary">2dp</dimen>
 
-    <dimen name="search_bar_margin_start">4dp</dimen>
-    <dimen name="search_bar_margin_end">4dp</dimen>
+    <dimen name="search_bar_margin_horizontal">4dp</dimen>
     <dimen name="search_bar_margin_top">4dp</dimen>
     <dimen name="search_bar_margin_bottom">0dp</dimen>
     <dimen name="search_bar_elevation">4dp</dimen>
     <dimen name="search_bar_height">64dp</dimen>
+
+    <dimen name="main_left_pane_width">272dp</dimen>
+    <dimen name="main_search_bar_width">256dp</dimen>
 
     <dimen name="map_item_size">16dp</dimen>
 

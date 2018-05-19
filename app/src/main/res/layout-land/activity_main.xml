@@ -10,12 +10,12 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="272dp"
-        android:layout_marginStart="272dp" />
+        android:layout_marginLeft="@dimen/main_left_pane_width"
+        android:layout_marginStart="@dimen/main_left_pane_width" />
 
     <FrameLayout
         android:id="@+id/fragment_filters"
-        android:layout_width="272dp"
+        android:layout_width="@dimen/main_left_pane_width"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:clipToPadding="true" />
@@ -31,19 +31,19 @@
 
     <include
         layout="@layout/widget_search"
-        android:layout_width="256dp"
+        android:layout_width="@dimen/main_search_bar_width"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_marginBottom="@dimen/search_bar_margin_bottom"
-        android:layout_marginEnd="@dimen/search_bar_margin_end"
-        android:layout_marginLeft="@dimen/search_bar_margin_start"
-        android:layout_marginRight="@dimen/search_bar_margin_end"
-        android:layout_marginStart="@dimen/search_bar_margin_start"
+        android:layout_marginEnd="@dimen/search_bar_margin_horizontal"
+        android:layout_marginLeft="@dimen/search_bar_margin_horizontal"
+        android:layout_marginRight="@dimen/search_bar_margin_horizontal"
+        android:layout_marginStart="@dimen/search_bar_margin_horizontal"
         android:layout_marginTop="@dimen/search_bar_margin_top" />
 
     <View
         android:id="@+id/shadow_bottom_sheet"
-        android:layout_width="272dp"
+        android:layout_width="@dimen/main_left_pane_width"
         android:layout_height="8dp"
         android:layout_gravity="top"
         android:background="@drawable/bg_shadow_top"
@@ -52,7 +52,7 @@
 
     <FrameLayout
         android:id="@+id/bottom_sheet"
-        android:layout_width="272dp"
+        android:layout_width="@dimen/main_left_pane_width"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:elevation="4dp"
