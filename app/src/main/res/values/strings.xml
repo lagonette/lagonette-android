@@ -27,7 +27,7 @@
     <string name="snackbar_error_no_call_app_found">Aucune application téléphonique trouvée.</string>
     <string name="snackbar_error_no_browser_app_found">Aucun navigateur web trouvé.</string>
     <string name="snackbar_error_no_email_app_found">Aucune application email trouvée.</string>
-    <string name="snackbar_error_getting_categories">Echec lors de la mise à jour des categories.</string>
+    <string name="snackbar_error_getting_categories">Echec lors de la mise à jour des catégories.</string>
     <string name="snackbar_error_getting_partners">Echec lors de la mise à jour des partenaires.</string>
     <string name="snackbar_error_unknown">"Une erreur inconnue s'est produite."</string>
 
@@ -41,7 +41,7 @@
     <string name="showcase_location_title">Ma position !</string>
     <string name="showcase_location_content">Cliquez ici et la carte se centrera sur vous.</string>
     <string name="showcase_filters_fab_title">Ouvrez l\'annuaire !</string>
-    <string name="showcase_filters_fab_content">Retrouvez tous les partenaires de la Gonette triés par categories.</string>
+    <string name="showcase_filters_fab_content">Retrouvez tous les partenaires de la Gonette triés par catégories.</string>
     <string name="showcase_filters_title">Bienvenue dans l\'annuaire !</string>
     <string name="showcase_filters_content">Glissez vers le haut pour accéder à la liste des partenaires.</string>
     <string name="showcase_details_title">Découvrez vos partenaires !</string>
