@@ -30,5 +30,5 @@ public class SharedPreferencesUtils {
 
 	public static final boolean DEFAULT_VALUE_CRASHLITYCS_ENABLED = false;
 
-	public static final int CURRENT_VALUE_ONBOARDING_VERSION = 0;
+	public static final int CURRENT_VALUE_ONBOARDING_VERSION = 1;
 }
