@@ -11,7 +11,7 @@ import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.room.entity.statement.Shortcut;
 import org.lagonette.app.room.statement.FilterStatement;
 import org.lagonette.app.room.statement.MapLocationStatement;
-import org.lagonette.app.room.statement.PartnerDetailStatement;
+import org.lagonette.app.room.statement.LocationDetailStatement;
 import org.lagonette.app.room.statement.ShortcutStatement;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 @Dao
 public interface UiDao {
 
-	@Query(PartnerDetailStatement.SQL)
+	@Query(LocationDetailStatement.SQL)
 	LiveData<LocationDetail> getLocationsDetail(long id);
 
 	@Query(MapLocationStatement.LOCATIONS_SQL)

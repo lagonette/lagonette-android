@@ -4,7 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 
-import org.lagonette.app.room.converter.DataTypeConverters;
+import org.lagonette.app.room.converter.LatLngTypeConverter;
 import org.lagonette.app.room.dao.CategoryDao;
 import org.lagonette.app.room.dao.PartnerDao;
 import org.lagonette.app.room.dao.UiDao;
@@ -28,7 +28,7 @@ import org.lagonette.app.util.DatabaseUtils;
 		},
 		version = DatabaseUtils.DATABASE_NUMBER
 )
-@TypeConverters({DataTypeConverters.class})
+@TypeConverters({LatLngTypeConverter.class})
 public abstract class LaGonetteDatabase
 		extends RoomDatabase {
 

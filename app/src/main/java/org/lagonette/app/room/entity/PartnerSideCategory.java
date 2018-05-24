@@ -8,21 +8,7 @@ import android.arch.persistence.room.Entity;
 		primaryKeys = {
 				"partner_id",
 				"category_id"
-		}//,
-//        foreignKeys = {
-//                @ForeignKey(
-//                        entity = Partner.class,
-//                        parentColumns = "id",
-//                        childColumns = "partner_id",
-//                        onDelete = ForeignKey.CASCADE
-//                ),
-//                @ForeignKey(
-//                        entity = Category.class,
-//                        parentColumns = "id",
-//                        childColumns = "category_id",
-//                        onDelete = ForeignKey.CASCADE
-//                )
-//        }
+		}
 )
 public class PartnerSideCategory {
 

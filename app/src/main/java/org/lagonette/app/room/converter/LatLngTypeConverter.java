@@ -6,10 +6,10 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class DataTypeConverters {
+public class LatLngTypeConverter {
 
 	@TypeConverter
-	public static LatLng toLocation(@Nullable String position) {
+	public static LatLng toLatLng(@Nullable String position) {
 		if (position == null) {
 			return null;
 		}

@@ -2,7 +2,9 @@ package org.lagonette.app.room.statement;
 
 import org.lagonette.app.room.statement.base.GonetteStatement;
 
-public interface PartnerDetailStatement
+import static org.lagonette.app.room.statement.Statement.NO_ID;
+
+public interface LocationDetailStatement
 		extends GonetteStatement {
 
 	String SQL =
@@ -25,9 +27,9 @@ public interface PartnerDetailStatement
 					"location.street, " +
 					"location.zip_code, " +
 					"location.city, " +
-					"main_category.id as main_category_id, " +
-					"main_category.label as main_category_label, " +
-					"main_category.icon as main_category_icon" +
+					"(CASE WHEN main_category.id IS NULL THEN " + NO_ID + " ELSE main_category.id END) AS main_category_id, " +
+					"main_category.label AS main_category_label, " +
+					"main_category.icon AS main_category_icon" +
 					FROM_PARTNER +
 					JOIN_LOCATION_ON_PARTNER +
 					LEFT_JOIN_MAIN_CATEGORY_ON_PARTNER +
