@@ -22,7 +22,6 @@ android {
                 proguardFile 'proguard-rules.pro'
             }
         }
-        prod {  }
     }
 
 }
