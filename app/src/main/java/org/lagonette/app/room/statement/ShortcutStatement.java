@@ -28,9 +28,12 @@ public abstract class ShortcutStatement
 					" LIMIT 1";
 
 	private static final String HEADQUARTER_SQL =
-			" SELECT location.id AS headquarter_location_id, partner.logo AS headquarter_icon " +
+			" SELECT location.id AS headquarter_location_id, " +
+					" location_metadata.is_visible AS headquarter_is_visible, " +
+					" partner.logo AS headquarter_icon " +
 					FROM_PARTNER +
 					JOIN_LOCATION_ON_PARTNER +
+					JOIN_METADATA_ON_LOCATION +
 					" WHERE partner.is_gonette_headquarter = 1 " +
 					" LIMIT 1";
 

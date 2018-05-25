@@ -146,7 +146,11 @@ public class ShortcutDecorator
 		if (shortcut != null && shortcut.headquarterLocationId != null) {
 			holder.headquarterView.setTag(shortcut.headquarterLocationId);
 			holder.headquarterView.setClickable(true);
-			holder.backgroundHeadquarterView.setBackgroundResource(R.drawable.bg_item_partner);
+			holder.backgroundHeadquarterView.setBackgroundResource(
+					shortcut.isHeadquarterVisible
+							? R.drawable.bg_item_partner
+							: R.drawable.bg_item_partner_unselected
+			);
 			holder.textHeadquarterView.setTextColor(mSecondaryTextColor);
 			Glide.with(holder.itemView.getContext())
 					.load(shortcut.headquarterIcon)

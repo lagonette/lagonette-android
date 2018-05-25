@@ -24,6 +24,9 @@ public class Shortcut {
 	@ColumnInfo(name = "headquarter_icon")
 	public final String headquarterIcon;
 
+	@ColumnInfo(name = "headquarter_is_visible")
+	public final boolean isHeadquarterVisible;
+
 	@ColumnInfo(name = "is_all_category_collapsed")
 	public final boolean isAllCategoryCollapsed;
 
@@ -41,6 +44,7 @@ public class Shortcut {
 			int exchangeOfficeCount,
 			Long headquarterLocationId,
 			@NonNull String headquarterIcon,
+			boolean isHeadquarterVisible,
 			boolean isAllCategoryCollapsed,
 			boolean isAllCategoryVisible) {
 		this.thereIsSomePartners = thereIsSomePartners;
@@ -50,6 +54,7 @@ public class Shortcut {
 		this.exchangeOfficeCount = exchangeOfficeCount;
 		this.headquarterLocationId = headquarterLocationId;
 		this.headquarterIcon = headquarterIcon;
+		this.isHeadquarterVisible = isHeadquarterVisible;
 		this.isAllCategoryCollapsed = isAllCategoryCollapsed;
 		this.isAllCategoryVisible = isAllCategoryVisible;
 	}
