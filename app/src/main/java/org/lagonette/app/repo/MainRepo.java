@@ -15,7 +15,6 @@ import org.lagonette.app.room.entity.statement.Filter;
 import org.lagonette.app.room.entity.statement.LocationDetail;
 import org.lagonette.app.room.entity.statement.LocationItem;
 import org.lagonette.app.room.entity.statement.Shortcut;
-import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.SearchUtils;
 
 import java.util.List;
@@ -136,9 +135,21 @@ public class MainRepo {
 
 	public void setAllCategoriesVisibility(boolean visibility) {
 		mExecutor.execute(
-				() -> mDatabase
-						.categoryDao()
-						.updateCategoryVisibilities(visibility)
+				() -> {
+					try {
+						mDatabase.beginTransaction();
+						mDatabase
+								.categoryDao()
+								.updateCategoryVisibilities(visibility);
+						mDatabase
+								.partnerDao()
+								.updateOrphanPartnerVisibilities(visibility);
+						mDatabase.setTransactionSuccessful();
+					}
+					finally {
+						mDatabase.endTransaction();
+					}
+				}
 		);
 	}
 
