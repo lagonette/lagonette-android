@@ -3,6 +3,7 @@ package org.lagonette.app.app.widget.presenter;
 import android.support.annotation.NonNull;
 
 import org.lagonette.app.app.activity.PresenterActivity;
+import org.lagonette.app.app.widget.coordinator.state.action.ShowFullMapAction;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.SharedPreferencesPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeBottomSheetPerformer;
@@ -10,6 +11,8 @@ import org.lagonette.app.app.widget.performer.landscape.LandscapeFabButtonsPerfo
 import org.lagonette.app.app.widget.performer.landscape.LandscapeMapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeSearchBarPerformer;
 import org.lagonette.app.app.widget.performer.landscape.LandscapeShowcasePerformer;
+
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.TOGGLE_BOTTOM_SHEET;
 
 public class LandscapeMainPresenter
 		extends MainPresenter<
@@ -34,6 +37,12 @@ public class LandscapeMainPresenter
 	@Override
 	public void onConstructed(@NonNull PresenterActivity activity) {
 		super.onConstructed(activity);
+
+		mEventBus.subscribe(
+				TOGGLE_BOTTOM_SHEET,
+				activity,
+				aVoid -> mUiActionStore.start(new ShowFullMapAction())
+		);
 
 		// Performer > Performer
 		mBottomSheetPerformer.onSlideChanged = mLocationDetailFragmentPerformer::updateTopPadding;

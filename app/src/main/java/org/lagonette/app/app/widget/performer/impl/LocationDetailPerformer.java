@@ -17,6 +17,7 @@ import org.lagonette.app.room.statement.Statement;
 import org.lagonette.app.util.PhoneUtils;
 import org.zxcv.functions.main.Consumer;
 import org.zxcv.functions.main.ObjBiDoubleConsumer;
+import org.zxcv.functions.main.Runnable;
 
 public class LocationDetailPerformer
 		implements ViewPerformer {
@@ -32,6 +33,9 @@ public class LocationDetailPerformer
 
 	@NonNull
 	public Consumer<String> onEmailClick = Consumer::doNothing;
+
+	@NonNull
+	public Runnable onHeaderClick = Runnable::doNothing;
 
 	private View mHeaderView;
 
@@ -106,6 +110,7 @@ public class LocationDetailPerformer
 		mMainCategoryLogoImageView = view.findViewById(R.id.main_category_logo);
 		mMainCategoryLogoLayout = view.findViewById(R.id.main_category_logo_container);
 
+		mHeaderView.setOnClickListener(v -> onHeaderClick.run());
 		mAddressLayout.setOnClickListener(v -> onAddressClick.accept(mNameTextView.getText().toString(), mLatitude, mLongitude));
 		mPhoneLayout.setOnClickListener(v -> onPhoneClick.accept(mPhoneTextView.getText().toString()));
 		mWebsiteLayout.setOnClickListener(v -> onWebsiteClick.accept(mWebsiteTextView.getText().toString()));

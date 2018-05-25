@@ -20,6 +20,8 @@ public class MainLiveEventBusViewModel
 		Event<Void> SHOW_FULL_MAP = new Event<>();
 
 		Event<UiState.MapMovement> NOTIFY_MAP_MOVEMENT = new Event<>();
+
+		Event<Void> TOGGLE_BOTTOM_SHEET = new Event<>();
 	}
 
 	public interface Map {

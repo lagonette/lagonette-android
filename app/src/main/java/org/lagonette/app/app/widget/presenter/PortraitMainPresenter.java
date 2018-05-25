@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.lagonette.app.app.activity.PresenterActivity;
 import org.lagonette.app.app.widget.coordinator.state.action.OpenFiltersAction;
+import org.lagonette.app.app.widget.coordinator.state.action.ToggleBottomSheetAction;
 import org.lagonette.app.app.widget.performer.impl.BottomSheetPerformer;
 import org.lagonette.app.app.widget.performer.impl.SharedPreferencesPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitBottomSheetPerformer;
@@ -11,6 +12,8 @@ import org.lagonette.app.app.widget.performer.portrait.PortraitFabButtonsPerform
 import org.lagonette.app.app.widget.performer.portrait.PortraitMapFragmentPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitSearchBarPerformer;
 import org.lagonette.app.app.widget.performer.portrait.PortraitShowcasePerformer;
+
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.TOGGLE_BOTTOM_SHEET;
 
 public class PortraitMainPresenter
 		extends MainPresenter<
@@ -26,10 +29,16 @@ public class PortraitMainPresenter
 	@Override
 	public void onConstructed(@NonNull PresenterActivity activity) {
 
+		mEventBus.subscribe(
+				TOGGLE_BOTTOM_SHEET,
+				activity,
+				aVoid -> mUiActionStore.start(new ToggleBottomSheetAction())
+		);
+
 		// Performer > LiveData
 		mFabButtonsPerformer.onFiltersClick(() -> mUiActionStore.start(new OpenFiltersAction()));
 
-		// LiveData > Performer, Coordinator
+		// LiveData > Performer
 		mLocationDetailFragmentPerformer.onFragmentLoaded(locationId -> mSearchBarPerformer.enableBehavior(true));
 		mFiltersFragmentPerformer.onFragmentLoaded(() -> mSearchBarPerformer.enableBehavior(false));
 

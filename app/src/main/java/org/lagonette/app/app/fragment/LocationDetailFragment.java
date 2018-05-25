@@ -8,10 +8,13 @@ import android.view.View;
 
 import org.lagonette.app.R;
 import org.lagonette.app.app.viewmodel.LocationDetailViewModel;
+import org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel;
 import org.lagonette.app.app.widget.performer.impl.IntentPerformer;
 import org.lagonette.app.app.widget.performer.impl.LocationDetailPerformer;
 import org.lagonette.app.app.widget.performer.impl.SnackbarPerformer;
 import org.lagonette.app.room.statement.Statement;
+
+import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.TOGGLE_BOTTOM_SHEET;
 
 public class LocationDetailFragment
 		extends BaseFragment {
@@ -19,6 +22,8 @@ public class LocationDetailFragment
 	public static final String TAG = "LocationDetailFragment";
 
 	private static final String ARG_LOCATION_ID = "arg:location_id";
+
+	private MainLiveEventBusViewModel mEventBus;
 
 	private LocationDetailPerformer mLocationPerformer;
 
@@ -59,6 +64,10 @@ public class LocationDetailFragment
 
 	@Override
 	protected void construct(@NonNull FragmentActivity activity) {
+		mEventBus = ViewModelProviders
+				.of(activity)
+				.get(MainLiveEventBusViewModel.class);
+
 		mSnackbarPerformer = new SnackbarPerformer(activity);
 	}
 
@@ -80,6 +89,7 @@ public class LocationDetailFragment
 	protected void onConstructed() {
 		mIntentPerformer.onError = mSnackbarPerformer::show;
 
+		mLocationPerformer.onHeaderClick = () -> mEventBus.publish(TOGGLE_BOTTOM_SHEET);
 		mLocationPerformer.onAddressClick = mIntentPerformer::startDirection;
 		mLocationPerformer.onEmailClick = mIntentPerformer::writeEmail;
 		mLocationPerformer.onPhoneClick = mIntentPerformer::makeCall;

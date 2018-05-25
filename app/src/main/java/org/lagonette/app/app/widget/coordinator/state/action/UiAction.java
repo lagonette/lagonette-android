@@ -30,6 +30,12 @@ public abstract class UiAction {
 		public Runnable closeBottomSheet = Runnable::doNothing;
 
 		@NonNull
+		public Runnable expandBottomSheet = Runnable::doNothing;
+
+		@NonNull
+		public Runnable collapseBottomSheet = Runnable::doNothing;
+
+		@NonNull
 		public Consumer<Cluster<LocationItem>> moveMapToCluster = Consumer::doNothing;
 
 		@NonNull

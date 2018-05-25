@@ -41,6 +41,8 @@ import org.lagonette.app.tools.arch.LocationViewModel;
 import org.lagonette.app.tools.arch.LongObserver;
 import org.zxcv.functions.main.Runnable;
 
+import static android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED;
+import static android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.MOVE_TO_CLUSTER;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.OPEN_LOCATION_ITEM;
 import static org.lagonette.app.app.viewmodel.MainLiveEventBusViewModel.Action.SHOW_FULL_MAP;
@@ -149,6 +151,8 @@ public abstract class MainPresenter<
 		// === Coordinator > Performer === //
 		mCallbacks.openBottomSheet = mBottomSheetPerformer::openBottomSheet;
 		mCallbacks.closeBottomSheet = mBottomSheetPerformer::closeBottomSheet;
+		mCallbacks.expandBottomSheet = () -> mBottomSheetPerformer.changeBottomSheetState(STATE_EXPANDED);
+		mCallbacks.collapseBottomSheet = () -> mBottomSheetPerformer.changeBottomSheetState(STATE_COLLAPSED);
 
 		mCallbacks.selectLocation = mMapViewModel::selectLocation;
 
