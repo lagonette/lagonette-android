@@ -29,6 +29,8 @@ public abstract class ShowcasePerformer {
 
 	protected final int mDelay;
 
+	protected final int mNoDelay;
+
 	@NonNull
 	public BooleanSupplier isLocationDetailLoaded = BooleanSupplier::getFalse;
 
@@ -42,6 +44,7 @@ public abstract class ShowcasePerformer {
 		mMaskColor = ContextCompat.getColor(activity, R.color.showcase_mask);
 		mFirstDelay = 1000;
 		mDelay = 500;
+		mNoDelay = 0;
 	}
 
 	public void startShowcaseIfNeeded(@NonNull PresenterActivity activity) {

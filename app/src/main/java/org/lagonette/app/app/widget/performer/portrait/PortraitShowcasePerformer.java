@@ -129,7 +129,7 @@ public class PortraitShowcasePerformer extends ShowcasePerformer {
 												)
 								)
 								.setTargetTouchable(true)
-								.setDelay(mDelay)
+								.setDelay(mNoDelay)
 								.build()
 				)
 				.start();
@@ -155,7 +155,7 @@ public class PortraitShowcasePerformer extends ShowcasePerformer {
 										)
 								)
 								.setTargetTouchable(true)
-								.setDelay(mDelay)
+								.setDelay(mNoDelay)
 								.build()
 				)
 				.start();
