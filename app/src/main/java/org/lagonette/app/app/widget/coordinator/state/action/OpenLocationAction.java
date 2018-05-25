@@ -9,20 +9,23 @@ import org.lagonette.app.room.statement.Statement;
 public class OpenLocationAction
 		extends OrientedAction {
 
-	public final long selectedLocationId;
+	private final long mSelectedLocationId;
 
-	public boolean shouldMove;
+	private boolean mMoved;
+
+	private boolean mHasSelected;
 
 	public OpenLocationAction(long selectedLocationId) {
 		super();
-		this.selectedLocationId = selectedLocationId;
-		this.shouldMove = true;
+		this.mSelectedLocationId = selectedLocationId;
+		this.mMoved = false;
+		this.mHasSelected = false;
 	}
 
 	@Override
 	protected void processForPortrait(
 			@NonNull UiState state, @NonNull Callbacks callbacks) {
-		if (selectedLocationId <= Statement.NO_ID) {
+		if (mSelectedLocationId <= Statement.NO_ID) {
 			callbacks.finishAction.run();
 		}
 		else if (state.isLocationDetailLoaded) {
@@ -30,15 +33,20 @@ public class OpenLocationAction
 
 				case BottomSheetBehavior.STATE_COLLAPSED:
 				case BottomSheetBehavior.STATE_EXPANDED:
-					if (state.selectedLocationId != selectedLocationId) {
-						callbacks.selectLocation.accept(selectedLocationId);
+					if (state.selectedLocationId != mSelectedLocationId) {
+						if (!mHasSelected) {
+							callbacks.selectLocation.accept(mSelectedLocationId);
+						}
+						else {
+							callbacks.wait.run();
+						}
 					}
-					else if (shouldMove) {
-						shouldMove = false;
+					else if (!mMoved) {
+						mMoved = true;
 						callbacks.moveMapToSelectedLocation.run();
 					}
-					else if (state.loadedLocationId != selectedLocationId) {
-						callbacks.loadLocationDetail.accept(selectedLocationId);
+					else if (state.loadedLocationId != mSelectedLocationId) {
+						callbacks.loadLocationDetail.accept(mSelectedLocationId);
 					}
 					else {
 						callbacks.finishAction.run();
@@ -61,11 +69,16 @@ public class OpenLocationAction
 							break;
 
 						case IDLE:
-							if (state.selectedLocationId != selectedLocationId) {
-								callbacks.selectLocation.accept(selectedLocationId);
+							if (state.selectedLocationId != mSelectedLocationId) {
+								if (!mHasSelected) {
+									callbacks.selectLocation.accept(mSelectedLocationId);
+								}
+								else {
+									callbacks.wait.run();
+								}
 							}
-							else if (shouldMove) { //TODO Use reason to mark action done if the user move something
-								shouldMove = false;
+							else if (!mMoved) { //TODO Use reason to mark action done if the user move something
+								mMoved = true;
 								callbacks.moveMapToSelectedLocation.run();
 							}
 							else {
@@ -97,7 +110,7 @@ public class OpenLocationAction
 						callbacks.unloadFilters.run();
 					}
 					else {
-						callbacks.loadLocationDetail.accept(selectedLocationId);
+						callbacks.loadLocationDetail.accept(mSelectedLocationId);
 					}
 					break;
 			}
@@ -107,7 +120,7 @@ public class OpenLocationAction
 	@Override
 	protected void processForLandscape(
 			@NonNull UiState state, @NonNull Callbacks callbacks) {
-		if (selectedLocationId <= Statement.NO_ID) {
+		if (mSelectedLocationId <= Statement.NO_ID) {
 			callbacks.finishAction.run();
 		}
 		else if (state.isLocationDetailLoaded) {
@@ -115,15 +128,20 @@ public class OpenLocationAction
 
 				case BottomSheetBehavior.STATE_COLLAPSED:
 				case BottomSheetBehavior.STATE_EXPANDED:
-					if (state.selectedLocationId != selectedLocationId) {
-						callbacks.selectLocation.accept(selectedLocationId);
+					if (state.selectedLocationId != mSelectedLocationId) {
+						if (!mHasSelected) {
+							callbacks.selectLocation.accept(mSelectedLocationId);
+						}
+						else {
+							callbacks.wait.run();
+						}
 					}
-					else if (shouldMove) {
-						shouldMove = false;
+					else if (!mMoved) {
+						mMoved = true;
 						callbacks.moveMapToSelectedLocation.run();
 					}
-					else if (state.loadedLocationId != selectedLocationId) {
-						callbacks.loadLocationDetail.accept(selectedLocationId);
+					else if (state.loadedLocationId != mSelectedLocationId) {
+						callbacks.loadLocationDetail.accept(mSelectedLocationId);
 					}
 					else {
 						callbacks.finishAction.run();
@@ -146,11 +164,16 @@ public class OpenLocationAction
 							break;
 
 						case IDLE:
-							if (state.selectedLocationId != selectedLocationId) {
-								callbacks.selectLocation.accept(selectedLocationId);
+							if (state.selectedLocationId != mSelectedLocationId) {
+								if (!mHasSelected) {
+									callbacks.selectLocation.accept(mSelectedLocationId);
+								}
+								else {
+									callbacks.wait.run();
+								}
 							}
-							else if (shouldMove) { //TODO Use reason to mark action done if the user move something
-								shouldMove = false;
+							else if (mMoved) { //TODO Use reason to mark action done if the user move something
+								mMoved = false;
 								callbacks.moveMapToSelectedLocation.run();
 							}
 							else {
@@ -178,7 +201,7 @@ public class OpenLocationAction
 					break;
 
 				case BottomSheetBehavior.STATE_HIDDEN:
-					callbacks.loadLocationDetail.accept(selectedLocationId);
+					callbacks.loadLocationDetail.accept(mSelectedLocationId);
 					break;
 			}
 		}

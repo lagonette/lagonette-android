@@ -35,9 +35,6 @@ public abstract class MapLocationStatement
 					LEFT_JOIN_MAIN_CATEGORY_AND_METADATA_ON_PARTNER +
 					"WHERE location.id = :id " +
 					"AND location.display_location <> 0 " +
-					"AND location_metadata.is_visible <> 0 " +
-					"GROUP BY location.id " +
-					"HAVING main_category_metadata.is_visible " +
-					"OR partner.main_category_id = " + Statement.NO_ID;
+					"GROUP BY location.id ";
 
 }

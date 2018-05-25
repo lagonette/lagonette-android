@@ -180,7 +180,7 @@ public class MapPerformer
 
 	public void selectLocation(@Nullable LocationItem selected) {
 		removeSelectedMarkerIfNeeded();
-		if (selected != null) {
+		if (mMap != null && selected != null) {
 			mSelectedMarker = mMap.addMarker(
 					mPartnerRenderer.createSelectedMarkerOptions(selected)
 			);
