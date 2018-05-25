@@ -77,7 +77,7 @@ public class OpenLocationAction
 									callbacks.wait.run();
 								}
 							}
-							else if (!mMoved) { //TODO Use reason to mark action done if the user move something
+							else if (!mMoved) {
 								mMoved = true;
 								callbacks.moveMapToSelectedLocation.run();
 							}
@@ -172,7 +172,7 @@ public class OpenLocationAction
 									callbacks.wait.run();
 								}
 							}
-							else if (mMoved) { //TODO Use reason to mark action done if the user move something
+							else if (mMoved) {
 								mMoved = false;
 								callbacks.moveMapToSelectedLocation.run();
 							}
