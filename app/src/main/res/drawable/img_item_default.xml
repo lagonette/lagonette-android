@@ -12,6 +12,6 @@
         </shape>
     </item>
 
-    <item android:drawable="@drawable/placeholder" />
+    <item android:drawable="@drawable/img_placeholder" />
 
 </layer-list>

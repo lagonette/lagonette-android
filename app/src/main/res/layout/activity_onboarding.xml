@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="48dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/lyon" />
+        android:src="@drawable/img_lyon" />
 
     <View
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
         android:background="@android:color/transparent"
         android:padding="16dp"
         android:scaleType="centerInside"
-        android:src="@drawable/header_gonette" />
+        android:src="@drawable/img_header_gonette" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/onboarding_pager"

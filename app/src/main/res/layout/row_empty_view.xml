@@ -25,7 +25,7 @@
         android:layout_marginRight="24dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/chicken_search" />
+        android:src="@drawable/img_chicken_search" />
 
     <TextView
         android:layout_width="wrap_content"
