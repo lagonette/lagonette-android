@@ -155,7 +155,7 @@ public class ShortcutDecorator
 			Glide.with(holder.itemView.getContext())
 					.load(shortcut.headquarterIcon)
 					.asBitmap()
-					.placeholder(R.drawable.img_item_default)
+					.placeholder(R.drawable.img_gonette)
 					.override(mCategoryIconSize, mCategoryIconSize)
 					.into(holder.iconHeadquarterView);
 		}
