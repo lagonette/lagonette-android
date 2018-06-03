@@ -35,7 +35,7 @@ public class PartnerRenderer
 
 	public static final float Z_INDEX_SELECTED_ITEM = 1f;
 
-	public static final int MIN_CLUSTER_SIZE = 7;
+	public static final int MIN_CLUSTER_SIZE = 20;
 
 	private static final String TAG = "PartnerRenderer";
 
