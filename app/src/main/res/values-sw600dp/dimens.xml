@@ -4,4 +4,7 @@
     <dimen name="main_left_pane_width">336dp</dimen>
     <dimen name="main_search_bar_width">320dp</dimen>
 
+    <dimen name="map_item_size">22dp</dimen>
+    <dimen name="map_icon_item_size">18dp</dimen>
+    <dimen name="map_item_margin">2dp</dimen>
 </resources>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_partner_background"
-    android:layout_width="16dp"
-    android:layout_height="16dp"
+    android:layout_width="@dimen/map_item_size"
+    android:layout_height="@dimen/map_item_size"
     android:background="@drawable/bg_item_partner">
 
     <ImageView
         android:id="@+id/item_partner_icon"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_margin="1dp"
+        android:layout_width="@dimen/map_icon_item_size"
+        android:layout_height="@dimen/map_icon_item_size"
+        android:layout_margin="@dimen/map_item_margin"
         android:src="@drawable/img_item_default" />
 
 </FrameLayout>
