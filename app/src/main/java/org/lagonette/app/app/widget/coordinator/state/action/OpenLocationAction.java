@@ -172,8 +172,8 @@ public class OpenLocationAction
 									callbacks.wait.run();
 								}
 							}
-							else if (mMoved) {
-								mMoved = false;
+							else if (!mMoved) {
+								mMoved = true;
 								callbacks.moveMapToSelectedLocation.run();
 							}
 							else {
