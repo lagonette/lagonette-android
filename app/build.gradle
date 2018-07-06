@@ -95,7 +95,7 @@ dependencies {
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.4.2'
 
     // For Crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.2'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 
     // For Lifecycles, LiveData, and ViewModel
     implementation 'android.arch.lifecycle:runtime:1.1.1'
@@ -103,11 +103,11 @@ dependencies {
     annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
 
     // For Room
-    implementation 'android.arch.persistence.room:runtime:1.1.0'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.1.0'
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
 
     // For Paging library
-    implementation 'android.arch.paging:runtime:1.0.0'
+    implementation 'android.arch.paging:runtime:1.0.1'
 
     // For Moshi
     implementation 'com.squareup.moshi:moshi:1.5.0'
