@@ -2,7 +2,7 @@
 
     <!--naming convention: https://jeroenmols.com/blog/2016/03/07/resourcenaming/-->
 
-    <string name="app_name">La Gonette</string>
+    <string name="app_name">La Gonette - Maps</string>
 
     <string name="all_format_address_full">%1$s, %2$s %3$s</string>
     <string name="all_button_allow">Autoriser</string>
